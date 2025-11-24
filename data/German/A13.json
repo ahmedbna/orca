@@ -1,0 +1,2388 @@
+[
+  {
+    "lessonId": 1,
+    "title": "Tagesablauf und Uhrzeiten",
+    "phrases": [
+      { "order": 1, "text": "Ich stehe jeden Morgen um sieben Uhr auf" },
+      { "order": 2, "text": "Mein Wecker klingelt immer sehr früh" },
+      { "order": 3, "text": "Nach dem Aufstehen dusche ich mich sofort" },
+      { "order": 4, "text": "Um halb acht frühstücke ich mit meiner Familie" },
+      {
+        "order": 5,
+        "text": "Ich trinke gern Kaffee zum Frühstück, aber keinen Tee"
+      },
+      {
+        "order": 6,
+        "text": "Um acht Uhr verlasse ich das Haus und gehe zur Arbeit"
+      },
+      {
+        "order": 7,
+        "text": "Mein Bus fährt pünktlich um viertel nach acht ab"
+      },
+      {
+        "order": 8,
+        "text": "Die Fahrt ins Büro dauert ungefähr zwanzig Minuten"
+      },
+      {
+        "order": 9,
+        "text": "Mittags mache ich von zwölf bis eins eine Pause"
+      },
+      {
+        "order": 10,
+        "text": "In der Mittagspause esse ich oft einen Salat in der Kantine"
+      },
+      {
+        "order": 11,
+        "text": "Am Nachmittag habe ich viele Termine und Besprechungen"
+      },
+      { "order": 12, "text": "Ich kaufe nach der Arbeit im Supermarkt ein" },
+      {
+        "order": 13,
+        "text": "Um achtzehn Uhr komme ich endlich wieder nach Hause"
+      },
+      { "order": 14, "text": "Abends koche ich manchmal etwas Leckeres" },
+      {
+        "order": 15,
+        "text": "Ich gehe meistens um dreiundzwanzig Uhr ins Bett"
+      }
+    ]
+  },
+  {
+    "lessonId": 2,
+    "title": "Das Wochenende (Perfekt mit haben)",
+    "phrases": [
+      { "order": 1, "text": "Was hast du am letzten Wochenende gemacht?" },
+      { "order": 2, "text": "Ich habe am Samstag lange geschlafen" },
+      { "order": 3, "text": "Am Vormittag habe ich meine Wohnung aufgeräumt" },
+      {
+        "order": 4,
+        "text": "Später habe ich einen interessanten Film gesehen"
+      },
+      { "order": 5, "text": "Wir haben am Nachmittag Freunde getroffen" },
+      { "order": 6, "text": "Habt ihr zusammen Kaffee getrunken?" },
+      { "order": 7, "text": "Ja, wir haben viel gelacht und erzählt" },
+      { "order": 8, "text": "Ich habe gestern Abend eine Pizza bestellt" },
+      {
+        "order": 9,
+        "text": "Mein Bruder hat den ganzen Sonntag Fußball gespielt"
+      },
+      { "order": 10, "text": "Hast du deine Hausaufgaben schon gemacht?" },
+      { "order": 11, "text": "Nein, ich habe am Wochenende nicht gelernt" },
+      { "order": 12, "text": "Meine Eltern haben im Garten gearbeitet" },
+      { "order": 13, "text": "Ich habe ein neues Buch gelesen" },
+      { "order": 14, "text": "Wir haben Musik gehört und getanzt" },
+      { "order": 15, "text": "Das Wochenende hat viel Spaß gemacht" }
+    ]
+  },
+  {
+    "lessonId": 3,
+    "title": "Reisen und Bewegung (Perfekt mit sein)",
+    "phrases": [
+      { "order": 1, "text": "Bist du schon einmal nach Berlin gefahren?" },
+      { "order": 2, "text": "Letzten Sommer sind wir nach Italien geflogen" },
+      { "order": 3, "text": "Ich bin gestern sehr spät nach Hause gekommen" },
+      { "order": 4, "text": "Wann seid ihr heute Morgen aufgestanden?" },
+      { "order": 5, "text": "Wir sind am Sonntag im Park spazieren gegangen" },
+      { "order": 6, "text": "Der Zug ist pünktlich am Bahnhof angekommen" },
+      { "order": 7, "text": "Meine Freundin ist letztes Jahr umgezogen" },
+      { "order": 8, "text": "Bist du mit dem Bus oder mit dem Auto gefahren?" },
+      { "order": 9, "text": "Wir sind am Wochenende zu Hause geblieben" },
+      { "order": 10, "text": "Das Kind ist schnell in den Garten gelaufen" },
+      { "order": 11, "text": "Seid ihr im Urlaub viel geschwommen?" },
+      { "order": 12, "text": "Ich bin letzte Woche krank gewesen" },
+      { "order": 13, "text": "Er ist direkt ins Büro gegangen" },
+      { "order": 14, "text": "Warum bist du nicht mitgekommen?" },
+      { "order": 15, "text": "Wir sind durch den Wald gewandert" }
+    ]
+  },
+  {
+    "lessonId": 4,
+    "title": "Einkaufen und Kleidung",
+    "phrases": [
+      { "order": 1, "text": "Ich suche eine neue Hose für die Arbeit" },
+      { "order": 2, "text": "Welche Größe haben Sie in diesem Pullover?" },
+      { "order": 3, "text": "Die blaue Jacke gefällt mir sehr gut" },
+      { "order": 4, "text": "Kann ich dieses Kleid bitte anprobieren?" },
+      { "order": 5, "text": "Die Umkleidekabinen sind dort hinten rechts" },
+      { "order": 6, "text": "Diese Schuhe sind mir leider zu klein" },
+      { "order": 7, "text": "Haben Sie das Hemd auch in einer anderen Farbe?" },
+      { "order": 8, "text": "Der Rock passt mir perfekt" },
+      { "order": 9, "text": "Ich nehme den Mantel, er ist sehr schick" },
+      { "order": 10, "text": "Wie viel kosten diese Socken?" },
+      { "order": 11, "text": "Kann ich bitte mit Karte bezahlen?" },
+      { "order": 12, "text": "Ich finde die Bluse ein bisschen zu teuer" },
+      { "order": 13, "text": "Dieser Schal ist sehr weich und warm" },
+      { "order": 14, "text": "Steht mir diese Brille?" },
+      { "order": 15, "text": "Ich brauche auch noch einen Gürtel" }
+    ]
+  },
+  {
+    "lessonId": 5,
+    "title": "Wegbeschreibung und Orientierung",
+    "phrases": [
+      { "order": 1, "text": "Entschuldigung, wie komme ich zum Bahnhof?" },
+      { "order": 2, "text": "Gehen Sie bitte immer geradeaus bis zur Ampel" },
+      { "order": 3, "text": "An der Kreuzung müssen Sie nach links abbiegen" },
+      { "order": 4, "text": "Die Post ist auf der rechten Seite" },
+      { "order": 5, "text": "Ist das Museum weit von hier entfernt?" },
+      { "order": 6, "text": "Nein, es ist ganz in der Nähe" },
+      { "order": 7, "text": "Sie können die Straßenbahn Linie 5 nehmen" },
+      { "order": 8, "text": "Steigen Sie an der dritten Haltestelle aus" },
+      { "order": 9, "text": "Der Supermarkt liegt gegenüber der Bank" },
+      { "order": 10, "text": "Gehen Sie an der Kirche vorbei" },
+      { "order": 11, "text": "Wo ist hier die nächste Apotheke?" },
+      { "order": 12, "text": "Biegen Sie an der Ecke rechts ab" },
+      { "order": 13, "text": "Sie müssen über die Brücke gehen" },
+      { "order": 14, "text": "Das Hotel befindet sich neben dem Park" },
+      { "order": 15, "text": "Vielen Dank für Ihre Hilfe" }
+    ]
+  },
+  {
+    "lessonId": 6,
+    "title": "Wohnen und Möbel",
+    "phrases": [
+      { "order": 1, "text": "Ich suche eine neue Wohnung im Stadtzentrum" },
+      { "order": 2, "text": "Die Miete für diese Wohnung ist sehr hoch" },
+      { "order": 3, "text": "Das Wohnzimmer ist hell und groß" },
+      { "order": 4, "text": "Der Tisch steht in der Mitte des Raumes" },
+      { "order": 5, "text": "Wir brauchen ein neues Sofa für das Wohnzimmer" },
+      { "order": 6, "text": "Das Bett steht im Schlafzimmer an der Wand" },
+      { "order": 7, "text": "Ich hänge das Bild über den Schreibtisch" },
+      { "order": 8, "text": "Die Lampe steht neben dem Sessel" },
+      { "order": 9, "text": "Der Teppich liegt auf dem Boden" },
+      {
+        "order": 10,
+        "text": "In der Küche gibt es einen Kühlschrank und einen Herd"
+      },
+      { "order": 11, "text": "Hast du einen Balkon oder eine Terrasse?" },
+      { "order": 12, "text": "Wir müssen die Wände neu streichen" },
+      { "order": 13, "text": "Der Schrank ist zu groß für diesen Flur" },
+      { "order": 14, "text": "Ich stelle die Bücher in das Regal" },
+      { "order": 15, "text": "Unsere Nachbarn sind sehr freundlich und ruhig" }
+    ]
+  },
+  {
+    "lessonId": 7,
+    "title": "Körper und Gesundheit",
+    "phrases": [
+      { "order": 1, "text": "Ich fühle mich heute nicht gut" },
+      { "order": 2, "text": "Mein Kopf tut weh und ich habe Fieber" },
+      { "order": 3, "text": "Du siehst wirklich krank aus" },
+      { "order": 4, "text": "Ich habe seit gestern starke Halsschmerzen" },
+      { "order": 5, "text": "Du solltest zum Arzt gehen" },
+      {
+        "order": 6,
+        "text": "Ich brauche einen Termin bei Frau Doktor Müller"
+      },
+      { "order": 7, "text": "Mein Rücken schmerzt nach der Arbeit" },
+      { "order": 8, "text": "Haben Sie etwas gegen Husten?" },
+      { "order": 9, "text": "Du musst viel Wasser trinken und schlafen" },
+      { "order": 10, "text": "Ich habe mir beim Sport den Fuß verletzt" },
+      { "order": 11, "text": "Der Arzt hat mir Tabletten verschrieben" },
+      { "order": 12, "text": "Gute Besserung, bleib heute im Bett" },
+      { "order": 13, "text": "Mein Bauch tut weh, ich habe zu viel gegessen" },
+      { "order": 14, "text": "Kannst du mir bitte ein Pflaster geben?" },
+      { "order": 15, "text": "Ich gehe in die Apotheke und kaufe Medikamente" }
+    ]
+  },
+  {
+    "lessonId": 8,
+    "title": "Im Restaurant",
+    "phrases": [
+      { "order": 1, "text": "Guten Abend, wir haben einen Tisch reserviert" },
+      { "order": 2, "text": "Können wir bitte die Speisekarte haben?" },
+      {
+        "order": 3,
+        "text": "Ich möchte gern ein Schnitzel mit Pommes bestellen"
+      },
+      { "order": 4, "text": "Was können Sie uns heute empfehlen?" },
+      { "order": 5, "text": "Für mich bitte nur einen kleinen Salat" },
+      { "order": 6, "text": "Möchten Sie etwas zu trinken bestellen?" },
+      { "order": 7, "text": "Ich nehme ein Mineralwasser ohne Kohlensäure" },
+      { "order": 8, "text": "Hat es Ihnen geschmeckt?" },
+      { "order": 9, "text": "Ja, das Essen war ausgezeichnet" },
+      { "order": 10, "text": "Entschuldigung, die Suppe ist leider kalt" },
+      { "order": 11, "text": "Könnten wir bitte bezahlen?" },
+      { "order": 12, "text": "Zahlen Sie zusammen oder getrennt?" },
+      { "order": 13, "text": "Das macht zusammen fünfundvierzig Euro" },
+      { "order": 14, "text": "Hier sind fünfzig Euro, das stimmt so" },
+      { "order": 15, "text": "Wir kommen gerne wieder" }
+    ]
+  },
+  {
+    "lessonId": 9,
+    "title": "Termine und Verabredungen",
+    "phrases": [
+      { "order": 1, "text": "Hast du am Freitagabend schon etwas vor?" },
+      { "order": 2, "text": "Ich möchte dich gerne ins Kino einladen" },
+      { "order": 3, "text": "Wann und wo treffen wir uns?" },
+      { "order": 4, "text": "Treffen wir uns um acht Uhr vor dem Kino" },
+      { "order": 5, "text": "Das passt mir sehr gut" },
+      { "order": 6, "text": "Leider habe ich am Samstag keine Zeit" },
+      { "order": 7, "text": "Können wir den Termin verschieben?" },
+      {
+        "order": 8,
+        "text": "Ich muss leider absagen, weil ich arbeiten muss"
+      },
+      { "order": 9, "text": "Passt es dir am Sonntag besser?" },
+      { "order": 10, "text": "Ja, am Sonntag habe ich den ganzen Tag frei" },
+      { "order": 11, "text": "Ich freue mich schon auf unser Treffen" },
+      { "order": 12, "text": "Vergiss bitte nicht unseren Termin morgen" },
+      { "order": 13, "text": "Ich rufe dich heute Abend noch einmal an" },
+      { "order": 14, "text": "Wir gehen danach noch etwas trinken" },
+      { "order": 15, "text": "Tut mir leid, ich komme zehn Minuten später" }
+    ]
+  },
+  {
+    "lessonId": 10,
+    "title": "Beruf und Arbeit",
+    "phrases": [
+      { "order": 1, "text": "Was sind Sie von Beruf?" },
+      {
+        "order": 2,
+        "text": "Ich arbeite als Ingenieur bei einer großen Firma"
+      },
+      { "order": 3, "text": "Meine Arbeitszeiten sind sehr flexibel" },
+      {
+        "order": 4,
+        "text": "Ich muss oft E-Mails schreiben und telefonieren"
+      },
+      { "order": 5, "text": "Haben Sie viele Kollegen im Büro?" },
+      {
+        "order": 6,
+        "text": "Wir haben jeden Montag eine Besprechung mit dem Chef"
+      },
+      { "order": 7, "text": "Macht Ihnen Ihre Arbeit Spaß?" },
+      { "order": 8, "text": "Ja, aber manchmal ist es sehr stressig" },
+      { "order": 9, "text": "Ich bewerbe mich um eine neue Stelle" },
+      { "order": 10, "text": "Ich habe heute viel zu tun" },
+      { "order": 11, "text": "Kannst du mir bei diesem Bericht helfen?" },
+      { "order": 12, "text": "Er arbeitet jetzt im Homeoffice" },
+      { "order": 13, "text": "Wann haben Sie Feierabend?" },
+      { "order": 14, "text": "Ich verdiene genug Geld für meine Miete" },
+      { "order": 15, "text": "Nächste Woche habe ich Urlaub" }
+    ]
+  },
+  {
+    "lessonId": 11,
+    "title": "Urlaub und Reisen planen",
+    "phrases": [
+      { "order": 1, "text": "Wohin fährst du dieses Jahr in den Urlaub?" },
+      { "order": 2, "text": "Wir wollen zwei Wochen am Meer verbringen" },
+      { "order": 3, "text": "Ich habe schon ein Hotelzimmer gebucht" },
+      { "order": 4, "text": "Fahrt ihr mit dem Auto oder fliegt ihr?" },
+      { "order": 5, "text": "Wir müssen noch unsere Koffer packen" },
+      { "order": 6, "text": "Vergiss nicht, deinen Reisepass mitzunehmen" },
+      {
+        "order": 7,
+        "text": "Ich möchte gern die Sehenswürdigkeiten besuchen"
+      },
+      { "order": 8, "text": "Hoffentlich ist das Wetter dort schön" },
+      { "order": 9, "text": "Wir machen eine Rundreise durch Spanien" },
+      { "order": 10, "text": "Ich brauche eine Pause vom Alltag" },
+      {
+        "order": 11,
+        "text": "Kannst du mir eine gute Reiseversicherung empfehlen?"
+      },
+      { "order": 12, "text": "Wir wandern gern in den Bergen" },
+      { "order": 13, "text": "Der Strand ist sehr sauber und ruhig" },
+      { "order": 14, "text": "Hast du die Fahrkarten schon gekauft?" },
+      { "order": 15, "text": "Ich freue mich sehr auf die Ferien" }
+    ]
+  },
+  {
+    "lessonId": 12,
+    "title": "Wetter und Jahreszeiten",
+    "phrases": [
+      { "order": 1, "text": "Wie ist das Wetter heute bei euch?" },
+      { "order": 2, "text": "Es regnet schon den ganzen Tag" },
+      { "order": 3, "text": "Morgen soll die Sonne scheinen" },
+      { "order": 4, "text": "Im Winter ist es hier sehr kalt und dunkel" },
+      { "order": 5, "text": "Es schneit, wir können Ski fahren" },
+      { "order": 6, "text": "Der Wind ist heute sehr stark" },
+      { "order": 7, "text": "Ich mag den Frühling, wenn die Blumen blühen" },
+      { "order": 8, "text": "Im Sommer gehen wir oft ins Schwimmbad" },
+      { "order": 9, "text": "Hast du einen Regenschirm dabei?" },
+      { "order": 10, "text": "Es sind heute über dreißig Grad" },
+      { "order": 11, "text": "Am Wochenende wird es gewittern" },
+      { "order": 12, "text": "Der Himmel ist blau und ohne Wolken" },
+      { "order": 13, "text": "Im Herbst fallen die Blätter von den Bäumen" },
+      { "order": 14, "text": "Es ist neblig, man kann nichts sehen" },
+      { "order": 15, "text": "Das Wetter ist perfekt für einen Ausflug" }
+    ]
+  },
+  {
+    "lessonId": 13,
+    "title": "Kommunikation und Medien",
+    "phrases": [
+      { "order": 1, "text": "Kann ich bitte Herrn Schmidt sprechen?" },
+      { "order": 2, "text": "Er ist gerade nicht am Platz" },
+      { "order": 3, "text": "Möchten Sie eine Nachricht hinterlassen?" },
+      { "order": 4, "text": "Ich schreibe dir später eine SMS" },
+      {
+        "order": 5,
+        "text": "Meine Internetverbindung ist heute sehr langsam"
+      },
+      { "order": 6, "text": "Ich habe deine E-Mail gestern bekommen" },
+      { "order": 7, "text": "Kannst du mir das Foto schicken?" },
+      { "order": 8, "text": "Ich benutze mein Smartphone jeden Tag" },
+      { "order": 9, "text": "Wir haben gestern lange telefoniert" },
+      { "order": 10, "text": "Liest du lieber Bücher oder E-Books?" },
+      {
+        "order": 11,
+        "text": "Ich schaue abends gern Nachrichten im Fernsehen"
+      },
+      { "order": 12, "text": "Wie lautet deine Telefonnummer?" },
+      { "order": 13, "text": "Ich kann dich leider nicht gut hören" },
+      { "order": 14, "text": "Bitte ruf mich so bald wie möglich zurück" },
+      { "order": 15, "text": "Hast du den Artikel in der Zeitung gelesen?" }
+    ]
+  },
+  {
+    "lessonId": 14,
+    "title": "Dienstleistungen und Service",
+    "phrases": [
+      { "order": 1, "text": "Ich möchte mir die Haare schneiden lassen" },
+      { "order": 2, "text": "Haben Sie heute noch einen Termin frei?" },
+      {
+        "order": 3,
+        "text": "Mein Fahrrad ist kaputt, können Sie es reparieren?"
+      },
+      { "order": 4, "text": "Wie lange dauert die Reparatur?" },
+      { "order": 5, "text": "Ich muss mein Auto zur Werkstatt bringen" },
+      { "order": 6, "text": "Können Sie dieses Paket für mich annehmen?" },
+      { "order": 7, "text": "Ich möchte Geld vom Konto abheben" },
+      { "order": 8, "text": "Wo kann ich hier Briefmarken kaufen?" },
+      { "order": 9, "text": "Die Reinigung hat meine Jacke sauber gemacht" },
+      {
+        "order": 10,
+        "text": "Der Techniker kommt morgen, um das Internet einzurichten"
+      },
+      { "order": 11, "text": "Ich möchte ein Konto eröffnen" },
+      { "order": 12, "text": "Die Waschmaschine funktioniert nicht mehr" },
+      { "order": 13, "text": "Bitte waschen und föhnen Sie meine Haare" },
+      { "order": 14, "text": "Was kostet die Änderung an der Hose?" },
+      { "order": 15, "text": "Der Service hier ist wirklich sehr gut" }
+    ]
+  },
+  {
+    "lessonId": 15,
+    "title": "Feste und Einladungen",
+    "phrases": [
+      { "order": 1, "text": "Ich habe bald Geburtstag und möchte feiern" },
+      { "order": 2, "text": "Ich lade dich herzlich zu meiner Party ein" },
+      { "order": 3, "text": "Vielen Dank für die Einladung, ich komme gern" },
+      { "order": 4, "text": "Alles Gute zum Geburtstag!" },
+      { "order": 5, "text": "Wir feiern Weihnachten immer mit der Familie" },
+      { "order": 6, "text": "Was wünschst du dir zum Geburtstag?" },
+      { "order": 7, "text": "Ich backe einen Kuchen für das Fest" },
+      { "order": 8, "text": "Silvester feiern wir mit Freunden in der Stadt" },
+      { "order": 9, "text": "Hast du schon ein Geschenk gekauft?" },
+      { "order": 10, "text": "Wir müssen noch Getränke besorgen" },
+      { "order": 11, "text": "Frohe Ostern und schöne Feiertage!" },
+      { "order": 12, "text": "Die Party fängt um zwanzig Uhr an" },
+      { "order": 13, "text": "Es gibt viel Musik und gutes Essen" },
+      { "order": 14, "text": "Darf ich meinen Partner mitbringen?" },
+      { "order": 15, "text": "Wir haben bis spät in die Nacht gefeiert" }
+    ]
+  },
+  {
+    "lessonId": 16,
+    "title": "Modalverben im Alltag",
+    "phrases": [
+      { "order": 1, "text": "Ich kann heute nicht kommen, ich muss arbeiten" },
+      { "order": 2, "text": "Darf ich hier parken?" },
+      { "order": 3, "text": "Du sollst mehr Wasser trinken, sagt der Arzt" },
+      { "order": 4, "text": "Wir wollen im Sommer nach Spanien fahren" },
+      { "order": 5, "text": "Können Sie mir bitte helfen?" },
+      { "order": 6, "text": "Hier darf man nicht rauchen" },
+      { "order": 7, "text": "Möchtest du heute Abend Kino gehen?" },
+      { "order": 8, "text": "Ich muss jetzt leider nach Hause gehen" },
+      { "order": 9, "text": "Kannst du gut Deutsch sprechen?" },
+      { "order": 10, "text": "Ihr sollt eure Hausaufgaben machen" },
+      { "order": 11, "text": "Er will Arzt werden" },
+      { "order": 12, "text": "Dürfen wir fernsehen?" },
+      { "order": 13, "text": "Ich mag keinen Kaffee" },
+      { "order": 14, "text": "Wir müssen pünktlich sein" },
+      { "order": 15, "text": "Kannst du schwimmen?" }
+    ]
+  },
+  {
+    "lessonId": 17,
+    "title": "Am Bahnhof",
+    "phrases": [
+      { "order": 1, "text": "Einmal nach München, bitte" },
+      { "order": 2, "text": "Muss ich umsteigen?" },
+      { "order": 3, "text": "Wann fährt der nächste Zug nach Berlin?" },
+      { "order": 4, "text": "Der Zug hat zehn Minuten Verspätung" },
+      { "order": 5, "text": "Von welchem Gleis fährt der Zug ab?" },
+      { "order": 6, "text": "Ich habe meinen Anschlusszug verpasst" },
+      { "order": 7, "text": "Ist dieser Platz noch frei?" },
+      { "order": 8, "text": "Ich hätte gerne eine Fahrkarte erster Klasse" },
+      { "order": 9, "text": "Der Zug kommt auf Gleis fünf an" },
+      { "order": 10, "text": "Gibt es einen Speisewagen im Zug?" },
+      { "order": 11, "text": "Wo kann ich den Fahrplan sehen?" },
+      { "order": 12, "text": "Die Fahrkartenkontrolle kommt gleich" },
+      { "order": 13, "text": "Haben Sie eine Bahncard?" },
+      { "order": 14, "text": "Bitte achten Sie auf Ihr Gepäck" },
+      { "order": 15, "text": "Gute Reise!" }
+    ]
+  },
+  {
+    "lessonId": 18,
+    "title": "Lebensmittel einkaufen",
+    "phrases": [
+      { "order": 1, "text": "Ich brauche ein Kilo Äpfel und fünf Bananen" },
+      { "order": 2, "text": "Wo finde ich die Milchprodukte?" },
+      { "order": 3, "text": "Haben Sie frisches Brot?" },
+      { "order": 4, "text": "Ich nehme 200 Gramm Käse" },
+      { "order": 5, "text": "Die Tomaten sehen sehr gut aus" },
+      { "order": 6, "text": "Ich brauche noch Butter und Eier" },
+      { "order": 7, "text": "Wie viel kostet ein Liter Milch?" },
+      { "order": 8, "text": "Ich gehe zum Markt, um Gemüse zu kaufen" },
+      { "order": 9, "text": "Die Kartoffeln sind im Angebot" },
+      { "order": 10, "text": "Ich habe meine Einkaufstasche vergessen" },
+      { "order": 11, "text": "Möchten Sie den Kassenbon?" },
+      { "order": 12, "text": "Ich bezahle bar" },
+      { "order": 13, "text": "Das macht insgesamt zwanzig Euro" },
+      { "order": 14, "text": "Wir brauchen noch Getränke für die Party" },
+      { "order": 15, "text": "Haben wir noch genug Kaffee zu Hause?" }
+    ]
+  },
+  {
+    "lessonId": 19,
+    "title": "Bank und Post",
+    "phrases": [
+      { "order": 1, "text": "Ich möchte ein Paket nach Österreich schicken" },
+      { "order": 2, "text": "Wie viel kostet das Porto für diesen Brief?" },
+      { "order": 3, "text": "Füllen Sie bitte dieses Formular aus" },
+      { "order": 4, "text": "Ich möchte Geld auf mein Konto einzahlen" },
+      { "order": 5, "text": "Wo ist der nächste Geldautomat?" },
+      { "order": 6, "text": "Ich habe meine PIN vergessen" },
+      { "order": 7, "text": "Ich erwarte ein wichtiges Paket" },
+      { "order": 8, "text": "Bitte unterschreiben Sie hier unten" },
+      { "order": 9, "text": "Kann ich hier Geld wechseln?" },
+      { "order": 10, "text": "Wie lange dauert der Versand?" },
+      { "order": 11, "text": "Ich möchte ein Einschreiben schicken" },
+      { "order": 12, "text": "Haben Sie Ihren Ausweis dabei?" },
+      { "order": 13, "text": "Die Bank schließt um 16 Uhr" },
+      { "order": 14, "text": "Ich möchte einen Dauerauftrag einrichten" },
+      { "order": 15, "text": "Der Briefkasten wird um 17 Uhr geleert" }
+    ]
+  },
+  {
+    "lessonId": 20,
+    "title": "Beschwerden und Reklamationen",
+    "phrases": [
+      { "order": 1, "text": "Entschuldigung, ich habe ein Problem" },
+      { "order": 2, "text": "Das Gerät funktioniert nicht" },
+      { "order": 3, "text": "Ich möchte das bitte umtauschen" },
+      { "order": 4, "text": "Haben Sie den Kassenbon noch?" },
+      { "order": 5, "text": "Die Rechnung ist leider falsch" },
+      { "order": 6, "text": "Ich habe das nicht bestellt" },
+      { "order": 7, "text": "Können Sie das reparieren?" },
+      { "order": 8, "text": "Ich bin mit dem Service nicht zufrieden" },
+      { "order": 9, "text": "Das Essen war kalt" },
+      { "order": 10, "text": "Ich möchte mein Geld zurück" },
+      { "order": 11, "text": "Es ist zu laut hier" },
+      { "order": 12, "text": "Die Heizung geht nicht" },
+      { "order": 13, "text": "Das Wasser ist kalt" },
+      { "order": 14, "text": "Können Sie mir helfen?" },
+      { "order": 15, "text": "Das ist kaputt" }
+    ]
+  },
+
+  {
+    "lessonId": 21,
+    "title": "Hobbys und Freizeit",
+    "phrases": [
+      { "order": 1, "text": "Was machst du gerne in deiner Freizeit?" },
+      {
+        "order": 2,
+        "text": "Ich spiele zweimal pro Woche Tennis im Verein"
+      },
+      {
+        "order": 3,
+        "text": "Mein Bruder interessiert sich sehr für Fußball"
+      },
+      { "order": 4, "text": "Am Wochenende gehe ich oft im Wald wandern" },
+      { "order": 5, "text": "Liest du lieber Romane oder Krimis?" },
+      { "order": 6, "text": "Ich sammle alte Briefmarken aus aller Welt" },
+      { "order": 7, "text": "Wir treffen uns freitags zum Kartenspielen" },
+      {
+        "order": 8,
+        "text": "Fotografieren ist ein teures aber schönes Hobby"
+      },
+      { "order": 9, "text": "Kannst du gut Gitarre spielen?" },
+      { "order": 10, "text": "Ich möchte gern malen lernen" },
+      { "order": 11, "text": "In meiner Freizeit höre ich viel Musik" },
+      { "order": 12, "text": "Gehst du gern ins Theater oder in die Oper?" },
+      { "order": 13, "text": "Wir kochen am Samstagabend oft zusammen" },
+      { "order": 14, "text": "Fährst du im Sommer gern Fahrrad?" },
+      { "order": 15, "text": "Mein Hobby macht mir sehr viel Spaß" }
+    ]
+  },
+  {
+    "lessonId": 22,
+    "title": "Sport und Fitness",
+    "phrases": [
+      { "order": 1, "text": "Treibst du regelmäßig Sport?" },
+      {
+        "order": 2,
+        "text": "Ich gehe jeden Morgen eine halbe Stunde joggen"
+      },
+      { "order": 3, "text": "Schwimmen ist sehr gesund für den Rücken" },
+      {
+        "order": 4,
+        "text": "Meine Freundin geht dreimal die Woche ins Fitnessstudio"
+      },
+      {
+        "order": 5,
+        "text": "Am Sonntag schauen wir das Fußballspiel im Stadion"
+      },
+      {
+        "order": 6,
+        "text": "Ich habe gestern beim Training ein Tor geschossen"
+      },
+      { "order": 7, "text": "Kannst du gut Ski fahren?" },
+      { "order": 8, "text": "Wir brauchen einen Ball und Sportkleidung" },
+      { "order": 9, "text": "Der Trainer ist sehr streng aber gut" },
+      { "order": 10, "text": "Nach dem Sport habe ich immer großen Hunger" },
+      { "order": 11, "text": "Yoga hilft mir beim Entspannen" },
+      {
+        "order": 12,
+        "text": "Die Mannschaft hat das Spiel leider verloren"
+      },
+      {
+        "order": 13,
+        "text": "Gewinnen ist nicht alles, Spaß ist wichtiger"
+      },
+      {
+        "order": 14,
+        "text": "Wir fahren am Wochenende mit dem Rad zum See"
+      },
+      { "order": 15, "text": "Hast du schon einmal Basketball gespielt?" }
+    ]
+  },
+  {
+    "lessonId": 23,
+    "title": "Im Hotel übernachten",
+    "phrases": [
+      {
+        "order": 1,
+        "text": "Haben Sie noch ein Doppelzimmer für zwei Nächte frei?"
+      },
+      {
+        "order": 2,
+        "text": "Ich möchte gern ein Zimmer mit Meerblick reservieren"
+      },
+      { "order": 3, "text": "Ist das Frühstück im Preis inbegriffen?" },
+      { "order": 4, "text": "Das Zimmer liegt im dritten Stock" },
+      { "order": 5, "text": "Gibt es im Zimmer WLAN und einen Fernseher?" },
+      { "order": 6, "text": "Wann müssen wir am Abreisetag auschecken?" },
+      { "order": 7, "text": "Können Sie mich bitte um sieben Uhr wecken?" },
+      { "order": 8, "text": "Der Aufzug ist leider außer Betrieb" },
+      {
+        "order": 9,
+        "text": "Ich habe meinen Zimmerschlüssel an der Rezeption abgegeben"
+      },
+      { "order": 10, "text": "Das Hotel hat ein sehr gutes Restaurant" },
+      { "order": 11, "text": "Bitte reinigen Sie mein Zimmer heute nicht" },
+      { "order": 12, "text": "Wir brauchen noch ein extra Handtuch" },
+      { "order": 13, "text": "Gibt es hier Parkplätze für Hotelgäste?" },
+      { "order": 14, "text": "Die Klimaanlage funktioniert nicht richtig" },
+      { "order": 15, "text": "Vielen Dank für den angenehmen Aufenthalt" }
+    ]
+  },
+  {
+    "lessonId": 24,
+    "title": "Stadtbesichtigung",
+    "phrases": [
+      {
+        "order": 1,
+        "text": "Welche Sehenswürdigkeiten gibt es in dieser Stadt?"
+      },
+      {
+        "order": 2,
+        "text": "Wir möchten gern das alte Schloss besichtigen"
+      },
+      { "order": 3, "text": "Der Eintritt für das Museum kostet zehn Euro" },
+      { "order": 4, "text": "Können wir eine Stadtführung buchen?" },
+      { "order": 5, "text": "Das Rathaus ist ein sehr schönes Gebäude" },
+      { "order": 6, "text": "Man hat vom Turm eine tolle Aussicht" },
+      { "order": 7, "text": "Wir machen viele Fotos von der Kathedrale" },
+      { "order": 8, "text": "Gibt es hier in der Nähe ein Touristenbüro?" },
+      {
+        "order": 9,
+        "text": "Die Altstadt ist sehr gemütlich und historisch"
+      },
+      { "order": 10, "text": "Wir spazieren über die berühmte Brücke" },
+      { "order": 11, "text": "Wann öffnet die Galerie morgens?" },
+      { "order": 12, "text": "Wir haben den ganzen Tag die Stadt erkundet" },
+      { "order": 13, "text": "Dieser Platz ist der Mittelpunkt der Stadt" },
+      {
+        "order": 14,
+        "text": "Es gibt hier viele kleine Cafés und Geschäfte"
+      },
+      {
+        "order": 15,
+        "text": "Der Reiseführer erklärt die Geschichte sehr gut"
+      }
+    ]
+  },
+  {
+    "lessonId": 25,
+    "title": "Familie und Verwandte",
+    "phrases": [
+      { "order": 1, "text": "Ich habe eine sehr große Familie" },
+      { "order": 2, "text": "Meine Schwester ist drei Jahre älter als ich" },
+      { "order": 3, "text": "Mein Onkel und meine Tante wohnen in München" },
+      { "order": 4, "text": "Wir besuchen unsere Großeltern jeden Sonntag" },
+      {
+        "order": 5,
+        "text": "Hast du Geschwister oder bist du ein Einzelkind?"
+      },
+      { "order": 6, "text": "Mein Cousin hat letzten Monat geheiratet" },
+      {
+        "order": 7,
+        "text": "Wir feiern Weihnachten mit der ganzen Verwandtschaft"
+      },
+      { "order": 8, "text": "Meine Nichte geht schon in den Kindergarten" },
+      { "order": 9, "text": "Mein Schwager arbeitet bei der Bank" },
+      {
+        "order": 10,
+        "text": "Wie verstehen Sie sich mit Ihrer Schwiegermutter?"
+      },
+      { "order": 11, "text": "Das ist ein Foto von meinen Eltern" },
+      { "order": 12, "text": "Mein Bruder studiert in einer anderen Stadt" },
+      { "order": 13, "text": "Wir haben ein gutes Verhältnis zueinander" },
+      { "order": 14, "text": "Meine Oma backt den besten Kuchen" },
+      { "order": 15, "text": "Die Familie ist für mich das Wichtigste" }
+    ]
+  },
+  {
+    "lessonId": 26,
+    "title": "Schule und Bildung",
+    "phrases": [
+      { "order": 1, "text": "Mein Sohn geht in die Grundschule" },
+      { "order": 2, "text": "Welche Fächer magst du am liebsten?" },
+      { "order": 3, "text": "Ich finde Mathematik ziemlich schwierig" },
+      { "order": 4, "text": "Wir haben morgen eine Prüfung in Geschichte" },
+      { "order": 5, "text": "Der Lehrer erklärt die Grammatik sehr gut" },
+      { "order": 6, "text": "Hast du deine Hausaufgaben schon gemacht?" },
+      { "order": 7, "text": "In der Pause spielen wir auf dem Schulhof" },
+      { "order": 8, "text": "Ich lerne jeden Tag Vokabeln für Englisch" },
+      { "order": 9, "text": "Die Sommerferien dauern sechs Wochen" },
+      {
+        "order": 10,
+        "text": "Er möchte später an der Universität studieren"
+      },
+      { "order": 11, "text": "Mein Zeugnis war dieses Jahr sehr gut" },
+      { "order": 12, "text": "Ich muss mich auf den Test vorbereiten" },
+      { "order": 13, "text": "Die Schule beginnt um acht Uhr morgens" },
+      { "order": 14, "text": "Wir machen einen Ausflug mit der Klasse" },
+      { "order": 15, "text": "Sprachen lernen macht mir viel Spaß" }
+    ]
+  },
+  {
+    "lessonId": 27,
+    "title": "Computer und Internet",
+    "phrases": [
+      { "order": 1, "text": "Ich muss meinen Computer neu starten" },
+      { "order": 2, "text": "Hast du WLAN in deiner Wohnung?" },
+      { "order": 3, "text": "Ich schreibe viele E-Mails im Büro" },
+      { "order": 4, "text": "Kannst du mir die Datei bitte schicken?" },
+      { "order": 5, "text": "Mein Drucker hat kein Papier mehr" },
+      { "order": 6, "text": "Ich lade die Fotos auf meinen Laptop" },
+      { "order": 7, "text": "Das Passwort muss sicher sein" },
+      { "order": 8, "text": "Ich suche Informationen im Internet" },
+      { "order": 9, "text": "Die Webseite lädt heute sehr langsam" },
+      { "order": 10, "text": "Benutzt du soziale Medien oft?" },
+      { "order": 11, "text": "Ich habe eine interessante App gefunden" },
+      { "order": 12, "text": "Wir skypen am Wochenende mit Freunden" },
+      { "order": 13, "text": "Du musst das Programm installieren" },
+      {
+        "order": 14,
+        "text": "Mein Akku ist fast leer, ich brauche das Ladekabel"
+      },
+      { "order": 15, "text": "Speichere bitte das Dokument ab" }
+    ]
+  },
+  {
+    "lessonId": 28,
+    "title": "Tiere und Haustiere",
+    "phrases": [
+      { "order": 1, "text": "Hast du ein Haustier zu Hause?" },
+      { "order": 2, "text": "Ich habe einen Hund und zwei Katzen" },
+      { "order": 3, "text": "Mein Hund muss dreimal am Tag raus" },
+      { "order": 4, "text": "Die Katze schläft gern auf dem Sofa" },
+      { "order": 5, "text": "Wir gehen am Sonntag in den Zoo" },
+      { "order": 6, "text": "Dort können wir Elefanten und Löwen sehen" },
+      { "order": 7, "text": "Ich habe Angst vor großen Spinnen" },
+      { "order": 8, "text": "Der Vogel singt morgens sehr laut" },
+      { "order": 9, "text": "Wir füttern die Fische im Aquarium" },
+      {
+        "order": 10,
+        "text": "Pferde sind sehr schöne und intelligente Tiere"
+      },
+      { "order": 11, "text": "Mein Kaninchen isst gern Karotten" },
+      { "order": 12, "text": "Darf man hier Hunde mitnehmen?" },
+      { "order": 13, "text": "Der Tierarzt hat meine Katze geimpft" },
+      { "order": 14, "text": "Auf dem Bauernhof gibt es Kühe und Schweine" },
+      { "order": 15, "text": "Tiere brauchen viel Pflege und Zeit" }
+    ]
+  },
+  {
+    "lessonId": 29,
+    "title": "Farben und Beschreibung",
+    "phrases": [
+      { "order": 1, "text": "Welche Farbe hat dein neues Auto?" },
+      { "order": 2, "text": "Es ist dunkelblau und sehr modern" },
+      { "order": 3, "text": "Ich mag helle Farben in meiner Wohnung" },
+      { "order": 4, "text": "Die Bluse passt gut zu deinem roten Rock" },
+      { "order": 5, "text": "Der Himmel ist heute strahlend blau" },
+      { "order": 6, "text": "Hast du das grüne Buch gesehen?" },
+      {
+        "order": 7,
+        "text": "Schwarz und Weiß sind eigentlich keine Farben"
+      },
+      { "order": 8, "text": "Die Blumen im Garten sind bunt" },
+      { "order": 9, "text": "Ich male die Wand in einem hellen Gelb" },
+      { "order": 10, "text": "Deine Augen sind braun wie Schokolade" },
+      { "order": 11, "text": "Der Tisch ist rund und aus Holz" },
+      { "order": 12, "text": "Das Paket ist quadratisch und schwer" },
+      { "order": 13, "text": "Die Sonne ist orange beim Untergang" },
+      { "order": 14, "text": "Ich trage gern graue Pullover im Winter" },
+      { "order": 15, "text": "Diese Farbkombination gefällt mir nicht" }
+    ]
+  },
+  {
+    "lessonId": 30,
+    "title": "Gefühle und Stimmung",
+    "phrases": [
+      { "order": 1, "text": "Ich bin heute sehr glücklich" },
+      { "order": 2, "text": "Warum bist du so traurig?" },
+      { "order": 3, "text": "Er ist wütend über die Verspätung" },
+      { "order": 4, "text": "Ich habe Angst vor Gewittern" },
+      { "order": 5, "text": "Wir freuen uns auf den Urlaub" },
+      { "order": 6, "text": "Bist du nervös vor der Prüfung?" },
+      { "order": 7, "text": "Ich bin müde und möchte schlafen" },
+      { "order": 8, "text": "Das ist eine tolle Überraschung" },
+      { "order": 9, "text": "Ich fühle mich heute sehr entspannt" },
+      { "order": 10, "text": "Es tut mir leid, dass du krank bist" },
+      { "order": 11, "text": "Sie lacht viel und ist immer fröhlich" },
+      { "order": 12, "text": "Ich mache mir Sorgen um dich" },
+      { "order": 13, "text": "Das Geschenk hat mir viel Freude gemacht" },
+      { "order": 14, "text": "Er ist stolz auf seine Arbeit" },
+      { "order": 15, "text": "Manchmal habe ich schlechte Laune" }
+    ]
+  },
+  {
+    "lessonId": 31,
+    "title": "Musik und Konzerte",
+    "phrases": [
+      { "order": 1, "text": "Welche Musik hörst du am liebsten?" },
+      { "order": 2, "text": "Ich mag Rockmusik und Popmusik" },
+      { "order": 3, "text": "Spielst du ein Instrument?" },
+      { "order": 4, "text": "Wir gehen am Samstagabend auf ein Konzert" },
+      { "order": 5, "text": "Die Band spielt live im Stadtpark" },
+      { "order": 6, "text": "Das Ticket war ziemlich teuer" },
+      { "order": 7, "text": "Ich höre Musik immer mit Kopfhörern" },
+      { "order": 8, "text": "Er spielt sehr gut Klavier" },
+      { "order": 9, "text": "Das Radio läuft den ganzen Tag" },
+      { "order": 10, "text": "Klassische Musik finde ich sehr beruhigend" },
+      { "order": 11, "text": "Wir haben gestern Abend viel getanzt" },
+      { "order": 12, "text": "Der Sänger hat eine tolle Stimme" },
+      { "order": 13, "text": "Kennst du dieses Lied?" },
+      { "order": 14, "text": "Musik macht das Leben schöner" },
+      { "order": 15, "text": "Ich möchte Gitarre lernen" }
+    ]
+  },
+  {
+    "lessonId": 32,
+    "title": "Wochenmarkt und frische Lebensmittel",
+    "phrases": [
+      { "order": 1, "text": "Ich gehe samstags immer auf den Wochenmarkt" },
+      { "order": 2, "text": "Das Obst und Gemüse hier ist sehr frisch" },
+      { "order": 3, "text": "Was kosten die Erdbeeren heute?" },
+      { "order": 4, "text": "Geben Sie mir bitte ein Kilo Kartoffeln" },
+      { "order": 5, "text": "Haben Sie auch frischen Fisch?" },
+      { "order": 6, "text": "Ich möchte gern ein Stück Käse probieren" },
+      { "order": 7, "text": "Die Blumen riechen wunderbar" },
+      { "order": 8, "text": "Ich kaufe Brot beim Bäckerstand" },
+      { "order": 9, "text": "Haben Sie Eier von glücklichen Hühnern?" },
+      { "order": 10, "text": "Der Markt schließt um dreizehn Uhr" },
+      { "order": 11, "text": "Ich habe meine Einkaufstasche dabei" },
+      { "order": 12, "text": "Alles sieht sehr lecker aus" },
+      { "order": 13, "text": "Wir kaufen Honig direkt vom Imker" },
+      { "order": 14, "text": "Darf es sonst noch etwas sein?" },
+      { "order": 15, "text": "Nein danke, das ist alles für heute" }
+    ]
+  },
+  {
+    "lessonId": 33,
+    "title": "Gesund leben",
+    "phrases": [
+      { "order": 1, "text": "Ich versuche, mich gesund zu ernähren" },
+      { "order": 2, "text": "Man sollte jeden Tag Obst und Gemüse essen" },
+      { "order": 3, "text": "Ich trinke zu wenig Wasser" },
+      { "order": 4, "text": "Rauchen ist schlecht für die Gesundheit" },
+      { "order": 5, "text": "Ich gehe früh schlafen, um fit zu sein" },
+      { "order": 6, "text": "Zucker ist nicht gut für die Zähne" },
+      { "order": 7, "text": "Bewegung ist wichtig für den Körper" },
+      { "order": 8, "text": "Ich esse nicht viel Fleisch" },
+      { "order": 9, "text": "Frische Luft tut mir gut" },
+      { "order": 10, "text": "Man muss auch mal eine Pause machen" },
+      {
+        "order": 11,
+        "text": "Ich koche lieber selbst als Fastfood zu essen"
+      },
+      { "order": 12, "text": "Stress macht auf Dauer krank" },
+      { "order": 13, "text": "Trinkst du Alkohol?" },
+      { "order": 14, "text": "Ich gehe regelmäßig zur Vorsorge beim Arzt" },
+      { "order": 15, "text": "Gesundheit ist das Wichtigste im Leben" }
+    ]
+  },
+  {
+    "lessonId": 34,
+    "title": "Berufe und Tätigkeiten",
+    "phrases": [
+      { "order": 1, "text": "Der Arzt untersucht die Patienten" },
+      {
+        "order": 2,
+        "text": "Die Lehrerin unterrichtet die Kinder in der Schule"
+      },
+      { "order": 3, "text": "Der Mechaniker repariert das Auto" },
+      { "order": 4, "text": "Die Verkäuferin arbeitet im Supermarkt" },
+      { "order": 5, "text": "Ein Koch bereitet das Essen im Restaurant zu" },
+      { "order": 6, "text": "Der Busfahrer fährt den Bus durch die Stadt" },
+      { "order": 7, "text": "Ein Architekt plant neue Häuser" },
+      { "order": 8, "text": "Die Friseurin schneidet die Haare" },
+      {
+        "order": 9,
+        "text": "Ein Journalist schreibt Artikel für die Zeitung"
+      },
+      {
+        "order": 10,
+        "text": "Der Polizist hilft den Menschen auf der Straße"
+      },
+      {
+        "order": 11,
+        "text": "Meine Arbeit ist anstrengend aber interessant"
+      },
+      { "order": 12, "text": "Ich arbeite oft am Wochenende" },
+      { "order": 13, "text": "Er ist seit zwei Monaten arbeitslos" },
+      {
+        "order": 14,
+        "text": "Sie hat eine Ausbildung als Krankenschwester gemacht"
+      },
+      { "order": 15, "text": "Ich möchte mich beruflich verändern" }
+    ]
+  },
+  {
+    "lessonId": 35,
+    "title": "Gegenstände im Haushalt",
+    "phrases": [
+      { "order": 1, "text": "Wo hast du den Staubsauger hingestellt?" },
+      { "order": 2, "text": "Ich muss noch die Wäsche waschen" },
+      {
+        "order": 3,
+        "text": "Der Geschirrspüler ist voll, bitte räum ihn aus"
+      },
+      {
+        "order": 4,
+        "text": "Wir brauchen neue Batterien für die Fernbedienung"
+      },
+      { "order": 5, "text": "Das Bügeleisen ist noch heiß" },
+      { "order": 6, "text": "Hast du einen Mülleimer in der Küche?" },
+      { "order": 7, "text": "Ich kann den Schlüssel nicht finden" },
+      { "order": 8, "text": "Der Wasserkocher steht auf der Arbeitsplatte" },
+      { "order": 9, "text": "Bitte mach das Licht im Flur aus" },
+      { "order": 10, "text": "Wir haben eine neue Kaffeemaschine gekauft" },
+      { "order": 11, "text": "Der Spiegel im Bad muss geputzt werden" },
+      { "order": 12, "text": "Hast du ein scharfes Messer?" },
+      { "order": 13, "text": "Der Wecker klingelt jeden Morgen" },
+      { "order": 14, "text": "Ich hänge das Handtuch an den Haken" },
+      { "order": 15, "text": "Die Haushaltsgeräte erleichtern die Arbeit" }
+    ]
+  },
+  {
+    "lessonId": 36,
+    "title": "Im Verkehr",
+    "phrases": [
+      { "order": 1, "text": "Es gibt heute viel Verkehr auf den Straßen" },
+      { "order": 2, "text": "Wir stehen schon seit einer Stunde im Stau" },
+      { "order": 3, "text": "Bitte schnallen Sie sich im Auto an" },
+      { "order": 4, "text": "Die Ampel ist rot, wir müssen warten" },
+      { "order": 5, "text": "Hier ist eine Baustelle, fahr bitte langsam" },
+      { "order": 6, "text": "Wo kann ich hier parken?" },
+      { "order": 7, "text": "Die Autobahn ist heute gesperrt" },
+      { "order": 8, "text": "Fährst du mit dem Fahrrad zur Arbeit?" },
+      { "order": 9, "text": "Man muss an der Kreuzung aufpassen" },
+      { "order": 10, "text": "Der Fußgängerüberweg ist für die Fußgänger" },
+      {
+        "order": 11,
+        "text": "Ich habe meinen Führerschein schon fünf Jahre"
+      },
+      { "order": 12, "text": "Das Benzin ist im Moment sehr teuer" },
+      { "order": 13, "text": "Wir nehmen lieber die U-Bahn" },
+      { "order": 14, "text": "Achten Sie auf die Schilder" },
+      { "order": 15, "text": "Gute Fahrt und komm sicher an" }
+    ]
+  },
+  {
+    "lessonId": 37,
+    "title": "Orte in der Stadt",
+    "phrases": [
+      { "order": 1, "text": "Ich treffe dich vor dem Kino" },
+      { "order": 2, "text": "Die Bibliothek ist neben der Schule" },
+      { "order": 3, "text": "Wir gehen am Samstag ins Schwimmbad" },
+      { "order": 4, "text": "Wo ist hier das nächste Krankenhaus?" },
+      { "order": 5, "text": "Die Polizei ist in der Bahnhofstraße" },
+      { "order": 6, "text": "Wir kaufen Brötchen in der Bäckerei" },
+      { "order": 7, "text": "Ich warte an der Bushaltestelle auf dich" },
+      { "order": 8, "text": "Im Park kann man gut spazieren gehen" },
+      { "order": 9, "text": "Das Theater bietet heute ein tolles Stück" },
+      { "order": 10, "text": "Wir essen heute Abend im Restaurant" },
+      { "order": 11, "text": "Die Apotheke hat auch nachts geöffnet" },
+      { "order": 12, "text": "Ich bringe den Brief zur Post" },
+      { "order": 13, "text": "Im Kaufhaus gibt es viele Geschäfte" },
+      { "order": 14, "text": "Der Spielplatz ist voller Kinder" },
+      { "order": 15, "text": "Die Stadt ist sehr lebendig" }
+    ]
+  },
+  {
+    "lessonId": 38,
+    "title": "Freundschaft",
+    "phrases": [
+      { "order": 1, "text": "Er ist mein bester Freund seit der Schulzeit" },
+      { "order": 2, "text": "Wir können über alles reden" },
+      {
+        "order": 3,
+        "text": "Vertrauen ist in einer Freundschaft sehr wichtig"
+      },
+      { "order": 4, "text": "Wir unternehmen viel zusammen" },
+      {
+        "order": 5,
+        "text": "Meine Freundin hilft mir immer, wenn ich Probleme habe"
+      },
+      { "order": 6, "text": "Wir haben den gleichen Humor" },
+      { "order": 7, "text": "Hast du viele Freunde oder nur wenige?" },
+      {
+        "order": 8,
+        "text": "Manchmal streiten wir uns, aber das ist normal"
+      },
+      { "order": 9, "text": "Wir kennen uns schon sehr lange" },
+      { "order": 10, "text": "Freunde sind wie eine zweite Familie" },
+      { "order": 11, "text": "Ich besuche meinen Freund im Krankenhaus" },
+      { "order": 12, "text": "Wir haben uns aus den Augen verloren" },
+      { "order": 13, "text": "Ein guter Freund ist immer für dich da" },
+      { "order": 14, "text": "Wir gehen zusammen durch dick und dünn" },
+      { "order": 15, "text": "Danke, dass du mein Freund bist" }
+    ]
+  },
+  {
+    "lessonId": 39,
+    "title": "Kultur und Tradition",
+    "phrases": [
+      {
+        "order": 1,
+        "text": "In Deutschland gibt es viele alte Traditionen"
+      },
+      { "order": 2, "text": "Das Oktoberfest in München ist weltbekannt" },
+      { "order": 3, "text": "Jedes Land hat seine eigene Kultur" },
+      {
+        "order": 4,
+        "text": "Wir essen an Weihnachten immer Kartoffelsalat"
+      },
+      { "order": 5, "text": "Karneval wird im Rheinland groß gefeiert" },
+      { "order": 6, "text": "Ich interessiere mich für fremde Kulturen" },
+      { "order": 7, "text": "Am Nationalfeiertag haben alle frei" },
+      { "order": 8, "text": "Tragen Sie bei Festen traditionelle Kleidung?" },
+      { "order": 9, "text": "Musik und Tanz gehören zur Kultur" },
+      { "order": 10, "text": "Wir besuchen ein Museum für moderne Kunst" },
+      {
+        "order": 11,
+        "text": "Es ist wichtig, andere Traditionen zu respektieren"
+      },
+      { "order": 12, "text": "In meiner Heimat feiert man anders" },
+      { "order": 13, "text": "Das Essen ist ein Teil der Kultur" },
+      {
+        "order": 14,
+        "text": "Wir lernen viel über die Geschichte des Landes"
+      },
+      { "order": 15, "text": "Kulturelle Vielfalt ist eine Bereicherung" }
+    ]
+  },
+  {
+    "lessonId": 40,
+    "title": "Zukunftspläne",
+    "phrases": [
+      { "order": 1, "text": "Was möchtest du in der Zukunft machen?" },
+      { "order": 2, "text": "Ich plane, eine Weltreise zu machen" },
+      { "order": 3, "text": "Wir wollen nächstes Jahr ein Haus bauen" },
+      { "order": 4, "text": "Ich werde bald eine neue Sprache lernen" },
+      {
+        "order": 5,
+        "text": "Hoffentlich finde ich bald einen besseren Job"
+      },
+      { "order": 6, "text": "In fünf Jahren möchte ich Kinder haben" },
+      { "order": 7, "text": "Wir sparen Geld für ein neues Auto" },
+      { "order": 8, "text": "Ich träume von einem Leben am Meer" },
+      { "order": 9, "text": "Nach der Schule werde ich studieren" },
+      { "order": 10, "text": "Man weiß nie, was die Zukunft bringt" },
+      { "order": 11, "text": "Ich freue mich auf das, was kommt" },
+      { "order": 12, "text": "Hast du schon Pläne für das nächste Jahr?" },
+      { "order": 13, "text": "Ich möchte gesund und glücklich bleiben" },
+      { "order": 14, "text": "Vielleicht ziehe ich in eine andere Stadt" },
+      { "order": 15, "text": "Träume können wahr werden" }
+    ]
+  },
+  {
+    "lessonId": 41,
+    "title": "Hausarbeit und Pflichten",
+    "phrases": [
+      { "order": 1, "text": "Ich muss heute unbedingt die Wohnung putzen" },
+      { "order": 2, "text": "Kannst du bitte den Müll rausbringen?" },
+      { "order": 3, "text": "Der Boden ist schmutzig, ich muss saugen" },
+      { "order": 4, "text": "Wer räumt heute die Spülmaschine aus?" },
+      { "order": 5, "text": "Ich habe gestern alle Fenster geputzt" },
+      { "order": 6, "text": "Die Wäsche hängt schon auf der Leine" },
+      { "order": 7, "text": "Wir müssen das Bad sauber machen" },
+      { "order": 8, "text": "Kannst du mir beim Abwaschen helfen?" },
+      { "order": 9, "text": "Das Bett ist noch nicht gemacht" },
+      { "order": 10, "text": "Ich hasse es, Hemden zu bügeln" },
+      { "order": 11, "text": "Wir teilen uns die Hausarbeit gerecht auf" },
+      { "order": 12, "text": "Der Staub liegt auf dem Regal" },
+      { "order": 13, "text": "Bitte wisch den Tisch nach dem Essen ab" },
+      {
+        "order": 14,
+        "text": "Am Samstag machen wir immer den großen Einkauf"
+      },
+      { "order": 15, "text": "Ordnung ist das halbe Leben" }
+    ]
+  },
+  {
+    "lessonId": 42,
+    "title": "Öffentliche Verkehrsmittel",
+    "phrases": [
+      {
+        "order": 1,
+        "text": "Die Fahrkarte müssen Sie vor der Fahrt entwerten"
+      },
+      { "order": 2, "text": "Fährt dieser Bus zum Hauptbahnhof?" },
+      { "order": 3, "text": "Wir müssen an der nächsten Station umsteigen" },
+      { "order": 4, "text": "Die U-Bahn kommt alle fünf Minuten" },
+      { "order": 5, "text": "Darf ich hier meinen Koffer abstellen?" },
+      {
+        "order": 6,
+        "text": "Eine Tageskarte ist günstiger als zwei Einzeltickets"
+      },
+      { "order": 7, "text": "Der Bus ist heute sehr voll" },
+      { "order": 8, "text": "Entschuldigung, ist dieser Platz noch frei?" },
+      { "order": 9, "text": "Bitte halten Sie sich gut fest" },
+      { "order": 10, "text": "Die Straßenbahn hat leider Verspätung" },
+      { "order": 11, "text": "Schauen Sie auf den Liniennetzplan" },
+      { "order": 12, "text": "Kinder unter sechs Jahren fahren kostenlos" },
+      { "order": 13, "text": "Wir haben den letzten Bus verpasst" },
+      { "order": 14, "text": "Der Fahrkartenautomat nimmt keine Scheine" },
+      { "order": 15, "text": "Man kommt hier sehr gut ohne Auto zurecht" }
+    ]
+  },
+  {
+    "lessonId": 43,
+    "title": "Personen beschreiben",
+    "phrases": [
+      { "order": 1, "text": "Wie sieht dein neuer Freund aus?" },
+      { "order": 2, "text": "Er ist groß, schlank und sportlich" },
+      { "order": 3, "text": "Sie hat lange, blonde Haare und blaue Augen" },
+      { "order": 4, "text": "Mein Bruder trägt einen Bart und eine Brille" },
+      { "order": 5, "text": "Sie ist ein sehr freundlicher Mensch" },
+      { "order": 6, "text": "Er wirkt ein bisschen schüchtern" },
+      { "order": 7, "text": "Meine Kollegin ist immer gut gelaunt" },
+      { "order": 8, "text": "Er hat kurze, dunkle Haare" },
+      { "order": 9, "text": "Sie ist etwa dreißig Jahre alt" },
+      { "order": 10, "text": "Er ist sehr lustig und erzählt viele Witze" },
+      { "order": 11, "text": "Sie trägt gern elegante Kleidung" },
+      { "order": 12, "text": "Ich finde ihn sehr sympathisch" },
+      { "order": 13, "text": "Sie hat ein schönes Lächeln" },
+      { "order": 14, "text": "Er ist eher ruhig und ernst" },
+      { "order": 15, "text": "Charakter ist wichtiger als Aussehen" }
+    ]
+  },
+  {
+    "lessonId": 44,
+    "title": "Büroalltag und Aufgaben",
+    "phrases": [
+      { "order": 1, "text": "Kannst du mir bitte den Tacker geben?" },
+      { "order": 2, "text": "Ich muss diese Unterlagen noch kopieren" },
+      { "order": 3, "text": "Der Drucker hat kein Papier mehr" },
+      { "order": 4, "text": "Wir haben um zehn Uhr eine Videokonferenz" },
+      { "order": 5, "text": "Bitte unterschreiben Sie den Vertrag hier" },
+      {
+        "order": 6,
+        "text": "Ich habe den Termin in meinen Kalender eingetragen"
+      },
+      { "order": 7, "text": "Mein Computerbildschirm ist schwarz" },
+      { "order": 8, "text": "Kannst du den Anruf bitte entgegennehmen?" },
+      { "order": 9, "text": "Ich leite die E-Mail an dich weiter" },
+      { "order": 10, "text": "Wir machen eine kurze Kaffeepause" },
+      { "order": 11, "text": "Der Chef ist heute nicht im Haus" },
+      { "order": 12, "text": "Hast du die Präsentation schon vorbereitet?" },
+      { "order": 13, "text": "Mein Schreibtisch ist sehr unordentlich" },
+      { "order": 14, "text": "Ich brauche einen neuen Kugelschreiber" },
+      { "order": 15, "text": "Schönen Feierabend, bis morgen!" }
+    ]
+  },
+  {
+    "lessonId": 45,
+    "title": "Höflichkeit und Bitten",
+    "phrases": [
+      { "order": 1, "text": "Könnten Sie mir bitte helfen?" },
+      { "order": 2, "text": "Darf ich bitte das Fenster öffnen?" },
+      { "order": 3, "text": "Würden Sie mir bitte das Salz reichen?" },
+      { "order": 4, "text": "Entschuldigung, ich habe eine Frage" },
+      { "order": 5, "text": "Können wir bitte die Rechnung haben?" },
+      { "order": 6, "text": "Seien Sie so gut und warten Sie einen Moment" },
+      { "order": 7, "text": "Dürfte ich kurz Ihr Telefon benutzen?" },
+      { "order": 8, "text": "Es wäre sehr nett, wenn Sie mich anrufen" },
+      { "order": 9, "text": "Vielen Dank für Ihre Bemühungen" },
+      { "order": 10, "text": "Tut mir leid, das wollte ich nicht" },
+      { "order": 11, "text": "Darf ich Sie zu einem Kaffee einladen?" },
+      {
+        "order": 12,
+        "text": "Wären Sie so freundlich, mir den Weg zu zeigen?"
+      },
+      { "order": 13, "text": "Bitte nehmen Sie doch Platz" },
+      { "order": 14, "text": "Ich danke Ihnen herzlich" },
+      { "order": 15, "text": "Gern geschehen, kein Problem" }
+    ]
+  },
+  {
+    "lessonId": 46,
+    "title": "Smalltalk führen",
+    "phrases": [
+      { "order": 1, "text": "Wie geht es dir heute?" },
+      { "order": 2, "text": "Danke, mir geht es gut, und dir?" },
+      { "order": 3, "text": "Das Wetter ist heute wirklich schön, oder?" },
+      { "order": 4, "text": "Wie war dein Wochenende?" },
+      { "order": 5, "text": "Ich habe viel erlebt und mich gut erholt" },
+      { "order": 6, "text": "Was machst du beruflich?" },
+      { "order": 7, "text": "Wohnst du schon lange hier in der Stadt?" },
+      { "order": 8, "text": "Hast du den neuen Film schon gesehen?" },
+      { "order": 9, "text": "Es ist heute ziemlich kalt draußen" },
+      { "order": 10, "text": "Schön, dich wiederzusehen" },
+      { "order": 11, "text": "Grüß bitte deine Familie von mir" },
+      { "order": 12, "text": "Hast du Pläne für den Sommer?" },
+      { "order": 13, "text": "Das ist eine interessante Geschichte" },
+      { "order": 14, "text": "Wir müssen uns bald mal treffen" },
+      { "order": 15, "text": "Komm gut nach Hause!" }
+    ]
+  },
+  {
+    "lessonId": 47,
+    "title": "Essgewohnheiten",
+    "phrases": [
+      { "order": 1, "text": "Was isst du normalerweise zum Frühstück?" },
+      { "order": 2, "text": "Ich esse morgens nur ein Müsli mit Obst" },
+      { "order": 3, "text": "Mittags esse ich meistens in der Kantine" },
+      { "order": 4, "text": "Abends kochen wir oft gemeinsam" },
+      { "order": 5, "text": "Isst du gern scharfes Essen?" },
+      { "order": 6, "text": "Ich bin Vegetarier und esse kein Fleisch" },
+      { "order": 7, "text": "Ich trinke lieber Tee als Kaffee" },
+      { "order": 8, "text": "Sonntags essen wir immer Kuchen" },
+      { "order": 9, "text": "Probier mal, das schmeckt sehr lecker" },
+      { "order": 10, "text": "Ich habe eine Allergie gegen Nüsse" },
+      { "order": 11, "text": "Zum Essen trinke ich gern ein Glas Wasser" },
+      { "order": 12, "text": "Fast Food esse ich nur sehr selten" },
+      { "order": 13, "text": "Deutsches Brot schmeckt mir am besten" },
+      { "order": 14, "text": "Wir laden Freunde zum Abendessen ein" },
+      { "order": 15, "text": "Guten Appetit!" }
+    ]
+  },
+  {
+    "lessonId": 48,
+    "title": "Natur und Garten",
+    "phrases": [
+      { "order": 1, "text": "Wir haben einen kleinen Garten hinter dem Haus" },
+      { "order": 2, "text": "Im Frühling pflanzen wir bunte Blumen" },
+      { "order": 3, "text": "Der Baum spendet im Sommer viel Schatten" },
+      { "order": 4, "text": "Ich muss den Rasen mähen" },
+      { "order": 5, "text": "Die Vögel singen in den Bäumen" },
+      { "order": 6, "text": "Wir gehen gern im Wald spazieren" },
+      { "order": 7, "text": "Die Luft auf dem Land ist sehr frisch" },
+      { "order": 8, "text": "Hast du Tomaten im Garten angepflanzt?" },
+      { "order": 9, "text": "Wir grillen am Wochenende auf der Terrasse" },
+      { "order": 10, "text": "Vorsicht, dort ist eine Biene" },
+      { "order": 11, "text": "Der See ist sehr klar und sauber" },
+      { "order": 12, "text": "Wir beobachten die Tiere in der Natur" },
+      { "order": 13, "text": "Es ist schön, draußen zu sein" },
+      { "order": 14, "text": "Die Rosen blühen wunderschön" },
+      { "order": 15, "text": "Wir schützen die Umwelt" }
+    ]
+  },
+  {
+    "lessonId": 49,
+    "title": "Kino und Filme",
+    "phrases": [
+      { "order": 1, "text": "Welchen Film möchtest du sehen?" },
+      { "order": 2, "text": "Ich mag Komödien lieber als Actionfilme" },
+      { "order": 3, "text": "Der Film beginnt um zwanzig Uhr fünfzehn" },
+      { "order": 4, "text": "Wir kaufen Popcorn und Getränke" },
+      { "order": 5, "text": "Die Plätze in der letzten Reihe sind am besten" },
+      { "order": 6, "text": "Der Schauspieler hat sehr gut gespielt" },
+      { "order": 7, "text": "Wie hast du den Film gefunden?" },
+      { "order": 8, "text": "Er war sehr spannend und lustig" },
+      { "order": 9, "text": "Lass uns nächste Woche wieder ins Kino gehen" },
+      { "order": 10, "text": "Das Kino ist heute komplett ausverkauft" },
+      { "order": 11, "text": "Ich schaue Filme gern in der Originalsprache" },
+      { "order": 12, "text": "Hast du den Trailer schon gesehen?" },
+      { "order": 13, "text": "Der Film dauert zwei Stunden" },
+      { "order": 14, "text": "Es war ein sehr trauriger Film" },
+      { "order": 15, "text": "Kino ist ein tolles Erlebnis" }
+    ]
+  },
+  {
+    "lessonId": 50,
+    "title": "Notfälle und Hilfe",
+    "phrases": [
+      { "order": 1, "text": "Hilfe, ich habe meinen Geldbeutel verloren!" },
+      { "order": 2, "text": "Rufen Sie bitte sofort die Polizei" },
+      { "order": 3, "text": "Ich brauche einen Krankenwagen" },
+      { "order": 4, "text": "Wo ist der Notausgang?" },
+      { "order": 5, "text": "Haben Sie einen Feuerlöscher?" },
+      { "order": 6, "text": "Es ist ein Unfall passiert" },
+      { "order": 7, "text": "Ich wurde bestohlen" },
+      { "order": 8, "text": "Können Sie Erste Hilfe leisten?" },
+      { "order": 9, "text": "Ich habe mich ausgesperrt" },
+      { "order": 10, "text": "Riechst du den Rauch?" },
+      { "order": 11, "text": "Bitte bleiben Sie ruhig" },
+      { "order": 12, "text": "Gibt es hier einen Arzt?" },
+      { "order": 13, "text": "Mein Auto hat eine Panne" },
+      { "order": 14, "text": "Ich habe meine Tasche im Zug vergessen" },
+      { "order": 15, "text": "Die Notrufnummer ist 112" }
+    ]
+  },
+  {
+    "lessonId": 51,
+    "title": "Im Deutschkurs",
+    "phrases": [
+      { "order": 1, "text": "Wie sagt man das auf Deutsch?" },
+      { "order": 2, "text": "Können Sie das bitte wiederholen?" },
+      { "order": 3, "text": "Ich habe die Frage nicht verstanden" },
+      { "order": 4, "text": "Was bedeutet dieses Wort?" },
+      { "order": 5, "text": "Darf ich einen Satz an die Tafel schreiben?" },
+      { "order": 6, "text": "Wir arbeiten jetzt in Gruppen zusammen" },
+      { "order": 7, "text": "Bitte schlagen Sie das Buch auf Seite zehn auf" },
+      { "order": 8, "text": "Die Hausaufgabe war ziemlich schwer" },
+      { "order": 9, "text": "Sprechen Sie bitte etwas langsamer" },
+      { "order": 10, "text": "Wie schreibt man das?" },
+      { "order": 11, "text": "Ist dieser Satz grammatikalisch korrekt?" },
+      { "order": 12, "text": "Ich möchte mein Deutsch verbessern" },
+      { "order": 13, "text": "Wir hören einen Dialog und antworten" },
+      { "order": 14, "text": "Ich habe mein Wörterbuch vergessen" },
+      { "order": 15, "text": "Das Lernen macht mir Spaß" }
+    ]
+  },
+  {
+    "lessonId": 52,
+    "title": "Mietwagen und Reisen",
+    "phrases": [
+      { "order": 1, "text": "Ich möchte gern ein Auto mieten" },
+      { "order": 2, "text": "Haben Sie einen Kleinwagen verfügbar?" },
+      { "order": 3, "text": "Wie viel kostet das Auto pro Tag?" },
+      { "order": 4, "text": "Ich brauche den Wagen für das Wochenende" },
+      { "order": 5, "text": "Ist die Versicherung im Preis enthalten?" },
+      { "order": 6, "text": "Muss ich das Auto vollgetankt zurückbringen?" },
+      { "order": 7, "text": "Darf ich Ihren Führerschein sehen?" },
+      { "order": 8, "text": "Das Auto hat ein Navigationssystem" },
+      { "order": 9, "text": "Wir machen einen Ausflug ins Grüne" },
+      { "order": 10, "text": "Bitte überprüfen Sie das Auto auf Schäden" },
+      { "order": 11, "text": "Gibt es eine Kilometerbegrenzung?" },
+      { "order": 12, "text": "Ich möchte einen zweiten Fahrer anmelden" },
+      { "order": 13, "text": "Wo kann ich den Schlüssel abgeben?" },
+      { "order": 14, "text": "Wir fahren über die Autobahn" },
+      { "order": 15, "text": "Gute Fahrt mit dem neuen Wagen" }
+    ]
+  },
+  {
+    "lessonId": 53,
+    "title": "Häufigkeit und Zeitangaben",
+    "phrases": [
+      { "order": 1, "text": "Ich gehe fast jeden Tag einkaufen" },
+      { "order": 2, "text": "Wir sehen uns nur selten" },
+      { "order": 3, "text": "Er kommt meistens pünktlich zur Arbeit" },
+      { "order": 4, "text": "Manchmal trinke ich abends ein Glas Wein" },
+      { "order": 5, "text": "Sie macht nie Sport" },
+      { "order": 6, "text": "Wir fahren einmal im Jahr in den Urlaub" },
+      { "order": 7, "text": "Ich putze mir zweimal täglich die Zähne" },
+      { "order": 8, "text": "Oft gehen wir am Wochenende spazieren" },
+      { "order": 9, "text": "Ab und zu lese ich eine Zeitung" },
+      { "order": 10, "text": "Besuchst du deine Eltern regelmäßig?" },
+      { "order": 11, "text": "Ich bin immer für dich da" },
+      { "order": 12, "text": "Morgens bin ich oft müde" },
+      { "order": 13, "text": "Wir treffen uns wöchentlich zum Spielen" },
+      { "order": 14, "text": "Er vergisst ständig seinen Schlüssel" },
+      { "order": 15, "text": "Gewöhnlich stehe ich um sieben Uhr auf" }
+    ]
+  },
+  {
+    "lessonId": 54,
+    "title": "Begründungen (denn und weil)",
+    "phrases": [
+      { "order": 1, "text": "Ich gehe ins Bett, denn ich bin müde" },
+      { "order": 2, "text": "Er kommt nicht, weil er krank ist" },
+      { "order": 3, "text": "Wir bleiben zu Hause, denn es regnet" },
+      {
+        "order": 4,
+        "text": "Sie lernt Deutsch, weil sie in Berlin arbeiten will"
+      },
+      {
+        "order": 5,
+        "text": "Ich kaufe das Kleid nicht, denn es ist zu teuer"
+      },
+      { "order": 6, "text": "Warum hast du nicht angerufen?" },
+      { "order": 7, "text": "Ich hatte keine Zeit, weil ich arbeiten musste" },
+      { "order": 8, "text": "Wir freuen uns, denn wir haben Urlaub" },
+      { "order": 9, "text": "Er isst nichts, weil er keinen Hunger hat" },
+      { "order": 10, "text": "Ich nehme den Bus, denn mein Auto ist kaputt" },
+      {
+        "order": 11,
+        "text": "Sie ist glücklich, weil sie die Prüfung bestanden hat"
+      },
+      { "order": 12, "text": "Ich trage einen Mantel, denn es ist kalt" },
+      { "order": 13, "text": "Warum lernst du diese Sprache?" },
+      { "order": 14, "text": "Weil es mir Spaß macht" },
+      { "order": 15, "text": "Ich mag ihn, denn er ist sehr lustig" }
+    ]
+  },
+  {
+    "lessonId": 55,
+    "title": "Vergleiche ziehen",
+    "phrases": [
+      { "order": 1, "text": "Mein Bruder ist größer als ich" },
+      { "order": 2, "text": "Dieses Auto ist schneller als das Fahrrad" },
+      { "order": 3, "text": "Im Sommer ist es wärmer als im Winter" },
+      { "order": 4, "text": "Er ist genauso alt wie meine Schwester" },
+      { "order": 5, "text": "Deutsch ist schwieriger als Englisch" },
+      { "order": 6, "text": "Ich finde Tee besser als Kaffee" },
+      { "order": 7, "text": "Deine Wohnung ist schöner als meine" },
+      { "order": 8, "text": "Er läuft so schnell wie ein Profi" },
+      { "order": 9, "text": "Das ist das beste Restaurant in der Stadt" },
+      { "order": 10, "text": "Lieber gesund und arm als reich und krank" },
+      { "order": 11, "text": "Je mehr ich lerne, desto besser verstehe ich" },
+      { "order": 12, "text": "Der Film war interessanter als das Buch" },
+      { "order": 13, "text": "Ich esse lieber Pizza als Pasta" },
+      { "order": 14, "text": "Heute ist das Wetter besser als gestern" },
+      { "order": 15, "text": "Sie ist die netteste Kollegin im Büro" }
+    ]
+  },
+  {
+    "lessonId": 56,
+    "title": "Einladungen und Absagen",
+    "phrases": [
+      { "order": 1, "text": "Hast du Lust, heute Abend Kino zu gehen?" },
+      { "order": 2, "text": "Ja, sehr gerne, das ist eine gute Idee" },
+      { "order": 3, "text": "Tut mir leid, ich habe leider keine Zeit" },
+      { "order": 4, "text": "Ich würde gerne kommen, aber ich muss arbeiten" },
+      { "order": 5, "text": "Vielleicht können wir das verschieben?" },
+      { "order": 6, "text": "Danke für die Einladung, ich komme bestimmt" },
+      { "order": 7, "text": "Schade, dass du nicht kommen kannst" },
+      { "order": 8, "text": "Lass uns doch morgen treffen" },
+      { "order": 9, "text": "Ich melde mich später noch einmal bei dir" },
+      { "order": 10, "text": "Passt es dir am Samstag besser?" },
+      { "order": 11, "text": "Ich freue mich schon sehr darauf" },
+      { "order": 12, "text": "Leider bin ich schon verabredet" },
+      { "order": 13, "text": "Wir gehen essen, kommst du mit?" },
+      { "order": 14, "text": "Ja klar, wann und wo treffen wir uns?" },
+      { "order": 15, "text": "Wir sehen uns dann am Wochenende" }
+    ]
+  },
+  {
+    "lessonId": 57,
+    "title": "In der Apotheke",
+    "phrases": [
+      { "order": 1, "text": "Guten Tag, ich möchte dieses Rezept einlösen" },
+      { "order": 2, "text": "Haben Sie etwas gegen Kopfschmerzen?" },
+      { "order": 3, "text": "Wie oft muss ich diese Tabletten nehmen?" },
+      {
+        "order": 4,
+        "text": "Nehmen Sie die Medizin dreimal täglich nach dem Essen"
+      },
+      { "order": 5, "text": "Ich brauche auch ein Nasenspray" },
+      { "order": 6, "text": "Haben Sie eine Allergie gegen Penicillin?" },
+      { "order": 7, "text": "Dieses Medikament ist verschreibungspflichtig" },
+      { "order": 8, "text": "Gute Besserung wünschen wir Ihnen" },
+      { "order": 9, "text": "Die Apotheke hat Notdienst heute Nacht" },
+      { "order": 10, "text": "Gibt es Nebenwirkungen?" },
+      { "order": 11, "text": "Trinken Sie viel Tee und ruhen Sie sich aus" },
+      { "order": 12, "text": "Das macht fünf Euro Zuzahlung, bitte" },
+      { "order": 13, "text": "Können Sie mir einen Hustensaft empfehlen?" },
+      { "order": 14, "text": "Ich habe Halsschmerzen und Schnupfen" },
+      { "order": 15, "text": "Hier ist Ihre Quittung" }
+    ]
+  },
+  {
+    "lessonId": 58,
+    "title": "Technik und Alltag",
+    "phrases": [
+      { "order": 1, "text": "Mein Handy hat keinen Empfang" },
+      { "order": 2, "text": "Kann ich mein Handy hier aufladen?" },
+      { "order": 3, "text": "Das WLAN-Passwort ist sehr lang" },
+      { "order": 4, "text": "Ich schicke dir das Foto per WhatsApp" },
+      { "order": 5, "text": "Hast du die neue App installiert?" },
+      { "order": 6, "text": "Mein Laptop ist abgestürzt" },
+      { "order": 7, "text": "Wir streamen abends oft Serien" },
+      { "order": 8, "text": "Ich muss meine E-Mails checken" },
+      { "order": 9, "text": "Die Technik funktioniert heute nicht" },
+      { "order": 10, "text": "Ich speichere die Daten in der Cloud" },
+      { "order": 11, "text": "Kannst du mir erklären, wie das geht?" },
+      { "order": 12, "text": "Wir sind immer online und erreichbar" },
+      { "order": 13, "text": "Ich kaufe mir ein neues Tablet" },
+      { "order": 14, "text": "Vergiss nicht, das Gerät auszuschalten" },
+      { "order": 15, "text": "Technik erleichtert unser Leben" }
+    ]
+  },
+  {
+    "lessonId": 59,
+    "title": "Wo ist was? (Ortsangaben)",
+    "phrases": [
+      { "order": 1, "text": "Das Buch liegt auf dem Tisch" },
+      { "order": 2, "text": "Die Katze sitzt unter dem Stuhl" },
+      { "order": 3, "text": "Das Bild hängt an der Wand" },
+      { "order": 4, "text": "Ich warte vor der Tür auf dich" },
+      { "order": 5, "text": "Der Supermarkt ist hinter der Post" },
+      { "order": 6, "text": "Wir sitzen im Garten" },
+      { "order": 7, "text": "Die Lampe steht neben dem Sofa" },
+      { "order": 8, "text": "Er wohnt über uns im zweiten Stock" },
+      { "order": 9, "text": "Der Schlüssel steckt im Schloss" },
+      { "order": 10, "text": "Zwischen den Häusern ist ein Park" },
+      { "order": 11, "text": "Leg die Zeitung bitte auf das Regal" },
+      { "order": 12, "text": "Wir treffen uns am Bahnhof" },
+      { "order": 13, "text": "Die Schuhe stehen unter dem Bett" },
+      { "order": 14, "text": "In der Stadt gibt es viele Autos" },
+      { "order": 15, "text": "Wo hast du mein Handy hingelegt?" }
+    ]
+  },
+  {
+    "lessonId": 60,
+    "title": "Vergangenheit und Kindheit (Präteritum)",
+    "phrases": [
+      { "order": 1, "text": "Früher war alles anders" },
+      { "order": 2, "text": "Als Kind hatte ich viele Spielsachen" },
+      { "order": 3, "text": "Wo warst du im letzten Urlaub?" },
+      { "order": 4, "text": "Ich war gestern sehr müde" },
+      { "order": 5, "text": "Wir hatten früher einen großen Hund" },
+      { "order": 6, "text": "Das Wetter war im Sommer sehr schön" },
+      { "order": 7, "text": "Meine Großeltern hatten einen Bauernhof" },
+      { "order": 8, "text": "Warst du schon einmal in Berlin?" },
+      { "order": 9, "text": "Es war einmal eine kleine Prinzessin" },
+      { "order": 10, "text": "Ich hatte Glück bei der Prüfung" },
+      { "order": 11, "text": "Gestern war Sonntag, alle Geschäfte waren zu" },
+      { "order": 12, "text": "Wir waren sehr gute Freunde in der Schule" },
+      { "order": 13, "text": "Hattest du Spaß auf der Party?" },
+      { "order": 14, "text": "Er war lange Zeit im Ausland" },
+      { "order": 15, "text": "Das war eine tolle Zeit" }
+    ]
+  },
+  {
+    "lessonId": 61,
+    "title": "Kleidung und Stil",
+    "phrases": [
+      { "order": 1, "text": "Was trägst du heute Abend zur Party?" },
+      { "order": 2, "text": "Ich trage ein schwarzes Kleid und rote Schuhe" },
+      { "order": 3, "text": "Dieser Anzug steht dir wirklich gut" },
+      { "order": 4, "text": "Ich mag bequeme Kleidung für den Alltag" },
+      { "order": 5, "text": "Die Hose ist mir leider etwas zu eng" },
+      { "order": 6, "text": "Hast du diesen Pullover auch in Größe M?" },
+      { "order": 7, "text": "Ich brauche einen warmen Schal für den Winter" },
+      { "order": 8, "text": "Deine Jacke ist sehr modisch" },
+      { "order": 9, "text": "Ich ziehe mich schnell um" },
+      { "order": 10, "text": "Welche Schuhe passen zu dieser Hose?" },
+      { "order": 11, "text": "Im Sommer trage ich gern kurze Hosen" },
+      { "order": 12, "text": "Das Hemd muss noch gebügelt werden" },
+      {
+        "order": 13,
+        "text": "Ich gehe shoppen, weil ich neue Kleidung brauche"
+      },
+      { "order": 14, "text": "Die Farbe Grün gefällt mir nicht" },
+      { "order": 15, "text": "Zieh dir bitte eine Jacke an, es ist kalt" }
+    ]
+  },
+  {
+    "lessonId": 62,
+    "title": "Ratschläge und Empfehlungen",
+    "phrases": [
+      { "order": 1, "text": "Du solltest mehr Sport machen" },
+      { "order": 2, "text": "Geh doch mal früh ins Bett" },
+      {
+        "order": 3,
+        "text": "Sie sollten zum Arzt gehen, wenn Sie Fieber haben"
+      },
+      { "order": 4, "text": "Trink viel Wasser, das ist gesund" },
+      { "order": 5, "text": "Du kannst den Bus nehmen, das ist billiger" },
+      { "order": 6, "text": "Wir empfehlen Ihnen das Tagesgericht" },
+      { "order": 7, "text": "Lern jeden Tag ein bisschen Deutsch" },
+      { "order": 8, "text": "Iss nicht so viel Zucker" },
+      { "order": 9, "text": "Probier doch mal dieses Restaurant aus" },
+      { "order": 10, "text": "Mach dir keine Sorgen" },
+      { "order": 11, "text": "Du musst unbedingt diesen Film sehen" },
+      { "order": 12, "text": "Fahr vorsichtig, die Straßen sind nass" },
+      { "order": 13, "text": "Vergiss nicht, deine Mutter anzurufen" },
+      { "order": 14, "text": "Nimm dir Zeit für dich selbst" },
+      { "order": 15, "text": "Es ist besser, wenn du zu Hause bleibst" }
+    ]
+  },
+  {
+    "lessonId": 63,
+    "title": "Körperpflege und Bad",
+    "phrases": [
+      { "order": 1, "text": "Ich gehe jetzt ins Badezimmer" },
+      { "order": 2, "text": "Ich dusche mich jeden Morgen" },
+      { "order": 3, "text": "Hast du dir schon die Zähne geputzt?" },
+      { "order": 4, "text": "Ich muss mir noch die Haare waschen" },
+      { "order": 5, "text": "Wo ist das Handtuch?" },
+      { "order": 6, "text": "Ich brauche Seife und Shampoo" },
+      { "order": 7, "text": "Er rasiert sich vor dem Spiegel" },
+      { "order": 8, "text": "Cremst du dich nach dem Duschen ein?" },
+      { "order": 9, "text": "Ich föhne mir die Haare" },
+      { "order": 10, "text": "Das Bad ist besetzt" },
+      { "order": 11, "text": "Ich wasche mir schnell die Hände" },
+      { "order": 12, "text": "Meine Zahnbürste ist blau" },
+      { "order": 13, "text": "Wir baden die Kinder am Abend" },
+      { "order": 14, "text": "Vergiss nicht, das Wasser abzustellen" },
+      { "order": 15, "text": "Ich mache mich fertig für die Arbeit" }
+    ]
+  },
+  {
+    "lessonId": 64,
+    "title": "Kochen und Backen",
+    "phrases": [
+      { "order": 1, "text": "Was kochen wir heute Abend?" },
+      { "order": 2, "text": "Ich muss die Kartoffeln schälen" },
+      { "order": 3, "text": "Kannst du bitte die Zwiebeln schneiden?" },
+      { "order": 4, "text": "Das Wasser kocht im Topf" },
+      { "order": 5, "text": "Wir braten das Fleisch in der Pfanne" },
+      { "order": 6, "text": "Ich backe einen Kuchen für den Geburtstag" },
+      { "order": 7, "text": "Hast du das Rezept gelesen?" },
+      { "order": 8, "text": "Wir brauchen noch Salz und Pfeffer" },
+      { "order": 9, "text": "Der Kuchen muss 40 Minuten in den Ofen" },
+      { "order": 10, "text": "Vorsicht, der Herd ist heiß" },
+      { "order": 11, "text": "Ich rühre die Suppe um" },
+      { "order": 12, "text": "Schmeckt das Essen gut?" },
+      { "order": 13, "text": "Es fehlt noch etwas Zucker" },
+      { "order": 14, "text": "Wir essen gern italienische Gerichte" },
+      { "order": 15, "text": "Kochen macht mir viel Spaß" }
+    ]
+  },
+  {
+    "lessonId": 65,
+    "title": "Briefe und E-Mails schreiben",
+    "phrases": [
+      { "order": 1, "text": "Liebe Lisa, wie geht es dir?" },
+      { "order": 2, "text": "Sehr geehrte Damen und Herren" },
+      { "order": 3, "text": "Ich schreibe Ihnen, weil ich eine Frage habe" },
+      { "order": 4, "text": "Vielen Dank für Ihre schnelle Antwort" },
+      { "order": 5, "text": "Ich freue mich, von dir zu hören" },
+      { "order": 6, "text": "Können Sie mir bitte Informationen schicken?" },
+      { "order": 7, "text": "Mit freundlichen Grüßen" },
+      { "order": 8, "text": "Viele Grüße aus dem Urlaub" },
+      { "order": 9, "text": "Ich antworte dir so bald wie möglich" },
+      { "order": 10, "text": "Hast du meine E-Mail bekommen?" },
+      { "order": 11, "text": "Der Anhang ist eine PDF-Datei" },
+      { "order": 12, "text": "Entschuldigen Sie bitte die späte Antwort" },
+      { "order": 13, "text": "Ich wünsche Ihnen einen schönen Tag" },
+      { "order": 14, "text": "Schreib mir bitte bald zurück" },
+      { "order": 15, "text": "Meine neue Adresse steht unten" }
+    ]
+  },
+  {
+    "lessonId": 66,
+    "title": "Datum und Kalender",
+    "phrases": [
+      { "order": 1, "text": "Der Wievielte ist heute?" },
+      { "order": 2, "text": "Heute ist der erste Mai" },
+      { "order": 3, "text": "Ich habe am dritten April Geburtstag" },
+      {
+        "order": 4,
+        "text": "Wir fahren vom zehnten bis zum zwanzigsten Juli weg"
+      },
+      { "order": 5, "text": "Welchen Tag haben wir heute?" },
+      { "order": 6, "text": "Das Jahr hat zwölf Monate" },
+      { "order": 7, "text": "Weihnachten ist im Dezember" },
+      { "order": 8, "text": "Der Termin ist am nächsten Montag" },
+      { "order": 9, "text": "Ich muss in den Kalender schauen" },
+      { "order": 10, "text": "Das Geschäft ist an Feiertagen geschlossen" },
+      { "order": 11, "text": "Wir treffen uns am Wochenende" },
+      { "order": 12, "text": "Er kommt in zwei Wochen zurück" },
+      { "order": 13, "text": "Mein Urlaub beginnt morgen" },
+      { "order": 14, "text": "Es war ein schöner Tag im Sommer" },
+      { "order": 15, "text": "Alles Gute zum neuen Jahr" }
+    ]
+  },
+  {
+    "lessonId": 67,
+    "title": "Geografie und Landschaft",
+    "phrases": [
+      { "order": 1, "text": "Deutschland liegt in der Mitte von Europa" },
+      { "order": 2, "text": "Berlin ist die Hauptstadt von Deutschland" },
+      { "order": 3, "text": "Im Süden gibt es viele hohe Berge" },
+      { "order": 4, "text": "Der Rhein ist ein langer Fluss" },
+      { "order": 5, "text": "Wir fahren an die Nordsee" },
+      { "order": 6, "text": "Ich mag das Meer lieber als die Berge" },
+      { "order": 7, "text": "Im Wald ist es ruhig und grün" },
+      { "order": 8, "text": "Die Insel liegt im Mittelmeer" },
+      { "order": 9, "text": "Wie weit ist es bis zur Grenze?" },
+      { "order": 10, "text": "In dieser Region regnet es oft" },
+      { "order": 11, "text": "Die Landschaft hier ist wunderschön" },
+      { "order": 12, "text": "Auf der Karte sieht man alle Städte" },
+      { "order": 13, "text": "Er kommt aus einem kleinen Dorf" },
+      { "order": 14, "text": "Wir wandern durch das Tal" },
+      { "order": 15, "text": "Der See ist sehr tief" }
+    ]
+  },
+  {
+    "lessonId": 68,
+    "title": "Umzug und neue Wohnung",
+    "phrases": [
+      { "order": 1, "text": "Wir ziehen nächsten Monat um" },
+      { "order": 2, "text": "Ich muss viele Kisten packen" },
+      { "order": 3, "text": "Der Umzugswagen kommt morgen früh" },
+      { "order": 4, "text": "Kannst du mir beim Tragen helfen?" },
+      { "order": 5, "text": "Die neue Wohnung hat drei Zimmer" },
+      { "order": 6, "text": "Wir müssen die Möbel aufbauen" },
+      { "order": 7, "text": "Ich kenne meine neuen Nachbarn noch nicht" },
+      { "order": 8, "text": "Die Miete ist hier günstiger" },
+      { "order": 9, "text": "Wir müssen die alte Wohnung renovieren" },
+      { "order": 10, "text": "Ich habe meine Adresse geändert" },
+      { "order": 11, "text": "Alles ist neu und sauber" },
+      { "order": 12, "text": "Der Schrank ist sehr schwer" },
+      { "order": 13, "text": "Wir feiern eine Einweihungsparty" },
+      { "order": 14, "text": "Ich fühle mich hier wohl" },
+      { "order": 15, "text": "Endlich ist der Umzug vorbei" }
+    ]
+  },
+  {
+    "lessonId": 69,
+    "title": "Fernsehen und Medien",
+    "phrases": [
+      { "order": 1, "text": "Was kommt heute Abend im Fernsehen?" },
+      { "order": 2, "text": "Ich schaue gern die Nachrichten um acht" },
+      { "order": 3, "text": "Diese Serie ist sehr spannend" },
+      { "order": 4, "text": "Schalt bitte den Fernseher ein" },
+      { "order": 5, "text": "Wo ist die Fernbedienung?" },
+      { "order": 6, "text": "Ich mag Filme ohne Werbung" },
+      { "order": 7, "text": "Hast du den Bericht über Sport gesehen?" },
+      { "order": 8, "text": "Wir gucken einen Film auf dem Tablet" },
+      { "order": 9, "text": "Das Programm ist heute langweilig" },
+      { "order": 10, "text": "Er liest jeden Morgen die Zeitung" },
+      { "order": 11, "text": "Ich höre Radio beim Frühstück" },
+      { "order": 12, "text": "Dieser Schauspieler ist sehr berühmt" },
+      { "order": 13, "text": "Ich informiere mich im Internet" },
+      { "order": 14, "text": "Die Sendung beginnt gleich" },
+      { "order": 15, "text": "Kannst du den Ton etwas leiser machen?" }
+    ]
+  },
+  {
+    "lessonId": 70,
+    "title": "Im Café",
+    "phrases": [
+      { "order": 1, "text": "Ich hätte gerne einen Cappuccino" },
+      { "order": 2, "text": "Möchten Sie ein Stück Kuchen dazu?" },
+      { "order": 3, "text": "Ein Kännchen Tee, bitte" },
+      { "order": 4, "text": "Der Apfelkuchen schmeckt sehr gut" },
+      { "order": 5, "text": "Können wir draußen auf der Terrasse sitzen?" },
+      { "order": 6, "text": "Ich nehme den Kaffee mit viel Milch" },
+      { "order": 7, "text": "Zum Mitnehmen oder zum hier Essen?" },
+      { "order": 8, "text": "Die Rechnung bitte" },
+      { "order": 9, "text": "Hier sind fünf Euro, das stimmt so" },
+      { "order": 10, "text": "Triffst du dich oft hier mit Freunden?" },
+      { "order": 11, "text": "Das Café ist sehr gemütlich" },
+      { "order": 12, "text": "Ich trinke ein Glas Orangensaft" },
+      { "order": 13, "text": "Haben Sie laktosefreie Milch?" },
+      { "order": 14, "text": "Wir bestellen noch ein Wasser" },
+      { "order": 15, "text": "Das Eis ist hier sehr lecker" }
+    ]
+  },
+  {
+    "lessonId": 71,
+    "title": "Meinung äußern",
+    "phrases": [
+      { "order": 1, "text": "Wie findest du das neue Lied?" },
+      { "order": 2, "text": "Ich finde es sehr gut" },
+      { "order": 3, "text": "Meiner Meinung nach ist das zu teuer" },
+      { "order": 4, "text": "Ich glaube, dass er recht hat" },
+      { "order": 5, "text": "Das sehe ich anders" },
+      { "order": 6, "text": "Was denkst du darüber?" },
+      { "order": 7, "text": "Ich bin sicher, dass das klappt" },
+      { "order": 8, "text": "Das ist eine gute Idee" },
+      { "order": 9, "text": "Ich weiß nicht genau" },
+      { "order": 10, "text": "Ich stimme dir zu" },
+      { "order": 11, "text": "Das ist mir egal" },
+      { "order": 12, "text": "Ich finde es wichtig, Deutsch zu lernen" },
+      { "order": 13, "text": "Vielleicht hast du recht" },
+      { "order": 14, "text": "Das gefällt mir überhaupt nicht" },
+      { "order": 15, "text": "Jeder hat seine eigene Meinung" }
+    ]
+  },
+  {
+    "lessonId": 72,
+    "title": "Der Arbeitsweg",
+    "phrases": [
+      { "order": 1, "text": "Wie kommst du zur Arbeit?" },
+      { "order": 2, "text": "Ich fahre jeden Tag mit dem Zug" },
+      { "order": 3, "text": "Mein Arbeitsweg dauert eine Stunde" },
+      { "order": 4, "text": "Ich stehe oft im Stau" },
+      { "order": 5, "text": "Ich gehe zu Fuß, weil ich nah wohne" },
+      { "order": 6, "text": "Um wie viel Uhr musst du da sein?" },
+      { "order": 7, "text": "Die Bahn ist morgens immer voll" },
+      { "order": 8, "text": "Ich höre Podcasts während der Fahrt" },
+      { "order": 9, "text": "Hast du ein Monatsticket?" },
+      { "order": 10, "text": "Ich nehme das Fahrrad, wenn es nicht regnet" },
+      { "order": 11, "text": "Ich bin heute zu spät gekommen" },
+      { "order": 12, "text": "Zum Glück habe ich Gleitzeit" },
+      { "order": 13, "text": "Ich fahre mit einer Kollegin zusammen" },
+      { "order": 14, "text": "Der Weg ist sehr weit" },
+      { "order": 15, "text": "Endlich bin ich zu Hause" }
+    ]
+  },
+  {
+    "lessonId": 73,
+    "title": "Jahreszeiten und Aktivitäten",
+    "phrases": [
+      { "order": 1, "text": "Im Winter gehen wir oft Skifahren" },
+      { "order": 2, "text": "Der Sommer ist perfekt zum Schwimmen" },
+      { "order": 3, "text": "Im Herbst sammeln wir Pilze im Wald" },
+      { "order": 4, "text": "Der Frühling ist meine Lieblingsjahreszeit" },
+      { "order": 5, "text": "Wir machen ein Picknick im Park" },
+      { "order": 6, "text": "Es ist kalt, wir trinken heißen Tee" },
+      { "order": 7, "text": "Die Sonne scheint lange am Abend" },
+      { "order": 8, "text": "Wir bauen einen Schneemann im Garten" },
+      { "order": 9, "text": "Die Blätter werden bunt" },
+      { "order": 10, "text": "Wir grillen mit Freunden am See" },
+      { "order": 11, "text": "Man kann draußen Sport machen" },
+      { "order": 12, "text": "Ich brauche eine Sonnenbrille" },
+      { "order": 13, "text": "Es wird früh dunkel" },
+      { "order": 14, "text": "Die Vögel kommen zurück" },
+      { "order": 15, "text": "Jede Jahreszeit hat etwas Schönes" }
+    ]
+  },
+  {
+    "lessonId": 74,
+    "title": "Sprachen lernen",
+    "phrases": [
+      { "order": 1, "text": "Wie lange lernst du schon Deutsch?" },
+      { "order": 2, "text": "Ich besuche einen Sprachkurs am Abend" },
+      { "order": 3, "text": "Die Grammatik ist manchmal kompliziert" },
+      { "order": 4, "text": "Ich muss mehr Vokabeln lernen" },
+      { "order": 5, "text": "Sprichst du auch Englisch?" },
+      { "order": 6, "text": "Ich verstehe viel, aber ich spreche wenig" },
+      { "order": 7, "text": "Übung macht den Meister" },
+      { "order": 8, "text": "Wir machen viele Übungen im Buch" },
+      { "order": 9, "text": "Hast du ein Wörterbuch dabei?" },
+      { "order": 10, "text": "Ich höre deutsche Musik, um zu lernen" },
+      { "order": 11, "text": "Mein Lehrer korrigiert meine Fehler" },
+      { "order": 12, "text": "Ich möchte fließend sprechen können" },
+      { "order": 13, "text": "Hast du Angst, Fehler zu machen?" },
+      { "order": 14, "text": "Ich lerne jeden Tag eine halbe Stunde" },
+      { "order": 15, "text": "Sprachen öffnen Türen" }
+    ]
+  },
+  {
+    "lessonId": 75,
+    "title": "Beim Zahnarzt",
+    "phrases": [
+      { "order": 1, "text": "Ich habe starke Zahnschmerzen" },
+      { "order": 2, "text": "Ich habe einen Termin um zehn Uhr" },
+      { "order": 3, "text": "Bitte nehmen Sie im Wartezimmer Platz" },
+      { "order": 4, "text": "Machen Sie bitte den Mund weit auf" },
+      { "order": 5, "text": "Der Zahnarzt untersucht die Zähne" },
+      { "order": 6, "text": "Haben Sie Angst vor dem Zahnarzt?" },
+      { "order": 7, "text": "Wir müssen ein Röntgenbild machen" },
+      { "order": 8, "text": "Das tut ein bisschen weh" },
+      { "order": 9, "text": "Sie haben ein Loch im Zahn" },
+      { "order": 10, "text": "Bitte spülen Sie den Mund aus" },
+      { "order": 11, "text": "Sie sollten Zahnseide benutzen" },
+      { "order": 12, "text": "Kommen Sie bitte in sechs Monaten wieder" },
+      { "order": 13, "text": "Ich putze meine Zähne sehr gründlich" },
+      { "order": 14, "text": "Alles sieht gut und gesund aus" },
+      { "order": 15, "text": "Die Praxis ist sehr modern" }
+    ]
+  },
+  {
+    "lessonId": 76,
+    "title": "Online einkaufen",
+    "phrases": [
+      { "order": 1, "text": "Ich bestelle oft Kleidung im Internet" },
+      { "order": 2, "text": "Der Online-Shop hat eine große Auswahl" },
+      { "order": 3, "text": "Ich lege das Buch in den Warenkorb" },
+      { "order": 4, "text": "Wie hoch sind die Versandkosten?" },
+      { "order": 5, "text": "Das Paket kommt in drei Tagen an" },
+      { "order": 6, "text": "Ich bezahle bequem mit Kreditkarte" },
+      { "order": 7, "text": "Ich muss mich erst anmelden" },
+      { "order": 8, "text": "Die Lieferung ist kostenlos" },
+      { "order": 9, "text": "Das Produkt hat gute Bewertungen" },
+      {
+        "order": 10,
+        "text": "Ich schicke die Schuhe zurück, weil sie nicht passen"
+      },
+      { "order": 11, "text": "Wo ist meine Bestellung?" },
+      { "order": 12, "text": "Der Postbote hat geklingelt" },
+      { "order": 13, "text": "Ich habe eine Bestätigung per E-Mail bekommen" },
+      { "order": 14, "text": "Vergleichen Sie die Preise" },
+      { "order": 15, "text": "Es ist einfach und schnell" }
+    ]
+  },
+  {
+    "lessonId": 77,
+    "title": "Im Zoo und Tiere",
+    "phrases": [
+      { "order": 1, "text": "Wir gehen heute mit den Kindern in den Zoo" },
+      { "order": 2, "text": "Die Elefanten sind sehr groß und grau" },
+      { "order": 3, "text": "Schau mal, die Affen klettern auf den Baum" },
+      { "order": 4, "text": "Der Löwe schläft in der Sonne" },
+      { "order": 5, "text": "Man darf die Tiere nicht füttern" },
+      { "order": 6, "text": "Die Giraffe hat einen langen Hals" },
+      { "order": 7, "text": "Wann werden die Pinguine gefüttert?" },
+      { "order": 8, "text": "Ein Eisbär mag kaltes Wetter" },
+      { "order": 9, "text": "Wir kaufen Eintrittskarten an der Kasse" },
+      { "order": 10, "text": "Im Streichelzoo kann man Ziegen anfassen" },
+      { "order": 11, "text": "Das Zebra hat schwarze und weiße Streifen" },
+      { "order": 12, "text": "Wir machen viele Fotos von den Tieren" },
+      { "order": 13, "text": "Der Zoo ist sehr groß und schön" },
+      { "order": 14, "text": "Tiere sind faszinierend" },
+      { "order": 15, "text": "Wir essen ein Eis am Kiosk" }
+    ]
+  },
+  {
+    "lessonId": 78,
+    "title": "Geschenke und Feiern",
+    "phrases": [
+      { "order": 1, "text": "Ich suche ein Geschenk für meine Mutter" },
+      { "order": 2, "text": "Was soll ich ihm zum Geburtstag schenken?" },
+      { "order": 3, "text": "Blumen sind immer eine gute Idee" },
+      { "order": 4, "text": "Ich verpacke das Geschenk in buntes Papier" },
+      {
+        "order": 5,
+        "text": "Wir schenken ihnen einen Gutschein für ein Restaurant"
+      },
+      { "order": 6, "text": "Herzlichen Glückwunsch zur Hochzeit!" },
+      { "order": 7, "text": "Ich hoffe, das Geschenk gefällt dir" },
+      { "order": 8, "text": "Das ist genau das, was ich mir gewünscht habe" },
+      { "order": 9, "text": "Vielen Dank für die schöne Überraschung" },
+      { "order": 10, "text": "Wir bringen eine Flasche Wein mit" },
+      { "order": 11, "text": "Sie freut sich sehr über das Buch" },
+      { "order": 12, "text": "Schenken macht Freude" },
+      { "order": 13, "text": "Vergiss die Karte nicht" },
+      { "order": 14, "text": "Wir singen ein Lied für das Geburtstagskind" },
+      { "order": 15, "text": "Es war eine tolle Feier" }
+    ]
+  },
+  {
+    "lessonId": 79,
+    "title": "Putzen und Reparieren",
+    "phrases": [
+      { "order": 1, "text": "Der Boden ist schmutzig, ich muss wischen" },
+      { "order": 2, "text": "Die Fenster sind nicht sauber" },
+      {
+        "order": 3,
+        "text": "Mein Fahrrad ist kaputt, ich muss es reparieren"
+      },
+      { "order": 4, "text": "Hast du den Hammer gesehen?" },
+      {
+        "order": 5,
+        "text": "Die Glühbirne ist kaputt, wir brauchen eine neue"
+      },
+      { "order": 6, "text": "Ich räume am Samstag mein Zimmer auf" },
+      { "order": 7, "text": "Der Abfluss in der Küche ist verstopft" },
+      { "order": 8, "text": "Wir müssen die Wände streichen" },
+      { "order": 9, "text": "Ich wasche die Wäsche in der Waschmaschine" },
+      { "order": 10, "text": "Kannst du das Regal an die Wand hängen?" },
+      { "order": 11, "text": "Wir machen einen Frühjahrsputz" },
+      { "order": 12, "text": "Ordnung halten ist manchmal schwer" },
+      { "order": 13, "text": "Das Werkzeug liegt im Keller" },
+      { "order": 14, "text": "Ich sauge den Teppich" },
+      { "order": 15, "text": "Alles glänzt und ist sauber" }
+    ]
+  },
+  {
+    "lessonId": 80,
+    "title": "Raumbeschreibung (Es gibt)",
+    "phrases": [
+      { "order": 1, "text": "In meinem Zimmer gibt es ein großes Bett" },
+      { "order": 2, "text": "Auf dem Schreibtisch steht ein Computer" },
+      { "order": 3, "text": "An der Wand hängen viele Bilder" },
+      { "order": 4, "text": "Es gibt zwei Fenster im Wohnzimmer" },
+      { "order": 5, "text": "Neben der Tür steht ein kleiner Schrank" },
+      { "order": 6, "text": "Auf dem Boden liegt ein roter Teppich" },
+      { "order": 7, "text": "In der Küche gibt es keinen Geschirrspüler" },
+      {
+        "order": 8,
+        "text": "Zwischen dem Sofa und dem Sessel steht eine Lampe"
+      },
+      { "order": 9, "text": "Gibt es hier einen Balkon?" },
+      { "order": 10, "text": "In der Stadt gibt es viele Parks" },
+      { "order": 11, "text": "Was liegt auf dem Stuhl?" },
+      { "order": 12, "text": "Der Raum ist hell und freundlich" },
+      { "order": 13, "text": "Es gibt viel Platz für meine Bücher" },
+      { "order": 14, "text": "Unter dem Tisch schläft der Hund" },
+      { "order": 15, "text": "Die Wohnung ist sehr gemütlich eingerichtet" }
+    ]
+  },
+  {
+    "lessonId": 81,
+    "title": "Probleme im Hotel",
+    "phrases": [
+      { "order": 1, "text": "Entschuldigung, mein Zimmer ist nicht sauber" },
+      { "order": 2, "text": "Die Heizung funktioniert leider nicht" },
+      { "order": 3, "text": "Es gibt kein warmes Wasser in der Dusche" },
+      { "order": 4, "text": "Mein Nachbar ist sehr laut" },
+      { "order": 5, "text": "Der Fernseher hat keinen Empfang" },
+      { "order": 6, "text": "Können Sie mir bitte ein anderes Zimmer geben?" },
+      { "order": 7, "text": "Ich habe keine frischen Handtücher" },
+      { "order": 8, "text": "Das Fenster lässt sich nicht schließen" },
+      { "order": 9, "text": "Die Klimaanlage ist zu kalt eingestellt" },
+      { "order": 10, "text": "Ich möchte mich beschweren" },
+      { "order": 11, "text": "Wir kümmern uns sofort darum" },
+      { "order": 12, "text": "Der Techniker kommt gleich vorbei" },
+      { "order": 13, "text": "Es fehlt Toilettenpapier im Bad" },
+      { "order": 14, "text": "Die Lampe am Bett ist kaputt" },
+      { "order": 15, "text": "Vielen Dank für Ihre Hilfe" }
+    ]
+  },
+  {
+    "lessonId": 82,
+    "title": "Beim Bäcker",
+    "phrases": [
+      { "order": 1, "text": "Guten Morgen, ich hätte gern fünf Brötchen" },
+      { "order": 2, "text": "Möchten Sie normale oder Körnerbrötchen?" },
+      { "order": 3, "text": "Ein Brot vom Vortag ist günstiger" },
+      { "order": 4, "text": "Ich nehme auch zwei Stück Apfelkuchen" },
+      { "order": 5, "text": "Ist dieses Brot aus Vollkorn?" },
+      { "order": 6, "text": "Geben Sie mir bitte noch ein Croissant" },
+      { "order": 7, "text": "Das riecht hier sehr gut nach frischem Brot" },
+      { "order": 8, "text": "Darf es sonst noch etwas sein?" },
+      { "order": 9, "text": "Wir essen sonntags immer süße Teilchen" },
+      { "order": 10, "text": "Können Sie das Brot bitte schneiden?" },
+      { "order": 11, "text": "Ich möchte eine Brezel mit Butter" },
+      { "order": 12, "text": "Das macht zusammen acht Euro fünfzig" },
+      { "order": 13, "text": "Haben Sie auch glutenfreies Brot?" },
+      { "order": 14, "text": "Die Bäckerei öffnet schon um sechs Uhr" },
+      { "order": 15, "text": "Danke und einen schönen Tag noch" }
+    ]
+  },
+  {
+    "lessonId": 83,
+    "title": "Vorschläge machen",
+    "phrases": [
+      { "order": 1, "text": "Wollen wir heute Abend ins Kino gehen?" },
+      { "order": 2, "text": "Lass uns doch einen Spaziergang machen" },
+      { "order": 3, "text": "Hast du Lust auf eine Pizza?" },
+      { "order": 4, "text": "Wir könnten am Wochenende an den See fahren" },
+      {
+        "order": 5,
+        "text": "Wie wäre es mit einem gemütlichen Abend zu Hause?"
+      },
+      { "order": 6, "text": "Sollen wir uns um acht Uhr treffen?" },
+      { "order": 7, "text": "Das ist eine hervorragende Idee" },
+      { "order": 8, "text": "Ich habe einen besseren Vorschlag" },
+      { "order": 9, "text": "Lass uns lieber morgen gehen" },
+      { "order": 10, "text": "Warum besuchen wir nicht das Museum?" },
+      { "order": 11, "text": "Ich schlage vor, wir kochen zusammen" },
+      { "order": 12, "text": "Hast du Zeit für einen Kaffee?" },
+      { "order": 13, "text": "Wir können auch mit dem Fahrrad fahren" },
+      { "order": 14, "text": "Darauf habe ich keine Lust" },
+      { "order": 15, "text": "Okay, machen wir das so" }
+    ]
+  },
+  {
+    "lessonId": 84,
+    "title": "Orientierung im Kaufhaus",
+    "phrases": [
+      {
+        "order": 1,
+        "text": "Entschuldigung, wo finde ich die Herrenabteilung?"
+      },
+      { "order": 2, "text": "Die Spielwaren sind im vierten Stock" },
+      { "order": 3, "text": "Sie müssen die Rolltreppe nach oben nehmen" },
+      { "order": 4, "text": "Der Aufzug befindet sich dort hinten links" },
+      { "order": 5, "text": "Gibt es hier eine Kundentoilette?" },
+      { "order": 6, "text": "Die Sportabteilung ist im Untergeschoss" },
+      { "order": 7, "text": "Wo kann ich diesen Artikel bezahlen?" },
+      { "order": 8, "text": "Die Kasse ist am Ausgang" },
+      { "order": 9, "text": "Ich suche ein Geschenk für ein Kind" },
+      { "order": 10, "text": "Haben Sie eine Kundenkarte?" },
+      { "order": 11, "text": "Der Ausgang ist direkt vor Ihnen" },
+      { "order": 12, "text": "Wir machen in zehn Minuten zu" },
+      { "order": 13, "text": "Ich möchte das bitte als Geschenk einpacken" },
+      { "order": 14, "text": "Informationen finden Sie am Service-Schalter" },
+      { "order": 15, "text": "Viel Spaß beim Einkaufen" }
+    ]
+  },
+  {
+    "lessonId": 85,
+    "title": "Am Flughafen",
+    "phrases": [
+      {
+        "order": 1,
+        "text": "Bitte zeigen Sie mir Ihren Reisepass und das Flugticket"
+      },
+      { "order": 2, "text": "Wie viele Koffer möchten Sie aufgeben?" },
+      { "order": 3, "text": "Ist dieser Koffer Handgepäck?" },
+      { "order": 4, "text": "Ihr Flug hat leider dreißig Minuten Verspätung" },
+      {
+        "order": 5,
+        "text": "Wir müssen jetzt durch die Sicherheitskontrolle"
+      },
+      { "order": 6, "text": "Bitte legen Sie Ihren Gürtel in die Schale" },
+      { "order": 7, "text": "Das Flugzeug fliegt um zehn Uhr ab" },
+      { "order": 8, "text": "Wir warten am Gate A fünfzehn" },
+      { "order": 9, "text": "Ich habe meinen Flug verpasst" },
+      { "order": 10, "text": "Wo ist die Gepäckausgabe?" },
+      { "order": 11, "text": "Ich hole dich vom Flughafen ab" },
+      { "order": 12, "text": "Guten Flug und komm gesund an" },
+      { "order": 13, "text": "Haben Sie Flüssigkeiten in der Tasche?" },
+      { "order": 14, "text": "Das Boarding beginnt in wenigen Minuten" },
+      { "order": 15, "text": "Ich sitze lieber am Fenster als am Gang" }
+    ]
+  },
+  {
+    "lessonId": 86,
+    "title": "Vorlieben ausdrücken",
+    "phrases": [
+      { "order": 1, "text": "Ich trinke lieber Tee als Kaffee" },
+      { "order": 2, "text": "Am liebsten esse ich italienische Pizza" },
+      { "order": 3, "text": "Magst du lieber Katzen oder Hunde?" },
+      { "order": 4, "text": "Ich hasse es, früh aufzustehen" },
+      { "order": 5, "text": "Mein Lieblingsbuch ist ein Krimi" },
+      { "order": 6, "text": "Ich finde Fußball langweilig" },
+      { "order": 7, "text": "Sie hört sehr gern klassische Musik" },
+      { "order": 8, "text": "Was machst du am liebsten in der Freizeit?" },
+      {
+        "order": 9,
+        "text": "Ich gehe gern ins Kino, aber lieber ins Theater"
+      },
+      { "order": 10, "text": "Schokolade schmeckt mir besonders gut" },
+      { "order": 11, "text": "Ich mag die Farbe Blau überhaupt nicht" },
+      { "order": 12, "text": "Er reist für sein Leben gern" },
+      { "order": 13, "text": "Das ist mein Lieblingslied" },
+      { "order": 14, "text": "Ich bevorzuge den Sommer" },
+      { "order": 15, "text": "Geschmäcker sind verschieden" }
+    ]
+  },
+  {
+    "lessonId": 87,
+    "title": "Im Fundbüro",
+    "phrases": [
+      { "order": 1, "text": "Ich habe meinen Regenschirm im Bus vergessen" },
+      { "order": 2, "text": "Wann haben Sie ihn verloren?" },
+      { "order": 3, "text": "Können Sie den Gegenstand bitte beschreiben?" },
+      { "order": 4, "text": "Er ist schwarz und hat einen Holzgriff" },
+      { "order": 5, "text": "Ich habe meine Geldbörse verloren" },
+      { "order": 6, "text": "War Geld oder ein Ausweis darin?" },
+      { "order": 7, "text": "Wir haben Ihren Schlüssel gefunden" },
+      { "order": 8, "text": "Sie können ihn morgen abholen" },
+      { "order": 9, "text": "Bitte bringen Sie Ihren Ausweis mit" },
+      { "order": 10, "text": "Ich bin so froh, dass er da ist" },
+      { "order": 11, "text": "Haben Sie hier eine Brille gesehen?" },
+      { "order": 12, "text": "Füllen Sie bitte dieses Formular aus" },
+      { "order": 13, "text": "Wir rufen Sie an, wenn wir etwas finden" },
+      { "order": 14, "text": "Passen Sie besser auf Ihre Sachen auf" },
+      { "order": 15, "text": "Das Fundbüro ist am Bahnhof" }
+    ]
+  },
+  {
+    "lessonId": 88,
+    "title": "Entschuldigung sagen",
+    "phrases": [
+      { "order": 1, "text": "Es tut mir leid, dass ich zu spät komme" },
+      { "order": 2, "text": "Entschuldigen Sie bitte die Störung" },
+      { "order": 3, "text": "Das war nicht meine Absicht" },
+      { "order": 4, "text": "Verzeihung, ich habe Sie nicht gesehen" },
+      { "order": 5, "text": "Ich hoffe, du bist mir nicht böse" },
+      { "order": 6, "text": "Das wird nicht wieder vorkommen" },
+      { "order": 7, "text": "Ich möchte mich bei Ihnen entschuldigen" },
+      { "order": 8, "text": "Kein Problem, das kann passieren" },
+      { "order": 9, "text": "Macht nichts, alles ist gut" },
+      { "order": 10, "text": "Ich habe einen Fehler gemacht" },
+      { "order": 11, "text": "Tut mir leid, ich habe es vergessen" },
+      { "order": 12, "text": "Ich bitte um Verzeihung" },
+      { "order": 13, "text": "Können wir das vergessen?" },
+      { "order": 14, "text": "Es ist schon in Ordnung" },
+      { "order": 15, "text": "Danke für Ihr Verständnis" }
+    ]
+  },
+  {
+    "lessonId": 89,
+    "title": "In der Bibliothek",
+    "phrases": [
+      { "order": 1, "text": "Ich möchte mich in der Bibliothek anmelden" },
+      { "order": 2, "text": "Wie lange darf ich die Bücher behalten?" },
+      { "order": 3, "text": "Sie können die Bücher vier Wochen ausleihen" },
+      { "order": 4, "text": "Ich suche einen Roman von Thomas Mann" },
+      { "order": 5, "text": "Bitte seien Sie hier im Lesesaal leise" },
+      { "order": 6, "text": "Haben Sie einen Bibliotheksausweis?" },
+      { "order": 7, "text": "Ich muss das Buch heute zurückgeben" },
+      { "order": 8, "text": "Die Gebühr für die Verspätung ist zwei Euro" },
+      { "order": 9, "text": "Gibt es hier Computer mit Internet?" },
+      { "order": 10, "text": "Ich lese gern in einer ruhigen Umgebung" },
+      { "order": 11, "text": "Kann ich das Buch verlängern?" },
+      { "order": 12, "text": "Das Buch ist leider schon ausgeliehen" },
+      { "order": 13, "text": "Wir haben eine große Auswahl an Zeitschriften" },
+      { "order": 14, "text": "Der Kopierer steht in der Ecke" },
+      { "order": 15, "text": "Lesen bildet und macht Spaß" }
+    ]
+  },
+  {
+    "lessonId": 90,
+    "title": "Wünsche und Träume (Hätte/Würde)",
+    "phrases": [
+      { "order": 1, "text": "Ich hätte gern ein großes Haus am Meer" },
+      { "order": 2, "text": "Ich würde gern eine Weltreise machen" },
+      { "order": 3, "text": "Hättest du Zeit für mich?" },
+      { "order": 4, "text": "Er würde gern besser Deutsch sprechen" },
+      { "order": 5, "text": "Wir hätten gern einen Tisch für zwei Personen" },
+      { "order": 6, "text": "Ich wünschte, ich hätte mehr Geld" },
+      { "order": 7, "text": "Was würdest du tun, wenn du reich wärst?" },
+      { "order": 8, "text": "Sie würde gern als Ärztin arbeiten" },
+      { "order": 9, "text": "Ich hätte Lust auf ein Eis" },
+      { "order": 10, "text": "Würden Sie mir bitte helfen?" },
+      { "order": 11, "text": "Das wäre fantastisch" },
+      { "order": 12, "text": "Träume können wahr werden" },
+      { "order": 13, "text": "Ich hätte gern mehr Freizeit" },
+      { "order": 14, "text": "Wir würden uns sehr freuen" },
+      { "order": 15, "text": "Wenn ich Zeit hätte, würde ich kommen" }
+    ]
+  },
+  {
+    "lessonId": 91,
+    "title": "Glückwünsche",
+    "phrases": [
+      { "order": 1, "text": "Herzlichen Glückwunsch zum Geburtstag!" },
+      { "order": 2, "text": "Alles Gute für die Zukunft" },
+      { "order": 3, "text": "Ich gratuliere dir zur bestandenen Prüfung" },
+      { "order": 4, "text": "Viel Glück und Erfolg im neuen Job" },
+      { "order": 5, "text": "Frohe Weihnachten und ein gutes neues Jahr" },
+      { "order": 6, "text": "Wir wünschen euch eine schöne Hochzeit" },
+      { "order": 7, "text": "Gute Besserung, werde schnell gesund" },
+      { "order": 8, "text": "Herzlichen Glückwunsch zur Geburt eures Kindes" },
+      { "order": 9, "text": "Ich freue mich sehr für dich" },
+      { "order": 10, "text": "Feier schön und lass es dir gut gehen" },
+      { "order": 11, "text": "Viel Spaß im Urlaub!" },
+      { "order": 12, "text": "Das hast du toll gemacht" },
+      { "order": 13, "text": "Wir stoßen auf dein Wohl an" },
+      { "order": 14, "text": "Alles Liebe zum Muttertag" },
+      { "order": 15, "text": "Prost auf das Geburtstagskind!" }
+    ]
+  },
+  {
+    "lessonId": 92,
+    "title": "Umwelt und Natur",
+    "phrases": [
+      { "order": 1, "text": "Wir müssen die Umwelt schützen" },
+      { "order": 2, "text": "Ich trenne den Müll in Papier und Plastik" },
+      { "order": 3, "text": "Das Wasser ist eine wichtige Ressource" },
+      {
+        "order": 4,
+        "text": "Wir fahren oft mit dem Fahrrad statt mit dem Auto"
+      },
+      { "order": 5, "text": "Bitte werfen Sie keine Flaschen in die Natur" },
+      { "order": 6, "text": "Im Wald leben viele Tiere und Pflanzen" },
+      { "order": 7, "text": "Solarenergie ist gut für das Klima" },
+      { "order": 8, "text": "Ich kaufe Bio-Produkte auf dem Markt" },
+      {
+        "order": 9,
+        "text": "Wir sparen Strom, indem wir das Licht ausmachen"
+      },
+      { "order": 10, "text": "Die Luft in der Stadt ist nicht so gut" },
+      { "order": 11, "text": "Man sollte keine Lebensmittel wegwerfen" },
+      { "order": 12, "text": "Der Klimawandel ist ein großes Problem" },
+      { "order": 13, "text": "Wir pflanzen einen Baum im Garten" },
+      { "order": 14, "text": "Recycling ist wichtig" },
+      { "order": 15, "text": "Die Natur ist wunderschön" }
+    ]
+  },
+  {
+    "lessonId": 93,
+    "title": "Camping und Zelten",
+    "phrases": [
+      { "order": 1, "text": "Wir fahren am Wochenende zum Campingplatz" },
+      { "order": 2, "text": "Haben wir das Zelt eingepackt?" },
+      { "order": 3, "text": "Ich schlafe gern im Schlafsack" },
+      { "order": 4, "text": "Wir machen abends ein Lagerfeuer" },
+      { "order": 5, "text": "Der Campingplatz liegt direkt am See" },
+      { "order": 6, "text": "Wir brauchen eine Taschenlampe für die Nacht" },
+      { "order": 7, "text": "Es ist schön, unter den Sternen zu schlafen" },
+      { "order": 8, "text": "Gibt es dort Duschen und Toiletten?" },
+      { "order": 9, "text": "Wir grillen Würstchen über dem Feuer" },
+      { "order": 10, "text": "Vorsicht vor den Mücken" },
+      { "order": 11, "text": "Wir bauen das Zelt zusammen auf" },
+      { "order": 12, "text": "Camping ist günstiger als ein Hotel" },
+      { "order": 13, "text": "Die Natur ist hier sehr ruhig" },
+      { "order": 14, "text": "Wir haben einen Gaskocher dabei" },
+      { "order": 15, "text": "Das war ein echtes Abenteuer" }
+    ]
+  },
+  {
+    "lessonId": 94,
+    "title": "Telefonieren",
+    "phrases": [
+      { "order": 1, "text": "Guten Tag, hier spricht Müller" },
+      { "order": 2, "text": "Kann ich bitte Herrn Schmidt sprechen?" },
+      { "order": 3, "text": "Einen Moment bitte, ich verbinde Sie" },
+      { "order": 4, "text": "Die Leitung ist leider besetzt" },
+      { "order": 5, "text": "Können Sie bitte später noch einmal anrufen?" },
+      { "order": 6, "text": "Ich höre Sie sehr schlecht" },
+      { "order": 7, "text": "Möchten Sie eine Nachricht hinterlassen?" },
+      { "order": 8, "text": "Meine Nummer ist die null eins sieben.." },
+      { "order": 9, "text": "Ich rufe wegen der Wohnungsanzeige an" },
+      { "order": 10, "text": "Danke für Ihren Anruf" },
+      { "order": 11, "text": "Können Sie das bitte wiederholen?" },
+      { "order": 12, "text": "Wir wurden unterbrochen" },
+      { "order": 13, "text": "Ich melde mich morgen bei Ihnen" },
+      { "order": 14, "text": "Auf Wiederhören!" },
+      {
+        "order": 15,
+        "text": "Bitte richten Sie ihm aus, dass ich angerufen habe"
+      }
+    ]
+  },
+  {
+    "lessonId": 95,
+    "title": "Bewerbung und Arbeitssuche",
+    "phrases": [
+      { "order": 1, "text": "Ich suche eine neue Arbeit" },
+      {
+        "order": 2,
+        "text": "Ich habe eine interessante Stellenanzeige gelesen"
+      },
+      { "order": 3, "text": "Ich schicke meine Bewerbung per E-Mail" },
+      { "order": 4, "text": "Mein Lebenslauf ist im Anhang" },
+      {
+        "order": 5,
+        "text": "Ich habe nächste Woche ein Vorstellungsgespräch"
+      },
+      { "order": 6, "text": "Welche Erfahrungen haben Sie?" },
+      { "order": 7, "text": "Ich spreche Deutsch und Englisch" },
+      { "order": 8, "text": "Ich arbeite gern im Team" },
+      { "order": 9, "text": "Wann kann ich anfangen?" },
+      {
+        "order": 10,
+        "text": "Ich habe eine Ausbildung als Mechaniker gemacht"
+      },
+      { "order": 11, "text": "Wie hoch ist das Gehalt?" },
+      { "order": 12, "text": "Ich bin sehr motiviert und pünktlich" },
+      { "order": 13, "text": "Haben Sie noch Fragen an uns?" },
+      { "order": 14, "text": "Wir melden uns in ein paar Tagen bei Ihnen" },
+      { "order": 15, "text": "Viel Erfolg bei der Bewerbung" }
+    ]
+  },
+  {
+    "lessonId": 96,
+    "title": "Bildbeschreibung",
+    "phrases": [
+      { "order": 1, "text": "Auf dem Bild sehe ich eine Familie" },
+      { "order": 2, "text": "Im Vordergrund steht ein Auto" },
+      { "order": 3, "text": "Im Hintergrund sieht man Berge und Bäume" },
+      { "order": 4, "text": "Der Mann trägt einen blauen Pullover" },
+      { "order": 5, "text": "Die Sonne scheint und der Himmel ist blau" },
+      { "order": 6, "text": "Die Kinder spielen mit einem Ball" },
+      { "order": 7, "text": "Auf der rechten Seite ist ein Haus" },
+      { "order": 8, "text": "Links sitzt eine Katze auf der Mauer" },
+      { "order": 9, "text": "Das Bild wirkt sehr fröhlich" },
+      { "order": 10, "text": "Es ist wahrscheinlich Sommer" },
+      { "order": 11, "text": "Die Leute sehen glücklich aus" },
+      { "order": 12, "text": "Vielleicht sind sie im Urlaub" },
+      { "order": 13, "text": "In der Mitte des Bildes ist ein Tisch" },
+      { "order": 14, "text": "Das Foto ist schwarz-weiß" },
+      { "order": 15, "text": "Mir gefällt dieses Bild sehr gut" }
+    ]
+  },
+  {
+    "lessonId": 97,
+    "title": "Bank und Geld",
+    "phrases": [
+      { "order": 1, "text": "Ich möchte ein Konto eröffnen" },
+      { "order": 2, "text": "Ich muss Geld am Automaten abheben" },
+      { "order": 3, "text": "Wie hoch sind die Zinsen?" },
+      {
+        "order": 4,
+        "text": "Ich möchte hundert Euro auf mein Konto einzahlen"
+      },
+      { "order": 5, "text": "Bitte geben Sie Ihre Geheimzahl ein" },
+      { "order": 6, "text": "Ich habe meine Karte verloren" },
+      { "order": 7, "text": "Kann ich hier Geld wechseln?" },
+      { "order": 8, "text": "Ich brauche einen Kredit für ein Auto" },
+      { "order": 9, "text": "Die Bank schließt um sechzehn Uhr" },
+      { "order": 10, "text": "Bitte unterschreiben Sie hier unten" },
+      { "order": 11, "text": "Ich mache eine Überweisung online" },
+      { "order": 12, "text": "Mein Konto ist leider leer" },
+      { "order": 13, "text": "Geld macht nicht immer glücklich" },
+      { "order": 14, "text": "Ich spare jeden Monat etwas Geld" },
+      { "order": 15, "text": "Hier ist Ihr Kontoauszug" }
+    ]
+  },
+  {
+    "lessonId": 98,
+    "title": "Verkehrsregeln",
+    "phrases": [
+      { "order": 1, "text": "Hier darf man nur dreißig fahren" },
+      { "order": 2, "text": "Du musst an der roten Ampel halten" },
+      { "order": 3, "text": "Rechts vor links ist eine wichtige Regel" },
+      { "order": 4, "text": "Man darf hier nicht parken" },
+      { "order": 5, "text": "Bitte schnallen Sie sich an" },
+      { "order": 6, "text": "Fahrräder müssen auf dem Radweg fahren" },
+      { "order": 7, "text": "Achten Sie auf die Fußgänger" },
+      { "order": 8, "text": "Hier ist eine Einbahnstraße" },
+      { "order": 9, "text": "Man braucht einen Führerschein zum Autofahren" },
+      { "order": 10, "text": "Alkohol am Steuer ist verboten" },
+      { "order": 11, "text": "Das Stoppschild bedeutet anhalten" },
+      { "order": 12, "text": "Die Polizei kontrolliert die Geschwindigkeit" },
+      { "order": 13, "text": "Man muss immer vorsichtig fahren" },
+      { "order": 14, "text": "Der Blinker ist kaputt" },
+      { "order": 15, "text": "Sicherheit geht vor" }
+    ]
+  },
+  {
+    "lessonId": 99,
+    "title": "Gefühle und Beziehungen",
+    "phrases": [
+      { "order": 1, "text": "Ich bin sehr verliebt in sie" },
+      { "order": 2, "text": "Wir haben uns gestern gestritten" },
+      { "order": 3, "text": "Er ist eifersüchtig auf seinen Kollegen" },
+      { "order": 4, "text": "Vertrauen ist wichtig in einer Beziehung" },
+      { "order": 5, "text": "Ich fühle mich einsam ohne dich" },
+      { "order": 6, "text": "Sie sind seit zehn Jahren verheiratet" },
+      { "order": 7, "text": "Liebe ist ein schönes Gefühl" },
+      { "order": 8, "text": "Wir haben uns wieder vertragen" },
+      { "order": 9, "text": "Er ist mein bester Freund" },
+      { "order": 10, "text": "Ich vermisse meine Familie" },
+      { "order": 11, "text": "Bist du glücklich mit ihm?" },
+      { "order": 12, "text": "Wir passen gut zusammen" },
+      { "order": 13, "text": "Trennung ist immer schwer" },
+      { "order": 14, "text": "Ich mag deine ehrliche Art" },
+      { "order": 15, "text": "Küsse und Umarmungen gehören dazu" }
+    ]
+  },
+  {
+    "lessonId": 100,
+    "title": "Abschied und Rückblick",
+    "phrases": [
+      { "order": 1, "text": "Der Deutschkurs ist jetzt zu Ende" },
+      { "order": 2, "text": "Wir haben viel gelernt und gelacht" },
+      { "order": 3, "text": "Ich werde die Zeit hier vermissen" },
+      { "order": 4, "text": "Wir bleiben in Kontakt" },
+      { "order": 5, "text": "Hast du meine Telefonnummer?" },
+      { "order": 6, "text": "Ich wünsche euch alles Gute für die Zukunft" },
+      { "order": 7, "text": "Hoffentlich sehen wir uns bald wieder" },
+      { "order": 8, "text": "Es war mir eine Freude, Sie kennenzulernen" },
+      { "order": 9, "text": "Gute Reise und komm gut nach Hause" },
+      { "order": 10, "text": "Mach es gut und pass auf dich auf" },
+      { "order": 11, "text": "Danke für die schöne Zeit" },
+      { "order": 12, "text": "Ich mache weiter mit dem Deutschlernen" },
+      { "order": 13, "text": "Tschüss, bis zum nächsten Mal" },
+      { "order": 14, "text": "Das ist kein Abschied für immer" },
+      { "order": 15, "text": "Ende gut, alles gut" }
+    ]
+  }
+]
