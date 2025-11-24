@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Dimensions, Pressable, StyleSheet, Vibration } from 'react-native';
+import {
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  Vibration,
+  Alert,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,6 +14,7 @@ import Animated, {
   Easing,
   cancelAnimation,
   runOnJS,
+  withRepeat,
 } from 'react-native-reanimated';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
@@ -19,13 +26,19 @@ import { Seaweed } from '@/components/orca/seaweed';
 import { Jellyfish } from '@/components/orca/jellyfish';
 import { formatTime } from '@/lib/format-time';
 import { useAudioPlayer } from 'expo-audio';
+import { useWhisperModels } from '@/components/whisper/useWhisperModels';
+import { TranscribeRealtimeOptions } from 'whisper.rn/index.js';
+import {
+  getRecordingPermissionsAsync,
+  requestRecordingPermissionsAsync,
+} from 'expo-audio';
+
 const audioSource = require('../../assets/music/orca.mp3');
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const ORCA_SIZE = 150;
 const OBSTACLE_SIZE = 60;
-const TOTAL_OBSTACLES = 15;
 const ORCA_X = 0;
 const ORCA_Y = SCREEN_HEIGHT / 2 - (ORCA_SIZE * 0.6) / 2;
 
@@ -38,32 +51,104 @@ const LESSON = {
   order: 1,
   title: 'Begrüßungen',
   phrases: [
-    { order: 1, text: 'Hallo!' },
-    { order: 2, text: 'Guten Morgen' },
-    { order: 3, text: 'Guten Tag, Auf Wiedersehen, Herr Klein' },
+    {
+      order: 1,
+      text: 'Hallo!',
+      dictionary: [
+        { language: 'en', text: 'Hello!' },
+        { language: 'ar', text: 'مرحباً!' },
+      ],
+    },
+    {
+      order: 2,
+      text: 'Guten Morgen',
+      dictionary: [
+        { language: 'en', text: 'Good morning' },
+        { language: 'ar', text: 'صباح الخير' },
+      ],
+    },
+    {
+      order: 3,
+      text: 'Guten Tag',
+      dictionary: [
+        { language: 'en', text: 'Good day' },
+        { language: 'ar', text: 'نهارك سعيد' },
+      ],
+    },
+    {
+      order: 4,
+      text: 'Guten Abend',
+      dictionary: [
+        { language: 'en', text: 'Good evening' },
+        { language: 'ar', text: 'مساء الخير' },
+      ],
+    },
+    {
+      order: 5,
+      text: 'Gute Nacht',
+      dictionary: [
+        { language: 'en', text: 'Good night' },
+        { language: 'ar', text: 'تصبح على خير' },
+      ],
+    },
+    {
+      order: 6,
+      text: 'Tschüss',
+      dictionary: [
+        { language: 'en', text: 'Bye' },
+        { language: 'ar', text: 'وداعاً' },
+      ],
+    },
+    {
+      order: 7,
+      text: 'Auf Wiedersehen',
+      dictionary: [
+        { language: 'en', text: 'Goodbye' },
+        { language: 'ar', text: 'إلى اللقاء' },
+      ],
+    },
+    {
+      order: 8,
+      text: 'Bis bald',
+      dictionary: [
+        { language: 'en', text: 'See you soon' },
+        { language: 'ar', text: 'أراك قريباً' },
+      ],
+    },
   ],
 };
 
-type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
-
 const NATIVE_LANGUAGE = 'en';
+const TOTAL_OBSTACLES = LESSON.phrases.length;
+
+type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
 
 export const Orca = () => {
   const player = useAudioPlayer(audioSource);
 
   const [gameState, setGameState] = useState<GameStatus>('idle');
-  const [currentObstacle, setCurrentObstacle] = useState<string | null>(null);
-  const [score, setScore] = useState(0);
+  const [currentObstacleIndex, setCurrentObstacleIndex] = useState<
+    number | null
+  >(null);
+  const [currentObstacleEmoji, setCurrentObstacleEmoji] = useState<
+    string | null
+  >(null);
+  const [correctPhrases, setCorrectPhrases] = useState(0);
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [lives, setLives] = useState(5);
-  const [canClear, setCanClear] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [finalTime, setFinalTime] = useState(0);
+  const [isListening, setIsListening] = useState(false);
+  const [currentTranscript, setCurrentTranscript] = useState('');
+
+  const { whisperContext, isInitializingModel, initializeWhisperModel } =
+    useWhisperModels();
 
   const obstacleX = useSharedValue(SCREEN_WIDTH + OBSTACLE_SIZE);
   const obstacleY = useSharedValue(ORCA_Y);
   const obstacleOpacity = useSharedValue(0);
   const orcaShake = useSharedValue(0);
-  const buttonScale = useSharedValue(1);
+  const micScale = useSharedValue(1);
 
   const obstacleTimeoutRef = useRef<number | null>(null);
   const timerIntervalRef = useRef<number | null>(null);
@@ -71,7 +156,38 @@ export const Orca = () => {
   const isMovingRef = useRef(false);
   const hasHitRef = useRef(false);
   const gameEndedRef = useRef(false);
-  const scoreRef = useRef(0);
+  const currentPhraseIndexRef = useRef(0);
+  const correctPhrasesRef = useRef(0);
+  const realtimeTranscriberRef = useRef<any>(null);
+
+  // Initialize Whisper model on mount
+  useEffect(() => {
+    const initModel = async () => {
+      try {
+        await initializeWhisperModel('base', { initVad: false });
+      } catch (error) {
+        console.error('Failed to initialize Whisper model:', error);
+      }
+    };
+    initModel();
+  }, []);
+
+  // Animate mic icon when listening
+  useEffect(() => {
+    if (isListening) {
+      micScale.value = withRepeat(
+        withSequence(
+          withTiming(1.2, { duration: 500 }),
+          withTiming(1, { duration: 500 })
+        ),
+        -1,
+        false
+      );
+    } else {
+      cancelAnimation(micScale);
+      micScale.value = withTiming(1, { duration: 200 });
+    }
+  }, [isListening]);
 
   // Handle audio playback based on game state
   useEffect(() => {
@@ -79,10 +195,9 @@ export const Orca = () => {
       if (!player) return;
 
       if (gameState === 'playing' && player.isLoaded) {
-        // Start music when game starts
         try {
           if (player.playing) {
-            await player.seekTo(0); // Reset to start
+            await player.seekTo(0);
           } else {
             await player.play();
           }
@@ -90,11 +205,10 @@ export const Orca = () => {
           console.error('Error playing audio:', error);
         }
       } else {
-        // Stop music when game is not playing
         try {
           if (player.playing) {
             await player.pause();
-            await player.seekTo(0); // Reset to start for next play
+            await player.seekTo(0);
           }
         } catch (error) {
           console.error('Error stopping audio:', error);
@@ -121,73 +235,207 @@ export const Orca = () => {
     }, 100);
   }, [stopTimer]);
 
-  const cleanup = useCallback(() => {
+  const stopListening = useCallback(async () => {
+    try {
+      if (realtimeTranscriberRef.current?.stop) {
+        await realtimeTranscriberRef.current.stop();
+        realtimeTranscriberRef.current = null;
+      }
+      setIsListening(false);
+      setCurrentTranscript('');
+    } catch (err) {
+      console.error('Error stopping listening:', err);
+    }
+  }, []);
+
+  const cleanup = useCallback(async () => {
     if (obstacleTimeoutRef.current) {
       clearTimeout(obstacleTimeoutRef.current);
       obstacleTimeoutRef.current = null;
     }
     stopTimer();
+    await stopListening();
     cancelAnimation(obstacleX);
     cancelAnimation(obstacleOpacity);
     cancelAnimation(obstacleY);
     cancelAnimation(orcaShake);
+    cancelAnimation(micScale);
     isMovingRef.current = false;
     hasHitRef.current = false;
-  }, [stopTimer]);
+  }, [stopTimer, stopListening]);
 
   const endGame = useCallback(
-    (won: boolean) => {
+    async (won: boolean) => {
       if (gameEndedRef.current) return;
       gameEndedRef.current = true;
 
       const ft = Date.now() - startTimeRef.current;
       setFinalTime(ft);
-      cleanup();
-      setCurrentObstacle(null);
-      setCanClear(false);
+      await cleanup();
+      setCurrentObstacleIndex(null);
+      setCurrentObstacleEmoji(null);
       obstacleOpacity.value = 0;
       setGameState(won ? 'won' : 'lost');
     },
     [cleanup]
   );
 
+  const getNormalizedText = (text: string): string => {
+    return text
+      .toLowerCase()
+      .replace(/[^\w\s]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
+  const checkPronunciation = useCallback(
+    (transcript: string, targetPhrase: string): boolean => {
+      const normalizedTranscript = getNormalizedText(transcript);
+      const normalizedTarget = getNormalizedText(targetPhrase);
+
+      console.log('Checking pronunciation:', {
+        transcript: normalizedTranscript,
+        target: normalizedTarget,
+      });
+
+      // Check for exact match
+      if (normalizedTranscript === normalizedTarget) {
+        return true;
+      }
+
+      // Check if target is contained in transcript
+      if (normalizedTranscript.includes(normalizedTarget)) {
+        return true;
+      }
+
+      // Check for word-by-word match (at least 80% of words match)
+      const transcriptWords = normalizedTranscript.split(' ');
+      const targetWords = normalizedTarget.split(' ');
+
+      if (targetWords.length === 0) return false;
+
+      let matchedWords = 0;
+      for (const targetWord of targetWords) {
+        if (transcriptWords.includes(targetWord)) {
+          matchedWords++;
+        }
+      }
+
+      const matchPercentage = matchedWords / targetWords.length;
+      return matchPercentage >= 0.8;
+    },
+    []
+  );
+
+  const startListening = useCallback(async () => {
+    if (!whisperContext || currentObstacleIndex === null) return;
+
+    try {
+      const hasMicPermission = await getRecordingPermissionsAsync();
+      if (!hasMicPermission.granted) {
+        const permission = await requestRecordingPermissionsAsync();
+        if (!permission.granted) {
+          Alert.alert(
+            'Microphone Permission',
+            'Microphone access is required to play this game.'
+          );
+          return;
+        }
+      }
+
+      setIsListening(true);
+      setCurrentTranscript('');
+
+      const realtimeOptions: TranscribeRealtimeOptions = {
+        language: 'de',
+        realtimeAudioSec: 300,
+        realtimeAudioSliceSec: 10,
+        realtimeAudioMinSec: 1,
+        audioSessionOnStartIos: {
+          category: 'PlayAndRecord' as any,
+          options: ['MixWithOthers' as any],
+          mode: 'Default' as any,
+        },
+        audioSessionOnStopIos: 'restore' as any,
+      };
+
+      const { stop, subscribe } =
+        await whisperContext.transcribeRealtime(realtimeOptions);
+
+      subscribe((event: any) => {
+        const { isCapturing, data } = event;
+
+        if (data?.result) {
+          const transcript = data.result.trim();
+          setCurrentTranscript(transcript);
+
+          // Check if pronunciation matches the target phrase
+          const targetPhrase = LESSON.phrases[currentObstacleIndex].text;
+          if (checkPronunciation(transcript, targetPhrase)) {
+            runOnJS(clearObstacle)();
+          }
+        }
+
+        if (!isCapturing) {
+          console.log('Speech segment finished, continuing to listen...');
+        }
+      });
+
+      realtimeTranscriberRef.current = { stop };
+    } catch (err) {
+      console.error('Failed to start listening:', err);
+      setIsListening(false);
+    }
+  }, [whisperContext, currentObstacleIndex, checkPronunciation]);
+
   const spawnObstacle = useCallback(() => {
     if (gameEndedRef.current) return;
 
-    const type =
+    const nextIndex = currentPhraseIndexRef.current;
+    if (nextIndex >= LESSON.phrases.length) {
+      endGame(true);
+      return;
+    }
+
+    const emoji =
       OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
-    setCurrentObstacle(type);
-    setCanClear(true);
+    setCurrentObstacleIndex(nextIndex);
+    setCurrentPhraseIndex(nextIndex);
+    setCurrentObstacleEmoji(emoji);
     hasHitRef.current = false;
     isMovingRef.current = true;
 
-    // Reset obstacle position
     obstacleY.value = ORCA_Y;
     obstacleX.value = SCREEN_WIDTH + OBSTACLE_SIZE;
     obstacleOpacity.value = withTiming(1, { duration: 200 });
 
+    // Start listening for pronunciation
+    startListening();
+
     const collisionX = ORCA_X + ORCA_SIZE - 20;
     obstacleX.value = withTiming(
       collisionX,
-      { duration: 3000, easing: Easing.linear },
+      { duration: 5000, easing: Easing.linear },
       (finished) => {
         if (finished && isMovingRef.current && !gameEndedRef.current) {
           runOnJS(handleCollisionJS)();
         }
       }
     );
-  }, [endGame]);
+  }, [endGame, startListening]);
 
-  const handleCollisionJS = useCallback(() => {
+  const handleCollisionJS = useCallback(async () => {
     if (hasHitRef.current || gameEndedRef.current) return;
     hasHitRef.current = true;
     isMovingRef.current = false;
 
-    // Vibrate on collision
-    Vibration.vibrate(200);
+    await stopListening();
 
-    // Cancel the current obstacle animation
+    Vibration.vibrate(200);
     cancelAnimation(obstacleX);
+
+    // Move to next phrase WITHOUT incrementing correct phrases count
+    currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
 
     setLives((prev) => {
       const newLives = prev - 1;
@@ -195,12 +443,21 @@ export const Orca = () => {
         endGame(false);
         return 0;
       }
-      // Spawn next obstacle immediately after collision (if game continues)
+
+      // Clear current obstacle and spawn next one
+      setCurrentObstacleIndex(null);
+      setCurrentObstacleEmoji(null);
+      obstacleOpacity.value = withTiming(0, { duration: 200 });
+
       setTimeout(() => {
         if (!gameEndedRef.current) {
-          spawnObstacle();
+          if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
+            endGame(true);
+          } else {
+            spawnObstacle();
+          }
         }
-      }, 300); // Small delay for shake animation to be visible
+      }, 300);
       return newLives;
     });
 
@@ -211,33 +468,31 @@ export const Orca = () => {
       withTiming(10, { duration: 50 }),
       withTiming(0, { duration: 50 })
     );
+  }, [endGame, spawnObstacle, stopListening]);
 
-    setCurrentObstacle(null);
-    setCanClear(false);
-    obstacleOpacity.value = withTiming(0, { duration: 200 });
-  }, [endGame, spawnObstacle]);
-
-  const clearObstacle = useCallback(() => {
+  const clearObstacle = useCallback(async () => {
     if (
-      !canClear ||
-      !currentObstacle ||
       hasHitRef.current ||
-      gameEndedRef.current
+      gameEndedRef.current ||
+      currentObstacleIndex === null
     )
       return;
 
     isMovingRef.current = false;
-    hasHitRef.current = true; // Prevent collision handling
+    hasHitRef.current = true;
     cancelAnimation(obstacleX);
 
-    const newScore = scoreRef.current + 1;
-    scoreRef.current = newScore;
-    setScore(newScore);
-    setCanClear(false);
-    setCurrentObstacle(null);
+    await stopListening();
 
-    // Check for win condition
-    if (newScore >= TOTAL_OBSTACLES) {
+    // Increment both phrase index and correct phrases count
+    currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
+    correctPhrasesRef.current = correctPhrasesRef.current + 1;
+
+    setCorrectPhrases(correctPhrasesRef.current);
+    setCurrentObstacleIndex(null);
+    setCurrentObstacleEmoji(null);
+
+    if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
       endGame(true);
       return;
     }
@@ -248,39 +503,32 @@ export const Orca = () => {
     });
     obstacleOpacity.value = withTiming(0, { duration: 300 });
 
-    // Spawn next obstacle immediately
     setTimeout(() => {
       if (!gameEndedRef.current) {
         spawnObstacle();
       }
     }, 100);
-  }, [canClear, currentObstacle, endGame, spawnObstacle]);
+  }, [currentObstacleIndex, endGame, spawnObstacle, stopListening]);
 
-  const handleButtonPress = useCallback(() => {
-    buttonScale.value = withSequence(
-      withTiming(0.9, { duration: 50 }),
-      withTiming(1, { duration: 100 })
-    );
-
-    if (gameState === 'idle' || gameState === 'won' || gameState === 'lost') {
-      startGame();
+  const startGame = useCallback(async () => {
+    if (!whisperContext) {
+      Alert.alert(
+        'Not Ready',
+        'Whisper model is still loading. Please wait...'
+      );
       return;
     }
 
-    if (gameState === 'playing') {
-      clearObstacle();
-    }
-  }, [gameState, clearObstacle]);
-
-  const startGame = useCallback(() => {
-    cleanup();
+    await cleanup();
     gameEndedRef.current = false;
-    scoreRef.current = 0;
+    currentPhraseIndexRef.current = 0;
+    correctPhrasesRef.current = 0;
     setGameState('playing');
-    setScore(0);
+    setCorrectPhrases(0);
+    setCurrentPhraseIndex(0);
     setLives(5);
-    setCurrentObstacle(null);
-    setCanClear(false);
+    setCurrentObstacleIndex(null);
+    setCurrentObstacleEmoji(null);
     setElapsedTime(0);
     setFinalTime(0);
 
@@ -293,9 +541,13 @@ export const Orca = () => {
     obstacleTimeoutRef.current = setTimeout(() => {
       spawnObstacle();
     }, 1000);
-  }, [cleanup, spawnObstacle, startTimer]);
+  }, [cleanup, spawnObstacle, startTimer, whisperContext]);
 
-  useEffect(() => cleanup, [cleanup]);
+  useEffect(() => {
+    return () => {
+      cleanup();
+    };
+  }, [cleanup]);
 
   const orcaContainerStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: orcaShake.value }],
@@ -309,9 +561,17 @@ export const Orca = () => {
     opacity: obstacleOpacity.value,
   }));
 
-  const buttonStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: buttonScale.value }],
+  const micAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: micScale.value }],
   }));
+
+  const getTranslation = (phraseIndex: number): string => {
+    const phrase = LESSON.phrases[phraseIndex];
+    const translation = phrase.dictionary.find(
+      (d) => d.language === NATIVE_LANGUAGE
+    );
+    return translation?.text || phrase.text;
+  };
 
   return (
     <View style={styles.container}>
@@ -340,7 +600,7 @@ export const Orca = () => {
         </Animated.View>
       )}
 
-      {currentObstacle && (
+      {currentObstacleEmoji && (
         <Animated.View
           style={[
             styles.obstacle,
@@ -348,7 +608,7 @@ export const Orca = () => {
             { top: SCREEN_HEIGHT * 0.6 - OBSTACLE_SIZE / 2 },
           ]}
         >
-          <Text style={styles.obstacleEmoji}>{currentObstacle}</Text>
+          <Text style={styles.obstacleEmoji}>{currentObstacleEmoji}</Text>
         </Animated.View>
       )}
 
@@ -390,50 +650,82 @@ export const Orca = () => {
           <View>
             <Progress
               height={16}
-              value={Math.floor((score / TOTAL_OBSTACLES) * 100)}
+              value={Math.floor((correctPhrases / TOTAL_OBSTACLES) * 100)}
             />
           </View>
         </View>
 
-        {gameState === 'playing' && (
+        {gameState === 'playing' && currentObstacleIndex !== null && (
           <View
             style={{
               position: 'absolute',
-              top: SCREEN_HEIGHT * 0.3,
+              top: SCREEN_HEIGHT * 0.25,
               alignSelf: 'center',
               paddingHorizontal: 20,
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              borderRadius: 20,
+              padding: 20,
             }}
           >
             <Text
               style={{
-                fontSize: 46,
-                fontWeight: '800',
+                fontSize: 18,
+                fontWeight: '600',
                 textAlign: 'center',
-                color: '#000',
+                color: BRAND_COLOR,
+                marginBottom: 8,
               }}
             >
-              {LESSON.phrases[2].text}
+              Say in German:
+            </Text>
+            <Text
+              style={{
+                fontSize: 36,
+                fontWeight: '800',
+                textAlign: 'center',
+                color: '#FFF',
+              }}
+            >
+              {getTranslation(currentObstacleIndex)}
             </Text>
           </View>
         )}
 
         {gameState === 'playing' && (
-          <Animated.View style={[styles.buttonContainer, buttonStyle]}>
-            <Pressable style={styles.actionButton} onPress={handleButtonPress}>
-              <Text style={styles.buttonText}>🌊 SPLASH!</Text>
-            </Pressable>
+          <Animated.View style={[styles.indicatorContainer, micAnimatedStyle]}>
+            <View style={styles.indicatorButton}>
+              <View style={styles.indicatorContent}>
+                <Text style={styles.micIcon}>{isListening ? '🎤' : '🔇'}</Text>
+                <Text style={styles.languageIndicator}>🇺🇸 → 🇩🇪</Text>
+              </View>
+              {isListening && currentTranscript && (
+                <Text style={styles.transcriptText} numberOfLines={2}>
+                  {currentTranscript}
+                </Text>
+              )}
+            </View>
           </Animated.View>
         )}
 
         {gameState === 'idle' && (
           <View style={styles.overlay}>
             <Text style={styles.titleText}>🐋 Orca Swim 🐋</Text>
-            <Text style={styles.instructionText}>Dodge the obstacles!</Text>
-            <Pressable style={styles.startButton} onPress={handleButtonPress}>
-              <Text style={styles.startButtonText}>TAP TO START</Text>
+            <Text style={styles.instructionText}>Pronunciation Challenge!</Text>
+            <Pressable
+              style={[
+                styles.startButton,
+                (isInitializingModel || !whisperContext) &&
+                  styles.buttonDisabled,
+              ]}
+              onPress={startGame}
+              disabled={isInitializingModel || !whisperContext}
+            >
+              <Text style={styles.startButtonText}>
+                {isInitializingModel ? 'LOADING...' : 'TAP TO START'}
+              </Text>
             </Pressable>
             <Text style={styles.subText}>
-              Press SPLASH to clear obstacles{'\n'}before they hit you!
+              Say the German phrase aloud{'\n'}to clear each obstacle!
             </Text>
           </View>
         )}
@@ -443,10 +735,10 @@ export const Orca = () => {
             <Text style={styles.winText}>🎉 YOU WON! 🎉</Text>
             <Text style={styles.finalTime}>⏱️ {formatTime(finalTime)}</Text>
             <Text style={styles.finalScore}>
-              Score: {score}/{TOTAL_OBSTACLES}
+              Correct: {correctPhrases}/{TOTAL_OBSTACLES}
             </Text>
             <Text style={styles.livesLeft}>Lives remaining: {lives}</Text>
-            <Pressable style={styles.startButton} onPress={handleButtonPress}>
+            <Pressable style={styles.startButton} onPress={startGame}>
               <Text style={styles.startButtonText}>PLAY AGAIN</Text>
             </Pressable>
           </View>
@@ -457,9 +749,9 @@ export const Orca = () => {
             <Text style={styles.loseText}>💔 GAME OVER 💔</Text>
             <Text style={styles.finalTime}>⏱️ {formatTime(finalTime)}</Text>
             <Text style={styles.finalScore}>
-              Score: {score}/{TOTAL_OBSTACLES}
+              Correct: {correctPhrases}/{TOTAL_OBSTACLES}
             </Text>
-            <Pressable style={styles.startButton} onPress={handleButtonPress}>
+            <Pressable style={styles.startButton} onPress={startGame}>
               <Text style={styles.startButtonText}>TRY AGAIN</Text>
             </Pressable>
           </View>
@@ -512,10 +804,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontVariant: ['tabular-nums'],
   },
-  buttonContainer: { position: 'absolute', bottom: 80, alignSelf: 'center' },
-  actionButton: {
+  indicatorContainer: {
+    position: 'absolute',
+    bottom: 80,
+    alignSelf: 'center',
+  },
+  indicatorButton: {
     backgroundColor: DARK_COLOR,
-    paddingHorizontal: 44,
+    paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 28,
     shadowColor: '#000',
@@ -523,8 +819,32 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+    minWidth: 200,
+    alignItems: 'center',
   },
-  buttonText: { color: BRAND_COLOR, fontSize: 22, fontWeight: 'bold' },
+  indicatorContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  micIcon: {
+    fontSize: 24,
+  },
+  languageIndicator: {
+    color: BRAND_COLOR,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  transcriptText: {
+    color: '#4ade80',
+    fontSize: 14,
+    fontWeight: '600',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
