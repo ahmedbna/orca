@@ -54,7 +54,7 @@ export const Whisper = () => {
     initializeModel();
   }, []);
 
-  const initializeModel = async (modelId: string = 'base') => {
+  const initializeModel = async (modelId: string = 'small') => {
     try {
       await initializeWhisperModel(modelId, { initVad: false });
     } catch (error) {
@@ -197,7 +197,7 @@ export const Whisper = () => {
       }
 
       // Transcribe the audio
-      const options = { language: 'en' };
+      const options = { language: 'de' };
       const { promise } = whisperContext.transcribe(expoAudioPath.uri, options);
 
       const startTime = Date.now();
@@ -239,7 +239,7 @@ export const Whisper = () => {
 
       // Use the built-in transcribeRealtime method from whisper.rn
       const realtimeOptions: TranscribeRealtimeOptions = {
-        language: 'en',
+        language: 'de',
         // Keep the session alive well past the default 30s ceiling so we only stop on user action
         realtimeAudioSec: 300,
         realtimeAudioSliceSec: 20,
@@ -321,7 +321,8 @@ export const Whisper = () => {
   };
 
   const activeModelLabel = getCurrentModel()?.label || 'Model';
-  const downloadPercentage = getDownloadProgress(currentModelId || 'base') ?? 0;
+  const downloadPercentage =
+    getDownloadProgress(currentModelId || 'small') ?? 0;
   const whisperStatusText = isDownloading
     ? `Downloading ${activeModelLabel} · ${(downloadPercentage * 100).toFixed(
         0
@@ -463,37 +464,6 @@ export const Whisper = () => {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Models</Text>
-          <View style={styles.modelGrid}>
-            {['large-v3-turbo', 'tiny', 'base', 'small'].map((modelId) => {
-              const isActive = getCurrentModel()?.id === modelId;
-              return (
-                <TouchableOpacity
-                  key={modelId}
-                  style={[
-                    styles.modelChip,
-                    isActive && styles.modelChipActive,
-                    (isDownloading || isInitializingModel) &&
-                      styles.buttonDisabled,
-                  ]}
-                  onPress={() => initializeModel(modelId)}
-                  disabled={isDownloading || isInitializingModel}
-                >
-                  <Text
-                    style={[
-                      styles.modelChipText,
-                      isActive && styles.modelChipTextActive,
-                    ]}
-                  >
-                    {modelId}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-
         {storedModels.length > 0 ? (
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>Stored models</Text>
@@ -538,10 +508,6 @@ export const Whisper = () => {
             })}
           </View>
         ) : null}
-
-        <Text style={styles.footerNote}>
-          whisper.rn demo — download a model, try a sample file, or speak live.
-        </Text>
       </ScrollView>
     </SafeAreaView>
   );

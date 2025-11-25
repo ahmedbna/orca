@@ -2,6 +2,9 @@ import { Orca } from '@/components/orca/orca';
 import { View } from '@/components/ui/view';
 import { Whisper } from '@/components/whisper/whisper';
 
+const LEARNING_LANGUAGE = 'de';
+const NATIVE_LANGUAGE = 'en';
+
 const LESSON = {
   order: 1,
   title: 'Begrüßungen',
@@ -86,53 +89,15 @@ const LESSON = {
         { language: 'ar', text: 'نهارك سعيد يا سيد مولر' },
       ],
     },
-    {
-      order: 11,
-      text: 'Guten Abend, Frau Schmidt',
-      dictionary: [
-        { language: 'en', text: 'Good evening, Mrs. Schmidt' },
-        { language: 'ar', text: 'مساء الخير يا سيدة شميت' },
-      ],
-    },
-    {
-      order: 12,
-      text: 'Hallo, wie geht es?',
-      dictionary: [
-        { language: 'en', text: 'Hello, how are you?' },
-        { language: 'ar', text: 'مرحباً، كيف حالك؟' },
-      ],
-    },
-    {
-      order: 13,
-      text: 'Tschüss, bis morgen',
-      dictionary: [
-        { language: 'en', text: 'Bye, see you tomorrow' },
-        { language: 'ar', text: 'وداعاً، أراك غداً' },
-      ],
-    },
-    {
-      order: 14,
-      text: 'Gute Nacht, Maria',
-      dictionary: [
-        { language: 'en', text: 'Good night, Maria' },
-        { language: 'ar', text: 'تصبحين على خير يا ماريا' },
-      ],
-    },
-    {
-      order: 15,
-      text: 'Auf Wiedersehen, Herr Klein',
-      dictionary: [
-        { language: 'en', text: 'Goodbye, Mr. Klein' },
-        { language: 'ar', text: 'إلى اللقاء يا سيد كلاين' },
-      ],
-    },
   ],
 };
 
 export default function HomeScreen() {
   return (
-    <View style={{ flex: 1 }}>
-      <Orca />
-    </View>
+    <Orca
+      lesson={LESSON}
+      native={NATIVE_LANGUAGE}
+      language={LEARNING_LANGUAGE}
+    />
   );
 }

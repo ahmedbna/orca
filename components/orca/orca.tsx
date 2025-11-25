@@ -47,85 +47,26 @@ const DARK_COLOR = '#000000';
 
 const OBSTACLE_TYPES = ['🪸', '🦑', '🦈', '⚓', '🪼', '🐡'];
 
-const LESSON = {
-  order: 1,
-  title: 'Begrüßungen',
-  phrases: [
-    {
-      order: 1,
-      text: 'Hallo!',
-      dictionary: [
-        { language: 'en', text: 'Hello!' },
-        { language: 'ar', text: 'مرحباً!' },
-      ],
-    },
-    {
-      order: 2,
-      text: 'Guten Morgen',
-      dictionary: [
-        { language: 'en', text: 'Good morning' },
-        { language: 'ar', text: 'صباح الخير' },
-      ],
-    },
-    {
-      order: 3,
-      text: 'Guten Tag',
-      dictionary: [
-        { language: 'en', text: 'Good day' },
-        { language: 'ar', text: 'نهارك سعيد' },
-      ],
-    },
-    {
-      order: 4,
-      text: 'Guten Abend',
-      dictionary: [
-        { language: 'en', text: 'Good evening' },
-        { language: 'ar', text: 'مساء الخير' },
-      ],
-    },
-    {
-      order: 5,
-      text: 'Gute Nacht',
-      dictionary: [
-        { language: 'en', text: 'Good night' },
-        { language: 'ar', text: 'تصبح على خير' },
-      ],
-    },
-    {
-      order: 6,
-      text: 'Tschüss',
-      dictionary: [
-        { language: 'en', text: 'Bye' },
-        { language: 'ar', text: 'وداعاً' },
-      ],
-    },
-    {
-      order: 7,
-      text: 'Auf Wiedersehen',
-      dictionary: [
-        { language: 'en', text: 'Goodbye' },
-        { language: 'ar', text: 'إلى اللقاء' },
-      ],
-    },
-    {
-      order: 8,
-      text: 'Bis bald',
-      dictionary: [
-        { language: 'en', text: 'See you soon' },
-        { language: 'ar', text: 'أراك قريباً' },
-      ],
-    },
-  ],
-};
-
-const NATIVE_LANGUAGE = 'en';
-const TOTAL_OBSTACLES = LESSON.phrases.length;
-
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
 
-export const Orca = () => {
+type Props = {
+  native: string;
+  language: string;
+  lesson: {
+    order: number;
+    title: string;
+    phrases: {
+      order: number;
+      text: string;
+      dictionary: { language: string; text: string }[];
+    }[];
+  };
+};
+
+export const Orca = ({ lesson, native, language }: Props) => {
   const player = useAudioPlayer(audioSource);
 
+  const TOTAL_OBSTACLES = lesson.phrases.length;
   const [gameState, setGameState] = useState<GameStatus>('idle');
   const [currentObstacleIndex, setCurrentObstacleIndex] = useState<
     number | null
@@ -164,7 +105,7 @@ export const Orca = () => {
   useEffect(() => {
     const initModel = async () => {
       try {
-        await initializeWhisperModel('base', { initVad: false });
+        await initializeWhisperModel('small', { initVad: false });
       } catch (error) {
         console.error('Failed to initialize Whisper model:', error);
       }
@@ -327,157 +268,15 @@ export const Orca = () => {
     []
   );
 
-  const startListening = useCallback(async () => {
-    if (!whisperContext || currentObstacleIndex === null) return;
-
-    try {
-      const hasMicPermission = await getRecordingPermissionsAsync();
-      if (!hasMicPermission.granted) {
-        const permission = await requestRecordingPermissionsAsync();
-        if (!permission.granted) {
-          Alert.alert(
-            'Microphone Permission',
-            'Microphone access is required to play this game.'
-          );
-          return;
-        }
-      }
-
-      setIsListening(true);
-      setCurrentTranscript('');
-
-      const realtimeOptions: TranscribeRealtimeOptions = {
-        language: 'de',
-        realtimeAudioSec: 300,
-        realtimeAudioSliceSec: 10,
-        realtimeAudioMinSec: 1,
-        audioSessionOnStartIos: {
-          category: 'PlayAndRecord' as any,
-          options: ['MixWithOthers' as any],
-          mode: 'Default' as any,
-        },
-        audioSessionOnStopIos: 'restore' as any,
-      };
-
-      const { stop, subscribe } =
-        await whisperContext.transcribeRealtime(realtimeOptions);
-
-      subscribe((event: any) => {
-        const { isCapturing, data } = event;
-
-        if (data?.result) {
-          const transcript = data.result.trim();
-          setCurrentTranscript(transcript);
-
-          // Check if pronunciation matches the target phrase
-          const targetPhrase = LESSON.phrases[currentObstacleIndex].text;
-          if (checkPronunciation(transcript, targetPhrase)) {
-            runOnJS(clearObstacle)();
-          }
-        }
-
-        if (!isCapturing) {
-          console.log('Speech segment finished, continuing to listen...');
-        }
-      });
-
-      realtimeTranscriberRef.current = { stop };
-    } catch (err) {
-      console.error('Failed to start listening:', err);
-      setIsListening(false);
-    }
-  }, [whisperContext, currentObstacleIndex, checkPronunciation]);
-
-  const spawnObstacle = useCallback(() => {
-    if (gameEndedRef.current) return;
-
-    const nextIndex = currentPhraseIndexRef.current;
-    if (nextIndex >= LESSON.phrases.length) {
-      endGame(true);
-      return;
-    }
-
-    const emoji =
-      OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
-    setCurrentObstacleIndex(nextIndex);
-    setCurrentPhraseIndex(nextIndex);
-    setCurrentObstacleEmoji(emoji);
-    hasHitRef.current = false;
-    isMovingRef.current = true;
-
-    obstacleY.value = ORCA_Y;
-    obstacleX.value = SCREEN_WIDTH + OBSTACLE_SIZE;
-    obstacleOpacity.value = withTiming(1, { duration: 200 });
-
-    // Start listening for pronunciation
-    startListening();
-
-    const collisionX = ORCA_X + ORCA_SIZE - 20;
-    obstacleX.value = withTiming(
-      collisionX,
-      { duration: 5000, easing: Easing.linear },
-      (finished) => {
-        if (finished && isMovingRef.current && !gameEndedRef.current) {
-          runOnJS(handleCollisionJS)();
-        }
-      }
-    );
-  }, [endGame, startListening]);
-
-  const handleCollisionJS = useCallback(async () => {
-    if (hasHitRef.current || gameEndedRef.current) return;
-    hasHitRef.current = true;
-    isMovingRef.current = false;
-
-    await stopListening();
-
-    Vibration.vibrate(200);
-    cancelAnimation(obstacleX);
-
-    // Move to next phrase WITHOUT incrementing correct phrases count
-    currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
-
-    setLives((prev) => {
-      const newLives = prev - 1;
-      if (newLives <= 0) {
-        endGame(false);
-        return 0;
-      }
-
-      // Clear current obstacle and spawn next one
-      setCurrentObstacleIndex(null);
-      setCurrentObstacleEmoji(null);
-      obstacleOpacity.value = withTiming(0, { duration: 200 });
-
-      setTimeout(() => {
-        if (!gameEndedRef.current) {
-          if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
-            endGame(true);
-          } else {
-            spawnObstacle();
-          }
-        }
-      }, 300);
-      return newLives;
-    });
-
-    orcaShake.value = withSequence(
-      withTiming(-10, { duration: 50 }),
-      withTiming(10, { duration: 50 }),
-      withTiming(-10, { duration: 50 }),
-      withTiming(10, { duration: 50 }),
-      withTiming(0, { duration: 50 })
-    );
-  }, [endGame, spawnObstacle, stopListening]);
-
   const clearObstacle = useCallback(async () => {
     if (
       hasHitRef.current ||
       gameEndedRef.current ||
-      currentObstacleIndex === null
+      currentPhraseIndexRef.current >= lesson.phrases.length
     )
       return;
 
+    console.log('Clearing obstacle for phrase:', currentPhraseIndexRef.current);
     isMovingRef.current = false;
     hasHitRef.current = true;
     cancelAnimation(obstacleX);
@@ -507,8 +306,190 @@ export const Orca = () => {
       if (!gameEndedRef.current) {
         spawnObstacle();
       }
+    }, 500);
+  }, [endGame, stopListening]);
+
+  const startListening = useCallback(async () => {
+    if (!whisperContext) {
+      console.log('Whisper context not available');
+      return;
+    }
+
+    // Stop any existing transcription first
+    if (realtimeTranscriberRef.current?.stop) {
+      try {
+        await realtimeTranscriberRef.current.stop();
+      } catch (e) {
+        console.log('Error stopping previous transcriber:', e);
+      }
+      realtimeTranscriberRef.current = null;
+    }
+
+    try {
+      const hasMicPermission = await getRecordingPermissionsAsync();
+      if (!hasMicPermission.granted) {
+        const permission = await requestRecordingPermissionsAsync();
+        if (!permission.granted) {
+          Alert.alert(
+            'Microphone Permission',
+            'Microphone access is required to play this game.'
+          );
+          return;
+        }
+      }
+
+      setIsListening(true);
+      setCurrentTranscript('');
+
+      const realtimeOptions: TranscribeRealtimeOptions = {
+        language,
+        realtimeAudioSec: 300,
+        realtimeAudioSliceSec: 5,
+        realtimeAudioMinSec: 0.5,
+        audioSessionOnStartIos: {
+          category: 'PlayAndRecord' as any,
+          options: ['DefaultToSpeaker' as any, 'AllowBluetooth' as any],
+          mode: 'Default' as any,
+        },
+        audioSessionOnStopIos: 'restore' as any,
+      };
+
+      console.log('Starting Whisper realtime transcription...');
+      const { stop, subscribe } =
+        await whisperContext.transcribeRealtime(realtimeOptions);
+
+      let hasCleared = false;
+
+      subscribe((event: any) => {
+        const { isCapturing, data, error } = event;
+
+        if (error) {
+          console.error('Transcription error:', error);
+          return;
+        }
+
+        if (data?.result) {
+          const transcript = data.result.trim();
+          console.log('Received transcript:', transcript);
+          setCurrentTranscript(transcript);
+
+          // Only check if we haven't already cleared this obstacle
+          if (
+            !hasCleared &&
+            currentPhraseIndexRef.current < lesson.phrases.length
+          ) {
+            const targetPhrase =
+              lesson.phrases[currentPhraseIndexRef.current].text;
+            console.log('Checking against target:', targetPhrase);
+
+            if (checkPronunciation(transcript, targetPhrase)) {
+              console.log('✓ Pronunciation matched!');
+              hasCleared = true;
+              runOnJS(clearObstacle)();
+            }
+          }
+        }
+
+        if (!isCapturing) {
+          console.log('Speech segment finished, continuing to listen...');
+        }
+      });
+
+      realtimeTranscriberRef.current = { stop };
+      console.log('Whisper listening started successfully');
+    } catch (err) {
+      console.error('Failed to start listening:', err);
+      setIsListening(false);
+    }
+  }, [whisperContext, checkPronunciation, clearObstacle]);
+
+  const spawnObstacle = useCallback(() => {
+    if (gameEndedRef.current) return;
+
+    const nextIndex = currentPhraseIndexRef.current;
+    if (nextIndex >= lesson.phrases.length) {
+      endGame(true);
+      return;
+    }
+
+    const emoji =
+      OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
+    setCurrentObstacleIndex(nextIndex);
+    setCurrentPhraseIndex(nextIndex);
+    setCurrentObstacleEmoji(emoji);
+    hasHitRef.current = false;
+    isMovingRef.current = true;
+
+    obstacleY.value = ORCA_Y;
+    obstacleX.value = SCREEN_WIDTH + OBSTACLE_SIZE;
+    obstacleOpacity.value = withTiming(1, { duration: 200 });
+
+    // Start listening immediately for pronunciation
+    setTimeout(() => {
+      startListening();
     }, 100);
-  }, [currentObstacleIndex, endGame, spawnObstacle, stopListening]);
+
+    const collisionX = ORCA_X + ORCA_SIZE - 20;
+    obstacleX.value = withTiming(
+      collisionX,
+      { duration: 5000, easing: Easing.linear },
+      (finished) => {
+        if (finished && isMovingRef.current && !gameEndedRef.current) {
+          runOnJS(handleCollisionJS)();
+        }
+      }
+    );
+  }, [endGame, startListening]);
+
+  const handleCollisionJS = useCallback(async () => {
+    if (hasHitRef.current || gameEndedRef.current) return;
+    hasHitRef.current = true;
+    isMovingRef.current = false;
+
+    console.log(
+      'Collision! Failed to say phrase:',
+      currentPhraseIndexRef.current
+    );
+    await stopListening();
+
+    Vibration.vibrate(200);
+    cancelAnimation(obstacleX);
+
+    // Move to next phrase WITHOUT incrementing correct phrases count
+    currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
+
+    setLives((prev) => {
+      const newLives = prev - 1;
+      if (newLives <= 0) {
+        endGame(false);
+        return 0;
+      }
+
+      // Clear current obstacle and spawn next one
+      setCurrentObstacleIndex(null);
+      setCurrentObstacleEmoji(null);
+      obstacleOpacity.value = withTiming(0, { duration: 200 });
+
+      setTimeout(() => {
+        if (!gameEndedRef.current) {
+          if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
+            endGame(true);
+          } else {
+            spawnObstacle();
+          }
+        }
+      }, 800);
+      return newLives;
+    });
+
+    orcaShake.value = withSequence(
+      withTiming(-10, { duration: 50 }),
+      withTiming(10, { duration: 50 }),
+      withTiming(-10, { duration: 50 }),
+      withTiming(10, { duration: 50 }),
+      withTiming(0, { duration: 50 })
+    );
+  }, [endGame, spawnObstacle, stopListening]);
 
   const startGame = useCallback(async () => {
     if (!whisperContext) {
@@ -566,10 +547,8 @@ export const Orca = () => {
   }));
 
   const getTranslation = (phraseIndex: number): string => {
-    const phrase = LESSON.phrases[phraseIndex];
-    const translation = phrase.dictionary.find(
-      (d) => d.language === NATIVE_LANGUAGE
-    );
+    const phrase = lesson.phrases[phraseIndex];
+    const translation = phrase.dictionary.find((d) => d.language === native);
     return translation?.text || phrase.text;
   };
 

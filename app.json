@@ -9,10 +9,13 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "icon": "./assets/images/orca.icon",
       "supportsTablet": true,
       "bundleIdentifier": "com.ahmedbna.orca",
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": ["audio"],
+        "NSMicrophoneUsageDescription": "This app needs microphone access to perform speech recognition.",
+        "NSSpeechRecognitionUsageDescription": "This app uses speech recognition to detect spoken phrases."
       }
     },
     "android": {
@@ -68,14 +71,6 @@
         "expo-audio",
         {
           "microphonePermission": "Allow $(PRODUCT_NAME) to access the microphone for transcription."
-        }
-      ],
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
-          "recordAudioAndroid": true
         }
       ]
     ],

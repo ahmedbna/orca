@@ -3,15 +3,15 @@
  *
  * Download from https://huggingface.co/ggerganov/whisper.cpp/tree/main
  */
-import { useState, useCallback, useEffect } from "react";
-import { Directory, File, Paths } from "expo-file-system";
+import { useState, useCallback, useEffect } from 'react';
+import { Directory, File, Paths } from 'expo-file-system';
 import {
   createDownloadResumable,
   type DownloadProgressData,
   type FileSystemDownloadResult,
-} from "expo-file-system/legacy";
-import { initWhisper, initWhisperVad } from "whisper.rn/index.js";
-import type { WhisperContext } from "whisper.rn/index.js";
+} from 'expo-file-system/legacy';
+import { initWhisper, initWhisperVad } from 'whisper.rn/index.js';
+import type { WhisperContext } from 'whisper.rn/index.js';
 
 export interface WhisperModel {
   id: string;
@@ -27,54 +27,23 @@ export interface WhisperModel {
 
 export const WHISPER_MODELS: WhisperModel[] = [
   {
-    id: "large-v3-turbo",
-    label: "Large Multilanguae",
-    url: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin",
-    filename: "ggml-large-v3-turbo.bin",
+    id: 'base',
+    label: 'Base Model',
+    url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin',
+    filename: 'ggml-base.bin',
     capabilities: {
       multilingual: true,
       quantizable: false,
     },
   },
   {
-    id: "tiny",
-    label: "Tiny (en)",
-    url: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin",
-    filename: "ggml-tiny.en.bin",
-    capabilities: {
-      multilingual: false,
-      quantizable: false,
-    },
-  },
-  {
-    id: "base",
-    label: "Base Model",
-    url: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin",
-    filename: "ggml-base.bin",
+    id: 'small',
+    label: 'Small Model',
+    url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q8_0.bin',
+    filename: 'ggml-small-q8_0.bin',
     capabilities: {
       multilingual: true,
       quantizable: false,
-    },
-  },
-  {
-    id: "small",
-    label: "Small Model",
-    url: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin",
-    filename: "ggml-small.bin",
-    capabilities: {
-      multilingual: true,
-      quantizable: false,
-    },
-  },
-  {
-    id: "small-tdrz",
-    label: "Small (tdrz)",
-    url: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en-tdrz.bin",
-    filename: "ggml-small.en-tdrz.bin",
-    capabilities: {
-      multilingual: false,
-      quantizable: false,
-      tdrz: true,
     },
   },
 ];
@@ -104,18 +73,18 @@ export function useWhisperModels() {
     try {
       documentDirectory = Paths.document;
     } catch (error) {
-      throw new Error("Document directory is not available.");
+      throw new Error('Document directory is not available.');
     }
 
     if (!documentDirectory?.uri) {
-      throw new Error("Document directory is not available.");
+      throw new Error('Document directory is not available.');
     }
 
-    const directory = new Directory(documentDirectory, "whisper-models");
+    const directory = new Directory(documentDirectory, 'whisper-models');
     try {
       directory.create({ idempotent: true, intermediates: true });
     } catch (error) {
-      console.warn("Failed to ensure Whisper model directory exists:", error);
+      console.warn('Failed to ensure Whisper model directory exists:', error);
       throw error;
     }
     return directory;
@@ -130,7 +99,7 @@ export function useWhisperModels() {
       const updateModelFileInfo = () => {
         try {
           const stats = file.info();
-          if (!stats.exists) throw new Error("File not found");
+          if (!stats.exists) throw new Error('File not found');
           setModelFiles((prev) => ({
             ...prev,
             [model.id]: {
@@ -179,7 +148,8 @@ export function useWhisperModels() {
           file.uri,
           undefined,
           (progressData: DownloadProgressData) => {
-            const { totalBytesWritten, totalBytesExpectedToWrite } = progressData;
+            const { totalBytesWritten, totalBytesExpectedToWrite } =
+              progressData;
             const fraction =
               totalBytesExpectedToWrite > 0
                 ? totalBytesWritten / totalBytesExpectedToWrite
@@ -193,7 +163,7 @@ export function useWhisperModels() {
                 1
               )}%`
             );
-          },
+          }
         );
 
         const downloadResult = (await downloadResumable.downloadAsync()) as
@@ -227,7 +197,7 @@ export function useWhisperModels() {
   const initializeWhisperModel = useCallback(
     async (modelId: string, options?: { initVad?: boolean }) => {
       const model = WHISPER_MODELS.find((m) => m.id === modelId);
-      if (!model) throw new Error("Invalid model selected");
+      if (!model) throw new Error('Invalid model selected');
 
       try {
         setIsInitializingModel(true);
@@ -247,15 +217,15 @@ export function useWhisperModels() {
 
         // Optionally initialize VAD context
         if (options?.initVad) {
-          console.log("Initializing VAD context...");
+          console.log('Initializing VAD context...');
           try {
             const vad = await initWhisperVad({
               filePath: modelPath,
             });
             setVadContext(vad);
-            console.log("VAD context initialized successfully");
+            console.log('VAD context initialized successfully');
           } catch (vadError) {
-            console.warn("VAD initialization failed:", vadError);
+            console.warn('VAD initialization failed:', vadError);
             // Continue without VAD - it's optional
           }
         }
@@ -265,7 +235,7 @@ export function useWhisperModels() {
           vadContext: options?.initVad ? vadContext : null,
         };
       } catch (error) {
-        console.error("Model initialization error:", error);
+        console.error('Model initialization error:', error);
         throw error;
       } finally {
         setIsInitializingModel(false);
@@ -278,7 +248,7 @@ export function useWhisperModels() {
     setWhisperContext(null);
     setVadContext(null);
     setCurrentModelId(null);
-    console.log("Whisper contexts reset");
+    console.log('Whisper contexts reset');
   }, []);
 
   const getModelById = useCallback((modelId: string) => {
@@ -340,7 +310,7 @@ export function useWhisperModels() {
             await whisperContext.release();
           } catch (releaseError) {
             console.warn(
-              "Failed to release Whisper context during model deletion:",
+              'Failed to release Whisper context during model deletion:',
               releaseError
             );
           }
@@ -402,7 +372,7 @@ export function useWhisperModels() {
           setModelFiles((prev) => ({ ...prev, ...fileMap }));
         }
       } catch (error) {
-        console.warn("Failed to load existing Whisper models:", error);
+        console.warn('Failed to load existing Whisper models:', error);
       }
     };
 
