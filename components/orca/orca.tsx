@@ -341,11 +341,15 @@ export const Orca = ({ lesson, native, language }: Props) => {
       setIsListening(true);
       setCurrentTranscript('');
 
+      // Optimized realtime options based on Whisper implementation
       const realtimeOptions: TranscribeRealtimeOptions = {
         language,
+        // Keep session alive for extended gameplay
         realtimeAudioSec: 300,
-        realtimeAudioSliceSec: 5,
-        realtimeAudioMinSec: 0.5,
+        // Longer slice duration for more accurate phrase recognition
+        realtimeAudioSliceSec: 8,
+        // Lower minimum to catch shorter phrases quickly
+        realtimeAudioMinSec: 1,
         audioSessionOnStartIos: {
           category: 'PlayAndRecord' as any,
           options: ['DefaultToSpeaker' as any, 'AllowBluetooth' as any],
@@ -359,19 +363,43 @@ export const Orca = ({ lesson, native, language }: Props) => {
         await whisperContext.transcribeRealtime(realtimeOptions);
 
       let hasCleared = false;
+      let accumulatedTranscript = '';
 
       subscribe((event: any) => {
-        const { isCapturing, data, error } = event;
+        const { isCapturing, data, error, processTime, recordingTime } = event;
 
         if (error) {
           console.error('Transcription error:', error);
           return;
         }
 
+        // Debug logging similar to Whisper implementation
+        console.log(
+          `Realtime transcribing: ${isCapturing ? 'ON' : 'OFF'}\n` +
+            `Result: ${data?.result || 'No result'}\n` +
+            `Process time: ${processTime}ms\n` +
+            `Recording time: ${recordingTime}ms`
+        );
+
         if (data?.result) {
-          const transcript = data.result.trim();
-          console.log('Received transcript:', transcript);
-          setCurrentTranscript(transcript);
+          const currentResult = data.result.trim();
+
+          // Always update display - ensures we never miss updates
+          setCurrentTranscript(currentResult);
+
+          // Accumulate transcript for better matching
+          if (currentResult && !accumulatedTranscript.includes(currentResult)) {
+            accumulatedTranscript = currentResult;
+          }
+
+          // Debug logging
+          console.log('📝 Real-time update:', {
+            isCapturing,
+            length: currentResult.length,
+            lastWords: currentResult.split(' ').slice(-5).join(' '),
+            totalWords: currentResult.split(' ').length,
+            accumulated: accumulatedTranscript,
+          });
 
           // Only check if we haven't already cleared this obstacle
           if (
@@ -382,7 +410,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
               lesson.phrases[currentPhraseIndexRef.current].text;
             console.log('Checking against target:', targetPhrase);
 
-            if (checkPronunciation(transcript, targetPhrase)) {
+            // Check both current result and accumulated transcript
+            if (
+              checkPronunciation(currentResult, targetPhrase) ||
+              checkPronunciation(accumulatedTranscript, targetPhrase)
+            ) {
               console.log('✓ Pronunciation matched!');
               hasCleared = true;
               runOnJS(clearObstacle)();
@@ -392,6 +424,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
         if (!isCapturing) {
           console.log('Speech segment finished, continuing to listen...');
+          // Reset accumulated transcript on pause, but keep listening
+          accumulatedTranscript = '';
         }
       });
 
@@ -400,8 +434,12 @@ export const Orca = ({ lesson, native, language }: Props) => {
     } catch (err) {
       console.error('Failed to start listening:', err);
       setIsListening(false);
+      Alert.alert(
+        'Speech Recognition Error',
+        'Unable to start speech recognition. Please try again.'
+      );
     }
-  }, [whisperContext, checkPronunciation, clearObstacle]);
+  }, [whisperContext, language, checkPronunciation, clearObstacle]);
 
   const spawnObstacle = useCallback(() => {
     if (gameEndedRef.current) return;
