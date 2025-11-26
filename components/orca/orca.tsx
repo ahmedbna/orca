@@ -25,15 +25,12 @@ import { Seafloor } from '@/components/orca/seafloor';
 import { Seaweed } from '@/components/orca/seaweed';
 import { Jellyfish } from '@/components/orca/jellyfish';
 import { formatTime } from '@/lib/format-time';
-import { useAudioPlayer } from 'expo-audio';
 import { useWhisperModels } from '@/components/whisper/useWhisperModels';
 import { TranscribeRealtimeOptions } from 'whisper.rn/index.js';
 import {
   getRecordingPermissionsAsync,
   requestRecordingPermissionsAsync,
 } from 'expo-audio';
-
-const audioSource = require('../../assets/music/orca.mp3');
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -64,8 +61,6 @@ type Props = {
 };
 
 export const Orca = ({ lesson, native, language }: Props) => {
-  const player = useAudioPlayer(audioSource);
-
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const [gameState, setGameState] = useState<GameStatus>('idle');
   const [currentObstacleIndex, setCurrentObstacleIndex] = useState<
@@ -129,36 +124,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
       micScale.value = withTiming(1, { duration: 200 });
     }
   }, [isListening]);
-
-  // Handle audio playback based on game state
-  useEffect(() => {
-    const handleAudio = async () => {
-      if (!player) return;
-
-      if (gameState === 'playing' && player.isLoaded) {
-        try {
-          if (player.playing) {
-            await player.seekTo(0);
-          } else {
-            await player.play();
-          }
-        } catch (error) {
-          console.error('Error playing audio:', error);
-        }
-      } else {
-        try {
-          if (player.playing) {
-            await player.pause();
-            await player.seekTo(0);
-          }
-        } catch (error) {
-          console.error('Error stopping audio:', error);
-        }
-      }
-    };
-
-    handleAudio();
-  }, [gameState, player]);
 
   const stopTimer = useCallback(() => {
     if (timerIntervalRef.current) {
@@ -341,15 +306,13 @@ export const Orca = ({ lesson, native, language }: Props) => {
       setIsListening(true);
       setCurrentTranscript('');
 
-      // Optimized realtime options based on Whisper implementation
+      // Use the exact same options that work in whisper.tsx
       const realtimeOptions: TranscribeRealtimeOptions = {
         language,
-        // Keep session alive for extended gameplay
+        // Keep the session alive well past the default 30s ceiling
         realtimeAudioSec: 300,
-        // Longer slice duration for more accurate phrase recognition
-        realtimeAudioSliceSec: 8,
-        // Lower minimum to catch shorter phrases quickly
-        realtimeAudioMinSec: 1,
+        realtimeAudioSliceSec: 20,
+        realtimeAudioMinSec: 2,
         audioSessionOnStartIos: {
           category: 'PlayAndRecord' as any,
           options: ['DefaultToSpeaker' as any, 'AllowBluetooth' as any],
@@ -363,7 +326,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
         await whisperContext.transcribeRealtime(realtimeOptions);
 
       let hasCleared = false;
-      let accumulatedTranscript = '';
 
       subscribe((event: any) => {
         const { isCapturing, data, error, processTime, recordingTime } = event;
@@ -373,7 +335,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
           return;
         }
 
-        // Debug logging similar to Whisper implementation
+        // Debug logging - same as working whisper.tsx implementation
         console.log(
           `Realtime transcribing: ${isCapturing ? 'ON' : 'OFF'}\n` +
             `Result: ${data?.result || 'No result'}\n` +
@@ -387,18 +349,12 @@ export const Orca = ({ lesson, native, language }: Props) => {
           // Always update display - ensures we never miss updates
           setCurrentTranscript(currentResult);
 
-          // Accumulate transcript for better matching
-          if (currentResult && !accumulatedTranscript.includes(currentResult)) {
-            accumulatedTranscript = currentResult;
-          }
-
           // Debug logging
           console.log('📝 Real-time update:', {
             isCapturing,
             length: currentResult.length,
             lastWords: currentResult.split(' ').slice(-5).join(' '),
             totalWords: currentResult.split(' ').length,
-            accumulated: accumulatedTranscript,
           });
 
           // Only check if we haven't already cleared this obstacle
@@ -410,11 +366,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
               lesson.phrases[currentPhraseIndexRef.current].text;
             console.log('Checking against target:', targetPhrase);
 
-            // Check both current result and accumulated transcript
-            if (
-              checkPronunciation(currentResult, targetPhrase) ||
-              checkPronunciation(accumulatedTranscript, targetPhrase)
-            ) {
+            if (checkPronunciation(currentResult, targetPhrase)) {
               console.log('✓ Pronunciation matched!');
               hasCleared = true;
               runOnJS(clearObstacle)();
@@ -424,8 +376,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
         if (!isCapturing) {
           console.log('Speech segment finished, continuing to listen...');
-          // Reset accumulated transcript on pause, but keep listening
-          accumulatedTranscript = '';
+          // Don't stop - just log that this speech segment ended
         }
       });
 
