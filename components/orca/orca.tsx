@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Vibration,
   Alert,
+  Platform,
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -14,7 +15,6 @@ import Animated, {
   Easing,
   cancelAnimation,
   runOnJS,
-  withRepeat,
 } from 'react-native-reanimated';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
@@ -25,7 +25,8 @@ import { Seafloor } from '@/components/orca/seafloor';
 import { Seaweed } from '@/components/orca/seaweed';
 import { Jellyfish } from '@/components/orca/jellyfish';
 import { formatTime } from '@/lib/format-time';
-import { useWhisperModels } from '@/components/whisper/useWhisperModels';
+import { useWhisperModels } from '../whisper/useWhisperModels';
+import { Directory, File, Paths } from 'expo-file-system';
 import { TranscribeRealtimeOptions } from 'whisper.rn/index.js';
 import {
   getRecordingPermissionsAsync,
@@ -70,15 +71,198 @@ export const Orca = ({ lesson, native, language }: Props) => {
     string | null
   >(null);
   const [correctPhrases, setCorrectPhrases] = useState(0);
-  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
-  const [lives, setLives] = useState(5);
+  const [lives, setLives] = useState(3);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [finalTime, setFinalTime] = useState(0);
-  const [isListening, setIsListening] = useState(false);
-  const [currentTranscript, setCurrentTranscript] = useState('');
 
-  const { whisperContext, isInitializingModel, initializeWhisperModel } =
-    useWhisperModels();
+  const [realtimeTranscriber, setRealtimeTranscriber] = useState<any>(null);
+  const [isRealtimeActive, setIsRealtimeActive] = useState(false);
+  const [realtimeResult, setRealtimeResult] = useState<string>('');
+  const [realtimeFinalResult, setRealtimeFinalResult] = useState<string>('');
+  const [error, setError] = useState<string>('');
+
+  const {
+    whisperContext,
+    vadContext,
+    isInitializingModel,
+    isDownloading,
+    downloadProgress,
+    currentModelId,
+    modelFiles,
+    initializeWhisperModel,
+    resetWhisperContext,
+    getCurrentModel,
+    getDownloadProgress,
+    getModelById,
+    deleteModel,
+  } = useWhisperModels();
+
+  const initializeModel = async (modelId: string = 'small') => {
+    try {
+      await initializeWhisperModel(modelId, { initVad: false });
+    } catch (error) {
+      console.error('Failed to initialize model:', error);
+      setError(`Failed to initialize model: ${error}`);
+    }
+  };
+
+  useEffect(() => {
+    // Initialize with samll model by default
+    initializeModel();
+  }, []);
+
+  const ensureMicrophonePermission = async (): Promise<boolean> => {
+    if (Platform.OS === 'web') {
+      Alert.alert(
+        'Unsupported Platform',
+        'Real-time transcription is not available on the web.'
+      );
+      return false;
+    }
+
+    const getPermissionText = (blocked: boolean) =>
+      blocked
+        ? Platform.OS === 'android'
+          ? 'Please enable microphone access in Android Settings to use real-time transcription.'
+          : 'Please enable microphone access in iOS Settings to use real-time transcription.'
+        : 'Microphone permission is required for real-time transcription.';
+
+    try {
+      let permissionStatus = await getRecordingPermissionsAsync();
+
+      if (permissionStatus.granted) {
+        return true;
+      }
+
+      if (!permissionStatus.canAskAgain) {
+        Alert.alert('Microphone Permission', getPermissionText(true));
+        console.warn('Microphone permission permanently denied.');
+        return false;
+      }
+
+      permissionStatus = await requestRecordingPermissionsAsync();
+
+      if (permissionStatus.granted) {
+        return true;
+      }
+
+      const blocked = !permissionStatus.canAskAgain;
+      Alert.alert('Microphone Permission', getPermissionText(blocked));
+      console.warn('Microphone permission not granted:', permissionStatus);
+      return false;
+    } catch (err) {
+      console.error('Failed to verify microphone permission:', err);
+      Alert.alert(
+        'Microphone Permission',
+        'Unable to verify microphone permission. Please try again.'
+      );
+      return false;
+    }
+  };
+
+  const startRealtimeTranscription = async () => {
+    if (!whisperContext) {
+      Alert.alert('Error', 'Whisper not initialized');
+      return;
+    }
+
+    try {
+      const hasMicPermission = await ensureMicrophonePermission();
+      if (!hasMicPermission) {
+        setError('Real-time transcription requires microphone access.');
+        return;
+      }
+
+      setIsRealtimeActive(true);
+      setRealtimeResult('');
+      setError('');
+
+      console.log('Starting real-time transcription...');
+
+      // Use the built-in transcribeRealtime method from whisper.rn
+      const realtimeOptions: TranscribeRealtimeOptions = {
+        language: 'de',
+        // Keep the session alive well past the default 30s ceiling so we only stop on user action
+        realtimeAudioSec: 300,
+        realtimeAudioSliceSec: 20,
+        realtimeAudioMinSec: 2,
+        audioSessionOnStartIos: {
+          category: 'PlayAndRecord' as any,
+          options: ['DefaultToSpeaker' as any, 'AllowBluetooth' as any],
+          mode: 'Default' as any,
+        },
+        audioSessionOnStopIos: 'restore' as any,
+      };
+
+      const { stop, subscribe } =
+        await whisperContext.transcribeRealtime(realtimeOptions);
+
+      // Subscribe to transcription events
+      subscribe((event: any) => {
+        const { isCapturing, data, processTime, recordingTime } = event;
+
+        console.log(
+          `Realtime transcribing: ${isCapturing ? 'ON' : 'OFF'}\n` +
+            `Result: ${data?.result || 'No result'}\n` +
+            `Process time: ${processTime}ms\n` +
+            `Recording time: ${recordingTime}ms`
+        );
+
+        if (data?.result) {
+          const currentResult = data.result.trim();
+
+          // Always update the display - this ensures we never miss updates
+          setRealtimeResult(currentResult);
+
+          // Debug logging to help track what's happening
+          console.log('📝 Real-time update:', {
+            isCapturing,
+            length: currentResult.length,
+            lastWords: currentResult.split(' ').slice(-5).join(' '), // Last 5 words
+            totalWords: currentResult.split(' ').length,
+          });
+        }
+
+        if (!isCapturing) {
+          console.log('Speech segment finished, but continuing to listen...');
+          // Don't stop the session - just log that this speech segment ended
+          // The transcription will continue listening for more speech
+        }
+      });
+
+      // Store the stop function
+      setRealtimeTranscriber({ stop });
+    } catch (err) {
+      const errorMessage = `Real-time transcription failed: ${err}`;
+      console.error(errorMessage);
+      setError(errorMessage);
+      Alert.alert('Real-time Error', errorMessage);
+      setIsRealtimeActive(false);
+    }
+  };
+
+  const stopRealtimeTranscription = async () => {
+    try {
+      if (realtimeTranscriber?.stop) {
+        await realtimeTranscriber.stop();
+        setRealtimeTranscriber(null);
+      }
+
+      // Capture the final result before clearing
+      const finalTranscript = realtimeResult.trim();
+      if (finalTranscript) {
+        setRealtimeFinalResult(finalTranscript);
+        console.log('Final real-time transcript:', finalTranscript);
+      }
+
+      setIsRealtimeActive(false);
+      console.log('Real-time transcription stopped');
+    } catch (err) {
+      console.error('Error stopping real-time transcription:', err);
+    }
+  };
+
+  const realtimeStatusText = isRealtimeActive ? 'Listening' : 'Idle';
 
   const obstacleX = useSharedValue(SCREEN_WIDTH + OBSTACLE_SIZE);
   const obstacleY = useSharedValue(ORCA_Y);
@@ -94,36 +278,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const gameEndedRef = useRef(false);
   const currentPhraseIndexRef = useRef(0);
   const correctPhrasesRef = useRef(0);
-  const realtimeTranscriberRef = useRef<any>(null);
-
-  // Initialize Whisper model on mount
-  useEffect(() => {
-    const initModel = async () => {
-      try {
-        await initializeWhisperModel('small', { initVad: false });
-      } catch (error) {
-        console.error('Failed to initialize Whisper model:', error);
-      }
-    };
-    initModel();
-  }, []);
-
-  // Animate mic icon when listening
-  useEffect(() => {
-    if (isListening) {
-      micScale.value = withRepeat(
-        withSequence(
-          withTiming(1.2, { duration: 500 }),
-          withTiming(1, { duration: 500 })
-        ),
-        -1,
-        false
-      );
-    } else {
-      cancelAnimation(micScale);
-      micScale.value = withTiming(1, { duration: 200 });
-    }
-  }, [isListening]);
 
   const stopTimer = useCallback(() => {
     if (timerIntervalRef.current) {
@@ -141,26 +295,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
     }, 100);
   }, [stopTimer]);
 
-  const stopListening = useCallback(async () => {
-    try {
-      if (realtimeTranscriberRef.current?.stop) {
-        await realtimeTranscriberRef.current.stop();
-        realtimeTranscriberRef.current = null;
-      }
-      setIsListening(false);
-      setCurrentTranscript('');
-    } catch (err) {
-      console.error('Error stopping listening:', err);
-    }
-  }, []);
-
   const cleanup = useCallback(async () => {
+    await stopRealtimeTranscription();
+
     if (obstacleTimeoutRef.current) {
       clearTimeout(obstacleTimeoutRef.current);
       obstacleTimeoutRef.current = null;
     }
     stopTimer();
-    await stopListening();
     cancelAnimation(obstacleX);
     cancelAnimation(obstacleOpacity);
     cancelAnimation(obstacleY);
@@ -168,7 +310,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     cancelAnimation(micScale);
     isMovingRef.current = false;
     hasHitRef.current = false;
-  }, [stopTimer, stopListening]);
+  }, [stopTimer]);
 
   const endGame = useCallback(
     async (won: boolean) => {
@@ -246,8 +388,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
     hasHitRef.current = true;
     cancelAnimation(obstacleX);
 
-    await stopListening();
-
     // Increment both phrase index and correct phrases count
     currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
     correctPhrasesRef.current = correctPhrasesRef.current + 1;
@@ -272,125 +412,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
         spawnObstacle();
       }
     }, 500);
-  }, [endGame, stopListening]);
-
-  const startListening = useCallback(async () => {
-    if (!whisperContext) {
-      console.log('Whisper context not available');
-      return;
-    }
-
-    // Stop any existing transcription first
-    if (realtimeTranscriberRef.current?.stop) {
-      try {
-        await realtimeTranscriberRef.current.stop();
-      } catch (e) {
-        console.log('Error stopping previous transcriber:', e);
-      }
-      realtimeTranscriberRef.current = null;
-    }
-
-    try {
-      const hasMicPermission = await getRecordingPermissionsAsync();
-      if (!hasMicPermission.granted) {
-        const permission = await requestRecordingPermissionsAsync();
-        if (!permission.granted) {
-          Alert.alert(
-            'Microphone Permission',
-            'Microphone access is required to play this game.'
-          );
-          return;
-        }
-      }
-
-      setIsListening(true);
-      setCurrentTranscript('');
-
-      // Use the exact same options that work in whisper.tsx
-      const realtimeOptions: TranscribeRealtimeOptions = {
-        language,
-        // Keep the session alive well past the default 30s ceiling
-        realtimeAudioSec: 300,
-        realtimeAudioSliceSec: 20,
-        realtimeAudioMinSec: 2,
-        audioSessionOnStartIos: {
-          category: 'PlayAndRecord' as any,
-          options: ['DefaultToSpeaker' as any, 'AllowBluetooth' as any],
-          mode: 'Default' as any,
-        },
-        audioSessionOnStopIos: 'restore' as any,
-      };
-
-      console.log('Starting Whisper realtime transcription...');
-      const { stop, subscribe } =
-        await whisperContext.transcribeRealtime(realtimeOptions);
-
-      let hasCleared = false;
-
-      subscribe((event: any) => {
-        const { isCapturing, data, error, processTime, recordingTime } = event;
-
-        if (error) {
-          console.error('Transcription error:', error);
-          return;
-        }
-
-        // Debug logging - same as working whisper.tsx implementation
-        console.log(
-          `Realtime transcribing: ${isCapturing ? 'ON' : 'OFF'}\n` +
-            `Result: ${data?.result || 'No result'}\n` +
-            `Process time: ${processTime}ms\n` +
-            `Recording time: ${recordingTime}ms`
-        );
-
-        if (data?.result) {
-          const currentResult = data.result.trim();
-
-          // Always update display - ensures we never miss updates
-          setCurrentTranscript(currentResult);
-
-          // Debug logging
-          console.log('📝 Real-time update:', {
-            isCapturing,
-            length: currentResult.length,
-            lastWords: currentResult.split(' ').slice(-5).join(' '),
-            totalWords: currentResult.split(' ').length,
-          });
-
-          // Only check if we haven't already cleared this obstacle
-          if (
-            !hasCleared &&
-            currentPhraseIndexRef.current < lesson.phrases.length
-          ) {
-            const targetPhrase =
-              lesson.phrases[currentPhraseIndexRef.current].text;
-            console.log('Checking against target:', targetPhrase);
-
-            if (checkPronunciation(currentResult, targetPhrase)) {
-              console.log('✓ Pronunciation matched!');
-              hasCleared = true;
-              runOnJS(clearObstacle)();
-            }
-          }
-        }
-
-        if (!isCapturing) {
-          console.log('Speech segment finished, continuing to listen...');
-          // Don't stop - just log that this speech segment ended
-        }
-      });
-
-      realtimeTranscriberRef.current = { stop };
-      console.log('Whisper listening started successfully');
-    } catch (err) {
-      console.error('Failed to start listening:', err);
-      setIsListening(false);
-      Alert.alert(
-        'Speech Recognition Error',
-        'Unable to start speech recognition. Please try again.'
-      );
-    }
-  }, [whisperContext, language, checkPronunciation, clearObstacle]);
+  }, [endGame]);
 
   const spawnObstacle = useCallback(() => {
     if (gameEndedRef.current) return;
@@ -404,7 +426,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
     const emoji =
       OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
     setCurrentObstacleIndex(nextIndex);
-    setCurrentPhraseIndex(nextIndex);
     setCurrentObstacleEmoji(emoji);
     hasHitRef.current = false;
     isMovingRef.current = true;
@@ -412,11 +433,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
     obstacleY.value = ORCA_Y;
     obstacleX.value = SCREEN_WIDTH + OBSTACLE_SIZE;
     obstacleOpacity.value = withTiming(1, { duration: 200 });
-
-    // Start listening immediately for pronunciation
-    setTimeout(() => {
-      startListening();
-    }, 100);
 
     const collisionX = ORCA_X + ORCA_SIZE - 20;
     obstacleX.value = withTiming(
@@ -428,7 +444,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
         }
       }
     );
-  }, [endGame, startListening]);
+  }, [endGame]);
 
   const handleCollisionJS = useCallback(async () => {
     if (hasHitRef.current || gameEndedRef.current) return;
@@ -439,7 +455,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
       'Collision! Failed to say phrase:',
       currentPhraseIndexRef.current
     );
-    await stopListening();
 
     Vibration.vibrate(200);
     cancelAnimation(obstacleX);
@@ -478,25 +493,19 @@ export const Orca = ({ lesson, native, language }: Props) => {
       withTiming(10, { duration: 50 }),
       withTiming(0, { duration: 50 })
     );
-  }, [endGame, spawnObstacle, stopListening]);
+  }, [endGame, spawnObstacle]);
 
   const startGame = useCallback(async () => {
-    if (!whisperContext) {
-      Alert.alert(
-        'Not Ready',
-        'Whisper model is still loading. Please wait...'
-      );
-      return;
-    }
-
     await cleanup();
+    await initializeModel();
+    await startRealtimeTranscription();
+
     gameEndedRef.current = false;
     currentPhraseIndexRef.current = 0;
     correctPhrasesRef.current = 0;
     setGameState('playing');
     setCorrectPhrases(0);
-    setCurrentPhraseIndex(0);
-    setLives(5);
+    setLives(3);
     setCurrentObstacleIndex(null);
     setCurrentObstacleEmoji(null);
     setElapsedTime(0);
@@ -511,7 +520,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     obstacleTimeoutRef.current = setTimeout(() => {
       spawnObstacle();
     }, 1000);
-  }, [cleanup, spawnObstacle, startTimer, whisperContext]);
+  }, [cleanup, spawnObstacle, startTimer]);
 
   useEffect(() => {
     return () => {
@@ -660,36 +669,34 @@ export const Orca = ({ lesson, native, language }: Props) => {
         )}
 
         {gameState === 'playing' && (
-          <Animated.View style={[styles.indicatorContainer, micAnimatedStyle]}>
+          <View style={[styles.indicatorContainer, micAnimatedStyle]}>
             <View style={styles.indicatorButton}>
               <View style={styles.indicatorContent}>
-                <Text style={styles.micIcon}>{isListening ? '🎤' : '🔇'}</Text>
                 <Text style={styles.languageIndicator}>🇺🇸 → 🇩🇪</Text>
-              </View>
-              {isListening && currentTranscript && (
-                <Text style={styles.transcriptText} numberOfLines={2}>
-                  {currentTranscript}
+                <Text style={styles.languageIndicator}>
+                  {realtimeStatusText}
                 </Text>
-              )}
+                <Text style={styles.languageIndicator}>
+                  {realtimeStatusText}
+                </Text>
+                <Text style={styles.languageIndicator}>
+                  {realtimeFinalResult}
+                </Text>
+                <Text style={styles.languageIndicator}>
+                  {error ? `Error: ${error}` : ''}
+                </Text>
+              </View>
             </View>
-          </Animated.View>
+          </View>
         )}
 
         {gameState === 'idle' && (
           <View style={styles.overlay}>
             <Text style={styles.titleText}>🐋 Orca Swim 🐋</Text>
             <Text style={styles.instructionText}>Pronunciation Challenge!</Text>
-            <Pressable
-              style={[
-                styles.startButton,
-                (isInitializingModel || !whisperContext) &&
-                  styles.buttonDisabled,
-              ]}
-              onPress={startGame}
-              disabled={isInitializingModel || !whisperContext}
-            >
+            <Pressable style={[styles.startButton]} onPress={startGame}>
               <Text style={styles.startButtonText}>
-                {isInitializingModel ? 'LOADING...' : 'TAP TO START'}
+                {isInitializingModel ? 'Loading...' : 'TAP TO START'}
               </Text>
             </Pressable>
             <Text style={styles.subText}>

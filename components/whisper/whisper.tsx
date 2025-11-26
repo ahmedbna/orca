@@ -246,7 +246,7 @@ export const Whisper = () => {
         realtimeAudioMinSec: 2,
         audioSessionOnStartIos: {
           category: 'PlayAndRecord' as any,
-          options: ['MixWithOthers' as any],
+          options: ['DefaultToSpeaker' as any, 'AllowBluetooth' as any],
           mode: 'Default' as any,
         },
         audioSessionOnStopIos: 'restore' as any,
@@ -321,8 +321,10 @@ export const Whisper = () => {
   };
 
   const activeModelLabel = getCurrentModel()?.label || 'Model';
+
   const downloadPercentage =
     getDownloadProgress(currentModelId || 'small') ?? 0;
+
   const whisperStatusText = isDownloading
     ? `Downloading ${activeModelLabel} · ${(downloadPercentage * 100).toFixed(
         0
@@ -332,10 +334,13 @@ export const Whisper = () => {
       : whisperContext
         ? `Ready · ${activeModelLabel}`
         : 'Not initialized';
+
   const realtimeStatusText = isRealtimeActive ? 'Listening' : 'Idle';
+
   const transcriptionStatusText = isTranscribing
     ? 'Processing sample…'
     : 'Idle';
+
   const storedModels = Object.entries(modelFiles);
 
   return (
