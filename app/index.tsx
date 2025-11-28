@@ -95,12 +95,10 @@ const LESSON = {
 
 export default function HomeScreen() {
   return (
-    // <Orca
-    //   lesson={LESSON}
-    //   native={NATIVE_LANGUAGE}
-    //   language={LEARNING_LANGUAGE}
-    // />
-
-    <Game />
+    <Orca
+      lesson={LESSON}
+      native={NATIVE_LANGUAGE}
+      language={LEARNING_LANGUAGE}
+    />
   );
 }

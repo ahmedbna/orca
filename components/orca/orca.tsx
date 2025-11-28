@@ -18,6 +18,7 @@ import { Seafloor } from '@/components/orca/seafloor';
 import { Seaweed } from '@/components/orca/seaweed';
 import { Jellyfish } from '@/components/orca/jellyfish';
 import { formatTime } from '@/lib/format-time';
+import { LANGUAGES } from '@/constants/languages';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -376,31 +377,17 @@ export const Orca = ({ lesson, native, language }: Props) => {
           <View
             style={{
               position: 'absolute',
-              top: SCREEN_HEIGHT * 0.25,
+              top: SCREEN_HEIGHT * 0.28,
               alignSelf: 'center',
-              paddingHorizontal: 20,
-              backgroundColor: '#000',
-              borderRadius: 20,
               padding: 20,
             }}
           >
             <Text
               style={{
-                fontSize: 18,
-                fontWeight: '600',
-                textAlign: 'center',
-                color: BRAND_COLOR,
-                marginBottom: 8,
-              }}
-            >
-              Say in {language === 'de' ? 'German' : language}:
-            </Text>
-            <Text
-              style={{
-                fontSize: 36,
+                fontSize: 46,
                 fontWeight: '800',
                 textAlign: 'center',
-                color: '#FFF',
+                color: '#000',
               }}
             >
               {getTranslation(currentObstacleIndex)}
@@ -410,35 +397,24 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
         {gameState === 'playing' && (
           <View style={styles.transcriptContainer}>
-            <Pressable
-              style={styles.transcriptCard}
-              onPress={clearObstacle}
-              disabled={currentObstacleIndex === null}
-            >
-              <Text style={styles.transcriptLabel}>CLEAR OBSTACLE</Text>
-            </Pressable>
-          </View>
-        )}
-
-        {/* {gameState === 'playing' && (
-          <View style={styles.transcriptContainer}>
             <View style={styles.transcriptCard}>
               <View style={styles.transcriptHeader}>
                 <Text style={styles.transcriptLabel}>
-                  {isRealtimeActive ? '🎤 Listening' : '⏸️ Ready'}
+                  {true ? '🎤 Listening' : '⏸️ Ready'}
+                  {` ${LANGUAGES.find((l) => l.code === language)?.flag}`}
                 </Text>
               </View>
               <Text
                 style={[
-                  styles.transcriptText,
-                  !realtimeResult && styles.transcriptPlaceholder,
+                  // styles.transcriptText,
+                  styles.transcriptPlaceholder,
                 ]}
               >
-                {realtimeResult || 'Start speaking...'}
+                {'Start speaking...'}
               </Text>
             </View>
           </View>
-        )} */}
+        )}
 
         {gameState === 'idle' && (
           <View style={styles.overlay}>
