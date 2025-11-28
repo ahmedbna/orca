@@ -1,12 +1,11 @@
 import { useEffect, useMemo } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   withRepeat,
   Easing,
-  withSequence,
 } from 'react-native-reanimated';
 import {
   Canvas,

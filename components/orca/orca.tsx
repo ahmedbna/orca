@@ -14,8 +14,8 @@ import Animated, {
   withSequence,
   Easing,
   cancelAnimation,
-  runOnJS,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import Voice, {
   SpeechErrorEvent,
   SpeechResultsEvent,
@@ -379,7 +379,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
       { duration: ROUND_SECONDS * 1000, easing: Easing.linear },
       (finished) => {
         if (finished && isMovingRef.current && !gameEndedRef.current) {
-          runOnJS(handleCollisionJS)();
+          scheduleOnRN(handleCollisionJS);
         }
       }
     );
