@@ -1,7 +1,4 @@
-import { Game } from '@/components/game';
 import { Orca } from '@/components/orca/orca';
-import { View } from '@/components/ui/view';
-import { Whisper } from '@/components/whisper/whisper';
 
 const LEARNING_LANGUAGE = 'de';
 const NATIVE_LANGUAGE = 'en';

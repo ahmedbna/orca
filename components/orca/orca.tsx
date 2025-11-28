@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Dimensions, Pressable, StyleSheet, Vibration } from 'react-native';
+import {
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  Vibration,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -9,6 +16,10 @@ import Animated, {
   cancelAnimation,
   runOnJS,
 } from 'react-native-reanimated';
+import Voice, {
+  SpeechErrorEvent,
+  SpeechResultsEvent,
+} from '@react-native-voice/voice';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Progress } from '@/components/ui/progress';
@@ -31,6 +42,7 @@ const BRAND_COLOR = '#FFCD00';
 const DARK_COLOR = '#000000';
 
 const OBSTACLE_TYPES = ['🪸', '🦑', '🦈', '⚓', '🪼', '🐡'];
+const ROUND_SECONDS = 10;
 
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
 
@@ -48,6 +60,61 @@ type Props = {
   };
 };
 
+/** Levenshtein distance for fuzzy matching */
+function levenshtein(a: string, b: string) {
+  const la = a.length;
+  const lb = b.length;
+  if (la === 0) return lb;
+  if (lb === 0) return la;
+
+  const dp = Array.from({ length: la + 1 }, () =>
+    new Array<number>(lb + 1).fill(0)
+  );
+  for (let i = 0; i <= la; i++) dp[i][0] = i;
+  for (let j = 0; j <= lb; j++) dp[0][j] = j;
+
+  for (let i = 1; i <= la; i++) {
+    for (let j = 1; j <= lb; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return dp[la][lb];
+}
+
+/** Normalize text for comparison */
+function normalizeText(s: string) {
+  return s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\p{L}\p{N}\s]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** Similarity 0..1 where 1 = identical */
+function similarity(a: string, b: string) {
+  const na = normalizeText(a);
+  const nb = normalizeText(b);
+  if (na.length === 0 && nb.length === 0) return 1;
+  const dist = levenshtein(na, nb);
+  const maxLen = Math.max(na.length, nb.length);
+  if (maxLen === 0) return 0;
+  return 1 - dist / maxLen;
+}
+
+function getThresholdFor(phrase: string) {
+  const words = normalizeText(phrase).split(' ').filter(Boolean).length;
+  if (words <= 2) return 0.6;
+  if (words <= 4) return 0.72;
+  return 0.78;
+}
+
 export const Orca = ({ lesson, native, language }: Props) => {
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const [gameState, setGameState] = useState<GameStatus>('idle');
@@ -61,14 +128,19 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const [lives, setLives] = useState(3);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [finalTime, setFinalTime] = useState(0);
+  const [isListening, setIsListening] = useState(false);
+  const [interimText, setInterimText] = useState('');
+  const [finalText, setFinalText] = useState('');
+  const [secondsLeft, setSecondsLeft] = useState(ROUND_SECONDS);
 
-  const obstacleX = useSharedValue(SCREEN_WIDTH + OBSTACLE_SIZE);
+  const obstacleX = useSharedValue(SCREEN_WIDTH);
   const obstacleY = useSharedValue(ORCA_Y);
   const obstacleOpacity = useSharedValue(0);
   const orcaShake = useSharedValue(0);
 
   const obstacleTimeoutRef = useRef<number | null>(null);
   const timerIntervalRef = useRef<number | null>(null);
+  const roundTimerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
   const isMovingRef = useRef(false);
   const hasHitRef = useRef(false);
@@ -76,10 +148,104 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const currentPhraseIndexRef = useRef(0);
   const correctPhrasesRef = useRef(0);
 
+  // Initialize Voice
+  useEffect(() => {
+    Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechPartialResults = onSpeechPartialResults;
+    Voice.onSpeechError = onSpeechError;
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+
+  async function ensureAudioPermission(): Promise<boolean> {
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        {
+          title: 'Microphone Permission',
+          message:
+            'This app needs access to your microphone for speech recognition',
+          buttonPositive: 'OK',
+        }
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    }
+    return true;
+  }
+
+  async function startListening() {
+    try {
+      const ok = await ensureAudioPermission();
+      if (!ok) {
+        console.warn('Microphone permission denied');
+        return;
+      }
+      setFinalText('');
+      setInterimText('');
+
+      await Voice.start(language);
+      setIsListening(true);
+    } catch (e: any) {
+      console.warn('startListening error', e);
+    }
+  }
+
+  async function stopListening() {
+    try {
+      await Voice.stop();
+      setIsListening(false);
+    } catch (e) {
+      console.warn('stopListening error', e);
+    }
+  }
+
+  function onSpeechResults(e: SpeechResultsEvent) {
+    const results = e.value ?? [];
+    const text = results.join(' ');
+    setFinalText(text);
+    checkMatch(text);
+  }
+
+  function onSpeechPartialResults(e: any) {
+    const partials = e.value ?? [];
+    const text = partials.join(' ');
+    setInterimText(text);
+    checkMatch(text);
+  }
+
+  function onSpeechError(e: SpeechErrorEvent) {
+    console.warn('Speech error', e);
+  }
+
+  function checkMatch(transcribed: string) {
+    if (currentPhraseIndexRef.current >= lesson.phrases.length) return;
+
+    const targetPhrase = lesson.phrases[currentPhraseIndexRef.current].text;
+    const sim = similarity(transcribed, targetPhrase);
+    const threshold = getThresholdFor(targetPhrase);
+
+    console.log(
+      `Checking: "${transcribed}" vs "${targetPhrase}" - Similarity: ${sim.toFixed(2)} (threshold: ${threshold})`
+    );
+
+    if (sim >= threshold) {
+      markSuccess();
+    }
+  }
+
   const stopTimer = useCallback(() => {
     if (timerIntervalRef.current) {
       clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = null;
+    }
+  }, []);
+
+  const stopRoundTimer = useCallback(() => {
+    if (roundTimerRef.current) {
+      clearInterval(roundTimerRef.current);
+      roundTimerRef.current = null;
     }
   }, []);
 
@@ -92,19 +258,36 @@ export const Orca = ({ lesson, native, language }: Props) => {
     }, 100);
   }, [stopTimer]);
 
+  const startRoundTimer = useCallback(() => {
+    stopRoundTimer();
+    setSecondsLeft(ROUND_SECONDS);
+    roundTimerRef.current = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          stopRoundTimer();
+          handleCollisionJS();
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+  }, [stopRoundTimer]);
+
   const cleanup = useCallback(() => {
     if (obstacleTimeoutRef.current) {
       clearTimeout(obstacleTimeoutRef.current);
       obstacleTimeoutRef.current = null;
     }
     stopTimer();
+    stopRoundTimer();
+    stopListening();
     cancelAnimation(obstacleX);
     cancelAnimation(obstacleOpacity);
     cancelAnimation(obstacleY);
     cancelAnimation(orcaShake);
     isMovingRef.current = false;
     hasHitRef.current = false;
-  }, [stopTimer]);
+  }, [stopTimer, stopRoundTimer]);
 
   const endGame = useCallback(
     (won: boolean) => {
@@ -122,7 +305,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     [cleanup]
   );
 
-  const clearObstacle = useCallback(() => {
+  const markSuccess = useCallback(() => {
     if (
       hasHitRef.current ||
       gameEndedRef.current ||
@@ -130,18 +313,25 @@ export const Orca = ({ lesson, native, language }: Props) => {
     )
       return;
 
-    console.log('Clearing obstacle for phrase:', currentPhraseIndexRef.current);
+    console.log(
+      'SUCCESS! Clearing obstacle for phrase:',
+      currentPhraseIndexRef.current
+    );
+
     isMovingRef.current = false;
     hasHitRef.current = true;
+    stopRoundTimer();
+    stopListening();
     cancelAnimation(obstacleX);
 
-    // Increment both phrase index and correct phrases count
     currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
     correctPhrasesRef.current = correctPhrasesRef.current + 1;
 
     setCorrectPhrases(correctPhrasesRef.current);
     setCurrentObstacleIndex(null);
     setCurrentObstacleEmoji(null);
+    setInterimText('');
+    setFinalText('');
 
     if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
       endGame(true);
@@ -159,7 +349,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
         spawnObstacle();
       }
     }, 500);
-  }, [endGame]);
+  }, [endGame, stopRoundTimer]);
 
   const spawnObstacle = useCallback(() => {
     if (gameEndedRef.current) return;
@@ -174,39 +364,45 @@ export const Orca = ({ lesson, native, language }: Props) => {
       OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
     setCurrentObstacleIndex(nextIndex);
     setCurrentObstacleEmoji(emoji);
+    setInterimText('');
+    setFinalText('');
     hasHitRef.current = false;
     isMovingRef.current = true;
 
     obstacleY.value = ORCA_Y;
-    obstacleX.value = SCREEN_WIDTH + OBSTACLE_SIZE;
+    obstacleX.value = SCREEN_WIDTH;
     obstacleOpacity.value = withTiming(1, { duration: 200 });
 
     const collisionX = ORCA_X + ORCA_SIZE - 20;
     obstacleX.value = withTiming(
       collisionX,
-      { duration: 5000, easing: Easing.linear },
+      { duration: ROUND_SECONDS * 1000, easing: Easing.linear },
       (finished) => {
         if (finished && isMovingRef.current && !gameEndedRef.current) {
           runOnJS(handleCollisionJS)();
         }
       }
     );
-  }, [endGame]);
+
+    // Start listening and round timer
+    startRoundTimer();
+    setTimeout(() => {
+      startListening();
+    }, 300);
+  }, [endGame, startRoundTimer]);
 
   const handleCollisionJS = useCallback(() => {
     if (hasHitRef.current || gameEndedRef.current) return;
     hasHitRef.current = true;
     isMovingRef.current = false;
 
-    console.log(
-      'Collision! Failed to clear phrase:',
-      currentPhraseIndexRef.current
-    );
+    console.log('COLLISION! Failed phrase:', currentPhraseIndexRef.current);
 
     Vibration.vibrate(200);
+    stopRoundTimer();
+    stopListening();
     cancelAnimation(obstacleX);
 
-    // Move to next phrase WITHOUT incrementing correct phrases count
     currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
 
     setLives((prev) => {
@@ -216,9 +412,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
         return 0;
       }
 
-      // Clear current obstacle and spawn next one
       setCurrentObstacleIndex(null);
       setCurrentObstacleEmoji(null);
+      setInterimText('');
+      setFinalText('');
       obstacleOpacity.value = withTiming(0, { duration: 200 });
 
       setTimeout(() => {
@@ -240,7 +437,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
       withTiming(10, { duration: 50 }),
       withTiming(0, { duration: 50 })
     );
-  }, [endGame, spawnObstacle]);
+  }, [endGame, spawnObstacle, stopRoundTimer]);
 
   const startGame = useCallback(() => {
     cleanup();
@@ -255,8 +452,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setCurrentObstacleEmoji(null);
     setElapsedTime(0);
     setFinalTime(0);
+    setInterimText('');
+    setFinalText('');
+    setSecondsLeft(ROUND_SECONDS);
 
-    obstacleX.value = SCREEN_WIDTH + OBSTACLE_SIZE;
+    obstacleX.value = SCREEN_WIDTH;
     obstacleOpacity.value = 0;
     orcaShake.value = 0;
 
@@ -289,6 +489,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
     const phrase = lesson.phrases[phraseIndex];
     const translation = phrase.dictionary.find((d) => d.language === native);
     return translation?.text || phrase.text;
+  };
+
+  const getCurrentTargetPhrase = (): string => {
+    if (currentObstacleIndex === null) return '';
+    return lesson.phrases[currentObstacleIndex].text;
   };
 
   return (
@@ -400,17 +605,21 @@ export const Orca = ({ lesson, native, language }: Props) => {
             <View style={styles.transcriptCard}>
               <View style={styles.transcriptHeader}>
                 <Text style={styles.transcriptLabel}>
-                  {true ? '🎤 Listening' : '⏸️ Ready'}
-                  {` ${LANGUAGES.find((l) => l.code === language)?.flag}`}
+                  {isListening ? '🎤 Listening' : '⏸️ Ready'}
+                  {` ${LANGUAGES.find((l) => l.code === language)?.flag || ''}`}
                 </Text>
+                <Text style={styles.timerBadge}>{secondsLeft}s</Text>
               </View>
+              <Text style={styles.targetText}>
+                Say: "{getCurrentTargetPhrase()}"
+              </Text>
               <Text
                 style={[
-                  // styles.transcriptText,
-                  styles.transcriptPlaceholder,
+                  styles.transcriptText,
+                  !interimText && !finalText && styles.transcriptPlaceholder,
                 ]}
               >
-                {'Start speaking...'}
+                {finalText || interimText || 'Start speaking...'}
               </Text>
             </View>
           </View>
@@ -419,12 +628,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
         {gameState === 'idle' && (
           <View style={styles.overlay}>
             <Text style={styles.titleText}>🐋 Orca Swim 🐋</Text>
-            <Text style={styles.instructionText}>Learning Challenge!</Text>
+            <Text style={styles.instructionText}>
+              Speech Recognition Challenge!
+            </Text>
             <Pressable style={[styles.startButton]} onPress={startGame}>
               <Text style={styles.startButtonText}>TAP TO START</Text>
             </Pressable>
             <Text style={styles.subText}>
-              Press the button to clear{'\n'}each obstacle and learn phrases!
+              Pronounce each phrase correctly{'\n'}to clear obstacles and win!
             </Text>
           </View>
         )}
@@ -503,27 +714,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontVariant: ['tabular-nums'],
   },
-  actionContainer: {
-    position: 'absolute',
-    bottom: 80,
-    alignSelf: 'center',
-  },
-  clearButton: {
-    backgroundColor: '#4ade80',
-    paddingHorizontal: 48,
-    paddingVertical: 20,
-    borderRadius: 28,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  clearButtonText: {
-    color: DARK_COLOR,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
   transcriptContainer: {
     position: 'absolute',
     bottom: 80,
@@ -545,20 +735,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
-    flexWrap: 'wrap',
-    gap: 8,
+    marginBottom: 8,
   },
   transcriptLabel: {
     color: BRAND_COLOR,
     fontSize: 14,
     fontWeight: '700',
   },
+  timerBadge: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    backgroundColor: 'rgba(255, 205, 0, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
   targetText: {
     color: '#888',
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '600',
     fontStyle: 'italic',
+    marginBottom: 8,
   },
   transcriptText: {
     color: '#4ade80',

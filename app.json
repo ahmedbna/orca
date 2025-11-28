@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "icon": "./assets/images/orca.icon",
+      "icon": "./assets/images/orca.png",
       "supportsTablet": true,
       "bundleIdentifier": "com.ahmedbna.orca",
       "infoPlist": {
