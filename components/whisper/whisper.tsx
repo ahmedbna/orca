@@ -8,24 +8,19 @@ import {
   ScrollView,
   Alert,
   Platform,
-  SafeAreaView,
 } from 'react-native';
-import { useWhisperModels } from './useWhisperModels';
-import { Directory, File, Paths } from 'expo-file-system';
+import { useWhisperModels, WHISPER_MODELS } from './useWhisperModels';
 import { TranscribeRealtimeOptions } from 'whisper.rn/index.js';
 import {
   getRecordingPermissionsAsync,
   requestRecordingPermissionsAsync,
 } from 'expo-audio';
 
-const APP_DIRECTORY_NAME = 'whisper-app-files';
 const ACCENT_COLOR = '#0A84FF';
 
 export const Whisper = () => {
   const [realtimeTranscriber, setRealtimeTranscriber] = useState<any>(null);
-  const [isTranscribing, setIsTranscribing] = useState(false);
   const [isRealtimeActive, setIsRealtimeActive] = useState(false);
-  const [transcriptionResult, setTranscriptionResult] = useState<string>('');
   const [realtimeResult, setRealtimeResult] = useState<string>('');
   const [realtimeFinalResult, setRealtimeFinalResult] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -124,7 +119,7 @@ export const Whisper = () => {
   };
 
   const handleDeleteModel = (modelId: string) => {
-    if (isRealtimeActive || isTranscribing) {
+    if (isRealtimeActive) {
       Alert.alert(
         'Busy',
         'Please stop any active transcription before deleting models.'
@@ -162,62 +157,6 @@ export const Whisper = () => {
     );
   };
 
-  const transcribeAudio = async () => {
-    if (!whisperContext) {
-      Alert.alert('Error', 'Whisper not initialized');
-      return;
-    }
-
-    try {
-      setIsTranscribing(true);
-      setTranscriptionResult('');
-      setError('');
-
-      console.log('Starting transcription...');
-
-      const expoAudioPath = new File(
-        Paths.document,
-        APP_DIRECTORY_NAME,
-        'jfk.wav'
-      );
-
-      // Download file if it doesn't exist
-      if (!expoAudioPath.exists) {
-        console.log('Downloading JFK sample...');
-        const url =
-          'https://github.com/ggerganov/whisper.cpp/raw/master/samples/jfk.wav';
-
-        // create directory
-        const destination = new Directory(Paths.document, APP_DIRECTORY_NAME);
-        destination.create({ intermediates: true });
-
-        // download
-        await File.downloadFileAsync(url, expoAudioPath);
-        console.log('download complete (jfk.wav) file');
-      }
-
-      // Transcribe the audio
-      const options = { language: 'de' };
-      const { promise } = whisperContext.transcribe(expoAudioPath.uri, options);
-
-      const startTime = Date.now();
-      const { result } = await promise;
-      const endTime = Date.now();
-
-      console.log(`Transcription completed in ${endTime - startTime}ms`);
-      console.log('Result:', result);
-
-      setTranscriptionResult(result || 'No transcription result');
-    } catch (err) {
-      const errorMessage = `Transcription failed: ${err}`;
-      console.error(errorMessage);
-      setError(errorMessage);
-      Alert.alert('Transcription Error', errorMessage);
-    } finally {
-      setIsTranscribing(false);
-    }
-  };
-
   const startRealtimeTranscription = async () => {
     if (!whisperContext) {
       Alert.alert('Error', 'Whisper not initialized');
@@ -246,7 +185,7 @@ export const Whisper = () => {
         realtimeAudioMinSec: 2,
         audioSessionOnStartIos: {
           category: 'PlayAndRecord' as any,
-          options: ['DefaultToSpeaker' as any, 'AllowBluetooth' as any],
+          options: ['MixWithOthers' as any],
           mode: 'Default' as any,
         },
         audioSessionOnStopIos: 'restore' as any,
@@ -321,10 +260,8 @@ export const Whisper = () => {
   };
 
   const activeModelLabel = getCurrentModel()?.label || 'Model';
-
   const downloadPercentage =
     getDownloadProgress(currentModelId || 'small') ?? 0;
-
   const whisperStatusText = isDownloading
     ? `Downloading ${activeModelLabel} · ${(downloadPercentage * 100).toFixed(
         0
@@ -334,17 +271,11 @@ export const Whisper = () => {
       : whisperContext
         ? `Ready · ${activeModelLabel}`
         : 'Not initialized';
-
   const realtimeStatusText = isRealtimeActive ? 'Listening' : 'Idle';
-
-  const transcriptionStatusText = isTranscribing
-    ? 'Processing sample…'
-    : 'Idle';
-
   const storedModels = Object.entries(modelFiles);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <StatusBar style='dark' />
       <ScrollView
         contentContainerStyle={styles.content}
@@ -385,10 +316,6 @@ export const Whisper = () => {
               <Text style={styles.statusTitle}>Live</Text>
               <Text style={styles.statusValue}>{realtimeStatusText}</Text>
             </View>
-            <View style={styles.statusCard}>
-              <Text style={styles.statusTitle}>File</Text>
-              <Text style={styles.statusValue}>{transcriptionStatusText}</Text>
-            </View>
           </View>
         </View>
 
@@ -419,53 +346,60 @@ export const Whisper = () => {
           </View>
         ) : null}
 
-        {transcriptionResult ? (
-          <View style={styles.card}>
-            <Text style={styles.cardLabel}>File transcription</Text>
-            <Text style={styles.cardText}>{transcriptionResult}</Text>
-          </View>
-        ) : null}
+        <View style={styles.section}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              isRealtimeActive ? styles.stopButton : styles.secondaryButton,
+              !whisperContext && styles.buttonDisabled,
+            ]}
+            onPress={
+              isRealtimeActive
+                ? stopRealtimeTranscription
+                : startRealtimeTranscription
+            }
+            disabled={!whisperContext}
+          >
+            <Text
+              style={
+                isRealtimeActive
+                  ? styles.stopButtonText
+                  : styles.secondaryButtonText
+              }
+            >
+              {isRealtimeActive ? 'Stop live session' : 'Start live session'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Quick actions</Text>
-          <View style={styles.buttonRow}>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                styles.primaryButton,
-                (!whisperContext || isTranscribing) && styles.buttonDisabled,
-              ]}
-              onPress={transcribeAudio}
-              disabled={!whisperContext || isTranscribing}
-            >
-              <Text style={styles.primaryButtonText}>
-                {isTranscribing ? 'Transcribing…' : 'Transcribe sample'}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.button,
-                isRealtimeActive ? styles.stopButton : styles.secondaryButton,
-                !whisperContext && styles.buttonDisabled,
-              ]}
-              onPress={
-                isRealtimeActive
-                  ? stopRealtimeTranscription
-                  : startRealtimeTranscription
-              }
-              disabled={!whisperContext}
-            >
-              <Text
-                style={
-                  isRealtimeActive
-                    ? styles.stopButtonText
-                    : styles.secondaryButtonText
-                }
-              >
-                {isRealtimeActive ? 'Stop live session' : 'Start live session'}
-              </Text>
-            </TouchableOpacity>
+          <Text style={styles.sectionLabel}>Models</Text>
+          <View style={styles.modelGrid}>
+            {WHISPER_MODELS.map((model) => {
+              const isActive = getCurrentModel()?.id === model.id;
+              return (
+                <TouchableOpacity
+                  key={model.id}
+                  style={[
+                    styles.modelChip,
+                    isActive && styles.modelChipActive,
+                    (isDownloading || isInitializingModel) &&
+                      styles.buttonDisabled,
+                  ]}
+                  onPress={() => initializeModel(model.id)}
+                  disabled={isDownloading || isInitializingModel}
+                >
+                  <Text
+                    style={[
+                      styles.modelChipText,
+                      isActive && styles.modelChipTextActive,
+                    ]}
+                  >
+                    {model.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 
@@ -514,13 +448,14 @@ export const Whisper = () => {
           </View>
         ) : null}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    paddingTop: 36,
     backgroundColor: '#ffffff',
   },
   content: {

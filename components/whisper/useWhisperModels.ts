@@ -27,8 +27,28 @@ export interface WhisperModel {
 
 export const WHISPER_MODELS: WhisperModel[] = [
   {
+    id: 'base-q5_1',
+    label: 'Base Q5_1',
+    url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base-q5_1.bin',
+    filename: 'ggml-base-q5_1.bin',
+    capabilities: {
+      multilingual: true,
+      quantizable: false,
+    },
+  },
+  {
+    id: 'base-q8_0',
+    label: 'Base Q8_0',
+    url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base-q8_0.bin',
+    filename: 'gggml-base-q8_0.bin',
+    capabilities: {
+      multilingual: true,
+      quantizable: false,
+    },
+  },
+  {
     id: 'base',
-    label: 'Base Model',
+    label: 'Base',
     url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin',
     filename: 'ggml-base.bin',
     capabilities: {
@@ -38,9 +58,9 @@ export const WHISPER_MODELS: WhisperModel[] = [
   },
   {
     id: 'small',
-    label: 'Small Model',
-    url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q8_0.bin',
-    filename: 'ggml-small-q8_0.bin',
+    label: 'Small',
+    url: 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q5_1.bin',
+    filename: 'ggml-small-q5_1.bin',
     capabilities: {
       multilingual: true,
       quantizable: false,

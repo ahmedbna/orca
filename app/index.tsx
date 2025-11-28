@@ -1,3 +1,4 @@
+import { Game } from '@/components/game';
 import { Orca } from '@/components/orca/orca';
 import { View } from '@/components/ui/view';
 import { Whisper } from '@/components/whisper/whisper';
@@ -94,10 +95,12 @@ const LESSON = {
 
 export default function HomeScreen() {
   return (
-    <Orca
-      lesson={LESSON}
-      native={NATIVE_LANGUAGE}
-      language={LEARNING_LANGUAGE}
-    />
+    // <Orca
+    //   lesson={LESSON}
+    //   native={NATIVE_LANGUAGE}
+    //   language={LEARNING_LANGUAGE}
+    // />
+
+    <Game />
   );
 }
