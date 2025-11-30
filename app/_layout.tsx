@@ -60,7 +60,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} animated />
+        <StatusBar style={'dark'} animated />
 
         <ConvexAuthProvider
           client={convex}

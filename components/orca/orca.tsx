@@ -22,7 +22,7 @@ import Voice, {
 } from '@react-native-voice/voice';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@/components/orca/progress';
 import { Fish } from '@/components/orca/fish';
 import { Clouds } from '@/components/orca/clouds';
 import { Seafloor } from '@/components/orca/seafloor';
@@ -42,7 +42,7 @@ const BRAND_COLOR = '#FFCD00';
 const DARK_COLOR = '#000000';
 
 const OBSTACLE_TYPES = ['🪸', '🦑', '🦈', '⚓', '🪼', '🐡'];
-const ROUND_SECONDS = 10;
+const ROUND_SECONDS = 5;
 
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
 
@@ -132,6 +132,12 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const [interimText, setInterimText] = useState('');
   const [finalText, setFinalText] = useState('');
   const [secondsLeft, setSecondsLeft] = useState(ROUND_SECONDS);
+  const [correctSegmentIndices, setCorrectSegmentIndices] = useState<number[]>(
+    []
+  );
+  const [failedSegmentIndices, setFailedSegmentIndices] = useState<number[]>(
+    []
+  );
 
   const obstacleX = useSharedValue(SCREEN_WIDTH);
   const obstacleY = useSharedValue(ORCA_Y);
@@ -325,6 +331,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
     cancelAnimation(obstacleX);
 
     currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
+    setCorrectSegmentIndices((prev) => [
+      ...prev,
+      currentPhraseIndexRef.current - 1,
+    ]);
     correctPhrasesRef.current = correctPhrasesRef.current + 1;
 
     setCorrectPhrases(correctPhrasesRef.current);
@@ -404,6 +414,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
     cancelAnimation(obstacleX);
 
     currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
+    setFailedSegmentIndices((prev) => [
+      ...prev,
+      currentPhraseIndexRef.current - 1,
+    ]);
 
     setLives((prev) => {
       const newLives = prev - 1;
@@ -445,7 +459,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
     gameEndedRef.current = false;
     currentPhraseIndexRef.current = 0;
     correctPhrasesRef.current = 0;
-    setGameState('playing');
+    setCorrectSegmentIndices([]);
+    setFailedSegmentIndices([]);
     setCorrectPhrases(0);
     setLives(3);
     setCurrentObstacleIndex(null);
@@ -455,6 +470,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setInterimText('');
     setFinalText('');
     setSecondsLeft(ROUND_SECONDS);
+    setGameState('playing');
 
     obstacleX.value = SCREEN_WIDTH;
     obstacleOpacity.value = 0;
@@ -489,11 +505,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
     const phrase = lesson.phrases[phraseIndex];
     const translation = phrase.dictionary.find((d) => d.language === native);
     return translation?.text || phrase.text;
-  };
-
-  const getCurrentTargetPhrase = (): string => {
-    if (currentObstacleIndex === null) return '';
-    return lesson.phrases[currentObstacleIndex].text;
   };
 
   return (
@@ -570,12 +581,32 @@ export const Orca = ({ lesson, native, language }: Props) => {
               </Text>
             </View>
           </View>
+
+          <View style={styles.transcriptHeader}>
+            <Text style={styles.transcriptLabel}>
+              {isListening ? '🎤 Listening' : '⏸️ Ready'}
+              {` ${LANGUAGES.find((l) => l.code === language)?.flag || ''}`}
+            </Text>
+            <Text style={styles.timerBadge}>{secondsLeft}s</Text>
+          </View>
+
           <View>
             <Progress
+              total={TOTAL_OBSTACLES}
+              correctSegments={correctSegmentIndices}
+              failedSegments={failedSegmentIndices}
               height={16}
-              value={Math.floor((correctPhrases / TOTAL_OBSTACLES) * 100)}
             />
           </View>
+
+          <Text
+            style={[
+              styles.transcriptText,
+              !interimText && !finalText && styles.transcriptPlaceholder,
+            ]}
+          >
+            {finalText || interimText || 'Start speaking...'}
+          </Text>
         </View>
 
         {gameState === 'playing' && currentObstacleIndex !== null && (
@@ -600,7 +631,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
           </View>
         )}
 
-        {gameState === 'playing' && (
+        {/* {gameState === 'playing' && (
           <View style={styles.transcriptContainer}>
             <View style={styles.transcriptCard}>
               <View style={styles.transcriptHeader}>
@@ -623,7 +654,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
               </Text>
             </View>
           </View>
-        )}
+        )} */}
 
         {gameState === 'idle' && (
           <View style={styles.overlay}>
@@ -735,7 +766,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
   },
   transcriptLabel: {
     color: BRAND_COLOR,

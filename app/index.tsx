@@ -1,3 +1,4 @@
+import { Learn } from '@/components/learn';
 import { Orca } from '@/components/orca/orca';
 
 const LEARNING_LANGUAGE = 'de';
@@ -92,6 +93,12 @@ const LESSON = {
 
 export default function HomeScreen() {
   return (
+    // <Learn
+    //   lesson={LESSON}
+    //   native={NATIVE_LANGUAGE}
+    //   language={LEARNING_LANGUAGE}
+    // />
+
     <Orca
       lesson={LESSON}
       native={NATIVE_LANGUAGE}

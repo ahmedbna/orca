@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useAudioPlayer } from 'expo-audio';
 import { View } from '@/components/ui/view';
+import { useAudioPlayer } from 'expo-audio';
 
 const audioSource = require('../../assets/music/orca.mp3');
 
