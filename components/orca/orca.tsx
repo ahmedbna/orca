@@ -33,6 +33,9 @@ import { LANGUAGES } from '@/constants/languages';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
+const PHRASE_TOP = SCREEN_HEIGHT * 0.4;
+const ORCA_TOP = SCREEN_HEIGHT * 0.7;
+
 const ORCA_SIZE = 150;
 const OBSTACLE_SIZE = 60;
 const ORCA_X = 0;
@@ -515,36 +518,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
       <Jellyfish />
       <Seaweed />
       <Seafloor />
-
-      {gameState === 'playing' && (
-        <Animated.View
-          style={[
-            {
-              position: 'absolute',
-              left: ORCA_X,
-              zIndex: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-              top: SCREEN_HEIGHT * 0.6 - (ORCA_SIZE * 0.6) / 2,
-            },
-            orcaContainerStyle,
-          ]}
-        >
-          <Fish style={{ width: ORCA_SIZE, height: ORCA_SIZE * 0.6 }} />
-        </Animated.View>
-      )}
-
-      {currentObstacleEmoji && (
-        <Animated.View
-          style={[
-            styles.obstacle,
-            obstacleStyle,
-            { top: SCREEN_HEIGHT * 0.6 - OBSTACLE_SIZE / 2 },
-          ]}
-        >
-          <Text style={styles.obstacleEmoji}>{currentObstacleEmoji}</Text>
-        </Animated.View>
-      )}
+      {/* <Music /> */}
 
       <View style={styles.uiOverlay}>
         <View style={styles.headerContainer}>
@@ -613,7 +587,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
           <View
             style={{
               position: 'absolute',
-              top: SCREEN_HEIGHT * 0.28,
+              top: PHRASE_TOP,
               alignSelf: 'center',
               padding: 20,
             }}
@@ -631,30 +605,35 @@ export const Orca = ({ lesson, native, language }: Props) => {
           </View>
         )}
 
-        {/* {gameState === 'playing' && (
-          <View style={styles.transcriptContainer}>
-            <View style={styles.transcriptCard}>
-              <View style={styles.transcriptHeader}>
-                <Text style={styles.transcriptLabel}>
-                  {isListening ? '🎤 Listening' : '⏸️ Ready'}
-                  {` ${LANGUAGES.find((l) => l.code === language)?.flag || ''}`}
-                </Text>
-                <Text style={styles.timerBadge}>{secondsLeft}s</Text>
-              </View>
-              <Text style={styles.targetText}>
-                Say: "{getCurrentTargetPhrase()}"
-              </Text>
-              <Text
-                style={[
-                  styles.transcriptText,
-                  !interimText && !finalText && styles.transcriptPlaceholder,
-                ]}
-              >
-                {finalText || interimText || 'Start speaking...'}
-              </Text>
-            </View>
-          </View>
-        )} */}
+        {gameState === 'playing' && (
+          <Animated.View
+            style={[
+              {
+                position: 'absolute',
+                left: ORCA_X,
+                zIndex: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                top: ORCA_TOP - (ORCA_SIZE * 0.6) / 2,
+              },
+              orcaContainerStyle,
+            ]}
+          >
+            <Fish style={{ width: ORCA_SIZE, height: ORCA_SIZE * 0.6 }} />
+          </Animated.View>
+        )}
+
+        {currentObstacleEmoji && (
+          <Animated.View
+            style={[
+              styles.obstacle,
+              obstacleStyle,
+              { top: ORCA_TOP - OBSTACLE_SIZE / 2 },
+            ]}
+          >
+            <Text style={styles.obstacleEmoji}>{currentObstacleEmoji}</Text>
+          </Animated.View>
+        )}
 
         {gameState === 'idle' && (
           <View style={styles.overlay}>

@@ -11,12 +11,12 @@ import Animated, {
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const clouds = [
-  { y: SCREEN_HEIGHT * 0.1, size: 80, speed: 0.3, opacity: 0.3 },
-  { y: SCREEN_HEIGHT * 0.15, size: 60, speed: 0.3, opacity: 0.4 },
-  { y: SCREEN_HEIGHT * 0.18, size: 80, speed: 0.4, opacity: 0.3 },
-  { y: SCREEN_HEIGHT * 0.2, size: 50, speed: 0.25, opacity: 0.35 },
-  { y: SCREEN_HEIGHT * 0.22, size: 50, speed: 0.15, opacity: 0.35 },
-  { y: SCREEN_HEIGHT * 0.25, size: 70, speed: 0.35, opacity: 0.25 },
+  { y: SCREEN_HEIGHT * 0.2, size: 80, speed: 0.3, opacity: 0.3 },
+  { y: SCREEN_HEIGHT * 0.25, size: 60, speed: 0.3, opacity: 0.4 },
+  { y: SCREEN_HEIGHT * 0.28, size: 80, speed: 0.4, opacity: 0.3 },
+  { y: SCREEN_HEIGHT * 0.3, size: 50, speed: 0.25, opacity: 0.35 },
+  { y: SCREEN_HEIGHT * 0.32, size: 50, speed: 0.15, opacity: 0.35 },
+  { y: SCREEN_HEIGHT * 0.35, size: 70, speed: 0.35, opacity: 0.25 },
 ];
 
 export const Clouds = () => {

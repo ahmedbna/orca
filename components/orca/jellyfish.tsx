@@ -212,24 +212,17 @@ export const Jellyfish = () => {
         speed={30}
         count={6}
         scale={0.8}
-        baseOpacity={0.3}
-        yRange={[SCREEN_HEIGHT * 0.4, SCREEN_HEIGHT * 0.6]}
+        baseOpacity={0.45}
+        yRange={[SCREEN_HEIGHT * 0.35, SCREEN_HEIGHT * 0.6]}
         color='rgba(0, 0, 40, 0.2)'
       />
-      <ParallaxLayer
-        speed={60}
-        count={4}
-        scale={0.6}
-        baseOpacity={0.5}
-        yRange={[SCREEN_HEIGHT * 0.5, SCREEN_HEIGHT * 0.8]}
-        color='rgba(0, 0, 20, 0.15)'
-      />
+
       <ParallaxLayer
         speed={80}
         count={6}
         scale={1}
         baseOpacity={0.7}
-        yRange={[SCREEN_HEIGHT * 0.6, SCREEN_HEIGHT * 0.9]}
+        yRange={[SCREEN_HEIGHT * 0.8, SCREEN_HEIGHT * 0.9]}
         color='rgba(0, 0, 0, 0.1)'
       />
     </View>
