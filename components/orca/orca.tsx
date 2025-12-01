@@ -30,6 +30,7 @@ import { Seaweed } from '@/components/orca/seaweed';
 import { Jellyfish } from '@/components/orca/jellyfish';
 import { formatTime } from '@/lib/format-time';
 import { LANGUAGES } from '@/constants/languages';
+import { useColor } from '@/hooks/useColor';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -119,6 +120,9 @@ function getThresholdFor(phrase: string) {
 }
 
 export const Orca = ({ lesson, native, language }: Props) => {
+  const green = useColor('green');
+  const muted = useColor('textMuted');
+
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const [gameState, setGameState] = useState<GameStatus>('idle');
   const [currentObstacleIndex, setCurrentObstacleIndex] = useState<
@@ -559,10 +563,12 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
           <View style={styles.transcriptHeader}>
             <Text style={styles.transcriptLabel}>
-              {isListening ? '🎤 Listening' : '⏸️ Ready'}
-              {` ${LANGUAGES.find((l) => l.code === language)?.flag || ''}`}
+              {isListening ? '🎤 Listening' : '🚨 Ready'}
             </Text>
-            <Text style={styles.timerBadge}>{secondsLeft}s</Text>
+            <Text style={styles.transcriptLabel}>
+              {`${LANGUAGES.find((l) => l.code === native)?.flag || ''} 🗣️ ${LANGUAGES.find((l) => l.code === language)?.flag || ''}`}
+            </Text>
+            {/* <Text style={styles.timerBadge}>{secondsLeft}s</Text> */}
           </View>
 
           <View>
@@ -573,35 +579,46 @@ export const Orca = ({ lesson, native, language }: Props) => {
               height={16}
             />
           </View>
-
-          <Text
-            style={[
-              styles.transcriptText,
-              !interimText && !finalText && styles.transcriptPlaceholder,
-            ]}
-          >
-            {finalText || interimText || 'Start speaking...'}
-          </Text>
         </View>
 
         {gameState === 'playing' && currentObstacleIndex !== null && (
           <View
             style={{
+              paddingHorizontal: 26,
               position: 'absolute',
               top: PHRASE_TOP,
-              alignSelf: 'center',
-              padding: 20,
+              // alignSelf: 'center',
             }}
           >
             <Text
               style={{
                 fontSize: 46,
-                fontWeight: '800',
-                textAlign: 'center',
                 color: '#000',
+                fontWeight: '800',
+                // textAlign: 'center',
               }}
             >
               {getTranslation(currentObstacleIndex)}
+            </Text>
+
+            <Text
+              style={[
+                {
+                  color: green,
+                  fontSize: 18,
+                  fontWeight: '600',
+                  lineHeight: 26,
+                },
+                !interimText &&
+                  !finalText && {
+                    color: 'rgba(0, 0, 40, 0.4)',
+                    fontStyle: 'italic',
+                  },
+              ]}
+            >
+              {finalText ||
+                interimText ||
+                `Start ${LANGUAGES.find((l) => l.code === language)?.name} speaking..`}
             </Text>
           </View>
         )}
@@ -694,7 +711,7 @@ const styles = StyleSheet.create({
     height: OBSTACLE_SIZE,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 5,
+    zIndex: 20,
   },
   obstacleEmoji: { fontSize: 50 },
   uiOverlay: { ...StyleSheet.absoluteFillObject, pointerEvents: 'box-none' },
@@ -705,7 +722,7 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 24,
     borderRadius: 36,
     gap: 10,
     shadowColor: '#000',
@@ -768,16 +785,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginBottom: 8,
   },
-  transcriptText: {
-    color: '#4ade80',
-    fontSize: 18,
-    fontWeight: '600',
-    lineHeight: 26,
-  },
-  transcriptPlaceholder: {
-    color: '#666',
-    fontStyle: 'italic',
-  },
+
   overlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',

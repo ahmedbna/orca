@@ -213,7 +213,7 @@ export const Jellyfish = () => {
         count={6}
         scale={0.8}
         baseOpacity={0.45}
-        yRange={[SCREEN_HEIGHT * 0.35, SCREEN_HEIGHT * 0.6]}
+        yRange={[SCREEN_HEIGHT * 0.45, SCREEN_HEIGHT * 0.6]}
         color='rgba(0, 0, 40, 0.2)'
       />
 
