@@ -352,16 +352,16 @@ export const Orca = ({ lesson, native, language }: Props) => {
     }
 
     obstacleY.value = withTiming(SCREEN_HEIGHT + 100, {
-      duration: 400,
+      duration: 200,
       easing: Easing.in(Easing.back(2)),
     });
-    obstacleOpacity.value = withTiming(0, { duration: 300 });
+    obstacleOpacity.value = withTiming(0, { duration: 100 });
 
     setTimeout(() => {
       if (!gameEndedRef.current) {
         spawnObstacle();
       }
-    }, 500);
+    }, 100); // Reduced from 400ms to minimize transition time
   }, [endGame, stopRoundTimer]);
 
   const spawnObstacle = useCallback(() => {
@@ -380,13 +380,23 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setInterimText('');
     setFinalText('');
     hasHitRef.current = false;
-    isMovingRef.current = true;
+    isMovingRef.current = true; // Set immediately
 
     obstacleY.value = ORCA_Y;
     obstacleX.value = SCREEN_WIDTH;
-    obstacleOpacity.value = withTiming(1, { duration: 200 });
+    obstacleOpacity.value = 1; // Instant visibility
 
     const collisionX = ORCA_X + ORCA_SIZE - 20;
+
+    // Start everything immediately
+    if (currentPhraseIndexRef.current === 0) {
+      startTimer();
+    }
+
+    startRoundTimer();
+    startListening(); // Start async but don't wait
+
+    // Start obstacle movement immediately
     obstacleX.value = withTiming(
       collisionX,
       { duration: ROUND_SECONDS * 1000, easing: Easing.linear },
@@ -396,13 +406,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
         }
       }
     );
-
-    // Start listening and round timer
-    startRoundTimer();
-    setTimeout(() => {
-      startListening();
-    }, 300);
-  }, [endGame, startRoundTimer]);
+  }, [endGame, startRoundTimer, startTimer]);
 
   const handleCollisionJS = useCallback(() => {
     if (hasHitRef.current || gameEndedRef.current) return;
@@ -443,7 +447,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
             spawnObstacle();
           }
         }
-      }, 800);
+      }, 100); // Reduced from 600ms to minimize transition time
       return newLives;
     });
 
@@ -479,12 +483,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
     obstacleOpacity.value = 0;
     orcaShake.value = 0;
 
-    startTimer();
-
     obstacleTimeoutRef.current = setTimeout(() => {
       spawnObstacle();
-    }, 1000);
-  }, [cleanup, spawnObstacle, startTimer]);
+    }, 500); // Reduced from 1000ms for faster start
+  }, [cleanup, spawnObstacle]);
 
   useEffect(() => {
     return () => {
@@ -518,7 +520,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
       <Jellyfish />
       <Seaweed />
       <Seafloor />
-      {/* <Music /> */}
 
       <View style={styles.uiOverlay}>
         <View style={styles.headerContainer}>
