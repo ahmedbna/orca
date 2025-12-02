@@ -3,6 +3,7 @@ export const LANGUAGES = [
     name: 'Arabic',
     native: 'العربية',
     code: 'ar',
+    locale: 'ar-SA',
     flag: '🇸🇦',
     voices: {
       male: [{ id: 'IES4nrmZdUBHByLBde0P', name: 'Haytham' }],
@@ -13,6 +14,7 @@ export const LANGUAGES = [
     name: 'Bulgarian',
     native: 'български',
     code: 'bg',
+    locale: 'bg-BG',
     flag: '🇧🇬',
     voices: {
       male: [{ id: 'j9jfwdrw7BRfcR43Qohk', name: 'Frederick Surrey' }],
@@ -23,6 +25,7 @@ export const LANGUAGES = [
     name: 'Chinese',
     native: '中文',
     code: 'zh',
+    locale: 'zh-CN',
     flag: '🇨🇳',
     voices: {
       male: [{ id: '4VZIsMPtgggwNg7OXbPY', name: 'James Gao' }],
@@ -33,6 +36,7 @@ export const LANGUAGES = [
     name: 'Croatian',
     native: 'hrvatski',
     code: 'hr',
+    locale: 'hr-HR',
     flag: '🇭🇷',
     voices: {
       male: [{ id: 'j9jfwdrw7BRfcR43Qohk', name: 'Frederick Surrey' }],
@@ -43,6 +47,7 @@ export const LANGUAGES = [
     name: 'Czech',
     native: 'čeština',
     code: 'cs',
+    locale: 'cs-CZ',
     flag: '🇨🇿',
     voices: {
       male: [{ id: 'uYFJyGaibp4N2VwYQshk', name: 'Adam' }],
@@ -53,6 +58,7 @@ export const LANGUAGES = [
     name: 'Danish',
     native: 'dansk',
     code: 'da',
+    locale: 'da-DK',
     flag: '🇩🇰',
     voices: {
       male: [{ id: 'j9jfwdrw7BRfcR43Qohk', name: 'Frederick Surrey' }],
@@ -63,6 +69,7 @@ export const LANGUAGES = [
     name: 'Dutch',
     native: 'Nederlands',
     code: 'nl',
+    locale: 'nl-NL',
     flag: '🇳🇱',
     voices: {
       male: [{ id: 'wqDY19Brqhu7UCoLadPh', name: 'Jann' }],
@@ -73,6 +80,7 @@ export const LANGUAGES = [
     name: 'English',
     native: 'English',
     code: 'en',
+    locale: 'en-US',
     flag: '🇺🇸',
     voices: {
       male: [{ id: 'NYC9WEgkq1u4jiqBseQ9', name: 'Russell' }],
@@ -83,6 +91,7 @@ export const LANGUAGES = [
     name: 'Filipino',
     native: 'Filipino',
     code: 'tl',
+    locale: 'tl-PH',
     flag: '🇵🇭',
     voices: {
       male: [{ id: 'rVz5W5gAIQHsFZox2HtT', name: 'Kuya' }],
@@ -93,6 +102,7 @@ export const LANGUAGES = [
     name: 'Finnish',
     native: 'suomi',
     code: 'fi',
+    locale: 'fi-FI',
     flag: '🇫🇮',
     voices: {
       male: [{ id: '8Es4wFxsDlHBmFWAOWRS', name: 'William Shanks' }],
@@ -103,6 +113,7 @@ export const LANGUAGES = [
     name: 'French',
     native: 'français',
     code: 'fr',
+    locale: 'fr-FR',
     flag: '🇫🇷',
     voices: {
       male: [{ id: 'ohItIVrXTBI80RrUECOD', name: 'Guillaume' }],
@@ -113,6 +124,7 @@ export const LANGUAGES = [
     name: 'German',
     native: 'Deutsch',
     code: 'de',
+    locale: 'de-DE',
     flag: '🇩🇪',
     voices: {
       male: [{ id: 'LMwgkTZL66bLQfT9Y7py', name: 'Henry' }],
@@ -123,6 +135,7 @@ export const LANGUAGES = [
     name: 'Greek',
     native: 'ελληνικά',
     code: 'el',
+    locale: 'el-GR',
     flag: '🇬🇷',
     voices: {
       male: [{ id: 'n0vzWypeCK1NlWPVwhOc', name: 'Theos' }],
@@ -133,6 +146,7 @@ export const LANGUAGES = [
     name: 'Hindi',
     native: 'हिन्दी',
     code: 'hi',
+    locale: 'hi-IN',
     flag: '🇮🇳',
     voices: {
       male: [{ id: 'zgqefOY5FPQ3bB7OZTVR', name: 'Niraj' }],
@@ -143,6 +157,7 @@ export const LANGUAGES = [
     name: 'Hungarian',
     native: 'magyar',
     code: 'hu',
+    locale: 'hu-HU',
     flag: '🇭🇺',
     voices: {
       male: [{ id: 'M336tBVZHWWiWb4R54ui', name: 'David' }],
@@ -153,6 +168,7 @@ export const LANGUAGES = [
     name: 'Indonesian',
     native: 'Bahasa Indonesia',
     code: 'id',
+    locale: 'id-ID',
     flag: '🇮🇩',
     voices: {
       male: [{ id: 'RWiGLY9uXI70QL540WNd', name: 'Putra' }],
@@ -163,6 +179,7 @@ export const LANGUAGES = [
     name: 'Italian',
     native: 'italiano',
     code: 'it',
+    locale: 'it-IT',
     flag: '🇮🇹',
     voices: {
       male: [{ id: '', name: 'Giovanni Rossi' }],
@@ -173,6 +190,7 @@ export const LANGUAGES = [
     name: 'Japanese',
     native: '日本語',
     code: 'ja',
+    locale: 'ja-JP',
     flag: '🇯🇵',
     voices: {
       male: [{ id: 'b34JylakFZPlGS0BnwyY', name: 'Kenzo' }],
@@ -183,6 +201,7 @@ export const LANGUAGES = [
     name: 'Korean',
     native: '한국어',
     code: 'ko',
+    locale: 'ko-KR',
     flag: '🇰🇷',
     voices: {
       male: [{ id: '1W00IGEmNmwmsDeYy7ag', name: 'KKC' }],
@@ -193,6 +212,7 @@ export const LANGUAGES = [
     name: 'Malay',
     native: 'Bahasa Melayu',
     code: 'ms',
+    locale: 'ms-MY',
     flag: '🇲🇾',
     voices: {
       male: [{ id: 'C1gMsiiE7sXAt59fmvYg', name: 'Hasnan' }],
@@ -203,6 +223,7 @@ export const LANGUAGES = [
     name: 'Norwegian',
     native: 'norsk',
     code: 'no',
+    locale: 'nb-NO',
     flag: '🇳🇴',
     voices: {
       male: [{ id: 'dgrgQcxISbZtq517iweJ', name: 'Ola' }],
@@ -213,6 +234,7 @@ export const LANGUAGES = [
     name: 'Polish',
     native: 'polski',
     code: 'pl',
+    locale: 'pl-PL',
     flag: '🇵🇱',
     voices: {
       male: [{ id: 'W3ryZpL8gFeUBUllKisa', name: 'Maciej' }],
@@ -223,6 +245,7 @@ export const LANGUAGES = [
     name: 'Portuguese',
     native: 'português',
     code: 'pt',
+    locale: 'pt-PT',
     flag: '🇵🇹',
     voices: {
       male: [{ id: 'NGS0ZsC7j4t4dCWbPdgO', name: 'Dhyogo Azevedo' }],
@@ -233,6 +256,7 @@ export const LANGUAGES = [
     name: 'Romanian',
     native: 'română',
     code: 'ro',
+    locale: 'ro-RO',
     flag: '🇷🇴',
     voices: {
       male: [{ id: 'h3aQ5g69oxB0wpernpfx', name: 'Ciprian Pop' }],
@@ -243,6 +267,7 @@ export const LANGUAGES = [
     name: 'Russian',
     native: 'русский',
     code: 'ru',
+    locale: 'ru-RU',
     flag: '🇷🇺',
     voices: {
       male: [{ id: 'gJEfHTTiifXEDmO687lC', name: 'Prince Nuri' }],
@@ -253,6 +278,7 @@ export const LANGUAGES = [
     name: 'Slovak',
     native: 'slovenčina',
     code: 'sk',
+    locale: 'sk-SK',
     flag: '🇸🇰',
     voices: {
       male: [{ id: 'd6IbhdqAKkXCCVuJjbie', name: 'Peter' }],
@@ -263,6 +289,7 @@ export const LANGUAGES = [
     name: 'Spanish',
     native: 'español',
     code: 'es',
+    locale: 'es-ES',
     flag: '🇪🇸',
     voices: {
       male: [{ id: '9F4C8ztpNUmXkdDDbz3J', name: 'Dan Dan' }],
@@ -273,6 +300,7 @@ export const LANGUAGES = [
     name: 'Swedish',
     native: 'svenska',
     code: 'sv',
+    locale: 'sv-SE',
     flag: '🇸🇪',
     voices: {
       male: [{ id: 'x0u3EW21dbrORJzOq1m9', name: 'Adam' }],
@@ -283,6 +311,7 @@ export const LANGUAGES = [
     name: 'Turkish',
     native: 'Türkçe',
     code: 'tr',
+    locale: 'tr-TR',
     flag: '🇹🇷',
     voices: {
       male: [{ id: 'GLHtjkeLJ9Rxcv9JhLmh', name: 'MUHAMMER ARABACI' }],
@@ -293,6 +322,7 @@ export const LANGUAGES = [
     name: 'Ukrainian',
     native: 'українська',
     code: 'uk',
+    locale: 'uk-UA',
     flag: '🇺🇦',
     voices: {
       male: [{ id: '9Sj8ugvpK1DmcAXyvi3a', name: 'Alex Nekrasov' }],
@@ -303,23 +333,11 @@ export const LANGUAGES = [
     name: 'Vietnamese',
     native: 'Tiếng Việt',
     code: 'vi',
+    locale: 'vi-VN',
     flag: '🇻🇳',
     voices: {
       male: [{ id: '3VnrjnYrskPMDsapTr8X', name: 'DangTungDuy' }],
       female: [{ id: 'BlZK9tHPU6XXjwOSIiYA', name: 'HuyenTrang' }],
-    },
-  },
-] as const;
-
-export const AVAILABLE_LANGUAGES = [
-  {
-    name: 'German',
-    native: 'Deutsch',
-    code: 'de',
-    flag: '🇩🇪',
-    voices: {
-      male: [{ id: 'LMwgkTZL66bLQfT9Y7py', name: 'Henry' }],
-      female: [{ id: 'Dr5ws89ILcknhL7xh4JG', name: 'Johanna' }],
     },
   },
 ] as const;

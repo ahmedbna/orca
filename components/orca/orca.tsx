@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Vibration,
   Platform,
-  PermissionsAndroid,
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -16,10 +15,11 @@ import Animated, {
   cancelAnimation,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
-import Voice, {
-  SpeechErrorEvent,
-  SpeechResultsEvent,
-} from '@react-native-voice/voice';
+// 1. New Imports
+import {
+  ExpoSpeechRecognitionModule,
+  useSpeechRecognitionEvent,
+} from 'expo-speech-recognition';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Progress } from '@/components/orca/progress';
@@ -121,7 +121,6 @@ function getThresholdFor(phrase: string) {
 
 export const Orca = ({ lesson, native, language }: Props) => {
   const green = useColor('green');
-  const muted = useColor('textMuted');
 
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const [gameState, setGameState] = useState<GameStatus>('idle');
@@ -135,10 +134,15 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const [lives, setLives] = useState(3);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [finalTime, setFinalTime] = useState(0);
+
+  // State for UI feedback
   const [isListening, setIsListening] = useState(false);
   const [interimText, setInterimText] = useState('');
   const [finalText, setFinalText] = useState('');
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [secondsLeft, setSecondsLeft] = useState(ROUND_SECONDS);
+
   const [correctSegmentIndices, setCorrectSegmentIndices] = useState<number[]>(
     []
   );
@@ -161,75 +165,67 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const currentPhraseIndexRef = useRef(0);
   const correctPhrasesRef = useRef(0);
 
-  // Initialize Voice
-  useEffect(() => {
-    Voice.onSpeechResults = onSpeechResults;
-    Voice.onSpeechPartialResults = onSpeechPartialResults;
-    Voice.onSpeechError = onSpeechError;
+  // 2. Event Listeners using expo-speech-recognition hook
+  useSpeechRecognitionEvent('start', () => setIsListening(true));
+  useSpeechRecognitionEvent('end', () => setIsListening(false));
+  useSpeechRecognitionEvent('error', (event) => {
+    console.log('Speech Recognition Error:', event.error, event.message);
+  });
 
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
+  useSpeechRecognitionEvent('result', (event) => {
+    // Get the top result
+    const results = event.results?.[0]?.transcript;
+    if (!results) return;
 
-  async function ensureAudioPermission(): Promise<boolean> {
-    if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        {
-          title: 'Microphone Permission',
-          message:
-            'This app needs access to your microphone for speech recognition',
-          buttonPositive: 'OK',
-        }
-      );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    if (event.isFinal) {
+      setFinalText(results);
+      setInterimText(''); // Clear interim when final matches
+      checkMatch(results);
+    } else {
+      setInterimText(results);
+      // Crucial: We check match on interim results too for faster gameplay
+      checkMatch(results);
     }
-    return true;
-  }
+  });
 
+  const locale = LANGUAGES.find((l) => l.code === language)?.locale || 'de-DE';
+  // 3. Helper to start listening
   async function startListening() {
     try {
-      const ok = await ensureAudioPermission();
-      if (!ok) {
+      // Handles permission internally or you can call requestPermissionsAsync explicitly
+      const perms = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+      if (!perms.granted) {
         console.warn('Microphone permission denied');
         return;
       }
+
       setFinalText('');
       setInterimText('');
 
-      await Voice.start(language);
+      // Avoid starting if already started
+      ExpoSpeechRecognitionModule.start({
+        lang: locale,
+        interimResults: true,
+        maxAlternatives: 1,
+        // For short bursts (5s), continuous: false is usually more stable,
+        // but can be true if you want to catch multiple sentences.
+        // Default (false) works well for "Say this phrase" mechanics.
+        continuous: true,
+      });
       setIsListening(true);
     } catch (e: any) {
       console.warn('startListening error', e);
     }
   }
 
+  // 4. Helper to stop listening
   async function stopListening() {
     try {
-      await Voice.stop();
+      ExpoSpeechRecognitionModule.stop();
       setIsListening(false);
     } catch (e) {
       console.warn('stopListening error', e);
     }
-  }
-
-  function onSpeechResults(e: SpeechResultsEvent) {
-    const results = e.value ?? [];
-    const text = results.join(' ');
-    setFinalText(text);
-    checkMatch(text);
-  }
-
-  function onSpeechPartialResults(e: any) {
-    const partials = e.value ?? [];
-    const text = partials.join(' ');
-    setInterimText(text);
-    checkMatch(text);
-  }
-
-  function onSpeechError(e: SpeechErrorEvent) {
-    console.warn('Speech error', e);
   }
 
   function checkMatch(transcribed: string) {
@@ -239,9 +235,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
     const sim = similarity(transcribed, targetPhrase);
     const threshold = getThresholdFor(targetPhrase);
 
-    console.log(
-      `Checking: "${transcribed}" vs "${targetPhrase}" - Similarity: ${sim.toFixed(2)} (threshold: ${threshold})`
-    );
+    // Optional debug log
+    // console.log(
+    //   `Checking: "${transcribed}" vs "${targetPhrase}" - Similarity: ${sim.toFixed(2)}`
+    // );
 
     if (sim >= threshold) {
       markSuccess();
@@ -365,7 +362,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
       if (!gameEndedRef.current) {
         spawnObstacle();
       }
-    }, 100); // Reduced from 400ms to minimize transition time
+    }, 100);
   }, [endGame, stopRoundTimer]);
 
   const spawnObstacle = useCallback(() => {
@@ -384,23 +381,21 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setInterimText('');
     setFinalText('');
     hasHitRef.current = false;
-    isMovingRef.current = true; // Set immediately
+    isMovingRef.current = true;
 
     obstacleY.value = ORCA_Y;
     obstacleX.value = SCREEN_WIDTH;
-    obstacleOpacity.value = 1; // Instant visibility
+    obstacleOpacity.value = 1;
 
     const collisionX = ORCA_X + ORCA_SIZE - 20;
 
-    // Start everything immediately
     if (currentPhraseIndexRef.current === 0) {
       startTimer();
     }
 
     startRoundTimer();
-    startListening(); // Start async but don't wait
+    startListening();
 
-    // Start obstacle movement immediately
     obstacleX.value = withTiming(
       collisionX,
       { duration: ROUND_SECONDS * 1000, easing: Easing.linear },
@@ -451,7 +446,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
             spawnObstacle();
           }
         }
-      }, 100); // Reduced from 600ms to minimize transition time
+      }, 100);
       return newLives;
     });
 
@@ -489,7 +484,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
     obstacleTimeoutRef.current = setTimeout(() => {
       spawnObstacle();
-    }, 500); // Reduced from 1000ms for faster start
+    }, 500);
   }, [cleanup, spawnObstacle]);
 
   useEffect(() => {
