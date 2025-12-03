@@ -121,8 +121,10 @@ function getThresholdFor(phrase: string) {
 
 export const Orca = ({ lesson, native, language }: Props) => {
   const green = useColor('green');
-
   const TOTAL_OBSTACLES = lesson.phrases.length;
+  const NATIVE_LANGUAGE = LANGUAGES.find((l) => l.code === native);
+  const LEARNING_LANGUAGE = LANGUAGES.find((l) => l.code === language);
+
   const [gameState, setGameState] = useState<GameStatus>('idle');
   const [currentObstacleIndex, setCurrentObstacleIndex] = useState<
     number | null
@@ -188,9 +190,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
     }
   });
 
-  const locale = LANGUAGES.find((l) => l.code === language)?.locale || 'de-DE';
   // 3. Helper to start listening
-  async function startListening() {
+  const startListening = async () => {
     try {
       // Handles permission internally or you can call requestPermissionsAsync explicitly
       const perms = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
@@ -204,7 +205,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
       // Avoid starting if already started
       ExpoSpeechRecognitionModule.start({
-        lang: locale,
+        lang: LEARNING_LANGUAGE?.locale,
         interimResults: true,
         maxAlternatives: 1,
         // For short bursts (5s), continuous: false is usually more stable,
@@ -216,17 +217,17 @@ export const Orca = ({ lesson, native, language }: Props) => {
     } catch (e: any) {
       console.warn('startListening error', e);
     }
-  }
+  };
 
   // 4. Helper to stop listening
-  async function stopListening() {
+  const stopListening = async () => {
     try {
       ExpoSpeechRecognitionModule.stop();
       setIsListening(false);
     } catch (e) {
       console.warn('stopListening error', e);
     }
-  }
+  };
 
   function checkMatch(transcribed: string) {
     if (currentPhraseIndexRef.current >= lesson.phrases.length) return;
@@ -283,14 +284,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
     }, 1000);
   }, [stopRoundTimer]);
 
-  const cleanup = useCallback(() => {
+  const cleanup = useCallback(async () => {
     if (obstacleTimeoutRef.current) {
       clearTimeout(obstacleTimeoutRef.current);
       obstacleTimeoutRef.current = null;
     }
     stopTimer();
     stopRoundTimer();
-    stopListening();
+    await stopListening();
     cancelAnimation(obstacleX);
     cancelAnimation(obstacleOpacity);
     cancelAnimation(obstacleY);
@@ -365,8 +366,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
     }, 100);
   }, [endGame, stopRoundTimer]);
 
-  const spawnObstacle = useCallback(() => {
+  const spawnObstacle = useCallback(async () => {
     if (gameEndedRef.current) return;
+
+    await startListening();
 
     const nextIndex = currentPhraseIndexRef.current;
     if (nextIndex >= lesson.phrases.length) {
@@ -394,7 +397,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
     }
 
     startRoundTimer();
-    startListening();
 
     obstacleX.value = withTiming(
       collisionX,
