@@ -24,6 +24,7 @@ import { Jellyfish } from '@/components/orca/jellyfish';
 import { formatTime } from '@/lib/format-time';
 import { LANGUAGES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -147,6 +148,8 @@ function isNoisyTranscript(t: string) {
 }
 
 export const Orca = ({ lesson, native, language }: Props) => {
+  const insets = useSafeAreaInsets();
+
   const green = useColor('green');
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const NATIVE_LANGUAGE = LANGUAGES.find((l) => l.code === native);
@@ -647,7 +650,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
       <Seafloor />
 
       <View style={styles.uiOverlay}>
-        <View style={styles.headerContainer}>
+        <View style={[styles.headerContainer, { top: insets.top }]}>
           <View
             style={{
               flexDirection: 'row',
@@ -843,7 +846,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: '#000',
     position: 'absolute',
-    top: 60,
+    // top: 60,
     left: 16,
     right: 16,
     paddingHorizontal: 20,
