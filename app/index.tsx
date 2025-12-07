@@ -1,5 +1,6 @@
 import { Learn } from '@/components/learn';
 import { Orca } from '@/components/orca/orca';
+import { Speech } from '@/components/speech';
 
 const LEARNING_LANGUAGE = 'de';
 const NATIVE_LANGUAGE = 'en';
@@ -104,5 +105,7 @@ export default function HomeScreen() {
       native={NATIVE_LANGUAGE}
       language={LEARNING_LANGUAGE}
     />
+
+    // <Speech />
   );
 }

@@ -30,15 +30,12 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const PHRASE_TOP = SCREEN_HEIGHT * 0.4;
 const ORCA_TOP = SCREEN_HEIGHT * 0.7;
-
 const ORCA_SIZE = 150;
 const OBSTACLE_SIZE = 60;
 const ORCA_X = 0;
 const ORCA_Y = SCREEN_HEIGHT / 2 - (ORCA_SIZE * 0.6) / 2;
-
 const BRAND_COLOR = '#FFCD00';
 const DARK_COLOR = '#000000';
-
 const OBSTACLE_TYPES = ['🪸', '🦑', '🦈', '⚓', '🪼', '🐡'];
 const ROUND_SECONDS = 5;
 
@@ -58,7 +55,8 @@ type Props = {
   };
 };
 
-/** Levenshtein distance for fuzzy matching (digit-by-digit to avoid arithmetic mistakes) */
+/** --- UTILS --- */
+
 function levenshtein(a: string, b: string) {
   const la = a.length;
   const lb = b.length;
@@ -83,7 +81,6 @@ function levenshtein(a: string, b: string) {
   return dp[la][lb];
 }
 
-/** Normalize text for comparison */
 function normalizeText(s: string) {
   return s
     .toLowerCase()
@@ -94,7 +91,6 @@ function normalizeText(s: string) {
     .trim();
 }
 
-/** Similarity 0..1 where 1 = identical */
 function similarity(a: string, b: string) {
   const na = normalizeText(a);
   const nb = normalizeText(b);
@@ -105,7 +101,6 @@ function similarity(a: string, b: string) {
   return 1 - dist / maxLen;
 }
 
-/** Base threshold by phrase length */
 function baseThresholdFor(phrase: string) {
   const words = normalizeText(phrase).split(' ').filter(Boolean).length;
   if (words <= 2) return 0.6;
@@ -113,49 +108,35 @@ function baseThresholdFor(phrase: string) {
   return 0.78;
 }
 
-/** Per-language tuning: returns multiplier/addition applied to base threshold and VAD params */
 function languageTuning(langCode: string | undefined) {
-  // Defaults tuned for common languages; extend as needed.
-  // Returns { thresholdOffset, vadSilenceMs }.
-  if (!langCode) return { thresholdOffset: 0, vadSilenceMs: 700 };
-
-  switch (langCode.split('-')[0]) {
+  if (!langCode) return { thresholdOffset: 0 };
+  const base = langCode.split('-')[0];
+  switch (base) {
     case 'en':
-      return { thresholdOffset: 0.02, vadSilenceMs: 600 }; // english often recognized well
+      return { thresholdOffset: 0.02 };
     case 'de':
-      return { thresholdOffset: 0.0, vadSilenceMs: 700 };
+      return { thresholdOffset: 0.0 };
     case 'fr':
-      return { thresholdOffset: 0.015, vadSilenceMs: 700 };
+      return { thresholdOffset: 0.015 };
     case 'es':
-      return { thresholdOffset: 0.01, vadSilenceMs: 650 };
+      return { thresholdOffset: 0.01 };
     case 'ar':
-      return { thresholdOffset: -0.02, vadSilenceMs: 800 }; // speech recognition for some accents may be lower
+      return { thresholdOffset: -0.02 };
     default:
-      return { thresholdOffset: 0.0, vadSilenceMs: 700 };
+      return { thresholdOffset: 0.0 };
   }
-}
-
-/** Whether transcript looks like 'noise' (too short / punctuation only / one-letter) */
-function isNoisyTranscript(t: string) {
-  if (!t) return true;
-  const clean = t
-    .replace(/[^A-Za-z0-9\u00C0-\u024F\u0600-\u06FF\s]/g, '')
-    .trim();
-  if (clean.length < 2) return true;
-  // if it is only numbers or single char after cleaning
-  if (/^[0-9]{1,2}$/.test(clean)) return true;
-  return false;
 }
 
 export const Orca = ({ lesson, native, language }: Props) => {
   const insets = useSafeAreaInsets();
-
   const green = useColor('green');
+
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const NATIVE_LANGUAGE = LANGUAGES.find((l) => l.code === native);
   const LEARNING_LANGUAGE = LANGUAGES.find((l) => l.code === language);
+  const tuning = languageTuning(LEARNING_LANGUAGE?.locale);
 
-  // --- Game state (unchanged UI) ---
+  // --- GAME STATE ---
   const [gameState, setGameState] = useState<GameStatus>('idle');
   const [currentObstacleIndex, setCurrentObstacleIndex] = useState<
     number | null
@@ -168,28 +149,25 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [finalTime, setFinalTime] = useState(0);
 
-  // --- UI feedback states (kept but we don't change layout) ---
-  const [isListening, setIsListening] = useState(false);
-  const [micReady, setMicReady] = useState(false);
+  // --- UI STATE ---
   const [interimText, setInterimText] = useState('');
-  const [finalText, setFinalText] = useState('');
+  const [finalText, setFinalText] = useState(''); // Kept for logic, though purely visual in this continuous mode
   const [secondsLeft, setSecondsLeft] = useState(ROUND_SECONDS);
-
   const [correctSegmentIndices, setCorrectSegmentIndices] = useState<number[]>(
     []
   );
   const [failedSegmentIndices, setFailedSegmentIndices] = useState<number[]>(
     []
   );
+  const [isRecognizing, setIsRecognizing] = useState(false);
 
-  // --- Animation refs ---
+  // --- ANIMATION VALUES ---
   const obstacleX = useSharedValue(SCREEN_WIDTH);
   const obstacleY = useSharedValue(ORCA_Y);
   const obstacleOpacity = useSharedValue(0);
   const orcaShake = useSharedValue(0);
 
-  // --- Classic refs for timers and state (avoid unnecessary state updates) ---
-  const obstacleTimeoutRef = useRef<number | null>(null);
+  // --- REFS ---
   const timerIntervalRef = useRef<number | null>(null);
   const roundTimerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -198,233 +176,147 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const gameEndedRef = useRef(false);
   const currentPhraseIndexRef = useRef(0);
   const correctPhrasesRef = useRef(0);
+  const processingSuccessRef = useRef(false);
 
-  // --- Microphone + VAD refs ---
-  const isListeningRef = useRef(false);
-  const micStartAttemptedRef = useRef(false); // guard single restart attempt
-  const lastInterimTimestamp = useRef<number>(0); // for VAD
-  const silenceTimerRef = useRef<number | null>(null);
-  const processingPhraseRef = useRef(false); // prevent double-processing the same phrase
+  // -------------------------------------------------------------------------
+  //  STT LOGIC (Cleaned Up)
+  // -------------------------------------------------------------------------
 
-  // Per-language tuning
-  const tuning = languageTuning(LEARNING_LANGUAGE?.locale);
-
-  // --- Utility: stop timers safely ---
-  const stopTimer = useCallback(() => {
-    if (timerIntervalRef.current) {
-      clearInterval(timerIntervalRef.current);
-      timerIntervalRef.current = null;
-    }
-  }, []);
-
-  const stopRoundTimer = useCallback(() => {
-    if (roundTimerRef.current) {
-      clearInterval(roundTimerRef.current);
-      roundTimerRef.current = null;
-    }
-  }, []);
-
-  // --- Start / Stop listening (stable single-start approach) ---
-  const startListening = useCallback(async () => {
+  const startListening = async () => {
     try {
-      if (isListeningRef.current) return;
-      micStartAttemptedRef.current = true;
+      const permissions =
+        await ExpoSpeechRecognitionModule.requestPermissionsAsync();
 
-      const perms = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
-      if (!perms.granted) {
-        console.warn('Microphone permission denied');
+      if (!permissions.granted) {
+        console.warn('Permissions not granted', permissions);
         return;
       }
 
-      // reset exposition texts
-      setFinalText('');
-      setInterimText('');
-
       await ExpoSpeechRecognitionModule.start({
-        lang: LEARNING_LANGUAGE?.locale || 'de-DE',
+        lang: LEARNING_LANGUAGE?.locale || 'en-US',
         interimResults: true,
         maxAlternatives: 1,
-        continuous: true, // key for continuous illusion
+        continuous: true,
+        requiresOnDeviceRecognition: false,
+        addsPunctuation: false,
+        androidIntentOptions: {
+          EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
+          EXTRA_MASK_OFFENSIVE_WORDS: false,
+        },
+        androidRecognitionServicePackage: 'com.google.android.tts',
+        iosTaskHint: 'unspecified',
+        iosCategory: {
+          mode: 'measurement',
+          category: 'record',
+          categoryOptions: ['defaultToSpeaker', 'allowBluetooth'],
+        },
+        iosVoiceProcessingEnabled: true,
       });
-
-      isListeningRef.current = true;
-      setIsListening(true);
-      setMicReady(true);
-      // initialize VAD timestamps
-      lastInterimTimestamp.current = Date.now();
-    } catch (e: any) {
-      console.warn('startListening error', e);
-      isListeningRef.current = false;
-      setIsListening(false);
-      setMicReady(false);
+    } catch (e) {
+      console.warn('Start listening failed', e);
     }
-  }, [LEARNING_LANGUAGE]);
+  };
 
-  const stopListening = useCallback(async () => {
+  const stopListening = async () => {
     try {
       await ExpoSpeechRecognitionModule.stop();
-    } catch (e) {
-      // ignore
-    } finally {
-      isListeningRef.current = false;
-      setIsListening(false);
-      setMicReady(false);
-      // clear VAD timers
-      if (silenceTimerRef.current) {
-        clearTimeout(silenceTimerRef.current);
-        silenceTimerRef.current = null;
-      }
+    } catch (error) {
+      console.warn('Stop listening failed', error);
     }
-  }, []);
+  };
 
-  // --- Microphone events (minimal, robust) ---
-  // When SDK emits 'start', we mark listening
   useSpeechRecognitionEvent('start', () => {
-    isListeningRef.current = true;
-    setIsListening(true);
-    setMicReady(true);
-    lastInterimTimestamp.current = Date.now();
+    console.log('Speech recognition started');
+    setIsRecognizing(true);
   });
 
-  // If OS stops the mic unexpectedly, attempt single recovery
   useSpeechRecognitionEvent('end', () => {
-    isListeningRef.current = false;
-    setIsListening(false);
-    setMicReady(false);
-
-    // Attempt one restart only (guarded by micStartAttemptedRef)
-    if (!micStartAttemptedRef.current) {
-      micStartAttemptedRef.current = true;
-      setTimeout(() => {
-        startListening().catch(() => {});
-      }, 250);
-    }
+    console.log('Speech recognition ended');
+    setIsRecognizing(false);
   });
 
-  useSpeechRecognitionEvent('error', (event) => {
-    console.warn('Speech Recognition Error:', event?.error ?? event);
-    isListeningRef.current = false;
-    setIsListening(false);
-    setMicReady(false);
-    // single restart attempt
-    if (!micStartAttemptedRef.current) {
-      micStartAttemptedRef.current = true;
-      setTimeout(() => {
-        startListening().catch(() => {});
-      }, 400);
-    }
+  useSpeechRecognitionEvent('error', () => {
+    console.warn('Speech recognition error occurred');
   });
 
-  // --- VAD + transcript handling ---
-  // Strategy:
-  // 1. Use interim results to know user is speaking
-  // 2. Reset a silence timer on every interim result
-  // 3. When silence timer fires (no speech for vadSilenceMs), evaluate the last interim/final transcript
-  // 4. Debounce & guard processing to prevent duplicate marking
+  useSpeechRecognitionEvent('result', (event) => {
+    if (gameEndedRef.current || hasHitRef.current) return;
 
-  // Evaluate (noise filter + similarity) and mark success if matched
-  function evaluateTranscript(transcribed: string) {
-    if (!transcribed) return;
-    if (processingPhraseRef.current) return;
+    const transcript = event.results?.[0]?.transcript;
+    if (!transcript) return;
+
+    setInterimText(transcript);
+
+    // Process immediately (no wait for silence)
+    processTranscript(transcript);
+  });
+
+  const processTranscript = (text: string) => {
+    if (processingSuccessRef.current) return; // Already succeeded this round
     if (currentPhraseIndexRef.current >= lesson.phrases.length) return;
 
-    // Basic noise filter
-    if (isNoisyTranscript(transcribed)) {
-      // ignore short/noisy phrases
-      return;
-    }
+    // Basic noise filtering
+    const clean = text
+      .replace(/[^A-Za-z0-9\u00C0-\u024F\u0600-\u06FF\s]/g, '')
+      .trim();
+    if (clean.length < 2) return;
 
     const targetPhrase = lesson.phrases[currentPhraseIndexRef.current].text;
-    const sim = similarity(transcribed, targetPhrase);
+    const sim = similarity(text, targetPhrase);
     const base = baseThresholdFor(targetPhrase);
-    const threshold = Math.max(0, Math.min(1, base + tuning.thresholdOffset)); // clamp 0..1
+    const threshold = Math.max(0, Math.min(1, base + tuning.thresholdOffset));
 
-    // Only accept if similarity meets tuned threshold
     if (sim >= threshold) {
-      processingPhraseRef.current = true;
-      // slight delay to ensure we don't race with animations
-      setTimeout(() => {
-        markSuccess();
-        processingPhraseRef.current = false;
-      }, 50);
+      processingSuccessRef.current = true;
+      markSuccess();
     }
-  }
+  };
 
-  // result events — update interim/final, refresh VAD timer
-  useSpeechRecognitionEvent('result', (event) => {
-    const transcript = event.results?.[0]?.transcript ?? '';
-    const isFinal = !!event.isFinal;
+  // -------------------------------------------------------------------------
+  //  GAME LOGIC
+  // -------------------------------------------------------------------------
 
-    const now = Date.now();
-    lastInterimTimestamp.current = now;
-
-    if (isFinal) {
-      setFinalText(transcript);
-      setInterimText('');
-      // Evaluate immediately for final
-      evaluateTranscript(transcript);
-    } else {
-      setInterimText(transcript);
-
-      // Reset old silence timer and set a new one so we evaluate when speech stops
-      if (silenceTimerRef.current) {
-        clearTimeout(silenceTimerRef.current);
-      }
-      const vadMs = tuning.vadSilenceMs ?? 700;
-      silenceTimerRef.current = setTimeout(() => {
-        // Use latest interim text to evaluate (user likely stopped speaking)
-        evaluateTranscript(transcript);
-        silenceTimerRef.current = null;
-      }, vadMs) as unknown as number;
-    }
-  });
-
-  // --- Game timing & animation functions (mostly unchanged) ---
   const startTimer = useCallback(() => {
-    stopTimer();
+    if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     startTimeRef.current = Date.now();
     setElapsedTime(0);
     timerIntervalRef.current = setInterval(() => {
       setElapsedTime(Date.now() - startTimeRef.current);
     }, 100) as unknown as number;
-  }, [stopTimer]);
+  }, []);
 
   const startRoundTimer = useCallback(() => {
-    stopRoundTimer();
+    if (roundTimerRef.current) clearInterval(roundTimerRef.current);
     setSecondsLeft(ROUND_SECONDS);
     roundTimerRef.current = setInterval(() => {
       setSecondsLeft((s) => {
         if (s <= 1) {
-          stopRoundTimer();
+          if (roundTimerRef.current) clearInterval(roundTimerRef.current);
           handleCollisionJS();
           return 0;
         }
         return s - 1;
       });
     }, 1000) as unknown as number;
-  }, [stopRoundTimer]);
+  }, []);
+
+  const stopTimers = useCallback(() => {
+    if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    if (roundTimerRef.current) clearInterval(roundTimerRef.current);
+  }, []);
 
   const cleanup = useCallback(async () => {
-    if (obstacleTimeoutRef.current) {
-      clearTimeout(obstacleTimeoutRef.current);
-      obstacleTimeoutRef.current = null;
-    }
-    stopTimer();
-    stopRoundTimer();
+    stopTimers();
     await stopListening();
+
     cancelAnimation(obstacleX);
     cancelAnimation(obstacleOpacity);
     cancelAnimation(obstacleY);
     cancelAnimation(orcaShake);
+
     isMovingRef.current = false;
     hasHitRef.current = false;
-    processingPhraseRef.current = false;
-    // clear VAD timers
-    if (silenceTimerRef.current) {
-      clearTimeout(silenceTimerRef.current);
-      silenceTimerRef.current = null;
-    }
-  }, [stopTimer, stopRoundTimer, stopListening]);
+  }, [stopTimers]);
 
   const endGame = useCallback(
     (won: boolean) => {
@@ -434,6 +326,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
       const ft = Date.now() - startTimeRef.current;
       setFinalTime(ft);
       cleanup();
+
       setCurrentObstacleIndex(null);
       setCurrentObstacleEmoji(null);
       obstacleOpacity.value = 0;
@@ -443,35 +336,32 @@ export const Orca = ({ lesson, native, language }: Props) => {
   );
 
   const markSuccess = useCallback(() => {
-    if (
-      hasHitRef.current ||
-      gameEndedRef.current ||
-      currentPhraseIndexRef.current >= lesson.phrases.length
-    )
-      return;
+    if (hasHitRef.current || gameEndedRef.current) return;
 
     isMovingRef.current = false;
     hasHitRef.current = true;
-    stopRoundTimer();
+    if (roundTimerRef.current) clearInterval(roundTimerRef.current);
     cancelAnimation(obstacleX);
 
-    currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
+    currentPhraseIndexRef.current += 1;
     setCorrectSegmentIndices((prev) => [
       ...prev,
       currentPhraseIndexRef.current - 1,
     ]);
-    correctPhrasesRef.current = correctPhrasesRef.current + 1;
+    correctPhrasesRef.current += 1;
     setCorrectPhrases(correctPhrasesRef.current);
+
     setCurrentObstacleIndex(null);
     setCurrentObstacleEmoji(null);
     setInterimText('');
-    setFinalText('');
+    setFinalText(''); // Clear text
 
     if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
       endGame(true);
       return;
     }
 
+    // Animation: Orca passes obstacle (move obstacle down)
     obstacleY.value = withTiming(SCREEN_HEIGHT + 100, {
       duration: 200,
       easing: Easing.in(Easing.back(2)),
@@ -479,19 +369,12 @@ export const Orca = ({ lesson, native, language }: Props) => {
     obstacleOpacity.value = withTiming(0, { duration: 100 });
 
     setTimeout(() => {
-      if (!gameEndedRef.current) {
-        spawnObstacle();
-      }
-    }, 100);
-  }, [endGame, stopRoundTimer]);
+      if (!gameEndedRef.current) spawnObstacle();
+    }, 250); // Slight delay before next spawn
+  }, [endGame]);
 
-  const spawnObstacle = useCallback(async () => {
+  const spawnObstacle = useCallback(() => {
     if (gameEndedRef.current) return;
-
-    // Ensure mic is started - startListening is idempotent
-    if (!isListeningRef.current) {
-      await startListening();
-    }
 
     const nextIndex = currentPhraseIndexRef.current;
     if (nextIndex >= lesson.phrases.length) {
@@ -503,8 +386,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
       OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
     setCurrentObstacleIndex(nextIndex);
     setCurrentObstacleEmoji(emoji);
+
+    // Reset state for new round
     setInterimText('');
     setFinalText('');
+    processingSuccessRef.current = false;
     hasHitRef.current = false;
     isMovingRef.current = true;
 
@@ -514,10 +400,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
     const collisionX = ORCA_X + ORCA_SIZE - 20;
 
-    if (currentPhraseIndexRef.current === 0) {
-      startTimer();
-    }
-
+    if (currentPhraseIndexRef.current === 0) startTimer();
     startRoundTimer();
 
     obstacleX.value = withTiming(
@@ -529,18 +412,18 @@ export const Orca = ({ lesson, native, language }: Props) => {
         }
       }
     );
-  }, [endGame, startRoundTimer, startTimer, startListening]);
+  }, [endGame, startRoundTimer, startTimer]);
 
   const handleCollisionJS = useCallback(() => {
     if (hasHitRef.current || gameEndedRef.current) return;
+
     hasHitRef.current = true;
     isMovingRef.current = false;
-
     Vibration.vibrate(200);
-    stopRoundTimer();
+    if (roundTimerRef.current) clearInterval(roundTimerRef.current);
     cancelAnimation(obstacleX);
 
-    currentPhraseIndexRef.current = currentPhraseIndexRef.current + 1;
+    currentPhraseIndexRef.current += 1;
     setFailedSegmentIndices((prev) => [
       ...prev,
       currentPhraseIndexRef.current - 1,
@@ -553,19 +436,16 @@ export const Orca = ({ lesson, native, language }: Props) => {
         return 0;
       }
 
+      // Reset for next round
       setCurrentObstacleIndex(null);
       setCurrentObstacleEmoji(null);
       setInterimText('');
-      setFinalText('');
       obstacleOpacity.value = withTiming(0, { duration: 200 });
 
       setTimeout(() => {
         if (!gameEndedRef.current) {
-          if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
-            endGame(true);
-          } else {
-            spawnObstacle();
-          }
+          if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) endGame(true);
+          else spawnObstacle();
         }
       }, 100);
       return newLives;
@@ -578,17 +458,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
       withTiming(10, { duration: 50 }),
       withTiming(0, { duration: 50 })
     );
-  }, [endGame, spawnObstacle, stopRoundTimer]);
+  }, [endGame, spawnObstacle]);
 
-  // startGame ensures mic is started once before gameplay but will NOT aggressively restart it
-  const startGame = useCallback(async () => {
+  const startGame = async () => {
+    // Reset Game State
     await cleanup();
-
-    // reset single-start guard so we can recover if needed
-    micStartAttemptedRef.current = false;
-    processingPhraseRef.current = false;
-
-    await startListening(); // start once
 
     gameEndedRef.current = false;
     currentPhraseIndexRef.current = 0;
@@ -602,26 +476,27 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setElapsedTime(0);
     setFinalTime(0);
     setInterimText('');
-    setFinalText('');
     setSecondsLeft(ROUND_SECONDS);
     setGameState('playing');
+    processingSuccessRef.current = false;
 
     obstacleX.value = SCREEN_WIDTH;
     obstacleOpacity.value = 0;
     orcaShake.value = 0;
 
-    obstacleTimeoutRef.current = setTimeout(() => {
-      spawnObstacle();
-    }, 500) as unknown as number;
-  }, [cleanup, startListening, spawnObstacle]);
+    await startListening();
+    spawnObstacle();
+  };
 
   useEffect(() => {
-    // cleanup on unmount
+    // This return function now only runs when the component unmounts (navigates away)
     return () => {
       cleanup();
     };
-  }, [cleanup]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // --- STYLES ---
   const orcaContainerStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: orcaShake.value }],
   }));
@@ -643,13 +518,13 @@ export const Orca = ({ lesson, native, language }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.background} />
-
       <Clouds />
       <Jellyfish />
       <Seaweed />
       <Seafloor />
 
       <View style={styles.uiOverlay}>
+        {/* Header */}
         <View style={[styles.headerContainer, { top: insets.top }]}>
           <View
             style={{
@@ -687,27 +562,22 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
           <View style={styles.transcriptHeader}>
             <Text style={styles.transcriptLabel}>
-              {isListening
-                ? '🎤 Listening'
-                : micReady
-                  ? '✅ Mic Ready'
-                  : '🚨 Mic Off'}
+              {isRecognizing ? '🎤 Listening' : '⏳ Initializing...'}
             </Text>
             <Text style={styles.transcriptLabel}>
-              {`${LANGUAGES.find((l) => l.code === native)?.flag || ''} 🗣️ ${LANGUAGES.find((l) => l.code === language)?.flag || ''}`}
+              {`${NATIVE_LANGUAGE?.flag || ''} 🗣️ ${LEARNING_LANGUAGE?.flag || ''}`}
             </Text>
           </View>
 
-          <View>
-            <Progress
-              total={TOTAL_OBSTACLES}
-              correctSegments={correctSegmentIndices}
-              failedSegments={failedSegmentIndices}
-              height={16}
-            />
-          </View>
+          <Progress
+            total={TOTAL_OBSTACLES}
+            correctSegments={correctSegmentIndices}
+            failedSegments={failedSegmentIndices}
+            height={16}
+          />
         </View>
 
+        {/* Game UI */}
         {gameState === 'playing' && currentObstacleIndex !== null && (
           <View
             style={{
@@ -716,13 +586,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
               top: PHRASE_TOP,
             }}
           >
-            <Text
-              style={{
-                fontSize: 46,
-                color: '#000',
-                fontWeight: '800',
-              }}
-            >
+            <Text style={{ fontSize: 46, color: '#000', fontWeight: '800' }}>
               {getTranslation(currentObstacleIndex)}
             </Text>
 
@@ -734,20 +598,18 @@ export const Orca = ({ lesson, native, language }: Props) => {
                   fontWeight: '600',
                   lineHeight: 26,
                 },
-                !interimText &&
-                  !finalText && {
-                    color: 'rgba(0, 0, 40, 0.4)',
-                    fontStyle: 'italic',
-                  },
+                !interimText && {
+                  color: 'rgba(0, 0, 40, 0.4)',
+                  fontStyle: 'italic',
+                },
               ]}
             >
-              {finalText ||
-                interimText ||
-                `Start ${LANGUAGES.find((l) => l.code === language)?.name} speaking..`}
+              {interimText || `Say it in ${LEARNING_LANGUAGE?.name}...`}
             </Text>
           </View>
         )}
 
+        {/* Orca & Obstacles */}
         {gameState === 'playing' && (
           <Animated.View
             style={[
@@ -778,47 +640,37 @@ export const Orca = ({ lesson, native, language }: Props) => {
           </Animated.View>
         )}
 
+        {/* Screens */}
         {gameState === 'idle' && (
           <View style={styles.overlay}>
             <Text style={styles.titleText}>🐋 Orca Swim 🐋</Text>
             <Text style={styles.instructionText}>
               Speech Recognition Challenge!
             </Text>
-            <Pressable style={[styles.startButton]} onPress={startGame}>
+            <Pressable style={styles.startButton} onPress={startGame}>
               <Text style={styles.startButtonText}>TAP TO START</Text>
             </Pressable>
             <Text style={styles.subText}>
               Pronounce each phrase correctly{'\n'}to clear obstacles and win!
             </Text>
-            <Text style={{ marginTop: 8, color: '#ddd', fontSize: 12 }}>
-              (The game will start once the microphone is ready)
-            </Text>
           </View>
         )}
 
-        {gameState === 'won' && (
+        {(gameState === 'won' || gameState === 'lost') && (
           <View style={styles.overlay}>
-            <Text style={styles.winText}>🎉 YOU WON! 🎉</Text>
-            <Text style={styles.finalTime}>⏱️ {formatTime(finalTime)}</Text>
-            <Text style={styles.finalScore}>
-              Correct: {correctPhrases}/{TOTAL_OBSTACLES}
+            <Text
+              style={gameState === 'won' ? styles.winText : styles.loseText}
+            >
+              {gameState === 'won' ? '🎉 YOU WON! 🎉' : '💔 GAME OVER 💔'}
             </Text>
-            <Text style={styles.livesLeft}>Lives remaining: {lives}</Text>
-            <Pressable style={styles.startButton} onPress={startGame}>
-              <Text style={styles.startButtonText}>PLAY AGAIN</Text>
-            </Pressable>
-          </View>
-        )}
-
-        {gameState === 'lost' && (
-          <View style={styles.overlay}>
-            <Text style={styles.loseText}>💔 GAME OVER 💔</Text>
             <Text style={styles.finalTime}>⏱️ {formatTime(finalTime)}</Text>
             <Text style={styles.finalScore}>
               Correct: {correctPhrases}/{TOTAL_OBSTACLES}
             </Text>
             <Pressable style={styles.startButton} onPress={startGame}>
-              <Text style={styles.startButtonText}>TRY AGAIN</Text>
+              <Text style={styles.startButtonText}>
+                {gameState === 'won' ? 'PLAY AGAIN' : 'TRY AGAIN'}
+              </Text>
             </Pressable>
           </View>
         )}
@@ -846,7 +698,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: '#000',
     position: 'absolute',
-    // top: 60,
     left: 16,
     right: 16,
     paddingHorizontal: 20,
@@ -860,60 +711,19 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   scoreLabel: { color: BRAND_COLOR, fontSize: 11, fontWeight: '600' },
-  timerContainer: {
-    minWidth: 100,
-    alignItems: 'center',
-  },
+  timerContainer: { minWidth: 100, alignItems: 'center' },
   scoreValue: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
     fontVariant: ['tabular-nums'],
   },
-  transcriptContainer: {
-    position: 'absolute',
-    bottom: 80,
-    left: 16,
-    right: 16,
-  },
-  transcriptCard: {
-    backgroundColor: DARK_COLOR,
-    paddingHorizontal: 24,
-    paddingVertical: 20,
-    borderRadius: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
   transcriptHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  transcriptLabel: {
-    color: BRAND_COLOR,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  timerBadge: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-    backgroundColor: 'rgba(255, 205, 0, 0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  targetText: {
-    color: '#888',
-    fontSize: 13,
-    fontWeight: '600',
-    fontStyle: 'italic',
-    marginBottom: 8,
-  },
-
+  transcriptLabel: { color: BRAND_COLOR, fontSize: 14, fontWeight: '700' },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
@@ -955,5 +765,4 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   finalScore: { color: '#fff', fontSize: 22, marginBottom: 8 },
-  livesLeft: { color: BRAND_COLOR, fontSize: 16, marginBottom: 24 },
 });
