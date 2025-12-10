@@ -27,7 +27,7 @@ export const Fonts = Platform.select({
 });
 
 export const lightColors = {
-  orca: '#FFCD00',
+  orca: '#FAD40B',
   // Base colors
   background: '#FFFFFF',
   foreground: '#000000',
@@ -104,7 +104,7 @@ export const lightColors = {
 };
 
 export const darkColors = {
-  orca: '#FFCD00',
+  orca: '#FAD40B',
 
   // Base colors
   background: '#000000',

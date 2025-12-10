@@ -20,7 +20,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#FFCD00",
+        "backgroundColor": "#FAD40B",
         "foregroundImage": "./assets/images/orca.png",
         "backgroundImage": "./assets/images/orca.png",
         "monochromeImage": "./assets/images/orca.png"
@@ -41,7 +41,7 @@
     "splash": {
       "image": "./assets/images/orca.png",
       "resizeMode": "cover",
-      "backgroundColor": "#FFCD00"
+      "backgroundColor": "#FAD40B"
     },
     "plugins": [
       "expo-asset",
@@ -71,9 +71,9 @@
           "image": "./assets/images/orca.png",
           "imageWidth": 200,
           "resizeMode": "cover",
-          "backgroundColor": "#FFCD00",
+          "backgroundColor": "#FAD40B",
           "dark": {
-            "backgroundColor": "#FFCD00"
+            "backgroundColor": "#FAD40B"
           }
         }
       ],

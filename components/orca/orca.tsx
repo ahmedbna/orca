@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Dimensions, Pressable, StyleSheet, Vibration } from 'react-native';
+import {
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  Vibration,
+  TextInput,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,6 +13,7 @@ import Animated, {
   withSequence,
   Easing,
   cancelAnimation,
+  useAnimatedProps,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 import {
@@ -16,17 +23,19 @@ import {
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Progress } from '@/components/orca/progress';
-import { Fish } from '@/components/orca/fish';
 import { Clouds } from '@/components/orca/clouds';
 import { Seafloor } from '@/components/orca/seafloor';
 import { Seaweed } from '@/components/orca/seaweed';
 import { Jellyfish } from '@/components/orca/jellyfish';
-import { formatTime } from '@/lib/format-time';
 import { LANGUAGES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Image } from 'expo-image';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Create an Animated TextInput to display time without re-renders
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const PHRASE_TOP = SCREEN_HEIGHT * 0.4;
 const ORCA_TOP = SCREEN_HEIGHT * 0.7;
@@ -34,10 +43,11 @@ const ORCA_SIZE = 150;
 const OBSTACLE_SIZE = 60;
 const ORCA_X = 0;
 const ORCA_Y = SCREEN_HEIGHT / 2 - (ORCA_SIZE * 0.6) / 2;
-const BRAND_COLOR = '#FFCD00';
-const DARK_COLOR = '#000000';
+const BRAND_COLOR = '#FAD40B';
+// const BRAND_COLOR = '#FFCD00';
 const OBSTACLE_TYPES = ['🪸', '🦑', '🦈', '⚓', '🪼', '🐡'];
 const ROUND_SECONDS = 5;
+const LIVES = 3;
 
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
 
@@ -55,8 +65,7 @@ type Props = {
   };
 };
 
-/** --- UTILS --- */
-
+/** --- UTILS (Kept same as provided) --- */
 function levenshtein(a: string, b: string) {
   const la = a.length;
   const lb = b.length;
@@ -127,6 +136,25 @@ function languageTuning(langCode: string | undefined) {
   }
 }
 
+const formatTimeWorklet = (ms: number) => {
+  'worklet';
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const m = minutes < 10 ? '0' + minutes : minutes;
+  const s = seconds < 10 ? '0' + seconds : seconds;
+  return `${m}:${s}`;
+};
+
+const formatTimeJS = (ms: number) => {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const m = minutes < 10 ? '0' + minutes : minutes;
+  const s = seconds < 10 ? '0' + seconds : seconds;
+  return `${m}:${s}`;
+};
+
 export const Orca = ({ lesson, native, language }: Props) => {
   const insets = useSafeAreaInsets();
   const green = useColor('green');
@@ -145,14 +173,15 @@ export const Orca = ({ lesson, native, language }: Props) => {
     string | null
   >(null);
   const [correctPhrases, setCorrectPhrases] = useState(0);
-  const [lives, setLives] = useState(3);
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const [lives, setLives] = useState(LIVES);
   const [finalTime, setFinalTime] = useState(0);
 
   // --- UI STATE ---
   const [interimText, setInterimText] = useState('');
-  const [finalText, setFinalText] = useState(''); // Kept for logic, though purely visual in this continuous mode
-  const [secondsLeft, setSecondsLeft] = useState(ROUND_SECONDS);
+  // REMOVED: const [secondsLeft, setSecondsLeft] = useState(ROUND_SECONDS);
+  // Using Ref instead for logic to prevent re-renders
+  const secondsLeftRef = useRef(ROUND_SECONDS);
+
   const [correctSegmentIndices, setCorrectSegmentIndices] = useState<number[]>(
     []
   );
@@ -166,6 +195,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const obstacleY = useSharedValue(ORCA_Y);
   const obstacleOpacity = useSharedValue(0);
   const orcaShake = useSharedValue(0);
+  const elapsedTimeSV = useSharedValue(0);
 
   // --- REFS ---
   const timerIntervalRef = useRef<number | null>(null);
@@ -179,20 +209,17 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const processingSuccessRef = useRef(false);
 
   // -------------------------------------------------------------------------
-  //  STT LOGIC (Cleaned Up)
+  //  STT LOGIC
   // -------------------------------------------------------------------------
 
   const startListening = async () => {
     try {
       const permissions =
         await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+      if (!permissions.granted) return;
 
-      if (!permissions.granted) {
-        console.warn('Permissions not granted', permissions);
-        return;
-      }
-
-      await ExpoSpeechRecognitionModule.start({
+      // Ensure we don't start if already started
+      ExpoSpeechRecognitionModule.start({
         lang: LEARNING_LANGUAGE?.locale || 'en-US',
         interimResults: true,
         maxAlternatives: 1,
@@ -201,10 +228,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
         addsPunctuation: false,
         androidIntentOptions: {
           EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
-          EXTRA_MASK_OFFENSIVE_WORDS: false,
         },
         androidRecognitionServicePackage: 'com.google.android.tts',
-        iosTaskHint: 'unspecified',
         iosCategory: {
           mode: 'measurement',
           category: 'record',
@@ -212,8 +237,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
         },
         iosVoiceProcessingEnabled: true,
       });
-    } catch (e) {
-      console.warn('Start listening failed', e);
+    } catch (error) {
+      console.warn('Start listening failed', error);
     }
   };
 
@@ -221,41 +246,25 @@ export const Orca = ({ lesson, native, language }: Props) => {
     try {
       await ExpoSpeechRecognitionModule.stop();
     } catch (error) {
-      console.warn('Stop listening failed', error);
+      // ignore
     }
   };
 
-  useSpeechRecognitionEvent('start', () => {
-    console.log('Speech recognition started');
-    setIsRecognizing(true);
-  });
-
-  useSpeechRecognitionEvent('end', () => {
-    console.log('Speech recognition ended');
-    setIsRecognizing(false);
-  });
-
-  useSpeechRecognitionEvent('error', () => {
-    console.warn('Speech recognition error occurred');
-  });
-
-  useSpeechRecognitionEvent('result', (event) => {
+  const handleSpeechResult = useCallback((event: any) => {
     if (gameEndedRef.current || hasHitRef.current) return;
 
     const transcript = event.results?.[0]?.transcript;
     if (!transcript) return;
 
-    setInterimText(transcript);
-
-    // Process immediately (no wait for silence)
+    // Optimization: Only update state if meaningful change to reduce render cycle
+    setInterimText((prev) => (prev === transcript ? prev : transcript));
     processTranscript(transcript);
-  });
+  }, []);
 
   const processTranscript = (text: string) => {
-    if (processingSuccessRef.current) return; // Already succeeded this round
+    if (processingSuccessRef.current) return;
     if (currentPhraseIndexRef.current >= lesson.phrases.length) return;
 
-    // Basic noise filtering
     const clean = text
       .replace(/[^A-Za-z0-9\u00C0-\u024F\u0600-\u06FF\s]/g, '')
       .trim();
@@ -272,6 +281,16 @@ export const Orca = ({ lesson, native, language }: Props) => {
     }
   };
 
+  useSpeechRecognitionEvent('start', () => setIsRecognizing(true));
+  useSpeechRecognitionEvent('end', () => {
+    setIsRecognizing(false);
+    // Auto-restart logic is now safer because we removed the 1-second re-render loop
+    if (!gameEndedRef.current && gameState === 'playing') {
+      startListening();
+    }
+  });
+  useSpeechRecognitionEvent('result', handleSpeechResult);
+
   // -------------------------------------------------------------------------
   //  GAME LOGIC
   // -------------------------------------------------------------------------
@@ -279,25 +298,74 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const startTimer = useCallback(() => {
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     startTimeRef.current = Date.now();
-    setElapsedTime(0);
+    elapsedTimeSV.value = 0;
+
     timerIntervalRef.current = setInterval(() => {
-      setElapsedTime(Date.now() - startTimeRef.current);
+      elapsedTimeSV.value = Date.now() - startTimeRef.current;
     }, 100) as unknown as number;
   }, []);
 
   const startRoundTimer = useCallback(() => {
     if (roundTimerRef.current) clearInterval(roundTimerRef.current);
-    setSecondsLeft(ROUND_SECONDS);
+
+    // Reset the Ref, NOT the State
+    secondsLeftRef.current = ROUND_SECONDS;
+
     roundTimerRef.current = setInterval(() => {
-      setSecondsLeft((s) => {
-        if (s <= 1) {
-          if (roundTimerRef.current) clearInterval(roundTimerRef.current);
-          handleCollisionJS();
-          return 0;
-        }
-        return s - 1;
-      });
+      // Decrement ref
+      secondsLeftRef.current -= 1;
+
+      // Check logic
+      if (secondsLeftRef.current <= 0) {
+        if (roundTimerRef.current) clearInterval(roundTimerRef.current);
+        handleCollisionJS();
+      }
     }, 1000) as unknown as number;
+  }, []);
+
+  const handleCollisionJS = useCallback(() => {
+    if (hasHitRef.current || gameEndedRef.current) return;
+
+    hasHitRef.current = true;
+    isMovingRef.current = false;
+    Vibration.vibrate(200);
+    if (roundTimerRef.current) clearInterval(roundTimerRef.current);
+    cancelAnimation(obstacleX);
+
+    currentPhraseIndexRef.current += 1;
+    setFailedSegmentIndices((prev) => [
+      ...prev,
+      currentPhraseIndexRef.current - 1,
+    ]);
+
+    setLives((prev) => {
+      const newLives = prev - 1;
+      if (newLives <= 0) {
+        endGame(false);
+        return 0;
+      }
+
+      setCurrentObstacleIndex(null);
+      setCurrentObstacleEmoji(null);
+      setInterimText('');
+      obstacleOpacity.value = withTiming(0, { duration: 200 });
+
+      setTimeout(() => {
+        if (!gameEndedRef.current) {
+          if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) endGame(true);
+          else spawnObstacle();
+        }
+      }, 100);
+      return newLives;
+    });
+
+    orcaShake.value = withSequence(
+      withTiming(-10, { duration: 50 }),
+      withTiming(10, { duration: 50 }),
+      withTiming(-10, { duration: 50 }),
+      withTiming(10, { duration: 50 }),
+      withTiming(0, { duration: 50 })
+    );
   }, []);
 
   const stopTimers = useCallback(() => {
@@ -354,14 +422,12 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setCurrentObstacleIndex(null);
     setCurrentObstacleEmoji(null);
     setInterimText('');
-    setFinalText(''); // Clear text
 
     if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
       endGame(true);
       return;
     }
 
-    // Animation: Orca passes obstacle (move obstacle down)
     obstacleY.value = withTiming(SCREEN_HEIGHT + 100, {
       duration: 200,
       easing: Easing.in(Easing.back(2)),
@@ -370,7 +436,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
     setTimeout(() => {
       if (!gameEndedRef.current) spawnObstacle();
-    }, 250); // Slight delay before next spawn
+    }, 250);
   }, [endGame]);
 
   const spawnObstacle = useCallback(() => {
@@ -387,9 +453,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setCurrentObstacleIndex(nextIndex);
     setCurrentObstacleEmoji(emoji);
 
-    // Reset state for new round
     setInterimText('');
-    setFinalText('');
     processingSuccessRef.current = false;
     hasHitRef.current = false;
     isMovingRef.current = true;
@@ -412,56 +476,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
         }
       }
     );
-  }, [endGame, startRoundTimer, startTimer]);
-
-  const handleCollisionJS = useCallback(() => {
-    if (hasHitRef.current || gameEndedRef.current) return;
-
-    hasHitRef.current = true;
-    isMovingRef.current = false;
-    Vibration.vibrate(200);
-    if (roundTimerRef.current) clearInterval(roundTimerRef.current);
-    cancelAnimation(obstacleX);
-
-    currentPhraseIndexRef.current += 1;
-    setFailedSegmentIndices((prev) => [
-      ...prev,
-      currentPhraseIndexRef.current - 1,
-    ]);
-
-    setLives((prev) => {
-      const newLives = prev - 1;
-      if (newLives <= 0) {
-        endGame(false);
-        return 0;
-      }
-
-      // Reset for next round
-      setCurrentObstacleIndex(null);
-      setCurrentObstacleEmoji(null);
-      setInterimText('');
-      obstacleOpacity.value = withTiming(0, { duration: 200 });
-
-      setTimeout(() => {
-        if (!gameEndedRef.current) {
-          if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) endGame(true);
-          else spawnObstacle();
-        }
-      }, 100);
-      return newLives;
-    });
-
-    orcaShake.value = withSequence(
-      withTiming(-10, { duration: 50 }),
-      withTiming(10, { duration: 50 }),
-      withTiming(-10, { duration: 50 }),
-      withTiming(10, { duration: 50 }),
-      withTiming(0, { duration: 50 })
-    );
-  }, [endGame, spawnObstacle]);
+  }, [endGame, startRoundTimer, startTimer, handleCollisionJS]);
 
   const startGame = async () => {
-    // Reset Game State
     await cleanup();
 
     gameEndedRef.current = false;
@@ -470,14 +487,13 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setCorrectSegmentIndices([]);
     setFailedSegmentIndices([]);
     setCorrectPhrases(0);
-    setLives(3);
+    setLives(LIVES);
     setCurrentObstacleIndex(null);
     setCurrentObstacleEmoji(null);
-    setElapsedTime(0);
     setFinalTime(0);
+    elapsedTimeSV.value = 0;
     setInterimText('');
-    setSecondsLeft(ROUND_SECONDS);
-    setGameState('playing');
+    secondsLeftRef.current = ROUND_SECONDS; // Reset Ref
     processingSuccessRef.current = false;
 
     obstacleX.value = SCREEN_WIDTH;
@@ -485,18 +501,23 @@ export const Orca = ({ lesson, native, language }: Props) => {
     orcaShake.value = 0;
 
     await startListening();
+
+    setGameState('playing');
     spawnObstacle();
   };
 
   useEffect(() => {
-    // This return function now only runs when the component unmounts (navigates away)
     return () => {
       cleanup();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // --- STYLES ---
+  const getTranslation = (phraseIndex: number): string => {
+    const phrase = lesson.phrases[phraseIndex];
+    const translation = phrase.dictionary.find((d) => d.language === native);
+    return translation?.text || phrase.text;
+  };
+
   const orcaContainerStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: orcaShake.value }],
   }));
@@ -509,11 +530,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
     opacity: obstacleOpacity.value,
   }));
 
-  const getTranslation = (phraseIndex: number): string => {
-    const phrase = lesson.phrases[phraseIndex];
-    const translation = phrase.dictionary.find((d) => d.language === native);
-    return translation?.text || phrase.text;
-  };
+  const animatedTimerProps = useAnimatedProps(() => {
+    return {
+      text: formatTimeWorklet(elapsedTimeSV.value),
+    } as any;
+  });
 
   return (
     <View style={styles.container}>
@@ -524,7 +545,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
       <Seafloor />
 
       <View style={styles.uiOverlay}>
-        {/* Header */}
         <View style={[styles.headerContainer, { top: insets.top }]}>
           <View
             style={{
@@ -538,12 +558,20 @@ export const Orca = ({ lesson, native, language }: Props) => {
                 Orca
               </Text>
             </View>
+
             <View style={{ flex: 1, alignItems: 'center' }}>
               <Text style={styles.scoreLabel}>TIME</Text>
               <View style={styles.timerContainer}>
-                <Text style={styles.scoreValue}>{formatTime(elapsedTime)}</Text>
+                <AnimatedTextInput
+                  underlineColorAndroid='transparent'
+                  editable={false}
+                  value='00:00'
+                  animatedProps={animatedTimerProps}
+                  style={styles.scoreValue}
+                />
               </View>
             </View>
+
             <View
               style={{
                 flex: 1,
@@ -577,8 +605,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
           />
         </View>
 
-        {/* Game UI */}
-        {gameState === 'playing' && currentObstacleIndex !== null && (
+        {currentObstacleIndex !== null && gameState === 'playing' && (
           <View
             style={{
               paddingHorizontal: 26,
@@ -609,44 +636,41 @@ export const Orca = ({ lesson, native, language }: Props) => {
           </View>
         )}
 
-        {/* Orca & Obstacles */}
-        {gameState === 'playing' && (
-          <Animated.View
-            style={[
-              {
-                position: 'absolute',
-                left: ORCA_X,
-                zIndex: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                top: ORCA_TOP - (ORCA_SIZE * 0.6) / 2,
-              },
-              orcaContainerStyle,
-            ]}
-          >
-            <Fish style={{ width: ORCA_SIZE, height: ORCA_SIZE * 0.6 }} />
-          </Animated.View>
-        )}
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              left: ORCA_X,
+              zIndex: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              top: ORCA_TOP - (ORCA_SIZE * 0.6) / 2,
+            },
+            orcaContainerStyle,
+          ]}
+        >
+          <Image
+            source={require('../../assets/videos/fish.webp')}
+            style={{ width: ORCA_SIZE, height: ORCA_SIZE * 0.6 }}
+            contentFit='cover' // expo-image prop
+          />
+        </Animated.View>
 
-        {currentObstacleEmoji && (
-          <Animated.View
-            style={[
-              styles.obstacle,
-              obstacleStyle,
-              { top: ORCA_TOP - OBSTACLE_SIZE / 2 },
-            ]}
-          >
+        <Animated.View
+          style={[
+            styles.obstacle,
+            obstacleStyle,
+            { top: ORCA_TOP - OBSTACLE_SIZE / 2 },
+          ]}
+        >
+          {currentObstacleEmoji ? (
             <Text style={styles.obstacleEmoji}>{currentObstacleEmoji}</Text>
-          </Animated.View>
-        )}
+          ) : null}
+        </Animated.View>
 
-        {/* Screens */}
-        {gameState === 'idle' && (
+        {gameState === 'idle' ? (
           <View style={styles.overlay}>
             <Text style={styles.titleText}>🐋 Orca Swim 🐋</Text>
-            <Text style={styles.instructionText}>
-              Speech Recognition Challenge!
-            </Text>
             <Pressable style={styles.startButton} onPress={startGame}>
               <Text style={styles.startButtonText}>TAP TO START</Text>
             </Pressable>
@@ -654,16 +678,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
               Pronounce each phrase correctly{'\n'}to clear obstacles and win!
             </Text>
           </View>
-        )}
-
-        {(gameState === 'won' || gameState === 'lost') && (
+        ) : gameState === 'won' || gameState === 'lost' ? (
           <View style={styles.overlay}>
             <Text
               style={gameState === 'won' ? styles.winText : styles.loseText}
             >
               {gameState === 'won' ? '🎉 YOU WON! 🎉' : '💔 GAME OVER 💔'}
             </Text>
-            <Text style={styles.finalTime}>⏱️ {formatTime(finalTime)}</Text>
+            <Text style={styles.finalTime}>⏱️ {formatTimeJS(finalTime)}</Text>
             <Text style={styles.finalScore}>
               Correct: {correctPhrases}/{TOTAL_OBSTACLES}
             </Text>
@@ -673,7 +695,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
               </Text>
             </Pressable>
           </View>
-        )}
+        ) : null}
       </View>
     </View>
   );
@@ -717,6 +739,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     fontVariant: ['tabular-nums'],
+    padding: 0,
+    margin: 0,
+    textAlign: 'center',
   },
   transcriptHeader: {
     flexDirection: 'row',
@@ -729,6 +754,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    zIndex: 50,
   },
   titleText: {
     color: BRAND_COLOR,
@@ -736,7 +762,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
   },
-  instructionText: { color: '#fff', fontSize: 18, marginBottom: 24 },
   startButton: {
     backgroundColor: BRAND_COLOR,
     paddingHorizontal: 36,
@@ -744,7 +769,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     marginBottom: 20,
   },
-  startButtonText: { color: DARK_COLOR, fontSize: 18, fontWeight: 'bold' },
+  startButtonText: { color: '#000', fontSize: 18, fontWeight: 'bold' },
   subText: { color: '#aaa', fontSize: 13, textAlign: 'center', lineHeight: 20 },
   winText: {
     color: '#4ade80',
