@@ -43,8 +43,7 @@ const ORCA_SIZE = 150;
 const OBSTACLE_SIZE = 60;
 const ORCA_X = 0;
 const ORCA_Y = SCREEN_HEIGHT / 2 - (ORCA_SIZE * 0.6) / 2;
-const BRAND_COLOR = '#FAD40B';
-// const BRAND_COLOR = '#FFCD00';
+const ORCA_COLOR = '#FAD40B';
 const OBSTACLE_TYPES = ['🪸', '🦑', '🦈', '⚓', '🪼', '🐡'];
 const ROUND_SECONDS = 5;
 const LIVES = 3;
@@ -65,7 +64,9 @@ type Props = {
   };
 };
 
-/** --- UTILS (Kept same as provided) --- */
+/** --- UTILS --- */
+
+// Levenshtein distance (Same as before)
 function levenshtein(a: string, b: string) {
   const la = a.length;
   const lb = b.length;
@@ -100,9 +101,51 @@ function normalizeText(s: string) {
     .trim();
 }
 
+/**
+ * NEW: Checks if a target phrase exists within a spoken stream using a sliding window.
+ * This solves the issue of "surrounding words" (e.g., "Uh yes Guten Morgen please").
+ */
+function slidingWindowSimilarity(
+  inputStream: string,
+  targetPhrase: string
+): number {
+  const normalizedInput = normalizeText(inputStream);
+  const normalizedTarget = normalizeText(targetPhrase);
+
+  // 1. Direct containment check (fastest and most accurate for clear speech)
+  if (normalizedInput.includes(normalizedTarget)) {
+    return 1.0;
+  }
+
+  const inputWords = normalizedInput.split(' ').filter(Boolean);
+  const targetWords = normalizedTarget.split(' ').filter(Boolean);
+
+  if (targetWords.length === 0) return 0;
+  if (inputWords.length < targetWords.length) {
+    // If input is shorter than target, just compare them directly
+    return similarity(normalizedInput, normalizedTarget);
+  }
+
+  // 2. Sliding Window: Scan the input for a chunk of words that looks like the target
+  // We scan windows of length N (target length)
+  let maxSim = 0;
+  const windowSize = targetWords.length;
+
+  for (let i = 0; i <= inputWords.length - windowSize; i++) {
+    // Construct a phrase from the current window
+    const windowPhrase = inputWords.slice(i, i + windowSize).join(' ');
+    const sim = similarity(windowPhrase, normalizedTarget);
+    if (sim > maxSim) maxSim = sim;
+  }
+
+  return maxSim;
+}
+
 function similarity(a: string, b: string) {
-  const na = normalizeText(a);
-  const nb = normalizeText(b);
+  // Assume a and b are already normalized if calling from slidingWindow,
+  // but safe to normalize again or ensure logic consistency
+  const na = a; // passed in normalized usually
+  const nb = b;
   if (na.length === 0 && nb.length === 0) return 1;
   const dist = levenshtein(na, nb);
   const maxLen = Math.max(na.length, nb.length);
@@ -112,9 +155,10 @@ function similarity(a: string, b: string) {
 
 function baseThresholdFor(phrase: string) {
   const words = normalizeText(phrase).split(' ').filter(Boolean).length;
-  if (words <= 2) return 0.6;
-  if (words <= 4) return 0.72;
-  return 0.78;
+  // Shorter words need higher accuracy to avoid false positives
+  if (words <= 1) return 0.8;
+  if (words <= 2) return 0.75;
+  return 0.7;
 }
 
 function languageTuning(langCode: string | undefined) {
@@ -122,38 +166,46 @@ function languageTuning(langCode: string | undefined) {
   const base = langCode.split('-')[0];
   switch (base) {
     case 'en':
-      return { thresholdOffset: 0.02 };
+      return { thresholdOffset: 0.0 };
     case 'de':
       return { thresholdOffset: 0.0 };
     case 'fr':
-      return { thresholdOffset: 0.015 };
+      return { thresholdOffset: 0.02 };
     case 'es':
-      return { thresholdOffset: 0.01 };
+      return { thresholdOffset: 0.02 };
     case 'ar':
-      return { thresholdOffset: -0.02 };
+      return { thresholdOffset: -0.05 }; // Arabic often needs looser matching due to transliteration/vowels
     default:
       return { thresholdOffset: 0.0 };
   }
 }
 
+// --- UPDATED TIMER FUNCTIONS START ---
+
 const formatTimeWorklet = (ms: number) => {
   'worklet';
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  const m = minutes < 10 ? '0' + minutes : minutes;
+  // Total seconds (no mod 60, so it counts up: 60, 61, 62...)
+  const seconds = Math.floor(ms / 1000);
+  // Get first 2 digits of milliseconds (Centiseconds)
+  const centiseconds = Math.floor((ms % 1000) / 10);
+
   const s = seconds < 10 ? '0' + seconds : seconds;
-  return `${m}:${s}`;
+  const c = centiseconds < 10 ? '0' + centiseconds : centiseconds;
+
+  // Returns SS:ms (e.g., 05:23 or 65:90)
+  return `${s}:${c}`;
 };
 
 const formatTimeJS = (ms: number) => {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  const m = minutes < 10 ? '0' + minutes : minutes;
+  const seconds = Math.floor(ms / 1000);
+  const centiseconds = Math.floor((ms % 1000) / 10);
+
   const s = seconds < 10 ? '0' + seconds : seconds;
-  return `${m}:${s}`;
+  const c = centiseconds < 10 ? '0' + centiseconds : centiseconds;
+  return `${s}:${c}`;
 };
+
+// --- UPDATED TIMER FUNCTIONS END ---
 
 export const Orca = ({ lesson, native, language }: Props) => {
   const insets = useSafeAreaInsets();
@@ -178,10 +230,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
   // --- UI STATE ---
   const [interimText, setInterimText] = useState('');
-  // REMOVED: const [secondsLeft, setSecondsLeft] = useState(ROUND_SECONDS);
-  // Using Ref instead for logic to prevent re-renders
   const secondsLeftRef = useRef(ROUND_SECONDS);
-
   const [correctSegmentIndices, setCorrectSegmentIndices] = useState<number[]>(
     []
   );
@@ -208,8 +257,13 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const correctPhrasesRef = useRef(0);
   const processingSuccessRef = useRef(false);
 
+  // --- TRANSCRIPT HANDLING REFS ---
+  // This is the key fix for "Adding together": we track how much of the continuous
+  // transcript we have already processed/cleared.
+  const transcriptOffsetRef = useRef(0);
+
   // -------------------------------------------------------------------------
-  //  STT LOGIC
+  //   STT LOGIC
   // -------------------------------------------------------------------------
 
   const startListening = async () => {
@@ -218,7 +272,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
         await ExpoSpeechRecognitionModule.requestPermissionsAsync();
       if (!permissions.granted) return;
 
-      // Ensure we don't start if already started
+      // Reset offset on start
+      transcriptOffsetRef.current = 0;
+
       ExpoSpeechRecognitionModule.start({
         lang: LEARNING_LANGUAGE?.locale || 'en-US',
         interimResults: true,
@@ -253,38 +309,61 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const handleSpeechResult = useCallback((event: any) => {
     if (gameEndedRef.current || hasHitRef.current) return;
 
-    const transcript = event.results?.[0]?.transcript;
-    if (!transcript) return;
+    const fullTranscript = event.results?.[0]?.transcript;
+    if (!fullTranscript) return;
 
-    // Optimization: Only update state if meaningful change to reduce render cycle
-    setInterimText((prev) => (prev === transcript ? prev : transcript));
-    processTranscript(transcript);
+    // FIX 1: We ignore the part of the transcript that belonged to previous rounds.
+    // "Continuous" recognition appends text. We slice it off.
+    const relevantTranscript = fullTranscript
+      .slice(transcriptOffsetRef.current)
+      .trim();
+
+    if (!relevantTranscript) return;
+
+    // Optimization: Only update state if meaningful change
+    setInterimText((prev) =>
+      prev === relevantTranscript ? prev : relevantTranscript
+    );
+
+    // Process the *relevant* part of the transcript, plus the raw fullTranscript length
+    // so we can update the offset later if successful.
+    processTranscript(relevantTranscript, fullTranscript.length);
   }, []);
 
-  const processTranscript = (text: string) => {
+  const processTranscript = (text: string, fullLength: number) => {
     if (processingSuccessRef.current) return;
     if (currentPhraseIndexRef.current >= lesson.phrases.length) return;
 
+    // Clean current input
     const clean = text
       .replace(/[^A-Za-z0-9\u00C0-\u024F\u0600-\u06FF\s]/g, '')
       .trim();
     if (clean.length < 2) return;
 
     const targetPhrase = lesson.phrases[currentPhraseIndexRef.current].text;
-    const sim = similarity(text, targetPhrase);
+
+    // FIX 2: Use Sliding Window Similarity instead of direct Similarity.
+    // This allows "Uh... Guten Morgen" to pass.
+    const sim = slidingWindowSimilarity(text, targetPhrase);
+
     const base = baseThresholdFor(targetPhrase);
     const threshold = Math.max(0, Math.min(1, base + tuning.thresholdOffset));
 
+    // console.log(`Input: "${text}" | Target: "${targetPhrase}" | Sim: ${sim.toFixed(2)} | Req: ${threshold}`);
+
     if (sim >= threshold) {
       processingSuccessRef.current = true;
-      markSuccess();
+      markSuccess(fullLength);
     }
   };
 
-  useSpeechRecognitionEvent('start', () => setIsRecognizing(true));
+  useSpeechRecognitionEvent('start', () => {
+    setIsRecognizing(true);
+    // Safety reset
+    transcriptOffsetRef.current = 0;
+  });
   useSpeechRecognitionEvent('end', () => {
     setIsRecognizing(false);
-    // Auto-restart logic is now safer because we removed the 1-second re-render loop
     if (!gameEndedRef.current && gameState === 'playing') {
       startListening();
     }
@@ -292,7 +371,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   useSpeechRecognitionEvent('result', handleSpeechResult);
 
   // -------------------------------------------------------------------------
-  //  GAME LOGIC
+  //   GAME LOGIC
   // -------------------------------------------------------------------------
 
   const startTimer = useCallback(() => {
@@ -300,22 +379,18 @@ export const Orca = ({ lesson, native, language }: Props) => {
     startTimeRef.current = Date.now();
     elapsedTimeSV.value = 0;
 
+    // Update slightly faster to make milliseconds look smooth
     timerIntervalRef.current = setInterval(() => {
       elapsedTimeSV.value = Date.now() - startTimeRef.current;
-    }, 100) as unknown as number;
+    }, 16) as unknown as number;
   }, []);
 
   const startRoundTimer = useCallback(() => {
     if (roundTimerRef.current) clearInterval(roundTimerRef.current);
-
-    // Reset the Ref, NOT the State
     secondsLeftRef.current = ROUND_SECONDS;
 
     roundTimerRef.current = setInterval(() => {
-      // Decrement ref
       secondsLeftRef.current -= 1;
-
-      // Check logic
       if (secondsLeftRef.current <= 0) {
         if (roundTimerRef.current) clearInterval(roundTimerRef.current);
         handleCollisionJS();
@@ -345,9 +420,17 @@ export const Orca = ({ lesson, native, language }: Props) => {
         return 0;
       }
 
+      // Reset for next round
       setCurrentObstacleIndex(null);
       setCurrentObstacleEmoji(null);
       setInterimText('');
+
+      // IMPORTANT: If we failed, we should probably also ignore whatever was said so far
+      // so the next phrase starts fresh. However, since the engine might not have
+      // returned a "result" event at the exact moment of failure, we rely on the
+      // next `spawnObstacle` logic or just let the offset stay as is until next result comes.
+      // But to be clean, let's just clear the UI text. The offset is handled better on success.
+
       obstacleOpacity.value = withTiming(0, { duration: 200 });
 
       setTimeout(() => {
@@ -403,41 +486,48 @@ export const Orca = ({ lesson, native, language }: Props) => {
     [cleanup]
   );
 
-  const markSuccess = useCallback(() => {
-    if (hasHitRef.current || gameEndedRef.current) return;
+  const markSuccess = useCallback(
+    (fullTranscriptLength: number) => {
+      if (hasHitRef.current || gameEndedRef.current) return;
 
-    isMovingRef.current = false;
-    hasHitRef.current = true;
-    if (roundTimerRef.current) clearInterval(roundTimerRef.current);
-    cancelAnimation(obstacleX);
+      isMovingRef.current = false;
+      hasHitRef.current = true;
+      if (roundTimerRef.current) clearInterval(roundTimerRef.current);
+      cancelAnimation(obstacleX);
 
-    currentPhraseIndexRef.current += 1;
-    setCorrectSegmentIndices((prev) => [
-      ...prev,
-      currentPhraseIndexRef.current - 1,
-    ]);
-    correctPhrasesRef.current += 1;
-    setCorrectPhrases(correctPhrasesRef.current);
+      // FIX 1 Part B: Update the offset.
+      // We now ignore everything up to this point for the NEXT phrase.
+      transcriptOffsetRef.current = fullTranscriptLength;
 
-    setCurrentObstacleIndex(null);
-    setCurrentObstacleEmoji(null);
-    setInterimText('');
+      currentPhraseIndexRef.current += 1;
+      setCorrectSegmentIndices((prev) => [
+        ...prev,
+        currentPhraseIndexRef.current - 1,
+      ]);
+      correctPhrasesRef.current += 1;
+      setCorrectPhrases(correctPhrasesRef.current);
 
-    if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
-      endGame(true);
-      return;
-    }
+      setCurrentObstacleIndex(null);
+      setCurrentObstacleEmoji(null);
+      setInterimText('');
 
-    obstacleY.value = withTiming(SCREEN_HEIGHT + 100, {
-      duration: 200,
-      easing: Easing.in(Easing.back(2)),
-    });
-    obstacleOpacity.value = withTiming(0, { duration: 100 });
+      if (currentPhraseIndexRef.current >= TOTAL_OBSTACLES) {
+        endGame(true);
+        return;
+      }
 
-    setTimeout(() => {
-      if (!gameEndedRef.current) spawnObstacle();
-    }, 250);
-  }, [endGame]);
+      obstacleY.value = withTiming(SCREEN_HEIGHT + 100, {
+        duration: 200,
+        easing: Easing.in(Easing.back(2)),
+      });
+      obstacleOpacity.value = withTiming(0, { duration: 100 });
+
+      setTimeout(() => {
+        if (!gameEndedRef.current) spawnObstacle();
+      }, 250);
+    },
+    [endGame]
+  );
 
   const spawnObstacle = useCallback(() => {
     if (gameEndedRef.current) return;
@@ -453,6 +543,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setCurrentObstacleIndex(nextIndex);
     setCurrentObstacleEmoji(emoji);
 
+    // Clear visible text for the new round
     setInterimText('');
     processingSuccessRef.current = false;
     hasHitRef.current = false;
@@ -484,6 +575,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     gameEndedRef.current = false;
     currentPhraseIndexRef.current = 0;
     correctPhrasesRef.current = 0;
+    transcriptOffsetRef.current = 0; // Reset speech offset
     setCorrectSegmentIndices([]);
     setFailedSegmentIndices([]);
     setCorrectPhrases(0);
@@ -493,7 +585,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setFinalTime(0);
     elapsedTimeSV.value = 0;
     setInterimText('');
-    secondsLeftRef.current = ROUND_SECONDS; // Reset Ref
+    secondsLeftRef.current = ROUND_SECONDS;
     processingSuccessRef.current = false;
 
     obstacleX.value = SCREEN_WIDTH;
@@ -652,7 +744,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
           <Image
             source={require('../../assets/videos/fish.webp')}
             style={{ width: ORCA_SIZE, height: ORCA_SIZE * 0.6 }}
-            contentFit='cover' // expo-image prop
+            contentFit='cover'
           />
         </Animated.View>
 
@@ -705,7 +797,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, overflow: 'hidden' },
   background: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: BRAND_COLOR,
+    backgroundColor: ORCA_COLOR,
   },
   obstacle: {
     position: 'absolute',
@@ -732,7 +824,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
-  scoreLabel: { color: BRAND_COLOR, fontSize: 11, fontWeight: '600' },
+  scoreLabel: { color: ORCA_COLOR, fontSize: 11, fontWeight: '600' },
   timerContainer: { minWidth: 100, alignItems: 'center' },
   scoreValue: {
     color: '#fff',
@@ -748,7 +840,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  transcriptLabel: { color: BRAND_COLOR, fontSize: 14, fontWeight: '700' },
+  transcriptLabel: { color: ORCA_COLOR, fontSize: 14, fontWeight: '700' },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
@@ -757,13 +849,13 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   titleText: {
-    color: BRAND_COLOR,
+    color: ORCA_COLOR,
     fontSize: 34,
     fontWeight: 'bold',
     marginBottom: 16,
   },
   startButton: {
-    backgroundColor: BRAND_COLOR,
+    backgroundColor: ORCA_COLOR,
     paddingHorizontal: 36,
     paddingVertical: 14,
     borderRadius: 24,
@@ -784,7 +876,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   finalTime: {
-    color: BRAND_COLOR,
+    color: ORCA_COLOR,
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 12,

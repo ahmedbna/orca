@@ -1,4 +1,5 @@
 import { Learn } from '@/components/learn';
+import { LevelMap } from '@/components/level-map';
 import { Orca } from '@/components/orca/orca';
 import { Speech } from '@/components/speech';
 
@@ -100,12 +101,12 @@ export default function HomeScreen() {
     //   language={LEARNING_LANGUAGE}
     // />
 
-    <Orca
-      lesson={LESSON}
-      native={NATIVE_LANGUAGE}
-      language={LEARNING_LANGUAGE}
-    />
+    // <Orca
+    //   lesson={LESSON}
+    //   native={NATIVE_LANGUAGE}
+    //   language={LEARNING_LANGUAGE}
+    // />
 
-    // <Speech />
+    <LevelMap />
   );
 }
