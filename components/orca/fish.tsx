@@ -87,14 +87,6 @@ const CartoonFish = ({ x, y, size, color, opacity }: CartoonFishProps) => {
 
       {/* Detail: Side Fin */}
       <Path path={finPath} color={color} opacity={0.8} style='fill' />
-
-      {/* Detail: Eye (White circle with dark pupil implied by contrast or minimal fill) */}
-      <Circle
-        cx={x + r * 0.5}
-        cy={y - r * 0.15}
-        r={size * 0.08}
-        color='rgba(255,255,255,0.4)'
-      />
     </Group>
   );
 };
@@ -203,22 +195,22 @@ export const Fish = () => {
     <View style={StyleSheet.absoluteFill} pointerEvents='none'>
       {/* Background Layer - Slower, smaller, darker */}
       <FishParallaxLayer
-        speed={40} // Positive speed logic handling inside component
+        speed={20} // Positive speed logic handling inside component
         count={5}
-        scale={0.6}
-        baseOpacity={0.3}
+        scale={0.4}
+        baseOpacity={0.6}
         yRange={[SCREEN_HEIGHT * 0.2, SCREEN_HEIGHT * 0.8]}
-        color='rgba(0, 50, 80, 0.4)'
+        color='rgba(0, 0, 0, 0.2)'
       />
 
       {/* Foreground Layer - Faster, larger */}
       <FishParallaxLayer
-        speed={90}
+        speed={50}
         count={4}
-        scale={1}
+        scale={0.6}
         baseOpacity={0.6}
         yRange={[SCREEN_HEIGHT * 0.3, SCREEN_HEIGHT * 0.7]}
-        color='rgba(0, 20, 40, 0.3)'
+        color='rgba(0, 0, 0, 0.1)'
       />
     </View>
   );

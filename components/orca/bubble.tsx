@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
+import { View } from '@/components/ui/view';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,15 +8,7 @@ import Animated, {
   withRepeat,
   Easing,
 } from 'react-native-reanimated';
-import {
-  Canvas,
-  Group,
-  Circle,
-  Paint,
-  vec,
-  interpolate,
-} from '@shopify/react-native-skia';
-import { View } from '@/components/ui/view';
+import { Canvas, Group, Circle } from '@shopify/react-native-skia';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -50,7 +43,7 @@ const SkiaBubble = ({
         cy={y}
         r={radius}
         style='stroke'
-        strokeWidth={2}
+        // strokeWidth={2}
         opacity={opacity}
         color='white'
       />
@@ -167,13 +160,13 @@ export const Bubbles = () => {
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents='none'>
       {/* Background Layer: Small, slow, faint */}
-      <BubbleLayer speed={40} count={8} scale={0.6} baseOpacity={0.3} />
+      <BubbleLayer speed={40} count={10} scale={0.6} baseOpacity={0.3} />
 
       {/* Middle Layer */}
-      <BubbleLayer speed={70} count={6} scale={1} baseOpacity={0.5} />
+      <BubbleLayer speed={50} count={8} scale={1} baseOpacity={0.5} />
 
       {/* Foreground Layer: Fast, larger */}
-      <BubbleLayer speed={100} count={4} scale={1.4} baseOpacity={0.7} />
+      <BubbleLayer speed={60} count={6} scale={1.2} baseOpacity={0.7} />
     </View>
   );
 };

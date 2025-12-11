@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -14,12 +14,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Image } from 'expo-image';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Jellyfish } from './orca/jellyfish';
-import { Bubbles } from './orca/bubble';
-import { Clouds } from './orca/clouds';
-import { Fish } from './orca/fish';
-
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Jellyfish } from '@/components/orca/jellyfish';
+import { Bubbles } from '@/components/orca/bubble';
+import { Clouds } from '@/components/orca/clouds';
+import { Fish } from '@/components/orca/fish';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Button } from '@/components/ui/button';
+import { Feather } from '@expo/vector-icons';
+import { Music } from './orca/music';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // --- THEME CONSTANTS ---
@@ -35,15 +38,16 @@ const COLORS = {
     shadow: '#D1D5DB',
   },
   completed: {
-    face: '#58CC02', // Duolingo Green
+    face: '#34C759', // Duolingo Green
+    // face: '#58CC02', // Duolingo Green
     shadow: '#46A302',
     text: '#FFFFFF',
   },
   path: 'rgba(255, 255, 255, 0.4)',
 };
 
-const NODE_SIZE = 80; // Slightly smaller to account for 3D depth
-const BUTTON_HEIGHT = 70;
+const NODE_SIZE = 86; // Slightly smaller to account for 3D depth
+const BUTTON_HEIGHT = 80;
 const BUTTON_SHADOW_HEIGHT = 10; // The 3D depth
 const VERTICAL_SPACING = 120;
 const AMPLITUDE = SCREEN_WIDTH * 0.25;
@@ -266,6 +270,45 @@ export const LevelMap = () => {
     }
   }, [levelCoords]);
 
+  const [streak, setStreak] = useState(7); // example
+  const [lastActive, setLastActive] = useState('2025-12-10');
+
+  // Helper: returns a YYYY-MM-DD string
+  const getToday = () => new Date().toISOString().split('T')[0];
+
+  useEffect(() => {
+    const today = getToday();
+
+    if (lastActive === today) return;
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+    if (lastActive === yesterdayStr) {
+      // continue streak
+      setStreak((prev) => prev + 1);
+    } else {
+      // streak broken
+      setStreak(0);
+    }
+
+    setLastActive(today);
+  }, []);
+
+  const firePulse = useSharedValue(1);
+
+  useEffect(() => {
+    firePulse.value = withRepeat(
+      withSequence(
+        withTiming(1.15, { duration: 900 }),
+        withTiming(1, { duration: 900 })
+      ),
+      -1,
+      true
+    );
+  }, []);
+
   return (
     <OceanBackground>
       <Animated.ScrollView
@@ -288,17 +331,62 @@ export const LevelMap = () => {
         ))}
       </Animated.ScrollView>
 
-      {/* Floating Header */}
-      <View style={[styles.headerContainer, { top: insets.top }]}>
-        <View style={styles.headerInner}>
-          <Text variant='heading' style={{ color: '#FFF', fontSize: 22 }}>
-            Orca
-          </Text>
-          <View style={styles.headerRight}>
-            {/* Hearts / Gems can go here */}
-            <View style={styles.statPill}>
-              <Text style={{ color: '#FFF', fontWeight: 'bold' }}>💎 450</Text>
-            </View>
+      <LinearGradient
+        colors={[
+          'rgba(255,255,255,1)',
+          'rgba(255,255,255,0.5)',
+          'rgba(255,255,255,0.01)',
+        ]}
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          height: 200,
+        }}
+      />
+
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: '#000',
+          paddingHorizontal: 16,
+          paddingTop: 32,
+          paddingBottom: insets.bottom + 16,
+          borderTopLeftRadius: 32,
+          borderTopRightRadius: 32,
+          gap: 20,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+            }}
+          >
+            <Image
+              source={require('@/assets/images/orca.png')} // Update path
+              style={{ width: 42, height: 42, borderRadius: 16 }}
+              contentFit='contain'
+            />
+            <Text variant='heading' style={{ color: '#FFF', fontSize: 32 }}>
+              Orca
+            </Text>
+          </View>
+
+          <View style={{ marginRight: 10 }}>
             <Avatar size={40}>
               <AvatarImage
                 source={{
@@ -309,7 +397,39 @@ export const LevelMap = () => {
             </Avatar>
           </View>
         </View>
+
+        {/* --- STREAK SECTION --- */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+          <View
+            style={[
+              {
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: 'rgba(255,140,0,0.15)',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            <Feather name='zap' size={32} color='#FFA200' />
+          </View>
+
+          <View>
+            <Text style={{ color: '#fff', fontSize: 20, fontWeight: '900' }}>
+              {streak} Day Streak
+            </Text>
+            <Text style={{ color: '#aaa', fontSize: 14 }}>
+              Keep learning daily to grow your streak!
+            </Text>
+          </View>
+        </View>
+
+        {/* Start Button */}
+        <Button variant='success'>Start</Button>
       </View>
+
+      {/* <Music /> */}
     </OceanBackground>
   );
 };
@@ -327,8 +447,6 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-
-  // --- BUTTON STYLES ---
   buttonFace: {
     width: NODE_SIZE,
     height: BUTTON_HEIGHT,
@@ -346,38 +464,10 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     zIndex: 1,
   },
-
-  // --- HEADER STYLES ---
-  headerContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    paddingHorizontal: 16,
-    zIndex: 100,
-  },
-  headerInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#000',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 999,
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  statPill: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  // --- FLOATING LABEL ---
   floatingLabel: {
     position: 'absolute',
-    top: -55,
-    backgroundColor: '#FFF',
+    top: -40,
+    backgroundColor: '#000',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 999,
@@ -399,7 +489,7 @@ const styles = StyleSheet.create({
   triangle: {
     position: 'absolute',
     bottom: -8,
-    left: '50%',
+    left: 50,
     marginLeft: -8,
     width: 0,
     height: 0,
@@ -408,6 +498,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 8,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: '#FFF',
+    borderTopColor: '#000',
   },
 });
