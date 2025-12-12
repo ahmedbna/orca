@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Jellyfish } from '@/components/orca/jellyfish';
 import { Bubbles } from '@/components/orca/bubbles';
 import { Clouds } from '@/components/orca/clouds';
-import { Fish } from '@/components/orca/fish';
+import { Shark } from '@/components/orca/fish';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/ui/button';
 import { Music } from '../orca/music';
@@ -73,7 +73,7 @@ const OceanBackground = ({ children }: { children: React.ReactNode }) => {
     <View style={styles.oceanContainer}>
       <Clouds />
       <Bubbles />
-      <Fish />
+      <Shark />
       <Jellyfish />
 
       <View style={styles.sunRays} />
@@ -194,8 +194,8 @@ export const LevelMap = () => {
             }}
           >
             <Image
-              source={require('@/assets/images/orca.png')} // Update path
-              style={{ width: 42, height: 42, borderRadius: 16 }}
+              source={require('@/assets/images/icon.png')} // Update path
+              style={{ width: 42, height: 42, borderRadius: 999 }}
               contentFit='contain'
             />
             <Text variant='heading' style={{ color: '#FFF', fontSize: 32 }}>
@@ -204,7 +204,7 @@ export const LevelMap = () => {
           </View>
 
           <View style={{ marginRight: 10 }}>
-            <Avatar size={40}>
+            <Avatar size={42}>
               <AvatarImage
                 source={{
                   uri: 'https://avatars.githubusercontent.com/u/99088394?v=4',

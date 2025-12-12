@@ -157,8 +157,8 @@ export const SquishyButton = ({
           {isActive ? (
             // Active Icon (e.g., The Orca)
             <Image
-              source={require('@/assets/images/icon.png')} // Update path
-              style={{ width: 45, height: 45 }}
+              source={require('@/assets/images/icon.png')}
+              style={{ width: 60, height: 60 }}
               contentFit='contain'
             />
           ) : isCompleted ? (
