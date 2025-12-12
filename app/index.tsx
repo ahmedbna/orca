@@ -1,5 +1,5 @@
 import { Learn } from '@/components/learn';
-import { LevelMap } from '@/components/level-map';
+import { LevelMap } from '@/components/map/map';
 import { Orca } from '@/components/orca/orca';
 import { Speech } from '@/components/speech';
 

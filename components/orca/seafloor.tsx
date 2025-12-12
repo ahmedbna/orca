@@ -1,5 +1,6 @@
-import { useEffect, useMemo } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { Dimensions } from 'react-native';
+import { View } from '@/components/ui/view';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -9,32 +10,41 @@ import Animated, {
 } from 'react-native-reanimated';
 import {
   Canvas,
-  Path,
-  Skia,
-  LinearGradient,
-  vec,
   Group,
   Circle,
+  Skia,
+  Path,
+  LinearGradient,
+  vec,
 } from '@shopify/react-native-skia';
-import { View } from '@/components/ui/view';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-// Create sand texture with organic wavy top edge
-const createSandPath = (width: number, startX: number) => {
+interface SeafloorProps {
+  height?: number;
+  speed?: number;
+  sandColor?: [string, string];
+  decorations?: {
+    rocks: number;
+    pebbles: number;
+    coral: number;
+  };
+  direction?: 'left' | 'right';
+}
+
+const createSandPath = (width: number, startX: number, height: number) => {
   const path = Skia.Path.Make();
-  const sandHeight = 50;
+  const sandHeight = height * 0.5;
   const segments = 20;
   const segmentWidth = width / segments;
 
-  path.moveTo(startX, 100); // Changed from SCREEN_HEIGHT to relative
-  path.lineTo(startX, 50); // Changed from SCREEN_HEIGHT - sandHeight
+  path.moveTo(startX, height);
+  path.lineTo(startX, sandHeight);
 
-  // Create organic wavy top edge
   for (let i = 0; i <= segments; i++) {
     const x = startX + i * segmentWidth;
     const randomness = Math.sin(i * 0.7) * 2 + Math.cos(i * 1.3) * 1.5;
-    const y = 50 + randomness; // Changed to relative
+    const y = sandHeight + randomness;
 
     if (i === 0) {
       path.lineTo(x, y);
@@ -42,21 +52,18 @@ const createSandPath = (width: number, startX: number) => {
       const prevX = startX + (i - 1) * segmentWidth;
       const prevRandomness =
         Math.sin((i - 1) * 0.7) * 2 + Math.cos((i - 1) * 1.3) * 1.5;
-      const prevY = 50 + prevRandomness;
-
+      const prevY = sandHeight + prevRandomness;
       const cpX = (prevX + x) / 2;
       const cpY = (prevY + y) / 2;
       path.quadTo(cpX, cpY, x, y);
     }
   }
 
-  path.lineTo(startX + width, 100);
+  path.lineTo(startX + width, height);
   path.close();
-
   return path;
 };
 
-// Create irregular rock shapes
 const createRock = (x: number, y: number, size: number) => {
   const path = Skia.Path.Make();
   const sides = 5 + Math.floor(Math.random() * 3);
@@ -75,11 +82,9 @@ const createRock = (x: number, y: number, size: number) => {
     }
   }
   path.close();
-
   return path;
 };
 
-// Create coral-like structure
 const createCoral = (x: number, y: number, size: number) => {
   const path = Skia.Path.Make();
   const branches = 3 + Math.floor(Math.random() * 3);
@@ -103,8 +108,12 @@ const createCoral = (x: number, y: number, size: number) => {
   return path;
 };
 
-// Generate static decorations for one segment
-const generateDecorations = (segmentWidth: number, startX: number) => {
+const generateDecorations = (
+  segmentWidth: number,
+  startX: number,
+  height: number,
+  counts: { rocks: number; pebbles: number; coral: number }
+) => {
   const decorations: Array<{
     type: 'rock' | 'coral' | 'pebble';
     path?: any;
@@ -114,11 +123,11 @@ const generateDecorations = (segmentWidth: number, startX: number) => {
     color: string;
   }> = [];
 
-  // Rocks
-  const rockCount = 8;
-  for (let i = 0; i < rockCount; i++) {
+  const sandHeight = height * 0.5;
+
+  for (let i = 0; i < counts.rocks; i++) {
     const x = startX + Math.random() * segmentWidth;
-    const y = 58 + Math.random() * 25; // Changed to relative
+    const y = sandHeight + 8 + Math.random() * 25;
     const size = 4 + Math.random() * 6;
     const shade = 0.15 + Math.random() * 0.08;
 
@@ -129,11 +138,9 @@ const generateDecorations = (segmentWidth: number, startX: number) => {
     });
   }
 
-  // Small pebbles
-  const pebbleCount = 15;
-  for (let i = 0; i < pebbleCount; i++) {
+  for (let i = 0; i < counts.pebbles; i++) {
     const x = startX + Math.random() * segmentWidth;
-    const y = 65 + Math.random() * 20; // Changed to relative
+    const y = sandHeight + 15 + Math.random() * 20;
     const size = 1.5 + Math.random() * 2;
     const shade = 0.12 + Math.random() * 0.06;
 
@@ -146,14 +153,12 @@ const generateDecorations = (segmentWidth: number, startX: number) => {
     });
   }
 
-  // Coral structures
-  const coralCount = 4;
-  for (let i = 0; i < coralCount; i++) {
+  for (let i = 0; i < counts.coral; i++) {
     const x =
       startX +
-      (i + 1) * (segmentWidth / (coralCount + 1)) +
+      (i + 1) * (segmentWidth / (counts.coral + 1)) +
       (Math.random() - 0.5) * 50;
-    const y = 52; // Changed to relative
+    const y = sandHeight + 2;
     const size = 15 + Math.random() * 10;
     const shade = 0.14 + Math.random() * 0.04;
 
@@ -167,43 +172,62 @@ const generateDecorations = (segmentWidth: number, startX: number) => {
   return decorations;
 };
 
-export const Seafloor = () => {
-  const translateX = useSharedValue(0);
-
-  // Seamless loop width
+export const Seafloor = ({
+  height = 100,
+  speed = 8000,
+  sandColor = ['rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.12)'],
+  decorations = { rocks: 8, pebbles: 15, coral: 4 },
+  direction = 'left',
+}: SeafloorProps = {}) => {
+  const translateX = useSharedValue(
+    direction === 'left' ? 0 : -SCREEN_WIDTH * 1.5
+  );
   const loopWidth = SCREEN_WIDTH * 1.5;
 
-  // Generate decorations once for both segments
   const segment1Decorations = useMemo(
-    () => generateDecorations(loopWidth, 0),
-    [loopWidth]
+    () => generateDecorations(loopWidth, 0, height, decorations),
+    [
+      loopWidth,
+      height,
+      decorations.rocks,
+      decorations.pebbles,
+      decorations.coral,
+    ]
   );
   const segment2Decorations = useMemo(
-    () => generateDecorations(loopWidth, loopWidth),
-    [loopWidth]
+    () => generateDecorations(loopWidth, loopWidth, height, decorations),
+    [
+      loopWidth,
+      height,
+      decorations.rocks,
+      decorations.pebbles,
+      decorations.coral,
+    ]
   );
 
   useEffect(() => {
-    // Smooth continuous scroll - slowest layer for parallax depth
+    const target = direction === 'left' ? -loopWidth : loopWidth;
     translateX.value = withRepeat(
-      withTiming(-loopWidth, {
-        duration: 8000,
+      withTiming(target, {
+        duration: speed,
         easing: Easing.linear,
       }),
       -1,
       false
     );
-  }, [loopWidth]);
+  }, [loopWidth, speed, direction]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
   }));
 
-  // Create sand paths for both segments
-  const sandPath1 = useMemo(() => createSandPath(loopWidth, 0), [loopWidth]);
+  const sandPath1 = useMemo(
+    () => createSandPath(loopWidth, 0, height),
+    [loopWidth, height]
+  );
   const sandPath2 = useMemo(
-    () => createSandPath(loopWidth, loopWidth),
-    [loopWidth]
+    () => createSandPath(loopWidth, loopWidth, height),
+    [loopWidth, height]
   );
 
   return (
@@ -213,7 +237,7 @@ export const Seafloor = () => {
         bottom: 0,
         left: 0,
         right: 0,
-        height: 100,
+        height: height,
         overflow: 'hidden',
       }}
     >
@@ -224,22 +248,20 @@ export const Seafloor = () => {
             bottom: 0,
             left: 0,
             width: loopWidth * 2,
-            height: 100,
+            height: height,
           },
           animatedStyle,
         ]}
       >
-        <Canvas style={{ width: loopWidth * 2, height: 100 }}>
-          {/* First segment - sand base with gradient */}
+        <Canvas style={{ width: loopWidth * 2, height: height }}>
           <Path path={sandPath1}>
             <LinearGradient
-              start={vec(0, 50)}
-              end={vec(0, 100)}
-              colors={['rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.12)']}
+              start={vec(0, height * 0.5)}
+              end={vec(0, height)}
+              colors={sandColor}
             />
           </Path>
 
-          {/* First segment - decorations */}
           <Group>
             {segment1Decorations.map((deco, i) => {
               if (deco.type === 'pebble') {
@@ -267,16 +289,14 @@ export const Seafloor = () => {
             })}
           </Group>
 
-          {/* Second segment - sand base with gradient */}
           <Path path={sandPath2}>
             <LinearGradient
-              start={vec(loopWidth, 50)}
-              end={vec(loopWidth, 100)}
-              colors={['rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.12)']}
+              start={vec(loopWidth, height * 0.5)}
+              end={vec(loopWidth, height)}
+              colors={sandColor}
             />
           </Path>
 
-          {/* Second segment - decorations */}
           <Group>
             {segment2Decorations.map((deco, i) => {
               if (deco.type === 'pebble') {

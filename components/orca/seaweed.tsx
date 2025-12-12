@@ -1,5 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Dimensions } from 'react-native';
+import { View } from '@/components/ui/view';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -9,26 +10,33 @@ import Animated, {
 } from 'react-native-reanimated';
 import {
   Canvas,
-  Path,
+  Group,
   Skia,
+  Path,
   LinearGradient,
   vec,
-  Group,
 } from '@shopify/react-native-skia';
-import { View } from '@/components/ui/view';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-// Create a realistic seaweed strand path
+interface SeaweedProps {
+  height?: number;
+  speed?: number;
+  count?: number;
+  color?: string;
+  direction?: 'left' | 'right';
+}
+
 const createSeaweedPath = (
   baseX: number,
   height: number,
+  canvasHeight: number,
   segments: number = 8
 ) => {
   const path = Skia.Path.Make();
   const segmentHeight = height / segments;
   const baseWidth = 8;
-  const baseY = 120; // Base at bottom of canvas
+  const baseY = canvasHeight;
 
   path.moveTo(baseX, baseY);
 
@@ -52,7 +60,6 @@ const createSeaweedPath = (
     }
   }
 
-  // Return path and create symmetrical other side
   for (let i = segments; i >= 0; i--) {
     const y = baseY - i * segmentHeight;
     const curve = Math.sin(i * 0.6) * (12 - i * 1.2);
@@ -85,15 +92,19 @@ interface SeaweedStrand {
   color: string;
 }
 
-const SeaweedLayer = () => {
-  const translateX = useSharedValue(0);
-
-  // Create seamless loop
+export const Seaweed = ({
+  height = 120,
+  speed = 6000,
+  count = 15,
+  color = 'rgba(0, 0, 0, 0.15)',
+  direction = 'left',
+}: SeaweedProps = {}) => {
+  const translateX = useSharedValue(
+    direction === 'left' ? 0 : -SCREEN_WIDTH * 1.5
+  );
   const loopWidth = SCREEN_WIDTH * 1.5;
 
-  // Generate seaweed positions once
   const seaweeds = useMemo((): SeaweedStrand[] => {
-    const count = 15;
     const strands: SeaweedStrand[] = [];
 
     for (let i = 0; i < count; i++) {
@@ -102,89 +113,31 @@ const SeaweedLayer = () => {
         x: (loopWidth / count) * i + Math.random() * 40,
         height: 45 + Math.random() * 45,
         swayOffset: Math.random() * Math.PI * 2,
-        color: `rgba(0, 0, 0, ${0.12 + Math.random() * 0.06})`,
+        color: color.includes('rgba')
+          ? color
+          : `rgba(0, 0, 0, ${0.12 + Math.random() * 0.06})`,
       });
     }
 
     return strands;
-  }, [loopWidth]);
+  }, [loopWidth, count, color]);
 
   useEffect(() => {
-    // Faster scroll than floor for parallax depth
+    const target = direction === 'left' ? -loopWidth : loopWidth;
     translateX.value = withRepeat(
-      withTiming(-loopWidth, {
-        duration: 6000,
+      withTiming(target, {
+        duration: speed,
         easing: Easing.linear,
       }),
       -1,
       false
     );
-  }, [loopWidth]);
+  }, [loopWidth, speed, direction]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
   }));
 
-  return (
-    <Animated.View
-      style={[
-        {
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: loopWidth * 2,
-          height: 120,
-        },
-        animatedStyle,
-      ]}
-    >
-      <Canvas style={{ width: loopWidth * 2, height: 120 }}>
-        {/* First segment */}
-        <Group>
-          {seaweeds.map((seaweed) => {
-            const path = createSeaweedPath(seaweed.x, seaweed.height);
-            return (
-              <Path key={`sw1-${seaweed.id}`} path={path} color={seaweed.color}>
-                <LinearGradient
-                  start={vec(seaweed.x, 120)}
-                  end={vec(seaweed.x, 120 - seaweed.height)}
-                  colors={[
-                    seaweed.color,
-                    seaweed.color.replace(/[\d.]+\)/, '0.06)'),
-                  ]}
-                />
-              </Path>
-            );
-          })}
-        </Group>
-
-        {/* Second segment (cloned) */}
-        <Group>
-          {seaweeds.map((seaweed) => {
-            const path = createSeaweedPath(
-              seaweed.x + loopWidth,
-              seaweed.height
-            );
-            return (
-              <Path key={`sw2-${seaweed.id}`} path={path} color={seaweed.color}>
-                <LinearGradient
-                  start={vec(seaweed.x + loopWidth, 120)}
-                  end={vec(seaweed.x + loopWidth, 120 - seaweed.height)}
-                  colors={[
-                    seaweed.color,
-                    seaweed.color.replace(/[\d.]+\)/, '0.06)'),
-                  ]}
-                />
-              </Path>
-            );
-          })}
-        </Group>
-      </Canvas>
-    </Animated.View>
-  );
-};
-
-export const Seaweed = () => {
   return (
     <View
       style={{
@@ -192,12 +145,73 @@ export const Seaweed = () => {
         bottom: 0,
         left: 0,
         right: 0,
-        height: 120,
+        height: height,
         overflow: 'hidden',
       }}
       pointerEvents='none'
     >
-      <SeaweedLayer />
+      <Animated.View
+        style={[
+          {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: loopWidth * 2,
+            height: height,
+          },
+          animatedStyle,
+        ]}
+      >
+        <Canvas style={{ width: loopWidth * 2, height: height }}>
+          <Group>
+            {seaweeds.map((seaweed) => {
+              const path = createSeaweedPath(seaweed.x, seaweed.height, height);
+              return (
+                <Path
+                  key={`sw1-${seaweed.id}`}
+                  path={path}
+                  color={seaweed.color}
+                >
+                  <LinearGradient
+                    start={vec(seaweed.x, height)}
+                    end={vec(seaweed.x, height - seaweed.height)}
+                    colors={[
+                      seaweed.color,
+                      seaweed.color.replace(/[\d.]+\)/, '0.06)'),
+                    ]}
+                  />
+                </Path>
+              );
+            })}
+          </Group>
+
+          <Group>
+            {seaweeds.map((seaweed) => {
+              const path = createSeaweedPath(
+                seaweed.x + loopWidth,
+                seaweed.height,
+                height
+              );
+              return (
+                <Path
+                  key={`sw2-${seaweed.id}`}
+                  path={path}
+                  color={seaweed.color}
+                >
+                  <LinearGradient
+                    start={vec(seaweed.x + loopWidth, height)}
+                    end={vec(seaweed.x + loopWidth, height - seaweed.height)}
+                    colors={[
+                      seaweed.color,
+                      seaweed.color.replace(/[\d.]+\)/, '0.06)'),
+                    ]}
+                  />
+                </Path>
+              );
+            })}
+          </Group>
+        </Canvas>
+      </Animated.View>
     </View>
   );
 };

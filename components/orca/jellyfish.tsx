@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
+import { View } from '@/components/ui/view';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -9,14 +10,35 @@ import Animated, {
 } from 'react-native-reanimated';
 import {
   Canvas,
+  Group,
   Path,
   Skia,
   BlurMask,
-  Group,
 } from '@shopify/react-native-skia';
-import { View } from '@/components/ui/view';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+interface JellyfishProps {
+  layers?: Array<{
+    speed?: number;
+    count?: number;
+    scale?: number;
+    baseOpacity?: number;
+    yRange?: [number, number];
+    color?: string;
+  }>;
+  direction?: 'left' | 'right';
+}
+
+interface JellyfishLayerProps {
+  speed: number;
+  count: number;
+  scale: number;
+  baseOpacity: number;
+  yRange: [number, number];
+  color: string;
+  direction: 'left' | 'right';
+}
 
 interface CartoonJellyfishProps {
   x: number;
@@ -112,28 +134,19 @@ const CartoonJellyfish = ({
   );
 };
 
-const ParallaxLayer = ({
+const JellyfishParallaxLayer = ({
   speed,
   count,
   scale,
   baseOpacity,
   yRange,
   color,
-}: {
-  speed: number;
-  count: number;
-  scale: number;
-  baseOpacity: number;
-  yRange: [number, number];
-  color: string;
-}) => {
-  const translateX = useSharedValue(0);
-  // The loop width must be wider than the screen to allow variance
+  direction,
+}: JellyfishLayerProps) => {
+  const translateX = useSharedValue(direction === 'left' ? 0 : -SCREEN_WIDTH);
   const loopWidth = SCREEN_WIDTH + 200;
-  // IMPORTANT: The container width must accommodate BOTH copies
   const containerWidth = loopWidth * 2;
 
-  // Generate random positions once
   const jellyfishItems = useMemo(() => {
     return Array.from({ length: count }).map((_, i) => ({
       id: i,
@@ -144,16 +157,17 @@ const ParallaxLayer = ({
 
   useEffect(() => {
     const duration = (loopWidth / speed) * 1000;
+    const target = direction === 'left' ? -loopWidth : loopWidth;
 
     translateX.value = withRepeat(
-      withTiming(-loopWidth, {
+      withTiming(target, {
         duration: duration,
         easing: Easing.linear,
       }),
       -1,
       false
     );
-  }, [speed, loopWidth]);
+  }, [speed, loopWidth, direction]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
@@ -167,13 +181,12 @@ const ParallaxLayer = ({
           top: 0,
           left: 0,
           height: SCREEN_HEIGHT,
-          width: containerWidth, // FIX: Explicit width ensures it doesn't move off-screen
+          width: containerWidth,
         },
         animatedStyle,
       ]}
     >
       <Canvas style={{ width: containerWidth, height: SCREEN_HEIGHT }}>
-        {/* First Group */}
         <Group>
           {jellyfishItems.map((item) => (
             <CartoonJellyfish
@@ -186,8 +199,6 @@ const ParallaxLayer = ({
             />
           ))}
         </Group>
-
-        {/* Second Group (Clone shifted by loopWidth) */}
         <Group origin={{ x: loopWidth, y: 0 }}>
           {jellyfishItems.map((item) => (
             <CartoonJellyfish
@@ -205,26 +216,45 @@ const ParallaxLayer = ({
   );
 };
 
-export const Jellyfish = () => {
+export const Jellyfish = ({
+  layers,
+  direction = 'left',
+}: JellyfishProps = {}) => {
+  const defaultLayers = [
+    {
+      speed: 30,
+      count: 6,
+      scale: 0.8,
+      baseOpacity: 0.45,
+      yRange: [SCREEN_HEIGHT * 0.45, SCREEN_HEIGHT * 0.6] as [number, number],
+      color: 'rgba(0, 0, 40, 0.2)',
+    },
+    {
+      speed: 80,
+      count: 6,
+      scale: 1,
+      baseOpacity: 0.7,
+      yRange: [SCREEN_HEIGHT * 0.8, SCREEN_HEIGHT * 0.9] as [number, number],
+      color: 'rgba(0, 0, 0, 0.1)',
+    },
+  ];
+
+  const finalLayers = layers || defaultLayers;
+
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents='none'>
-      <ParallaxLayer
-        speed={30}
-        count={6}
-        scale={0.8}
-        baseOpacity={0.45}
-        yRange={[SCREEN_HEIGHT * 0.45, SCREEN_HEIGHT * 0.6]}
-        color='rgba(0, 0, 40, 0.2)'
-      />
-
-      <ParallaxLayer
-        speed={80}
-        count={6}
-        scale={1}
-        baseOpacity={0.7}
-        yRange={[SCREEN_HEIGHT * 0.8, SCREEN_HEIGHT * 0.9]}
-        color='rgba(0, 0, 0, 0.1)'
-      />
+      {finalLayers.map((layer, idx) => (
+        <JellyfishParallaxLayer
+          key={idx}
+          speed={layer.speed || 50}
+          count={layer.count || 6}
+          scale={layer.scale || 1}
+          baseOpacity={layer.baseOpacity || 0.6}
+          yRange={layer.yRange || [SCREEN_HEIGHT * 0.5, SCREEN_HEIGHT * 0.8]}
+          color={layer.color || 'rgba(0, 0, 0, 0.15)'}
+          direction={direction}
+        />
+      ))}
     </View>
   );
 };

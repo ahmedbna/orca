@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -10,39 +10,46 @@ import Animated, {
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const clouds = [
-  { y: SCREEN_HEIGHT * 0.2, size: 80, speed: 0.3, opacity: 0.3 },
-  { y: SCREEN_HEIGHT * 0.25, size: 60, speed: 0.3, opacity: 0.4 },
-  { y: SCREEN_HEIGHT * 0.28, size: 80, speed: 0.4, opacity: 0.3 },
-  { y: SCREEN_HEIGHT * 0.3, size: 50, speed: 0.25, opacity: 0.35 },
-  { y: SCREEN_HEIGHT * 0.32, size: 50, speed: 0.15, opacity: 0.35 },
-  { y: SCREEN_HEIGHT * 0.35, size: 70, speed: 0.35, opacity: 0.25 },
-];
+interface CloudsProps {
+  clouds?: Array<{
+    y?: number;
+    size?: number;
+    speed?: number;
+    opacity?: number;
+    color?: string;
+  }>;
+  direction?: 'left' | 'right';
+}
 
-export const Clouds = () => {
-  return clouds.map((cloud, i) => <CloudElement key={i} {...cloud} />);
-};
+interface CloudElementProps {
+  y: number;
+  size: number;
+  speed: number;
+  opacity: number;
+  color: string;
+  direction: 'left' | 'right';
+}
 
 const CloudElement = ({
   y,
   size,
   speed,
   opacity,
-}: {
-  y: number;
-  size: number;
-  speed: number;
-  opacity: number;
-}) => {
-  const translateX = useSharedValue(SCREEN_WIDTH);
+  color,
+  direction,
+}: CloudElementProps) => {
+  const translateX = useSharedValue(
+    direction === 'left' ? SCREEN_WIDTH : -size * 2
+  );
 
   useEffect(() => {
+    const target = direction === 'left' ? -size * 2 : SCREEN_WIDTH;
     translateX.value = withRepeat(
-      withTiming(-size * 2, { duration: 15000 / speed, easing: Easing.linear }),
+      withTiming(target, { duration: 15000 / speed, easing: Easing.linear }),
       -1,
       false
     );
-  }, [speed, size]);
+  }, [speed, size, direction]);
 
   const style = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
@@ -57,10 +64,75 @@ const CloudElement = ({
           width: size,
           height: size * 0.6,
           borderRadius: size * 0.3,
-          backgroundColor: `rgba(255, 255, 255, ${opacity})`,
+          backgroundColor: color,
         },
         style,
       ]}
     />
+  );
+};
+
+export const Clouds = ({ clouds, direction = 'left' }: CloudsProps = {}) => {
+  const defaultClouds = [
+    {
+      y: SCREEN_HEIGHT * 0.2,
+      size: 80,
+      speed: 0.3,
+      opacity: 0.3,
+      color: 'rgba(255, 255, 255, 0.3)',
+    },
+    {
+      y: SCREEN_HEIGHT * 0.25,
+      size: 60,
+      speed: 0.3,
+      opacity: 0.4,
+      color: 'rgba(255, 255, 255, 0.4)',
+    },
+    {
+      y: SCREEN_HEIGHT * 0.28,
+      size: 80,
+      speed: 0.4,
+      opacity: 0.3,
+      color: 'rgba(255, 255, 255, 0.3)',
+    },
+    {
+      y: SCREEN_HEIGHT * 0.3,
+      size: 50,
+      speed: 0.25,
+      opacity: 0.35,
+      color: 'rgba(255, 255, 255, 0.35)',
+    },
+    {
+      y: SCREEN_HEIGHT * 0.32,
+      size: 50,
+      speed: 0.15,
+      opacity: 0.35,
+      color: 'rgba(255, 255, 255, 0.35)',
+    },
+    {
+      y: SCREEN_HEIGHT * 0.35,
+      size: 70,
+      speed: 0.35,
+      opacity: 0.25,
+      color: 'rgba(255, 255, 255, 0.25)',
+    },
+  ];
+
+  const finalClouds = clouds || defaultClouds;
+
+  return (
+    <>
+      {finalClouds.map((cloud, i) => (
+        <CloudElement
+          key={i}
+          y={cloud.y || SCREEN_HEIGHT * 0.3}
+          size={cloud.size || 60}
+          speed={cloud.speed || 0.3}
+          opacity={cloud.opacity || 0.3}
+          color={cloud.color || `rgba(255, 255, 255, ${cloud.opacity || 0.3})`}
+          direction={direction}
+        />
+      ))}
+    </>
   );
 };
