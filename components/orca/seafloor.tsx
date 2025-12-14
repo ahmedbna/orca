@@ -21,6 +21,7 @@ import {
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface SeafloorProps {
+  bottom?: number;
   height?: number;
   speed?: number;
   sandColor?: [string, string];
@@ -75,12 +76,10 @@ const createRock = (x: number, y: number, size: number) => {
     const px = x + Math.cos(angle) * radius;
     const py = y + Math.sin(angle) * radius;
 
-    if (i === 0) {
-      path.moveTo(px, py);
-    } else {
-      path.lineTo(px, py);
-    }
+    if (i === 0) path.moveTo(px, py);
+    else path.lineTo(px, py);
   }
+
   path.close();
   return path;
 };
@@ -89,19 +88,16 @@ const createCoral = (x: number, y: number, size: number) => {
   const path = Skia.Path.Make();
   const branches = 3 + Math.floor(Math.random() * 3);
 
-  path.moveTo(x, y);
-
   for (let i = 0; i < branches; i++) {
     const angle = (i / branches) * Math.PI - Math.PI / 2;
     const length = size * (0.6 + Math.random() * 0.4);
     const endX = x + Math.cos(angle) * length;
     const endY = y - Math.abs(Math.sin(angle)) * length;
 
-    path.moveTo(x, y);
-
     const cpX = x + Math.cos(angle) * length * 0.5 + (Math.random() - 0.5) * 5;
     const cpY = y - Math.abs(Math.sin(angle)) * length * 0.7;
 
+    path.moveTo(x, y);
     path.quadTo(cpX, cpY, endX, endY);
   }
 
@@ -114,58 +110,42 @@ const generateDecorations = (
   height: number,
   counts: { rocks: number; pebbles: number; coral: number }
 ) => {
-  const decorations: Array<{
-    type: 'rock' | 'coral' | 'pebble';
-    path?: any;
-    x?: number;
-    y?: number;
-    size?: number;
-    color: string;
-  }> = [];
-
+  const decorations: any[] = [];
   const sandHeight = height * 0.5;
 
   for (let i = 0; i < counts.rocks; i++) {
-    const x = startX + Math.random() * segmentWidth;
-    const y = sandHeight + 8 + Math.random() * 25;
-    const size = 4 + Math.random() * 6;
-    const shade = 0.15 + Math.random() * 0.08;
-
     decorations.push({
       type: 'rock',
-      path: createRock(x, y, size),
-      color: `rgba(0, 0, 0, ${shade})`,
+      path: createRock(
+        startX + Math.random() * segmentWidth,
+        sandHeight + 8 + Math.random() * 25,
+        4 + Math.random() * 6
+      ),
+      color: '#C4A600',
     });
   }
 
   for (let i = 0; i < counts.pebbles; i++) {
-    const x = startX + Math.random() * segmentWidth;
-    const y = sandHeight + 15 + Math.random() * 20;
-    const size = 1.5 + Math.random() * 2;
-    const shade = 0.12 + Math.random() * 0.06;
-
     decorations.push({
       type: 'pebble',
-      x,
-      y,
-      size,
-      color: `rgba(0, 0, 0, ${shade})`,
+      x: startX + Math.random() * segmentWidth,
+      y: sandHeight + 15 + Math.random() * 20,
+      size: 1.5 + Math.random() * 2,
+      color: '#C4A600',
     });
   }
 
   for (let i = 0; i < counts.coral; i++) {
-    const x =
-      startX +
-      (i + 1) * (segmentWidth / (counts.coral + 1)) +
-      (Math.random() - 0.5) * 50;
-    const y = sandHeight + 2;
-    const size = 15 + Math.random() * 10;
-    const shade = 0.14 + Math.random() * 0.04;
-
     decorations.push({
       type: 'coral',
-      path: createCoral(x, y, size),
-      color: `rgba(0, 0, 0, ${shade})`,
+      path: createCoral(
+        startX +
+          (i + 1) * (segmentWidth / (counts.coral + 1)) +
+          (Math.random() - 0.5) * 50,
+        sandHeight + 2,
+        15 + Math.random() * 10
+      ),
+      color: '#B89C00',
     });
   }
 
@@ -173,9 +153,10 @@ const generateDecorations = (
 };
 
 export const Seafloor = ({
+  bottom = 220,
   height = 100,
   speed = 8000,
-  sandColor = ['rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.12)'],
+  sandColor = ['#F6C90E', '#E8B800'], // ✅ SOLID COLOR
   decorations = { rocks: 8, pebbles: 15, coral: 4 },
   direction = 'left',
 }: SeafloorProps = {}) => {
@@ -186,29 +167,16 @@ export const Seafloor = ({
 
   const segment1Decorations = useMemo(
     () => generateDecorations(loopWidth, 0, height, decorations),
-    [
-      loopWidth,
-      height,
-      decorations.rocks,
-      decorations.pebbles,
-      decorations.coral,
-    ]
+    [loopWidth, height, decorations]
   );
   const segment2Decorations = useMemo(
     () => generateDecorations(loopWidth, loopWidth, height, decorations),
-    [
-      loopWidth,
-      height,
-      decorations.rocks,
-      decorations.pebbles,
-      decorations.coral,
-    ]
+    [loopWidth, height, decorations]
   );
 
   useEffect(() => {
-    const target = direction === 'left' ? -loopWidth : loopWidth;
     translateX.value = withRepeat(
-      withTiming(target, {
+      withTiming(direction === 'left' ? -loopWidth : loopWidth, {
         duration: speed,
         easing: Easing.linear,
       }),
@@ -234,11 +202,12 @@ export const Seafloor = ({
     <View
       style={{
         position: 'absolute',
-        bottom: 0,
+        bottom,
         left: 0,
         right: 0,
-        height: height,
+        height,
         overflow: 'hidden',
+        zIndex: 20,
       }}
     >
       <Animated.View
@@ -248,12 +217,12 @@ export const Seafloor = ({
             bottom: 0,
             left: 0,
             width: loopWidth * 2,
-            height: height,
+            height,
           },
           animatedStyle,
         ]}
       >
-        <Canvas style={{ width: loopWidth * 2, height: height }}>
+        <Canvas style={{ width: loopWidth * 2, height }}>
           <Path path={sandPath1}>
             <LinearGradient
               start={vec(0, height * 0.5)}
@@ -263,30 +232,20 @@ export const Seafloor = ({
           </Path>
 
           <Group>
-            {segment1Decorations.map((deco, i) => {
-              if (deco.type === 'pebble') {
-                return (
-                  <Circle
-                    key={`deco1-${i}`}
-                    cx={deco.x!}
-                    cy={deco.y!}
-                    r={deco.size!}
-                    color={deco.color}
-                  />
-                );
-              } else {
-                return (
-                  <Path
-                    key={`deco1-${i}`}
-                    path={deco.path}
-                    color={deco.color}
-                    style={deco.type === 'coral' ? 'stroke' : 'fill'}
-                    strokeWidth={deco.type === 'coral' ? 2 : undefined}
-                    strokeCap={deco.type === 'coral' ? 'round' : undefined}
-                  />
-                );
-              }
-            })}
+            {segment1Decorations.map((d, i) =>
+              d.type === 'pebble' ? (
+                <Circle key={i} cx={d.x} cy={d.y} r={d.size} color={d.color} />
+              ) : (
+                <Path
+                  key={i}
+                  path={d.path}
+                  color={d.color}
+                  style={d.type === 'coral' ? 'stroke' : 'fill'}
+                  strokeWidth={d.type === 'coral' ? 2 : undefined}
+                  strokeCap='round'
+                />
+              )
+            )}
           </Group>
 
           <Path path={sandPath2}>
@@ -298,30 +257,20 @@ export const Seafloor = ({
           </Path>
 
           <Group>
-            {segment2Decorations.map((deco, i) => {
-              if (deco.type === 'pebble') {
-                return (
-                  <Circle
-                    key={`deco2-${i}`}
-                    cx={deco.x!}
-                    cy={deco.y!}
-                    r={deco.size!}
-                    color={deco.color}
-                  />
-                );
-              } else {
-                return (
-                  <Path
-                    key={`deco2-${i}`}
-                    path={deco.path}
-                    color={deco.color}
-                    style={deco.type === 'coral' ? 'stroke' : 'fill'}
-                    strokeWidth={deco.type === 'coral' ? 2 : undefined}
-                    strokeCap={deco.type === 'coral' ? 'round' : undefined}
-                  />
-                );
-              }
-            })}
+            {segment2Decorations.map((d, i) =>
+              d.type === 'pebble' ? (
+                <Circle key={i} cx={d.x} cy={d.y} r={d.size} color={d.color} />
+              ) : (
+                <Path
+                  key={i}
+                  path={d.path}
+                  color={d.color}
+                  style={d.type === 'coral' ? 'stroke' : 'fill'}
+                  strokeWidth={d.type === 'coral' ? 2 : undefined}
+                  strokeCap='round'
+                />
+              )
+            )}
           </Group>
         </Canvas>
       </Animated.View>

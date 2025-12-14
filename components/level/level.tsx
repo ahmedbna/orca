@@ -1,5 +1,11 @@
 import React, { useMemo, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -7,7 +13,6 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Image } from 'expo-image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Jellyfish } from '@/components/orca/jellyfish';
 import { Bubbles } from '@/components/orca/bubbles';
@@ -16,10 +21,7 @@ import { Shark } from '@/components/orca/shark';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/ui/button';
 import { Music } from '../orca/music';
-import { Streak } from './streak';
-import { SquishyButton } from './squishy-button';
 import { Seafloor } from '../orca/seafloor';
-import { Seaweed } from '../orca/seaweed';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -52,22 +54,34 @@ const AMPLITUDE = SCREEN_WIDTH * 0.3;
 // --- TYPES ---
 type LevelStatus = 'locked' | 'active' | 'completed';
 
-export interface LevelData {
+export interface ScoreData {
   id: number;
-  order: number;
-  title: string;
-  stars: number;
-  status: LevelStatus;
+  time: number;
+  name: string;
+  image: string;
 }
 
 // --- MOCK DATA ---
-const LEVELS: LevelData[] = Array.from({ length: 20 }).map((_, i) => ({
-  id: i + 1,
-  order: i + 1,
-  title: `Level ${i + 1}`,
-  stars: i < 5 ? 3 : i === 5 ? 0 : 0,
-  status: i < 5 ? 'completed' : i === 5 ? 'active' : 'locked',
-}));
+const SCORES: ScoreData[] = [
+  {
+    id: 1,
+    time: 10,
+    name: 'Ahmed',
+    image: 'https://avatars.githubusercontent.com/u/99088394?v=4',
+  },
+  {
+    id: 2,
+    time: 10,
+    name: 'Ahmed',
+    image: 'https://avatars.githubusercontent.com/u/99088394?v=4',
+  },
+  {
+    id: 3,
+    time: 10,
+    name: 'Ahmed',
+    image: 'https://avatars.githubusercontent.com/u/99088394?v=4',
+  },
+];
 
 const OceanBackground = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -76,7 +90,7 @@ const OceanBackground = ({ children }: { children: React.ReactNode }) => {
       <Bubbles />
       <Shark />
       <Jellyfish />
-      <Seafloor bottom={300} speed={0} />
+      <Seafloor speed={0} />
       {/* <Seaweed /> */}
 
       {children}
@@ -85,51 +99,8 @@ const OceanBackground = ({ children }: { children: React.ReactNode }) => {
 };
 
 // --- MAIN SCREEN ---
-export const Map = () => {
+export const Level = () => {
   const insets = useSafeAreaInsets();
-  const scrollViewRef = useRef<Animated.ScrollView>(null);
-  const scrollY = useSharedValue(0);
-
-  // Calculation logic
-  const totalHeight = LEVELS.length * VERTICAL_SPACING + 400; // Extra padding at bottom
-  const centerX = SCREEN_WIDTH / 2;
-
-  const levelCoords = useMemo(() => {
-    return LEVELS.map((level, index) => {
-      // Invert Y so level 1 is at the bottom
-      const y = totalHeight - (index * VERTICAL_SPACING + 400);
-      // Sine wave for X
-      const x = centerX + Math.sin(index * 0.55) * AMPLITUDE;
-      return { ...level, x, y };
-    });
-  }, [totalHeight]);
-
-  const handleLevelPress = (id: number) => {
-    console.log(`Open Level ${id}`);
-  };
-
-  const scrollHandler = useAnimatedScrollHandler((event) => {
-    scrollY.value = event.contentOffset.y;
-  });
-
-  // Auto-scroll to active level on mount
-  useEffect(() => {
-    const activeLevel = levelCoords.find((l) => l.status === 'active');
-    if (activeLevel && scrollViewRef.current) {
-      // Center the active level
-      const targetY = activeLevel.y - SCREEN_HEIGHT * 0.5;
-      setTimeout(() => {
-        scrollViewRef.current?.scrollTo({
-          y: Math.max(0, targetY),
-          animated: false,
-        });
-      }, 100);
-    } else {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: false });
-      }, 100);
-    }
-  }, [levelCoords]);
 
   return (
     <OceanBackground>
@@ -145,25 +116,19 @@ export const Map = () => {
         }}
       />
 
-      <Animated.ScrollView
-        ref={scrollViewRef}
-        style={styles.scrollView}
-        contentContainerStyle={{ height: totalHeight }}
-        showsVerticalScrollIndicator={false}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
-      >
-        {/* Draw Nodes */}
-        {levelCoords.map((level) => (
-          <SquishyButton
-            key={level.id}
-            level={level}
-            x={level.x}
-            y={level.y}
-            onPress={handleLevelPress}
-          />
-        ))}
-      </Animated.ScrollView>
+      <View>
+        <FlatList
+          data={SCORES}
+          renderItem={({ item }) => <Score score={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            gap: 8,
+            padding: 32,
+            paddingTop: insets.top + 100,
+          }}
+        />
+      </View>
 
       <View
         style={{
@@ -176,7 +141,7 @@ export const Map = () => {
           paddingTop: 16,
           paddingBottom: insets.bottom + 16,
           gap: 16,
-          height: 300,
+          height: 220,
         }}
       >
         <View
@@ -203,24 +168,76 @@ export const Map = () => {
               contentFit='contain'
             /> */}
           </View>
-
-          <Avatar size={46}>
-            <AvatarImage
-              source={{
-                uri: 'https://avatars.githubusercontent.com/u/99088394?v=4',
-              }}
-            />
-            <AvatarFallback>AB</AvatarFallback>
-          </Avatar>
         </View>
 
-        <Streak />
-
-        <Button variant='success'>START</Button>
+        <View style={{ flexDirection: 'row', gap: 16 }}>
+          <Pressable
+            style={{
+              backgroundColor: COLORS.background,
+              height: 100,
+              flex: 1,
+              borderRadius: 24,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text variant='title' style={{ color: '#000' }}>
+              STUDY
+            </Text>
+          </Pressable>
+          <Pressable
+            style={{
+              backgroundColor: COLORS.completed.face,
+              height: 100,
+              flex: 1,
+              borderRadius: 24,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text variant='title'>PLAY</Text>
+          </Pressable>
+        </View>
       </View>
 
       {/* <Music /> */}
     </OceanBackground>
+  );
+};
+
+type ScoreProps = {
+  score: ScoreData;
+};
+
+const Score = ({ score }: ScoreProps) => {
+  return (
+    <TouchableOpacity
+      style={{ padding: 16, backgroundColor: '#000', borderRadius: 999 }}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Avatar size={46}>
+            <AvatarImage
+              source={{
+                uri: score.image,
+              }}
+            />
+            <AvatarFallback>AB</AvatarFallback>
+          </Avatar>
+
+          <Text variant='title'>{score.name}</Text>
+        </View>
+        <Text variant='title' style={{ color: '#FAD40B' }}>
+          {score.time}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 

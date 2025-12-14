@@ -223,18 +223,18 @@ export const Jellyfish = ({
   const defaultLayers = [
     {
       speed: 30,
-      count: 6,
-      scale: 0.8,
-      baseOpacity: 0.45,
-      yRange: [SCREEN_HEIGHT * 0.45, SCREEN_HEIGHT * 0.6] as [number, number],
+      count: 8,
+      scale: 1,
+      baseOpacity: 0.4,
+      yRange: [SCREEN_HEIGHT * 0.4, SCREEN_HEIGHT * 0.6] as [number, number],
       color: 'rgba(0, 0, 40, 0.2)',
     },
     {
-      speed: 80,
-      count: 6,
-      scale: 1,
-      baseOpacity: 0.7,
-      yRange: [SCREEN_HEIGHT * 0.8, SCREEN_HEIGHT * 0.9] as [number, number],
+      speed: 60,
+      count: 5,
+      scale: 0.6,
+      baseOpacity: 0.6,
+      yRange: [SCREEN_HEIGHT * 0.4, SCREEN_HEIGHT * 0.6] as [number, number],
       color: 'rgba(0, 0, 0, 0.1)',
     },
   ];

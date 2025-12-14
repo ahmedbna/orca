@@ -142,7 +142,7 @@ export const Seaweed = ({
     <View
       style={{
         position: 'absolute',
-        bottom: 0,
+        bottom: 220,
         left: 0,
         right: 0,
         height: height,

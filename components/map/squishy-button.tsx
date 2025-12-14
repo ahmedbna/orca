@@ -155,7 +155,6 @@ export const SquishyButton = ({
           ]}
         >
           {isActive ? (
-            // Active Icon (e.g., The Orca)
             <Image
               source={require('@/assets/images/icon.png')}
               style={{ width: 60, height: 60 }}
@@ -163,10 +162,12 @@ export const SquishyButton = ({
             />
           ) : isCompleted ? (
             // Checkmark for completed
-            <Text style={{ fontSize: 32 }}>✓</Text>
+            <Text variant='heading' style={{ color: '#FFF', fontSize: 32 }}>
+              {level.order}
+            </Text>
           ) : (
             // Number for locked
-            <Text style={{ fontSize: 24, fontWeight: '700' }}>
+            <Text variant='heading' style={{ color: '#FFF', fontSize: 32 }}>
               {level.order}
             </Text>
           )}

@@ -19,15 +19,27 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const random = (min: number, max: number) => Math.random() * (max - min) + min;
 
-// 🎨 Generate SpongeBob-style bubbly cloud shapes
+// 🎨 Generate SpongeBob-style bubbly cloud shapes with smooth edges
 const generateBubblePath = (size: number) => {
   const p = Skia.Path.Make();
   const r = size / 2;
 
-  // Organic blob shape
-  p.moveTo(r * 0.2, r);
-  p.cubicTo(r * -0.3, r * 0.2, r * 0.4, -r * 0.4, r, r * 0.1);
-  p.cubicTo(r * 1.6, r * 0.4, r * 1.2, r * 1.3, r * 0.5, r * 1.1);
+  // Start at the leftmost point of the cloud
+  p.moveTo(r * 0.1, r * 0.6);
+
+  // Create a smooth, rounded blob using multiple cubic curves
+  // Top-left curve (smoother transition)
+  p.cubicTo(r * 0.05, r * 0.2, r * 0.3, r * 0.05, r * 0.7, r * 0.1);
+
+  // Top-right curve
+  p.cubicTo(r * 1.1, r * 0.15, r * 1.4, r * 0.4, r * 1.3, r * 0.7);
+
+  // Bottom-right curve
+  p.cubicTo(r * 1.25, r * 1.0, r * 0.9, r * 1.15, r * 0.5, r * 1.1);
+
+  // Bottom-left curve (closes back to start smoothly)
+  p.cubicTo(r * 0.2, r * 1.05, r * 0.15, r * 0.8, r * 0.1, r * 0.6);
+
   p.close();
 
   return p;
@@ -42,7 +54,7 @@ const generateCloudProps = () => {
       ? random(0, SCREEN_WIDTH * 0.8)
       : SCREEN_WIDTH + random(0, SCREEN_WIDTH * 0.2),
 
-    y: random(SCREEN_HEIGHT * 0.02, SCREEN_HEIGHT * 0.22),
+    y: random(SCREEN_HEIGHT * 0.01, SCREEN_HEIGHT * 0.25),
     size,
     speed: random(0.25, 0.8),
     opacity: random(0.25, 0.75),
@@ -122,7 +134,7 @@ const CloudElement = () => {
   );
 };
 
-export const Clouds = ({ count = 16 }) => {
+export const Clouds = ({ count = 18 }) => {
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (

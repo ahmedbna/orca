@@ -31,14 +31,16 @@ import { LANGUAGES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
+import { Shark } from './shark';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Bubbles } from './bubbles';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // Create an Animated TextInput to display time without re-renders
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
-const PHRASE_TOP = SCREEN_HEIGHT * 0.4;
-const ORCA_TOP = SCREEN_HEIGHT * 0.7;
+const PHRASE_TOP = SCREEN_HEIGHT * 0.3;
 const ORCA_SIZE = 150;
 const OBSTACLE_SIZE = 60;
 const ORCA_X = 0;
@@ -630,14 +632,41 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
   return (
     <View style={styles.container}>
+      {/* <LinearGradient
+        colors={['#FAD40B', '#FAD40B50', 'rgba(255,255,255,0.01)']}
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          height: insets.top + 100,
+          zIndex: 99,
+        }}
+      /> */}
+
       <View style={styles.background} />
       <Clouds />
       <Jellyfish />
+      <Shark />
+      <Bubbles />
       <Seaweed />
       <Seafloor />
 
       <View style={styles.uiOverlay}>
-        <View style={[styles.headerContainer, { top: insets.top }]}>
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#000',
+            paddingHorizontal: 16,
+            paddingTop: 16,
+            paddingBottom: insets.bottom + 16,
+            gap: 32,
+            height: 220,
+          }}
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -646,7 +675,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
             }}
           >
             <View style={{ flex: 1 }}>
-              <Text variant='title' style={{ color: '#FFF' }}>
+              <Text variant='heading' style={{ color: '#FFF' }}>
                 Orca
               </Text>
             </View>
@@ -674,27 +703,29 @@ export const Orca = ({ lesson, native, language }: Props) => {
               }}
             >
               <Text style={{ fontSize: 22 }}>❤️</Text>
-              <Text variant='title' style={{ fontSize: 22, color: '#FFF' }}>
+              <Text variant='heading' style={{ fontSize: 24, color: '#FFF' }}>
                 {lives}
               </Text>
             </View>
           </View>
 
-          <View style={styles.transcriptHeader}>
-            <Text style={styles.transcriptLabel}>
-              {isRecognizing ? '🎤 Listening' : '⏳ Initializing...'}
-            </Text>
-            <Text style={styles.transcriptLabel}>
-              {`${NATIVE_LANGUAGE?.flag || ''} 🗣️ ${LEARNING_LANGUAGE?.flag || ''}`}
-            </Text>
-          </View>
+          <View style={{ gap: 16 }}>
+            <View style={styles.transcriptHeader}>
+              <Text style={styles.transcriptLabel}>
+                {isRecognizing ? '🎤 Listening' : '⏳ Initializing...'}
+              </Text>
+              <Text style={styles.transcriptLabel}>
+                {`${NATIVE_LANGUAGE?.flag || ''} 🗣️ ${LEARNING_LANGUAGE?.flag || ''}`}
+              </Text>
+            </View>
 
-          <Progress
-            total={TOTAL_OBSTACLES}
-            correctSegments={correctSegmentIndices}
-            failedSegments={failedSegmentIndices}
-            height={16}
-          />
+            <Progress
+              total={TOTAL_OBSTACLES}
+              correctSegments={correctSegmentIndices}
+              failedSegments={failedSegmentIndices}
+              height={16}
+            />
+          </View>
         </View>
 
         {currentObstacleIndex !== null && gameState === 'playing' && (
@@ -736,7 +767,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
               zIndex: 10,
               justifyContent: 'center',
               alignItems: 'center',
-              top: ORCA_TOP - (ORCA_SIZE * 0.6) / 2,
+              bottom: ORCA_SIZE * 0.5 + 220,
             },
             orcaContainerStyle,
           ]}
@@ -752,7 +783,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
           style={[
             styles.obstacle,
             obstacleStyle,
-            { top: ORCA_TOP - OBSTACLE_SIZE / 2 },
+            { bottom: ORCA_SIZE * 0.5 + 230 },
           ]}
         >
           {currentObstacleEmoji ? (

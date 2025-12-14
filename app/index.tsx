@@ -1,5 +1,6 @@
 import { Learn } from '@/components/learn';
-import { LevelMap } from '@/components/map/map';
+import { Level } from '@/components/level/level';
+import { Map } from '@/components/map/map';
 import { Orca } from '@/components/orca/orca';
 import { Speech } from '@/components/speech';
 
@@ -107,6 +108,8 @@ export default function HomeScreen() {
     //   language={LEARNING_LANGUAGE}
     // />
 
-    <LevelMap />
+    <Level />
+
+    // <Map />
   );
 }
