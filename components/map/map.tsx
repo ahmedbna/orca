@@ -134,16 +134,61 @@ export const Map = () => {
   return (
     <OceanBackground>
       <LinearGradient
-        colors={['#FAD40B', '#FAD40B50', 'rgba(255,255,255,0.01)']}
+        colors={[
+          '#FAD40B',
+          'rgba(250, 212, 11, 0.5)',
+          'rgba(250, 212, 11, 0.01)',
+        ]}
         style={{
           position: 'absolute',
           left: 0,
           right: 0,
           top: 0,
-          height: insets.top + 100,
-          zIndex: 99,
+          height: insets.top + 120,
+          zIndex: 10,
         }}
       />
+
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          paddingHorizontal: 16,
+          paddingTop: insets.bottom + 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          zIndex: 99,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Image
+            source={require('@/assets/images/icon.png')} // Update path
+            style={{ width: 54, height: 54, borderRadius: 14 }}
+            contentFit='contain'
+          />
+          <Text variant='heading' style={{ color: '#000', fontSize: 32 }}>
+            Orca
+          </Text>
+        </View>
+
+        <Avatar size={42}>
+          <AvatarImage
+            source={{
+              uri: 'https://avatars.githubusercontent.com/u/99088394?v=4',
+            }}
+          />
+          <AvatarFallback>AB</AvatarFallback>
+        </Avatar>
+      </View>
 
       <Animated.ScrollView
         ref={scrollViewRef}
@@ -179,41 +224,6 @@ export const Map = () => {
           height: 300,
         }}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-            }}
-          >
-            <Text variant='heading' style={{ color: '#FFF', fontSize: 32 }}>
-              Orca
-            </Text>
-            {/* <Image
-              source={require('@/assets/images/icon.png')} // Update path
-              style={{ width: 48, height: 48, borderRadius: 14 }}
-              contentFit='contain'
-            /> */}
-          </View>
-
-          <Avatar size={46}>
-            <AvatarImage
-              source={{
-                uri: 'https://avatars.githubusercontent.com/u/99088394?v=4',
-              }}
-            />
-            <AvatarFallback>AB</AvatarFallback>
-          </Avatar>
-        </View>
-
         <Streak />
 
         <Button variant='success'>START</Button>
