@@ -50,13 +50,13 @@ export const webhook = httpAction(async (ctx, request) => {
       cost,
     });
 
-    if (progress) {
-      await ctx.runMutation(internal.progress.add, {
-        userId,
-        lessonId,
-        progress,
-      });
-    }
+    // if (progress) {
+    //   await ctx.runMutation(internal.progress.add, {
+    //     userId,
+    //     lessonId,
+    //     progress,
+    //   });
+    // }
   }
 
   return new Response(

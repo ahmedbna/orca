@@ -1,6 +1,7 @@
 [
   {
     "order": 1,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Wiederholung: Begrüßung und Befinden",
     "phrases": [
       { "order": 1, "text": "Hallo, wie geht es dir heute?" },
@@ -22,6 +23,7 @@
   },
   {
     "order": 2,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Persönliche Informationen und Herkunft",
     "phrases": [
       { "order": 1, "text": "Woher kommst du genau?" },
@@ -43,6 +45,7 @@
   },
   {
     "order": 3,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Familie und Verwandte",
     "phrases": [
       { "order": 1, "text": "Hast du Geschwister?" },
@@ -67,6 +70,7 @@
   },
   {
     "order": 4,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Berufe und Arbeitsplatz",
     "phrases": [
       { "order": 1, "text": "Was bist du von Beruf?" },
@@ -88,6 +92,7 @@
   },
   {
     "order": 5,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Einkaufen: Lebensmittel",
     "phrases": [
       { "order": 1, "text": "Ich gehe heute in den Supermarkt" },
@@ -109,6 +114,7 @@
   },
   {
     "order": 6,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Essen und Kochen",
     "phrases": [
       { "order": 1, "text": "Was kochst du heute Abend?" },
@@ -130,6 +136,7 @@
   },
   {
     "order": 7,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Im Restaurant",
     "phrases": [
       { "order": 1, "text": "Guten Abend, wir haben einen Tisch reserviert" },
@@ -151,6 +158,7 @@
   },
   {
     "order": 8,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Die Wohnung: Zimmer und Möbel",
     "phrases": [
       { "order": 1, "text": "Wie viele Zimmer hat deine Wohnung?" },
@@ -172,6 +180,7 @@
   },
   {
     "order": 9,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Präpositionen mit Dativ (Wo?)",
     "phrases": [
       { "order": 1, "text": "Wo ist mein Schlüssel?" },
@@ -196,6 +205,7 @@
   },
   {
     "order": 10,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Präpositionen mit Akkusativ (Wohin?)",
     "phrases": [
       { "order": 1, "text": "Wohin gehst du heute?" },
@@ -217,6 +227,7 @@
   },
   {
     "order": 11,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Kleidung und Farben",
     "phrases": [
       { "order": 1, "text": "Was trägst du heute?" },
@@ -241,6 +252,7 @@
   },
   {
     "order": 12,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Uhrzeit und Tageszeiten",
     "phrases": [
       { "order": 1, "text": "Wie spät ist es jetzt?" },
@@ -262,6 +274,7 @@
   },
   {
     "order": 13,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Wochentage und Datum",
     "phrases": [
       { "order": 1, "text": "Welchen Tag haben wir heute?" },
@@ -283,6 +296,7 @@
   },
   {
     "order": 14,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Tagesablauf und Trennbare Verben",
     "phrases": [
       { "order": 1, "text": "Ich stehe jeden Tag um sieben Uhr auf" },
@@ -304,6 +318,7 @@
   },
   {
     "order": 15,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Verkehrsmittel und Reisen",
     "phrases": [
       { "order": 1, "text": "Wie kommst du zur Arbeit?" },
@@ -325,6 +340,7 @@
   },
   {
     "order": 16,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Wegbeschreibung und Orientierung",
     "phrases": [
       { "order": 1, "text": "Entschuldigung, wie komme ich zum Bahnhof?" },
@@ -346,6 +362,7 @@
   },
   {
     "order": 17,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Wetter und Jahreszeiten",
     "phrases": [
       { "order": 1, "text": "Wie ist das Wetter heute?" },
@@ -367,6 +384,7 @@
   },
   {
     "order": 18,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Körper und Gesundheit",
     "phrases": [
       { "order": 1, "text": "Wie fühlst du dich heute?" },
@@ -388,6 +406,7 @@
   },
   {
     "order": 19,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Modalverben: Können und Müssen",
     "phrases": [
       { "order": 1, "text": "Kannst du mir helfen?" },
@@ -409,6 +428,7 @@
   },
   {
     "order": 20,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Modalverben: Wollen und Dürfen",
     "phrases": [
       { "order": 1, "text": "Was willst du heute machen?" },
@@ -430,6 +450,7 @@
   },
   {
     "order": 21,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Das Perfekt: Regelmäßige Verben (haben)",
     "phrases": [
       { "order": 1, "text": "Was hast du gestern gemacht?" },
@@ -451,6 +472,7 @@
   },
   {
     "order": 22,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Das Perfekt: Unregelmäßige Verben (haben)",
     "phrases": [
       { "order": 1, "text": "Ich habe gestern ein Buch gelesen" },
@@ -472,6 +494,7 @@
   },
   {
     "order": 23,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Das Perfekt mit sein (Bewegung und Zustand)",
     "phrases": [
       { "order": 1, "text": "Wann bist du aufgestanden?" },
@@ -493,6 +516,7 @@
   },
   {
     "order": 24,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Kommunikation: Telefonieren und E-Mails",
     "phrases": [
       { "order": 1, "text": "Ich muss kurz telefonieren" },
@@ -514,6 +538,7 @@
   },
   {
     "order": 25,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Hobbys und Freizeit",
     "phrases": [
       { "order": 1, "text": "Was machst du in deiner Freizeit?" },
@@ -535,6 +560,7 @@
   },
   {
     "order": 26,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Einladungen und Verabredungen",
     "phrases": [
       { "order": 1, "text": "Hast du am Freitag schon etwas vor?" },
@@ -556,6 +582,7 @@
   },
   {
     "order": 27,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Im Hotel",
     "phrases": [
       { "order": 1, "text": "Ich habe ein Zimmer reserviert" },
@@ -577,6 +604,7 @@
   },
   {
     "order": 28,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Vergangenheit: Präteritum von sein und haben",
     "phrases": [
       { "order": 1, "text": "Wo warst du gestern?" },
@@ -598,6 +626,7 @@
   },
   {
     "order": 29,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Bank und Post",
     "phrases": [
       { "order": 1, "text": "Ich muss zur Bank gehen" },
@@ -619,6 +648,7 @@
   },
   {
     "order": 30,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Zukunft und Wünsche",
     "phrases": [
       { "order": 1, "text": "Was wirst du morgen machen?" },
@@ -640,6 +670,7 @@
   },
   {
     "order": 31,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Schule und Universität",
     "phrases": [
       { "order": 1, "text": "Gehst du noch zur Schule?" },
@@ -661,6 +692,7 @@
   },
   {
     "order": 32,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Tiere und Haustiere",
     "phrases": [
       { "order": 1, "text": "Hast du ein Haustier?" },
@@ -682,6 +714,7 @@
   },
   {
     "order": 33,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Nebensätze mit 'weil' (Begründungen)",
     "phrases": [
       { "order": 1, "text": "Warum kommst du nicht zur Party?" },
@@ -706,6 +739,7 @@
   },
   {
     "order": 34,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Fernsehen und Medien",
     "phrases": [
       { "order": 1, "text": "Siehst du oft fern?" },
@@ -727,6 +761,7 @@
   },
   {
     "order": 35,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Computer und Technologie",
     "phrases": [
       { "order": 1, "text": "Hast du einen eigenen Computer?" },
@@ -748,6 +783,7 @@
   },
   {
     "order": 36,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Nebensätze mit 'dass' (Meinung)",
     "phrases": [
       { "order": 1, "text": "Ich glaube, dass es morgen regnet" },
@@ -769,6 +805,7 @@
   },
   {
     "order": 37,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Stadt und Land",
     "phrases": [
       {
@@ -793,6 +830,7 @@
   },
   {
     "order": 38,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Haushalt und Pflichten",
     "phrases": [
       { "order": 1, "text": "Wer macht heute den Abwasch?" },
@@ -814,6 +852,7 @@
   },
   {
     "order": 39,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Imperativ (Aufforderungen und Bitten)",
     "phrases": [
       { "order": 1, "text": "Mach bitte die Tür zu!" },
@@ -835,6 +874,7 @@
   },
   {
     "order": 40,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Feste und Feiertage",
     "phrases": [
       { "order": 1, "text": "Wann ist Weihnachten?" },
@@ -856,6 +896,7 @@
   },
   {
     "order": 41,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Adjektivendungen (Nominativ und Akkusativ)",
     "phrases": [
       { "order": 1, "text": "Das ist ein schöner Tag" },
@@ -877,6 +918,7 @@
   },
   {
     "order": 42,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Verkehr und Autofahren",
     "phrases": [
       { "order": 1, "text": "Hast du einen Führerschein?" },
@@ -898,6 +940,7 @@
   },
   {
     "order": 43,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Nebensätze mit 'wenn' (Bedingungen)",
     "phrases": [
       { "order": 1, "text": "Ich helfe dir, wenn ich Zeit habe" },
@@ -919,6 +962,7 @@
   },
   {
     "order": 44,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Im Kaufhaus",
     "phrases": [
       { "order": 1, "text": "Wo ist die Abteilung für Herrenmode?" },
@@ -940,6 +984,7 @@
   },
   {
     "order": 45,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Körperpflege und Badezimmer",
     "phrases": [
       { "order": 1, "text": "Ich gehe ins Badezimmer" },
@@ -961,6 +1006,7 @@
   },
   {
     "order": 46,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Gefühle und Emotionen",
     "phrases": [
       { "order": 1, "text": "Wie geht es dir heute?" },
@@ -982,6 +1028,7 @@
   },
   {
     "order": 47,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Vergleiche (Komparativ)",
     "phrases": [
       { "order": 1, "text": "Mein Auto ist schneller als dein Auto" },
@@ -1003,6 +1050,7 @@
   },
   {
     "order": 48,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Superlativ (Am besten/schönsten)",
     "phrases": [
       { "order": 1, "text": "Wer ist der schnellste Läufer?" },
@@ -1024,6 +1072,7 @@
   },
   {
     "order": 49,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Schreiben: Briefe und Postkarten",
     "phrases": [
       { "order": 1, "text": "Liebe Anna, wie geht es dir?" },
@@ -1045,6 +1094,7 @@
   },
   {
     "order": 50,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Sport und Fitness",
     "phrases": [
       { "order": 1, "text": "Treibst du gerne Sport?" },
@@ -1066,6 +1116,7 @@
   },
   {
     "order": 51,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Berufe und Arbeitswelt II",
     "phrases": [
       { "order": 1, "text": "Ich habe eine Ausbildung gemacht" },
@@ -1087,6 +1138,7 @@
   },
   {
     "order": 52,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Im Büro",
     "phrases": [
       { "order": 1, "text": "Kann ich mir einen Kugelschreiber leihen?" },
@@ -1108,6 +1160,7 @@
   },
   {
     "order": 53,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Musik und Kultur",
     "phrases": [
       { "order": 1, "text": "Welche Musik hörst du gerne?" },
@@ -1129,6 +1182,7 @@
   },
   {
     "order": 54,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Museum und Kunst",
     "phrases": [
       { "order": 1, "text": "Gehen wir heute ins Museum?" },
@@ -1150,6 +1204,7 @@
   },
   {
     "order": 55,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Länder und Sprachen",
     "phrases": [
       { "order": 1, "text": "Warst du schon einmal in Frankreich?" },
@@ -1171,6 +1226,7 @@
   },
   {
     "order": 56,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Wegbeschreibung II (Detailliert)",
     "phrases": [
       { "order": 1, "text": "Können Sie mir den Weg erklären?" },
@@ -1192,6 +1248,7 @@
   },
   {
     "order": 57,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Im Restaurant II (Spezielle Wünsche)",
     "phrases": [
       { "order": 1, "text": "Haben Sie auch vegetarische Gerichte?" },
@@ -1213,6 +1270,7 @@
   },
   {
     "order": 58,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Beim Arzt II (Symptome)",
     "phrases": [
       { "order": 1, "text": "Was fehlt Ihnen denn?" },
@@ -1234,6 +1292,7 @@
   },
   {
     "order": 59,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Termine absagen und verschieben",
     "phrases": [
       { "order": 1, "text": "Ich muss den Termin leider absagen" },
@@ -1255,6 +1314,7 @@
   },
   {
     "order": 60,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Wiederholung: Gemischte Themen",
     "phrases": [
       { "order": 1, "text": "Hast du den Schlüssel gefunden?" },
@@ -1279,6 +1339,7 @@
   },
   {
     "order": 61,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Ratschläge geben (sollte/sollten)",
     "phrases": [
       { "order": 1, "text": "Du siehst müde aus, du solltest schlafen" },
@@ -1300,6 +1361,7 @@
   },
   {
     "order": 62,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "In der Küche",
     "phrases": [
       { "order": 1, "text": "Wo hast du den Topf hingestellt?" },
@@ -1321,6 +1383,7 @@
   },
   {
     "order": 63,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Reflexive Verben (Tagesablauf)",
     "phrases": [
       { "order": 1, "text": "Ich wasche mich jeden Morgen" },
@@ -1342,6 +1405,7 @@
   },
   {
     "order": 64,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Vorlieben ausdrücken (lieber/am liebsten)",
     "phrases": [
       { "order": 1, "text": "Ich trinke Kaffee, aber ich trinke lieber Tee" },
@@ -1363,6 +1427,7 @@
   },
   {
     "order": 65,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Personen beschreiben (Aussehen und Charakter)",
     "phrases": [
       { "order": 1, "text": "Wie sieht dein Freund aus?" },
@@ -1384,6 +1449,7 @@
   },
   {
     "order": 66,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Am Bahnhof",
     "phrases": [
       { "order": 1, "text": "Einmal nach Hamburg und zurück, bitte" },
@@ -1405,6 +1471,7 @@
   },
   {
     "order": 67,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Online Einkaufen und Pakete",
     "phrases": [
       { "order": 1, "text": "Ich kaufe oft im Internet ein" },
@@ -1426,6 +1493,7 @@
   },
   {
     "order": 68,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Probleme im Haus (Handwerker)",
     "phrases": [
       { "order": 1, "text": "Die Heizung funktioniert nicht" },
@@ -1447,6 +1515,7 @@
   },
   {
     "order": 69,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Termine vereinbaren (Detailliert)",
     "phrases": [
       { "order": 1, "text": "Ich möchte einen Termin vereinbaren" },
@@ -1468,6 +1537,7 @@
   },
   {
     "order": 70,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Über die Vergangenheit sprechen (Kindheit)",
     "phrases": [
       { "order": 1, "text": "Wo hast du als Kind gewohnt?" },
@@ -1489,6 +1559,7 @@
   },
   {
     "order": 71,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Erlaubnis und Verbot (dürfen)",
     "phrases": [
       { "order": 1, "text": "Darf ich hier rauchen?" },
@@ -1510,6 +1581,7 @@
   },
   {
     "order": 72,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Indefinitpronomen (jemand, niemand, alles)",
     "phrases": [
       { "order": 1, "text": "Ist jemand zu Hause?" },
@@ -1531,6 +1603,7 @@
   },
   {
     "order": 73,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Possessivartikel im Dativ (mit meinem/deiner)",
     "phrases": [
       { "order": 1, "text": "Ich gehe mit meinem Bruder ins Kino" },
@@ -1552,6 +1625,7 @@
   },
   {
     "order": 74,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Im Garten und Natur",
     "phrases": [
       { "order": 1, "text": "Wir haben einen großen Garten" },
@@ -1573,6 +1647,7 @@
   },
   {
     "order": 75,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Am Flughafen",
     "phrases": [
       { "order": 1, "text": "Wann fliegt das Flugzeug ab?" },
@@ -1594,6 +1669,7 @@
   },
   {
     "order": 76,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Reklamationen und Beschwerden",
     "phrases": [
       { "order": 1, "text": "Entschuldigung, die Suppe ist kalt" },
@@ -1615,6 +1691,7 @@
   },
   {
     "order": 77,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Einladungen annehmen und ablehnen",
     "phrases": [
       { "order": 1, "text": "Möchtest du heute Abend vorbeikommen?" },
@@ -1636,6 +1713,7 @@
   },
   {
     "order": 78,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Ordnungszahlen (Datum und Stockwerke)",
     "phrases": [
       { "order": 1, "text": "Heute ist der erste Mai" },
@@ -1660,6 +1738,7 @@
   },
   {
     "order": 79,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Über Filme und Bücher sprechen",
     "phrases": [
       { "order": 1, "text": "Hast du den neuen Film gesehen?" },
@@ -1681,6 +1760,7 @@
   },
   {
     "order": 80,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Freundschaft und Beziehungen",
     "phrases": [
       { "order": 1, "text": "Das ist mein bester Freund" },
@@ -1702,6 +1782,7 @@
   },
   {
     "order": 81,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Zeitpräpositionen (seit, vor, für)",
     "phrases": [
       { "order": 1, "text": "Ich lerne seit einem Jahr Deutsch" },
@@ -1723,6 +1804,7 @@
   },
   {
     "order": 82,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Der Körper (Bewegung und Schmerzen)",
     "phrases": [
       { "order": 1, "text": "Mein Kopf tut weh" },
@@ -1744,6 +1826,7 @@
   },
   {
     "order": 83,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Fragewörter II (Woher, Wohin, Seit wann)",
     "phrases": [
       { "order": 1, "text": "Woher kommst du?" },
@@ -1765,6 +1848,7 @@
   },
   {
     "order": 84,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Zusammenleben (WG und Mitbewohner)",
     "phrases": [
       { "order": 1, "text": "Ich wohne in einer Wohngemeinschaft" },
@@ -1786,6 +1870,7 @@
   },
   {
     "order": 85,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Small Talk",
     "phrases": [
       { "order": 1, "text": "Schönes Wetter heute, nicht wahr?" },
@@ -1807,6 +1892,7 @@
   },
   {
     "order": 86,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Umwelt und Recycling",
     "phrases": [
       { "order": 1, "text": "Wir müssen den Müll trennen" },
@@ -1828,6 +1914,7 @@
   },
   {
     "order": 87,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Verloren und Gefunden",
     "phrases": [
       { "order": 1, "text": "Hilfe, ich habe meinen Schlüssel verloren" },
@@ -1849,6 +1936,7 @@
   },
   {
     "order": 88,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Zukunftspläne",
     "phrases": [
       { "order": 1, "text": "Was willst du später machen?" },
@@ -1870,6 +1958,7 @@
   },
   {
     "order": 89,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Indirekte Fragen (ob)",
     "phrases": [
       { "order": 1, "text": "Ich weiß nicht, ob er kommt" },
@@ -1891,6 +1980,7 @@
   },
   {
     "order": 90,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Abschied und Wünsche",
     "phrases": [
       { "order": 1, "text": "Auf Wiedersehen, bis bald!" },
@@ -1912,6 +2002,7 @@
   },
   {
     "order": 91,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Glückwünsche und Anteilnahme",
     "phrases": [
       { "order": 1, "text": "Herzlichen Glückwunsch zum Geburtstag!" },
@@ -1933,6 +2024,7 @@
   },
   {
     "order": 92,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Meinung äußern",
     "phrases": [
       { "order": 1, "text": "Wie findest du das neue Auto?" },
@@ -1954,6 +2046,7 @@
   },
   {
     "order": 93,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Dienstleistungen: Friseur und Reinigung",
     "phrases": [
       { "order": 1, "text": "Ich brauche einen Termin beim Friseur" },
@@ -1975,6 +2068,7 @@
   },
   {
     "order": 94,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Notfälle",
     "phrases": [
       { "order": 1, "text": "Hilfe, es gab einen Unfall!" },
@@ -1996,6 +2090,7 @@
   },
   {
     "order": 95,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Verneinung (nicht, kein, nie)",
     "phrases": [
       { "order": 1, "text": "Ich habe heute keine Zeit" },
@@ -2017,6 +2112,7 @@
   },
   {
     "order": 96,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Zeitadverbien (Gewohnheiten)",
     "phrases": [
       { "order": 1, "text": "Morgens trinke ich immer Kaffee" },
@@ -2038,6 +2134,7 @@
   },
   {
     "order": 97,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Am Imbiss und Kiosk",
     "phrases": [
       { "order": 1, "text": "Eine Currywurst mit Pommes, bitte" },
@@ -2059,6 +2156,7 @@
   },
   {
     "order": 98,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Geld und Zahlen",
     "phrases": [
       { "order": 1, "text": "Wie viel kostet das?" },
@@ -2080,6 +2178,7 @@
   },
   {
     "order": 99,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Höflichkeit und Bitten (würde/hätte gern)",
     "phrases": [
       { "order": 1, "text": "Ich hätte gerne ein Glas Wein" },
@@ -2101,6 +2200,7 @@
   },
   {
     "order": 100,
+    "courseId": "k57ap220ghqptqvkxvk0g1eqfn7xgt1w",
     "title": "Kursabschluss und Rückblick",
     "phrases": [
       { "order": 1, "text": "Wir haben viel Deutsch gelernt" },

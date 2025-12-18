@@ -1,5 +1,132 @@
 export const LANGUAGES = [
   {
+    name: 'English',
+    native: 'English',
+    code: 'en',
+    locale: 'en-US',
+    flag: '🇺🇸',
+    voices: {
+      male: [{ id: 'NYC9WEgkq1u4jiqBseQ9', name: 'Russell' }],
+      female: [{ id: 'tnSpp4vdxKPjI9w0GnoV', name: 'Hope' }],
+    },
+  },
+  {
+    name: 'French',
+    native: 'français',
+    code: 'fr',
+    locale: 'fr-FR',
+    flag: '🇫🇷',
+    voices: {
+      male: [{ id: 'ohItIVrXTBI80RrUECOD', name: 'Guillaume' }],
+      female: [{ id: 'McVZB9hVxVSk3Equu8EH', name: 'Audrey' }],
+    },
+  },
+  {
+    name: 'German',
+    native: 'Deutsch',
+    code: 'de',
+    locale: 'de-DE',
+    flag: '🇩🇪',
+    voices: {
+      male: [{ id: 'LMwgkTZL66bLQfT9Y7py', name: 'Henry' }],
+      female: [{ id: 'Dr5ws89ILcknhL7xh4JG', name: 'Johanna' }],
+    },
+  },
+  {
+    name: 'Spanish',
+    native: 'español',
+    code: 'es',
+    locale: 'es-ES',
+    flag: '🇪🇸',
+    voices: {
+      male: [{ id: '9F4C8ztpNUmXkdDDbz3J', name: 'Dan Dan' }],
+      female: [{ id: 'qHkrJuifPpn95wK3rm2A', name: 'Andrea' }],
+    },
+  },
+] as const;
+
+export const NATIVES = [
+  {
+    name: 'Arabic',
+    native: 'العربية',
+    code: 'ar',
+    locale: 'ar-SA',
+    flag: '🇸🇦',
+    voices: {
+      male: [{ id: 'IES4nrmZdUBHByLBde0P', name: 'Haytham' }],
+      female: [{ id: 'u0TsaWvt0v8migutHM3M', name: 'GHIZLANE' }],
+    },
+  },
+  {
+    name: 'Chinese',
+    native: '中文',
+    code: 'zh',
+    locale: 'zh-CN',
+    flag: '🇨🇳',
+    voices: {
+      male: [{ id: '4VZIsMPtgggwNg7OXbPY', name: 'James Gao' }],
+      female: [{ id: 'bhJUNIXWQQ94l8eI2VUf', name: 'Amy' }],
+    },
+  },
+  {
+    name: 'English',
+    native: 'English',
+    code: 'en',
+    locale: 'en-US',
+    flag: '🇺🇸',
+    voices: {
+      male: [{ id: 'NYC9WEgkq1u4jiqBseQ9', name: 'Russell' }],
+      female: [{ id: 'tnSpp4vdxKPjI9w0GnoV', name: 'Hope' }],
+    },
+  },
+  {
+    name: 'French',
+    native: 'français',
+    code: 'fr',
+    locale: 'fr-FR',
+    flag: '🇫🇷',
+    voices: {
+      male: [{ id: 'ohItIVrXTBI80RrUECOD', name: 'Guillaume' }],
+      female: [{ id: 'McVZB9hVxVSk3Equu8EH', name: 'Audrey' }],
+    },
+  },
+  {
+    name: 'German',
+    native: 'Deutsch',
+    code: 'de',
+    locale: 'de-DE',
+    flag: '🇩🇪',
+    voices: {
+      male: [{ id: 'LMwgkTZL66bLQfT9Y7py', name: 'Henry' }],
+      female: [{ id: 'Dr5ws89ILcknhL7xh4JG', name: 'Johanna' }],
+    },
+  },
+  {
+    name: 'Hindi',
+    native: 'हिन्दी',
+    code: 'hi',
+    locale: 'hi-IN',
+    flag: '🇮🇳',
+    voices: {
+      male: [{ id: 'zgqefOY5FPQ3bB7OZTVR', name: 'Niraj' }],
+      female: [{ id: 'gHu9GtaHOXcSqFTK06ux', name: 'Anjali' }],
+    },
+  },
+  {
+    name: 'Spanish',
+    native: 'español',
+    code: 'es',
+    locale: 'es-ES',
+    flag: '🇪🇸',
+    voices: {
+      male: [{ id: '9F4C8ztpNUmXkdDDbz3J', name: 'Dan Dan' }],
+      female: [{ id: 'qHkrJuifPpn95wK3rm2A', name: 'Andrea' }],
+    },
+  },
+] as const;
+
+export const ALL_LANGUAGES = [
+  {
     name: 'Arabic',
     native: 'العربية',
     code: 'ar',

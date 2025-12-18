@@ -31,21 +31,9 @@ export const get = query({
       throw new Error('No course found for the lesson');
     }
 
-    const student = await ctx.db
-      .query('students')
-      .withIndex('by_user_language', (q) =>
-        q.eq('userId', userId).eq('learningLanguage.code', course.language.code)
-      )
-      .first();
-
-    if (!student) {
-      throw new Error('User is not enrolled in the course language');
-    }
-
     return {
       ...lesson,
       user,
-      student,
       course,
     };
   },
@@ -80,7 +68,7 @@ export const getByCourse = query({
     const lessonWithProgress = await Promise.all(
       lessons.map(async (lesson) => {
         const progress = await ctx.db
-          .query('progress')
+          .query('score')
           .withIndex('by_user_lesson', (q) =>
             q.eq('userId', userId).eq('lessonId', lesson._id)
           )

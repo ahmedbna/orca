@@ -1,6 +1,6 @@
 import { v } from 'convex/values';
 import { getAuthUserId } from '@convex-dev/auth/server';
-import { internalQuery, mutation, query } from './_generated/server';
+import { mutation, query } from './_generated/server';
 
 export const get = query({
   handler: async (ctx) => {
@@ -12,13 +12,17 @@ export const get = query({
 
     const user = await ctx.db.get(authId);
 
+    if (!user) {
+      throw new Error('User not found');
+    }
+
     return user;
   },
 });
 
-export const getbyemail = query({
+export const getbyId = query({
   args: {
-    email: v.string(),
+    userId: v.id('users'),
   },
   handler: async (ctx, args) => {
     const authId = await getAuthUserId(ctx);
@@ -27,10 +31,11 @@ export const getbyemail = query({
       throw new Error('Not authenticated');
     }
 
-    const user = await ctx.db
-      .query('users')
-      .withIndex('email', (q) => q.eq('email', args.email))
-      .unique();
+    const user = await ctx.db.get(args.userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
 
     return user;
   },
@@ -52,42 +57,19 @@ export const getAll = query({
   },
 });
 
-export const getId = query({
-  handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-
-    if (!userId) {
-      throw new Error('Not authenticated');
-    }
-
-    return userId;
-  },
-});
-
-export const getUserInfo = internalQuery({
-  handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-
-    if (!userId) {
-      throw new Error('Not authenticated');
-    }
-
-    const user = await ctx.db.get(userId);
-
-    if (!user) {
-      throw new Error('Not found');
-    }
-
-    return user;
-  },
-});
-
 export const update = mutation({
   args: {
     name: v.optional(v.string()),
     bio: v.optional(v.string()),
     gender: v.optional(v.string()),
     birthday: v.optional(v.number()),
+    image: v.optional(v.union(v.string(), v.null())),
+    nativeLanguage: v.optional(v.string()),
+    learningLanguage: v.optional(v.string()),
+    currentCourse: v.optional(v.id('courses')),
+    currentLesson: v.optional(v.id('lessons')),
+    voiceId: v.optional(v.string()),
+    agentId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -102,10 +84,8 @@ export const update = mutation({
       throw new Error('User not found');
     }
 
-    await ctx.db.patch(user._id, {
+    return await ctx.db.patch(user._id, {
       ...args,
     });
-
-    return user._id;
   },
 });

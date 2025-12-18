@@ -16,34 +16,16 @@ export default defineSchema({
     emailVerificationTime: v.optional(v.float64()),
     phoneVerificationTime: v.optional(v.float64()),
     isAnonymous: v.optional(v.boolean()),
-    githubId: v.optional(v.number()),
+
+    nativeLanguage: v.optional(v.string()),
+    learningLanguage: v.optional(v.string()),
+    currentCourse: v.optional(v.id('courses')),
+    currentLesson: v.optional(v.id('lessons')),
+    voiceId: v.optional(v.string()),
+    agentId: v.optional(v.string()),
   })
     .index('email', ['email'])
     .index('phone', ['phone']),
-
-  students: defineTable({
-    userId: v.id('users'),
-    agentId: v.string(),
-    nativeLanguage: v.object({
-      name: v.string(),
-      code: v.string(),
-      flag: v.string(),
-      native: v.string(),
-    }), // Native language of the user
-    learningLanguage: v.object({
-      name: v.string(),
-      code: v.string(),
-      flag: v.string(),
-      native: v.string(),
-    }), // Language they are learning
-    voiceId: v.optional(v.string()),
-    currentLessonId: v.optional(v.id('lessons')), // Current lesson progress
-    completedLessons: v.optional(v.array(v.id('lessons'))), // Completed lessons
-    current: v.optional(v.boolean()),
-  })
-    .index('by_user', ['userId'])
-    .index('by_user_current', ['userId', 'current'])
-    .index('by_user_language', ['userId', 'learningLanguage.code']),
 
   credits: defineTable({
     userId: v.id('users'),
@@ -64,19 +46,12 @@ export default defineSchema({
     .index('by_user_lesson', ['userId', 'lessonId']),
 
   courses: defineTable({
-    language: v.object({
-      name: v.string(),
-      code: v.string(),
-      flag: v.string(),
-      native: v.string(),
-    }),
+    language: v.string(),
     order: v.number(),
     title: v.string(),
     description: v.string(),
     prerequisites: v.optional(v.array(v.id('courses'))),
-  })
-    .index('by_language', ['language.code'])
-    .index('by_language_order', ['language.code', 'order']),
+  }).index('by_language', ['language']),
 
   lessons: defineTable({
     courseId: v.id('courses'),
@@ -99,10 +74,9 @@ export default defineSchema({
     ),
   }).index('by_course', ['courseId']),
 
-  progress: defineTable({
+  score: defineTable({
     userId: v.id('users'),
     lessonId: v.id('lessons'),
-    phrases: v.array(v.string()),
     score: v.float64(),
   })
     .index('by_lesson', ['lessonId'])

@@ -1,6 +1,7 @@
 [
   {
     "lessonId": 1,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Tagesablauf und Uhrzeiten",
     "phrases": [
       { "order": 1, "text": "Ich stehe jeden Morgen um sieben Uhr auf" },
@@ -49,6 +50,7 @@
   },
   {
     "lessonId": 2,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Das Wochenende (Perfekt mit haben)",
     "phrases": [
       { "order": 1, "text": "Was hast du am letzten Wochenende gemacht?" },
@@ -76,6 +78,7 @@
   },
   {
     "lessonId": 3,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Reisen und Bewegung (Perfekt mit sein)",
     "phrases": [
       { "order": 1, "text": "Bist du schon einmal nach Berlin gefahren?" },
@@ -97,6 +100,7 @@
   },
   {
     "lessonId": 4,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Einkaufen und Kleidung",
     "phrases": [
       { "order": 1, "text": "Ich suche eine neue Hose für die Arbeit" },
@@ -118,6 +122,7 @@
   },
   {
     "lessonId": 5,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Wegbeschreibung und Orientierung",
     "phrases": [
       { "order": 1, "text": "Entschuldigung, wie komme ich zum Bahnhof?" },
@@ -139,6 +144,7 @@
   },
   {
     "lessonId": 6,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Wohnen und Möbel",
     "phrases": [
       { "order": 1, "text": "Ich suche eine neue Wohnung im Stadtzentrum" },
@@ -163,6 +169,7 @@
   },
   {
     "lessonId": 7,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Körper und Gesundheit",
     "phrases": [
       { "order": 1, "text": "Ich fühle mich heute nicht gut" },
@@ -187,6 +194,7 @@
   },
   {
     "lessonId": 8,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Im Restaurant",
     "phrases": [
       { "order": 1, "text": "Guten Abend, wir haben einen Tisch reserviert" },
@@ -211,6 +219,7 @@
   },
   {
     "lessonId": 9,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Termine und Verabredungen",
     "phrases": [
       { "order": 1, "text": "Hast du am Freitagabend schon etwas vor?" },
@@ -235,6 +244,7 @@
   },
   {
     "lessonId": 10,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Beruf und Arbeit",
     "phrases": [
       { "order": 1, "text": "Was sind Sie von Beruf?" },
@@ -265,6 +275,7 @@
   },
   {
     "lessonId": 11,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Urlaub und Reisen planen",
     "phrases": [
       { "order": 1, "text": "Wohin fährst du dieses Jahr in den Urlaub?" },
@@ -292,6 +303,7 @@
   },
   {
     "lessonId": 12,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Wetter und Jahreszeiten",
     "phrases": [
       { "order": 1, "text": "Wie ist das Wetter heute bei euch?" },
@@ -313,6 +325,7 @@
   },
   {
     "lessonId": 13,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Kommunikation und Medien",
     "phrases": [
       { "order": 1, "text": "Kann ich bitte Herrn Schmidt sprechen?" },
@@ -340,6 +353,7 @@
   },
   {
     "lessonId": 14,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Dienstleistungen und Service",
     "phrases": [
       { "order": 1, "text": "Ich möchte mir die Haare schneiden lassen" },
@@ -367,6 +381,7 @@
   },
   {
     "lessonId": 15,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Feste und Einladungen",
     "phrases": [
       { "order": 1, "text": "Ich habe bald Geburtstag und möchte feiern" },
@@ -388,6 +403,7 @@
   },
   {
     "lessonId": 16,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Modalverben im Alltag",
     "phrases": [
       { "order": 1, "text": "Ich kann heute nicht kommen, ich muss arbeiten" },
@@ -409,6 +425,7 @@
   },
   {
     "lessonId": 17,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Am Bahnhof",
     "phrases": [
       { "order": 1, "text": "Einmal nach München, bitte" },
@@ -430,6 +447,7 @@
   },
   {
     "lessonId": 18,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Lebensmittel einkaufen",
     "phrases": [
       { "order": 1, "text": "Ich brauche ein Kilo Äpfel und fünf Bananen" },
@@ -451,6 +469,7 @@
   },
   {
     "lessonId": 19,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Bank und Post",
     "phrases": [
       { "order": 1, "text": "Ich möchte ein Paket nach Österreich schicken" },
@@ -472,6 +491,7 @@
   },
   {
     "lessonId": 20,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Beschwerden und Reklamationen",
     "phrases": [
       { "order": 1, "text": "Entschuldigung, ich habe ein Problem" },
@@ -494,6 +514,7 @@
 
   {
     "lessonId": 21,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Hobbys und Freizeit",
     "phrases": [
       { "order": 1, "text": "Was machst du gerne in deiner Freizeit?" },
@@ -524,6 +545,7 @@
   },
   {
     "lessonId": 22,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Sport und Fitness",
     "phrases": [
       { "order": 1, "text": "Treibst du regelmäßig Sport?" },
@@ -566,6 +588,7 @@
   },
   {
     "lessonId": 23,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Im Hotel übernachten",
     "phrases": [
       {
@@ -596,6 +619,7 @@
   },
   {
     "lessonId": 24,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Stadtbesichtigung",
     "phrases": [
       {
@@ -632,6 +656,7 @@
   },
   {
     "lessonId": 25,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Familie und Verwandte",
     "phrases": [
       { "order": 1, "text": "Ich habe eine sehr große Familie" },
@@ -662,6 +687,7 @@
   },
   {
     "lessonId": 26,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Schule und Bildung",
     "phrases": [
       { "order": 1, "text": "Mein Sohn geht in die Grundschule" },
@@ -686,6 +712,7 @@
   },
   {
     "lessonId": 27,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Computer und Internet",
     "phrases": [
       { "order": 1, "text": "Ich muss meinen Computer neu starten" },
@@ -710,6 +737,7 @@
   },
   {
     "lessonId": 28,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Tiere und Haustiere",
     "phrases": [
       { "order": 1, "text": "Hast du ein Haustier zu Hause?" },
@@ -734,6 +762,7 @@
   },
   {
     "lessonId": 29,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Farben und Beschreibung",
     "phrases": [
       { "order": 1, "text": "Welche Farbe hat dein neues Auto?" },
@@ -758,6 +787,7 @@
   },
   {
     "lessonId": 30,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Gefühle und Stimmung",
     "phrases": [
       { "order": 1, "text": "Ich bin heute sehr glücklich" },
@@ -779,6 +809,7 @@
   },
   {
     "lessonId": 31,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Musik und Konzerte",
     "phrases": [
       { "order": 1, "text": "Welche Musik hörst du am liebsten?" },
@@ -800,6 +831,7 @@
   },
   {
     "lessonId": 32,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Wochenmarkt und frische Lebensmittel",
     "phrases": [
       { "order": 1, "text": "Ich gehe samstags immer auf den Wochenmarkt" },
@@ -821,6 +853,7 @@
   },
   {
     "lessonId": 33,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Gesund leben",
     "phrases": [
       { "order": 1, "text": "Ich versuche, mich gesund zu ernähren" },
@@ -845,6 +878,7 @@
   },
   {
     "lessonId": 34,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Berufe und Tätigkeiten",
     "phrases": [
       { "order": 1, "text": "Der Arzt untersucht die Patienten" },
@@ -881,6 +915,7 @@
   },
   {
     "lessonId": 35,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Gegenstände im Haushalt",
     "phrases": [
       { "order": 1, "text": "Wo hast du den Staubsauger hingestellt?" },
@@ -908,6 +943,7 @@
   },
   {
     "lessonId": 36,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Im Verkehr",
     "phrases": [
       { "order": 1, "text": "Es gibt heute viel Verkehr auf den Straßen" },
@@ -932,6 +968,7 @@
   },
   {
     "lessonId": 37,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Orte in der Stadt",
     "phrases": [
       { "order": 1, "text": "Ich treffe dich vor dem Kino" },
@@ -953,6 +990,7 @@
   },
   {
     "lessonId": 38,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Freundschaft",
     "phrases": [
       { "order": 1, "text": "Er ist mein bester Freund seit der Schulzeit" },
@@ -983,6 +1021,7 @@
   },
   {
     "lessonId": 39,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Kultur und Tradition",
     "phrases": [
       {
@@ -1016,6 +1055,7 @@
   },
   {
     "lessonId": 40,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Zukunftspläne",
     "phrases": [
       { "order": 1, "text": "Was möchtest du in der Zukunft machen?" },
@@ -1040,6 +1080,7 @@
   },
   {
     "lessonId": 41,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Hausarbeit und Pflichten",
     "phrases": [
       { "order": 1, "text": "Ich muss heute unbedingt die Wohnung putzen" },
@@ -1064,6 +1105,7 @@
   },
   {
     "lessonId": 42,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Öffentliche Verkehrsmittel",
     "phrases": [
       {
@@ -1091,6 +1133,7 @@
   },
   {
     "lessonId": 43,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Personen beschreiben",
     "phrases": [
       { "order": 1, "text": "Wie sieht dein neuer Freund aus?" },
@@ -1112,6 +1155,7 @@
   },
   {
     "lessonId": 44,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Büroalltag und Aufgaben",
     "phrases": [
       { "order": 1, "text": "Kannst du mir bitte den Tacker geben?" },
@@ -1136,6 +1180,7 @@
   },
   {
     "lessonId": 45,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Höflichkeit und Bitten",
     "phrases": [
       { "order": 1, "text": "Könnten Sie mir bitte helfen?" },
@@ -1160,6 +1205,7 @@
   },
   {
     "lessonId": 46,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Smalltalk führen",
     "phrases": [
       { "order": 1, "text": "Wie geht es dir heute?" },
@@ -1181,6 +1227,7 @@
   },
   {
     "lessonId": 47,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Essgewohnheiten",
     "phrases": [
       { "order": 1, "text": "Was isst du normalerweise zum Frühstück?" },
@@ -1202,6 +1249,7 @@
   },
   {
     "lessonId": 48,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Natur und Garten",
     "phrases": [
       { "order": 1, "text": "Wir haben einen kleinen Garten hinter dem Haus" },
@@ -1223,6 +1271,7 @@
   },
   {
     "lessonId": 49,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Kino und Filme",
     "phrases": [
       { "order": 1, "text": "Welchen Film möchtest du sehen?" },
@@ -1244,6 +1293,7 @@
   },
   {
     "lessonId": 50,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Notfälle und Hilfe",
     "phrases": [
       { "order": 1, "text": "Hilfe, ich habe meinen Geldbeutel verloren!" },
@@ -1265,6 +1315,7 @@
   },
   {
     "lessonId": 51,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Im Deutschkurs",
     "phrases": [
       { "order": 1, "text": "Wie sagt man das auf Deutsch?" },
@@ -1286,6 +1337,7 @@
   },
   {
     "lessonId": 52,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Mietwagen und Reisen",
     "phrases": [
       { "order": 1, "text": "Ich möchte gern ein Auto mieten" },
@@ -1307,6 +1359,7 @@
   },
   {
     "lessonId": 53,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Häufigkeit und Zeitangaben",
     "phrases": [
       { "order": 1, "text": "Ich gehe fast jeden Tag einkaufen" },
@@ -1328,6 +1381,7 @@
   },
   {
     "lessonId": 54,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Begründungen (denn und weil)",
     "phrases": [
       { "order": 1, "text": "Ich gehe ins Bett, denn ich bin müde" },
@@ -1358,6 +1412,7 @@
   },
   {
     "lessonId": 55,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Vergleiche ziehen",
     "phrases": [
       { "order": 1, "text": "Mein Bruder ist größer als ich" },
@@ -1379,6 +1434,7 @@
   },
   {
     "lessonId": 56,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Einladungen und Absagen",
     "phrases": [
       { "order": 1, "text": "Hast du Lust, heute Abend Kino zu gehen?" },
@@ -1400,6 +1456,7 @@
   },
   {
     "lessonId": 57,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "In der Apotheke",
     "phrases": [
       { "order": 1, "text": "Guten Tag, ich möchte dieses Rezept einlösen" },
@@ -1424,6 +1481,7 @@
   },
   {
     "lessonId": 58,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Technik und Alltag",
     "phrases": [
       { "order": 1, "text": "Mein Handy hat keinen Empfang" },
@@ -1445,6 +1503,7 @@
   },
   {
     "lessonId": 59,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Wo ist was? (Ortsangaben)",
     "phrases": [
       { "order": 1, "text": "Das Buch liegt auf dem Tisch" },
@@ -1466,6 +1525,7 @@
   },
   {
     "lessonId": 60,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Vergangenheit und Kindheit (Präteritum)",
     "phrases": [
       { "order": 1, "text": "Früher war alles anders" },
@@ -1487,6 +1547,7 @@
   },
   {
     "lessonId": 61,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Kleidung und Stil",
     "phrases": [
       { "order": 1, "text": "Was trägst du heute Abend zur Party?" },
@@ -1511,6 +1572,7 @@
   },
   {
     "lessonId": 62,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Ratschläge und Empfehlungen",
     "phrases": [
       { "order": 1, "text": "Du solltest mehr Sport machen" },
@@ -1535,6 +1597,7 @@
   },
   {
     "lessonId": 63,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Körperpflege und Bad",
     "phrases": [
       { "order": 1, "text": "Ich gehe jetzt ins Badezimmer" },
@@ -1556,6 +1619,7 @@
   },
   {
     "lessonId": 64,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Kochen und Backen",
     "phrases": [
       { "order": 1, "text": "Was kochen wir heute Abend?" },
@@ -1577,6 +1641,7 @@
   },
   {
     "lessonId": 65,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Briefe und E-Mails schreiben",
     "phrases": [
       { "order": 1, "text": "Liebe Lisa, wie geht es dir?" },
@@ -1598,6 +1663,7 @@
   },
   {
     "lessonId": 66,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Datum und Kalender",
     "phrases": [
       { "order": 1, "text": "Der Wievielte ist heute?" },
@@ -1622,6 +1688,7 @@
   },
   {
     "lessonId": 67,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Geografie und Landschaft",
     "phrases": [
       { "order": 1, "text": "Deutschland liegt in der Mitte von Europa" },
@@ -1643,6 +1710,7 @@
   },
   {
     "lessonId": 68,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Umzug und neue Wohnung",
     "phrases": [
       { "order": 1, "text": "Wir ziehen nächsten Monat um" },
@@ -1664,6 +1732,7 @@
   },
   {
     "lessonId": 69,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Fernsehen und Medien",
     "phrases": [
       { "order": 1, "text": "Was kommt heute Abend im Fernsehen?" },
@@ -1685,6 +1754,7 @@
   },
   {
     "lessonId": 70,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Im Café",
     "phrases": [
       { "order": 1, "text": "Ich hätte gerne einen Cappuccino" },
@@ -1706,6 +1776,7 @@
   },
   {
     "lessonId": 71,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Meinung äußern",
     "phrases": [
       { "order": 1, "text": "Wie findest du das neue Lied?" },
@@ -1727,6 +1798,7 @@
   },
   {
     "lessonId": 72,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Der Arbeitsweg",
     "phrases": [
       { "order": 1, "text": "Wie kommst du zur Arbeit?" },
@@ -1748,6 +1820,7 @@
   },
   {
     "lessonId": 73,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Jahreszeiten und Aktivitäten",
     "phrases": [
       { "order": 1, "text": "Im Winter gehen wir oft Skifahren" },
@@ -1769,6 +1842,7 @@
   },
   {
     "lessonId": 74,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Sprachen lernen",
     "phrases": [
       { "order": 1, "text": "Wie lange lernst du schon Deutsch?" },
@@ -1790,6 +1864,7 @@
   },
   {
     "lessonId": 75,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Beim Zahnarzt",
     "phrases": [
       { "order": 1, "text": "Ich habe starke Zahnschmerzen" },
@@ -1811,6 +1886,7 @@
   },
   {
     "lessonId": 76,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Online einkaufen",
     "phrases": [
       { "order": 1, "text": "Ich bestelle oft Kleidung im Internet" },
@@ -1835,6 +1911,7 @@
   },
   {
     "lessonId": 77,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Im Zoo und Tiere",
     "phrases": [
       { "order": 1, "text": "Wir gehen heute mit den Kindern in den Zoo" },
@@ -1856,6 +1933,7 @@
   },
   {
     "lessonId": 78,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Geschenke und Feiern",
     "phrases": [
       { "order": 1, "text": "Ich suche ein Geschenk für meine Mutter" },
@@ -1880,6 +1958,7 @@
   },
   {
     "lessonId": 79,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Putzen und Reparieren",
     "phrases": [
       { "order": 1, "text": "Der Boden ist schmutzig, ich muss wischen" },
@@ -1907,6 +1986,7 @@
   },
   {
     "lessonId": 80,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Raumbeschreibung (Es gibt)",
     "phrases": [
       { "order": 1, "text": "In meinem Zimmer gibt es ein großes Bett" },
@@ -1931,6 +2011,7 @@
   },
   {
     "lessonId": 81,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Probleme im Hotel",
     "phrases": [
       { "order": 1, "text": "Entschuldigung, mein Zimmer ist nicht sauber" },
@@ -1952,6 +2033,7 @@
   },
   {
     "lessonId": 82,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Beim Bäcker",
     "phrases": [
       { "order": 1, "text": "Guten Morgen, ich hätte gern fünf Brötchen" },
@@ -1973,6 +2055,7 @@
   },
   {
     "lessonId": 83,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Vorschläge machen",
     "phrases": [
       { "order": 1, "text": "Wollen wir heute Abend ins Kino gehen?" },
@@ -1997,6 +2080,7 @@
   },
   {
     "lessonId": 84,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Orientierung im Kaufhaus",
     "phrases": [
       {
@@ -2021,6 +2105,7 @@
   },
   {
     "lessonId": 85,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Am Flughafen",
     "phrases": [
       {
@@ -2048,6 +2133,7 @@
   },
   {
     "lessonId": 86,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Vorlieben ausdrücken",
     "phrases": [
       { "order": 1, "text": "Ich trinke lieber Tee als Kaffee" },
@@ -2072,6 +2158,7 @@
   },
   {
     "lessonId": 87,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Im Fundbüro",
     "phrases": [
       { "order": 1, "text": "Ich habe meinen Regenschirm im Bus vergessen" },
@@ -2093,6 +2180,7 @@
   },
   {
     "lessonId": 88,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Entschuldigung sagen",
     "phrases": [
       { "order": 1, "text": "Es tut mir leid, dass ich zu spät komme" },
@@ -2114,6 +2202,7 @@
   },
   {
     "lessonId": 89,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "In der Bibliothek",
     "phrases": [
       { "order": 1, "text": "Ich möchte mich in der Bibliothek anmelden" },
@@ -2135,6 +2224,7 @@
   },
   {
     "lessonId": 90,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Wünsche und Träume (Hätte/Würde)",
     "phrases": [
       { "order": 1, "text": "Ich hätte gern ein großes Haus am Meer" },
@@ -2156,6 +2246,7 @@
   },
   {
     "lessonId": 91,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Glückwünsche",
     "phrases": [
       { "order": 1, "text": "Herzlichen Glückwunsch zum Geburtstag!" },
@@ -2177,6 +2268,7 @@
   },
   {
     "lessonId": 92,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Umwelt und Natur",
     "phrases": [
       { "order": 1, "text": "Wir müssen die Umwelt schützen" },
@@ -2204,6 +2296,7 @@
   },
   {
     "lessonId": 93,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Camping und Zelten",
     "phrases": [
       { "order": 1, "text": "Wir fahren am Wochenende zum Campingplatz" },
@@ -2225,6 +2318,7 @@
   },
   {
     "lessonId": 94,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Telefonieren",
     "phrases": [
       { "order": 1, "text": "Guten Tag, hier spricht Müller" },
@@ -2249,6 +2343,7 @@
   },
   {
     "lessonId": 95,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Bewerbung und Arbeitssuche",
     "phrases": [
       { "order": 1, "text": "Ich suche eine neue Arbeit" },
@@ -2279,6 +2374,7 @@
   },
   {
     "lessonId": 96,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Bildbeschreibung",
     "phrases": [
       { "order": 1, "text": "Auf dem Bild sehe ich eine Familie" },
@@ -2300,6 +2396,7 @@
   },
   {
     "lessonId": 97,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Bank und Geld",
     "phrases": [
       { "order": 1, "text": "Ich möchte ein Konto eröffnen" },
@@ -2324,6 +2421,7 @@
   },
   {
     "lessonId": 98,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Verkehrsregeln",
     "phrases": [
       { "order": 1, "text": "Hier darf man nur dreißig fahren" },
@@ -2345,6 +2443,7 @@
   },
   {
     "lessonId": 99,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Gefühle und Beziehungen",
     "phrases": [
       { "order": 1, "text": "Ich bin sehr verliebt in sie" },
@@ -2366,6 +2465,7 @@
   },
   {
     "lessonId": 100,
+    "courseId": "k576v9tv2w2746qdnqmjwmz0t17xhp7x",
     "title": "Abschied und Rückblick",
     "phrases": [
       { "order": 1, "text": "Der Deutschkurs ist jetzt zu Ende" },
