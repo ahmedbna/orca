@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -17,7 +17,9 @@ import { Text } from '@/components/ui/text';
 import { Streak } from '@/components/map/streak';
 import { SquishyButton } from '@/components/map/squishy-button';
 import { Background } from '@/components/background';
-import { Doc } from '@/convex/_generated/dataModel';
+import { Doc, Id } from '@/convex/_generated/dataModel';
+import { LANGUAGES } from '@/constants/languages';
+import { ChevronDown } from 'lucide-react-native';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -41,31 +43,12 @@ const COLORS = {
   path: 'rgba(255, 255, 255, 0.4)',
 };
 
-const VERTICAL_SPACING = 100;
-const AMPLITUDE = SCREEN_WIDTH * 0.3;
+const VERTICAL_SPACING = 96;
+const AMPLITUDE = SCREEN_WIDTH * 0.32;
 const BUTTON_SHADOW_HEIGHT = 8;
 
-// --- TYPES ---
-type LevelStatus = 'locked' | 'active' | 'completed';
-
-export interface LevelData {
-  id: number;
-  order: number;
-  title: string;
-  status: LevelStatus;
-}
-
-// --- MOCK DATA ---
-const LEVELS: LevelData[] = Array.from({ length: 20 }).map((_, i) => ({
-  id: i + 1,
-  order: i + 1,
-  title: `Level ${i + 1}`,
-  stars: i < 5 ? 3 : i === 5 ? 0 : 0,
-  status: i < 5 ? 'completed' : i === 5 ? 'active' : 'locked',
-}));
-
 // 3D Button Component
-const Button3D = ({
+const StartButton = ({
   onPress,
   label,
   variant = 'yellow',
@@ -158,8 +141,6 @@ type Props = {
       Doc<'lessons'> & {
         score: number;
         status: 'locked' | 'active' | 'completed';
-        isUnlocked: boolean;
-        isCompleted: boolean;
       }
     >;
   };
@@ -167,28 +148,31 @@ type Props = {
 
 export const Map = ({ course }: Props) => {
   const router = useRouter();
+  const scrollY = useSharedValue(0);
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<Animated.ScrollView>(null);
-  const scrollY = useSharedValue(0);
 
   // Calculation logic
-  const totalHeight = LEVELS.length * VERTICAL_SPACING + 400; // Extra padding at bottom
+  const totalHeight = course.lessons.length * VERTICAL_SPACING + 420; // Extra padding at bottom
   const centerX = SCREEN_WIDTH / 2;
 
   const levelCoords = useMemo(() => {
-    return LEVELS.map((level, index) => {
+    return course.lessons.map((level, index) => {
       // Invert Y so level 1 is at the bottom
-      const y = totalHeight - (index * VERTICAL_SPACING + 400);
+      const y = totalHeight - (index * VERTICAL_SPACING + 420);
       // Sine wave for X
       const x = centerX + Math.sin(index * 0.55) * AMPLITUDE;
       return { ...level, x, y };
     });
-  }, [totalHeight]);
+  }, [course.lessons, totalHeight]);
 
-  const handleLevelPress = (id: number) => {
-    router.push(`/level/${id}`);
-    console.log(`Open Level ${id}`);
+  const handleLevelPress = (lessonId: Id<'lessons'>) => {
+    router.push(`/level/${lessonId}`);
   };
+
+  const currentLesson = useMemo(() => {
+    return course.lessons.find((l) => l.status === 'active');
+  }, [course.lessons]);
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     scrollY.value = event.contentOffset.y;
@@ -226,22 +210,38 @@ export const Map = ({ course }: Props) => {
         {/* Draw Nodes */}
         {levelCoords.map((level) => (
           <SquishyButton
-            key={level.id}
+            key={level._id}
             level={level}
             x={level.x}
             y={level.y}
-            onPress={handleLevelPress}
+            onPress={() => handleLevelPress(level._id)}
           />
         ))}
       </Animated.ScrollView>
 
       <View style={[styles.bottomContainer, { paddingBottom: insets.bottom }]}>
+        <TouchableOpacity
+          onPress={() => router.push('/courses')}
+          style={{ flexDirection: 'row', gap: 2, alignItems: 'center' }}
+        >
+          <Text variant='heading'>
+            {LANGUAGES.find((lang) => lang.code === course.language)?.flag}
+          </Text>
+          <Text variant='title' style={{ color: '#000', fontWeight: '800' }}>
+            {course.title}
+          </Text>
+
+          {/* <ChevronDown size={26} color='#000' /> */}
+        </TouchableOpacity>
+
         <Streak />
 
-        <Button3D
+        <StartButton
           label='START'
           variant='green'
-          onPress={() => console.log('Start pressed')}
+          onPress={() =>
+            currentLesson && router.push(`/level/${currentLesson._id}`)
+          }
         />
       </View>
 
@@ -285,8 +285,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#FFE17B',
-    padding: 16,
-    gap: 8,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    gap: 12,
     height: 300,
     overflow: 'visible',
   },

@@ -10,29 +10,33 @@ export default function HomeScreen() {
   const course = useQuery(api.courses.getCourse);
 
   if (course === undefined) {
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: Colors.dark.orca,
-      }}
-    >
-      <Spinner size='lg' variant='circle' />
-    </View>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: Colors.dark.orca,
+        }}
+      >
+        <Spinner size='lg' variant='circle' />
+      </View>
+    );
   }
 
   if (course === null) {
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: Colors.dark.orca,
-      }}
-    >
-      <Text>Course Not Found!s</Text>
-    </View>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: Colors.dark.orca,
+        }}
+      >
+        <Text>Course Not Found!</Text>
+      </View>
+    );
   }
 
   return <Map course={course} />;

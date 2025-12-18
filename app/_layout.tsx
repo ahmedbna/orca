@@ -96,7 +96,7 @@ export default function RootLayout() {
               <Stack.Screen name='profile' />
 
               <Stack.Screen
-                name='sheet'
+                name='courses'
                 options={{
                   headerShown: false,
                   sheetGrabberVisible: true,

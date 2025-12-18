@@ -83,9 +83,9 @@ export const Streak = () => {
           <View style={styles.headerLeft}>
             <View>
               <Text style={styles.title}>{streak} Day Streak</Text>
-              <Text style={styles.subtitle}>
+              {/* <Text style={styles.subtitle}>
                 Learn every day to keep it alive
-              </Text>
+              </Text> */}
             </View>
           </View>
 
@@ -140,7 +140,7 @@ function StreakDay({ index, active }: StreakDayProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 150,
+    height: 118,
     position: 'relative',
   },
   shadow: {
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: SHADOW_HEIGHT,
-    height: 140,
+    height: 110,
     borderRadius: 20,
     backgroundColor: '#2A2A2A',
     zIndex: 1,
@@ -158,14 +158,15 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
-    height: 140,
+    height: 110,
     backgroundColor: '#000',
     borderRadius: 20,
     padding: 16,
-    gap: 12,
+    gap: 8,
     zIndex: 2,
     borderWidth: 4,
     borderColor: 'rgba(255, 255, 255, 0.1)',
+    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -191,8 +192,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   dayContainer: {
-    width: 48,
-    height: 48,
+    width: 42,
+    height: 42,
     borderRadius: 999,
     overflow: 'hidden',
     backgroundColor: '#444',
