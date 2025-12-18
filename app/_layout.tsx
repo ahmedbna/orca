@@ -88,7 +88,12 @@ export default function RootLayout() {
           <Authenticated>
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name='index' />
-              <Stack.Screen name='settings' />
+              <Stack.Screen name='level/[id]' />
+              <Stack.Screen name='orca/[id]' />
+              <Stack.Screen name='student/[id]' />
+              <Stack.Screen name='study/[id]' />
+              <Stack.Screen name='streak' />
+              <Stack.Screen name='profile' />
 
               <Stack.Screen
                 name='sheet'

@@ -156,7 +156,7 @@ export const Seafloor = ({
   bottom = 220,
   height = 100,
   speed = 8000,
-  sandColor = ['#F6C90E', '#E8B800'], // ✅ SOLID COLOR
+  sandColor = ['#F6C90E', '#FFE17B'], // ✅ SOLID COLOR
   decorations = { rocks: 8, pebbles: 15, coral: 4 },
   direction = 'left',
 }: SeafloorProps = {}) => {

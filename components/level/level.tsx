@@ -1,15 +1,9 @@
 import React, { useEffect } from 'react';
-import { Dimensions, FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Jellyfish } from '@/components/orca/jellyfish';
-import { Bubbles } from '@/components/orca/bubbles';
-import { Clouds } from '@/components/orca/clouds';
-import { Shark } from '@/components/orca/shark';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Seafloor } from '../orca/seafloor';
 import Animated, {
   useSharedValue,
   withSpring,
@@ -19,13 +13,11 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { Image } from 'expo-image';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+import { Background } from '@/components/background';
+import { useColor } from '@/hooks/useColor';
 
 // --- THEME CONSTANTS ---
 const COLORS = {
-  background: '#FAD40B',
   locked: {
     face: '#E5E7EB',
     shadow: '#AFB2B7',
@@ -45,6 +37,7 @@ const COLORS = {
 };
 
 const BUTTON_SHADOW_HEIGHT = 8;
+const LESSON_SHADOW_HEIGHT = 6;
 
 // --- TYPES ---
 export interface ScoreData {
@@ -86,19 +79,6 @@ const SCORES: ScoreData[] = [
     rank: 4,
   },
 ];
-
-const OceanBackground = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <View style={styles.oceanContainer}>
-      <Clouds />
-      <Bubbles />
-      <Shark />
-      <Jellyfish />
-      <Seafloor speed={0} />
-      {children}
-    </View>
-  );
-};
 
 // 3D Button Component
 const Button3D = ({
@@ -219,6 +199,68 @@ const EmptyState = () => {
   );
 };
 
+// Lesson Component with 3D effect
+const LessonCard = ({ onPress }: { onPress: () => void }) => {
+  const pressed = useSharedValue(0);
+  const pulse = useSharedValue(1);
+
+  useEffect(() => {
+    pulse.value = withRepeat(
+      withSequence(
+        withTiming(1.01, { duration: 2000 }),
+        withTiming(1, { duration: 2000 })
+      ),
+      -1,
+      true
+    );
+  }, []);
+
+  const animatedFaceStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      pressed.value,
+      [0, 1],
+      [0, LESSON_SHADOW_HEIGHT]
+    );
+    return {
+      transform: [{ translateY }, { scale: pulse.value }],
+    };
+  });
+
+  const handlePressIn = () => {
+    pressed.value = withSpring(1, { damping: 15 });
+  };
+
+  const handlePressOut = () => {
+    pressed.value = withSpring(0, { damping: 15 });
+    onPress();
+  };
+
+  return (
+    <Animated.View style={styles.lessonCard}>
+      {/* Shadow */}
+      <View style={styles.lessonShadow} />
+
+      {/* Face */}
+      <Animated.View
+        onTouchStart={handlePressIn}
+        onTouchEnd={handlePressOut}
+        style={[styles.lessonFace, animatedFaceStyle]}
+      >
+        <View style={styles.lessonContent}>
+          {/* Lesson Number - Fills height */}
+          <View style={styles.lessonNumberContainer}>
+            <Text style={styles.lessonNumber}>01</Text>
+          </View>
+
+          <Text style={styles.lessonTitle}>
+            Wiederholung: Begrüßung und Befinden
+          </Text>
+        </View>
+      </Animated.View>
+    </Animated.View>
+  );
+};
+
 // Rank Badge Component
 const RankBadge = ({ rank }: { rank: number }) => {
   const getEmoji = () => {
@@ -254,17 +296,14 @@ const RankBadge = ({ rank }: { rank: number }) => {
       <Text style={[styles.rankText, { fontSize: isTopThree ? 28 : 20 }]}>
         {getEmoji()}
       </Text>
-      {!isTopThree && (
-        <View style={styles.rankNumber}>
-          <Text style={styles.rankNumberText}>{rank}</Text>
-        </View>
-      )}
     </View>
   );
 };
 
-// Score Card Component with 3D effect
-const Score = ({ score }: { score: ScoreData }) => {
+// ScoreCard Component with 3D effect
+const ScoreCard = ({ score }: { score: ScoreData }) => {
+  const yellow = useColor('orca');
+
   const pressed = useSharedValue(0);
   const sparkle = useSharedValue(0);
 
@@ -386,11 +425,18 @@ const Score = ({ score }: { score: ScoreData }) => {
             </View>
           </View>
 
-          {/* Time Score */}
+          {/* Time ScoreCard */}
           <View style={styles.timeSection}>
             <View style={styles.timeContainer}>
               <Text style={styles.timeEmoji}>⚡</Text>
-              <Text variant='title' style={styles.timeText}>
+              <Text
+                variant='title'
+                style={{
+                  color: yellow,
+                  fontSize: 24,
+                  fontWeight: '900',
+                }}
+              >
                 {score.time}
               </Text>
             </View>
@@ -407,77 +453,35 @@ export const Level = () => {
   const insets = useSafeAreaInsets();
   const hasScores = SCORES.length > 0;
 
+  const handleLessonPress = () => {
+    console.log('Lesson card pressed!');
+    // Add your navigation or action here
+  };
+
+  const handleStudyPress = () => {
+    console.log('Study button pressed!');
+    // Add your navigation or action here
+  };
+
+  const handlePlayPress = () => {
+    console.log('Play button pressed!');
+    // Add your navigation or action here
+  };
+
   return (
-    <OceanBackground>
-      <LinearGradient
-        colors={[
-          '#FAD40B',
-          'rgba(250, 212, 11, 0.5)',
-          'rgba(250, 212, 11, 0.01)',
-        ]}
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 0,
-          height: insets.top + 120,
-          zIndex: 10,
-        }}
-      />
-
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          paddingHorizontal: 16,
-          paddingTop: insets.bottom + 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          zIndex: 99,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Image
-            source={require('@/assets/images/icon.png')} // Update path
-            style={{ width: 54, height: 54, borderRadius: 14 }}
-            contentFit='contain'
-          />
-          <Text variant='heading' style={{ color: '#000', fontSize: 32 }}>
-            Orca
-          </Text>
-        </View>
-
-        <Avatar size={42}>
-          <AvatarImage
-            source={{
-              uri: 'https://avatars.githubusercontent.com/u/99088394?v=4',
-            }}
-          />
-          <AvatarFallback>AB</AvatarFallback>
-        </Avatar>
-      </View>
-
+    <Background>
       <View style={styles.content}>
         {hasScores ? (
           <FlatList
             data={SCORES}
-            renderItem={({ item }) => <Score score={item} />}
+            renderItem={({ item }) => <ScoreCard score={item} />}
             keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
-              gap: 8,
+              gap: 4,
               padding: 20,
-              paddingTop: insets.top + 80,
-              paddingBottom: 240,
+              paddingTop: insets.top + 60,
+              paddingBottom: 400,
             }}
             ListHeaderComponent={() => (
               <View>
@@ -501,44 +505,20 @@ export const Level = () => {
       </View>
 
       {/* Bottom Action Buttons */}
-      <View
-        style={[
-          {
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: '#000',
-            paddingHorizontal: 16,
-            paddingTop: 16,
-            gap: 16,
-            height: 220,
-            paddingBottom: insets.bottom + 16,
-          },
-        ]}
-      >
-        <View style={{ gap: 8 }}>
-          <Text variant='heading' style={{ color: '#fff' }}>
-            Lesson 1: Hello
-          </Text>
-          <Text variant='caption'>Lesson 1: Hello</Text>
-        </View>
+      <View style={[styles.bottomContainer, { paddingBottom: insets.bottom }]}>
+        <LessonCard onPress={handleLessonPress} />
 
         <View style={styles.buttonRow}>
-          <Button3D label='STUDY' variant='yellow' onPress={() => {}} />
+          <Button3D label='STUDY' variant='yellow' onPress={handleStudyPress} />
           <View style={{ width: 16 }} />
-          <Button3D label='PLAY' variant='green' onPress={() => {}} />
+          <Button3D label='PLAY' variant='green' onPress={handlePlayPress} />
         </View>
       </View>
-    </OceanBackground>
+    </Background>
   );
 };
 
 const styles = StyleSheet.create({
-  oceanContainer: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
   content: {
     flex: 1,
   },
@@ -632,21 +612,6 @@ const styles = StyleSheet.create({
   rankText: {
     fontWeight: '900',
   },
-  rankNumber: {
-    position: 'absolute',
-    bottom: -8,
-    backgroundColor: '#000',
-    borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderWidth: 2,
-    borderColor: '#FFF',
-  },
-  rankNumberText: {
-    color: '#FFF',
-    fontSize: 12,
-    fontWeight: '900',
-  },
   playerSection: {
     flex: 1,
     flexDirection: 'row',
@@ -707,11 +672,7 @@ const styles = StyleSheet.create({
   timeEmoji: {
     fontSize: 18,
   },
-  timeText: {
-    color: COLORS.background,
-    fontSize: 24,
-    fontWeight: '900',
-  },
+
   timeLabel: {
     color: '#000',
     fontSize: 10,
@@ -720,7 +681,6 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    gap: 16,
   },
   buttonFace: {
     position: 'absolute',
@@ -742,5 +702,77 @@ const styles = StyleSheet.create({
     height: 92,
     borderRadius: 24,
     zIndex: 1,
+  },
+  bottomContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFE17B',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    gap: 8,
+    height: 300,
+    overflow: 'visible',
+  },
+  lessonCard: {
+    height: 150,
+    position: 'relative',
+  },
+  lessonShadow: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: LESSON_SHADOW_HEIGHT,
+    height: 140,
+    borderRadius: 20,
+    backgroundColor: '#2A2A2A',
+    zIndex: 1,
+  },
+  lessonFace: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 140,
+    backgroundColor: '#000',
+    borderRadius: 20,
+    padding: 16,
+    zIndex: 2,
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  lessonContent: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: 16,
+  },
+  lessonNumberContainer: {
+    backgroundColor: '#FAD40B',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 80,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  lessonNumber: {
+    color: '#000',
+    fontSize: 48,
+    fontWeight: '900',
+    letterSpacing: 2,
+  },
+
+  lessonTitle: {
+    flex: 1,
+    color: '#FFF',
+    fontSize: 26,
+    fontWeight: '900',
+    letterSpacing: 0.5,
   },
 });

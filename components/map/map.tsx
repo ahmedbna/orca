@@ -3,23 +3,26 @@ import { Dimensions, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
+  withSpring,
+  useAnimatedStyle,
+  interpolate,
+  withRepeat,
+  withSequence,
+  withTiming,
 } from 'react-native-reanimated';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Image } from 'expo-image';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Jellyfish } from '@/components/orca/jellyfish';
 import { Bubbles } from '@/components/orca/bubbles';
 import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Button } from '@/components/ui/button';
-import { Music } from '../orca/music';
-import { Streak } from './streak';
-import { SquishyButton } from './squishy-button';
-import { Seafloor } from '../orca/seafloor';
-import { Seaweed } from '../orca/seaweed';
+import { Music } from '@/components/orca/music';
+import { Streak } from '@/components/map/streak';
+import { SquishyButton } from '@/components/map/squishy-button';
+import { Seafloor } from '@/components/orca/seafloor';
+import { Background } from '@/components/background';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -37,17 +40,15 @@ const COLORS = {
   },
   completed: {
     face: '#34C759', // Duolingo Green
-    // face: '#58CC02', // Duolingo Green
     shadow: '#46A302',
     text: '#FFFFFF',
   },
   path: 'rgba(255, 255, 255, 0.4)',
 };
 
-const NODE_SIZE = 86; // Slightly smaller to account for 3D depth
-const BUTTON_HEIGHT = 80;
 const VERTICAL_SPACING = 100;
 const AMPLITUDE = SCREEN_WIDTH * 0.3;
+const BUTTON_SHADOW_HEIGHT = 8;
 
 // --- TYPES ---
 type LevelStatus = 'locked' | 'active' | 'completed';
@@ -77,15 +78,103 @@ const OceanBackground = ({ children }: { children: React.ReactNode }) => {
       <Shark />
       <Jellyfish />
       <Seafloor bottom={300} speed={0} />
-      {/* <Seaweed /> */}
 
       {children}
     </View>
   );
 };
 
+// 3D Button Component
+const Button3D = ({
+  onPress,
+  label,
+  variant = 'yellow',
+}: {
+  onPress: () => void;
+  label: string;
+  variant?: 'yellow' | 'green';
+}) => {
+  const pressed = useSharedValue(0);
+  const pulse = useSharedValue(1);
+
+  useEffect(() => {
+    pulse.value = withRepeat(
+      withSequence(
+        withTiming(1.02, { duration: 1500 }),
+        withTiming(1, { duration: 1500 })
+      ),
+      -1,
+      true
+    );
+  }, []);
+
+  const colors =
+    variant === 'yellow'
+      ? { face: COLORS.background, shadow: '#E5C000' }
+      : COLORS.completed;
+
+  const animatedFaceStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      pressed.value,
+      [0, 1],
+      [0, BUTTON_SHADOW_HEIGHT]
+    );
+    return {
+      transform: [{ translateY }, { scale: pulse.value }],
+    };
+  });
+
+  const handlePressIn = () => {
+    pressed.value = withSpring(1, { damping: 15 });
+  };
+
+  const handlePressOut = () => {
+    pressed.value = withSpring(0, { damping: 15 });
+    onPress();
+  };
+
+  return (
+    <Animated.View style={{ height: 100 }}>
+      {/* Shadow */}
+      <View
+        style={[
+          styles.button3DShadow,
+          {
+            backgroundColor: colors.shadow,
+            top: BUTTON_SHADOW_HEIGHT,
+          },
+        ]}
+      />
+      {/* Face */}
+      <Animated.View
+        onTouchStart={handlePressIn}
+        onTouchEnd={handlePressOut}
+        style={[
+          styles.button3DFace,
+          {
+            backgroundColor: colors.face,
+          },
+          animatedFaceStyle,
+        ]}
+      >
+        <Text
+          variant='title'
+          style={{
+            color: variant === 'yellow' ? '#000' : '#FFF',
+            fontSize: 18,
+            fontWeight: '900',
+          }}
+        >
+          {label}
+        </Text>
+      </Animated.View>
+    </Animated.View>
+  );
+};
+
 // --- MAIN SCREEN ---
 export const Map = () => {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<Animated.ScrollView>(null);
   const scrollY = useSharedValue(0);
@@ -105,6 +194,7 @@ export const Map = () => {
   }, [totalHeight]);
 
   const handleLevelPress = (id: number) => {
+    router.push(`/level/${id}`);
     console.log(`Open Level ${id}`);
   };
 
@@ -132,64 +222,7 @@ export const Map = () => {
   }, [levelCoords]);
 
   return (
-    <OceanBackground>
-      <LinearGradient
-        colors={[
-          '#FAD40B',
-          'rgba(250, 212, 11, 0.5)',
-          'rgba(250, 212, 11, 0.01)',
-        ]}
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 0,
-          height: insets.top + 120,
-          zIndex: 10,
-        }}
-      />
-
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          paddingHorizontal: 16,
-          paddingTop: insets.bottom + 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          zIndex: 99,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Image
-            source={require('@/assets/images/icon.png')} // Update path
-            style={{ width: 54, height: 54, borderRadius: 14 }}
-            contentFit='contain'
-          />
-          <Text variant='heading' style={{ color: '#000', fontSize: 32 }}>
-            Orca
-          </Text>
-        </View>
-
-        <Avatar size={42}>
-          <AvatarImage
-            source={{
-              uri: 'https://avatars.githubusercontent.com/u/99088394?v=4',
-            }}
-          />
-          <AvatarFallback>AB</AvatarFallback>
-        </Avatar>
-      </View>
-
+    <Background>
       <Animated.ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
@@ -210,27 +243,18 @@ export const Map = () => {
         ))}
       </Animated.ScrollView>
 
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: '#000',
-          paddingHorizontal: 16,
-          paddingTop: 16,
-          paddingBottom: insets.bottom + 16,
-          gap: 16,
-          height: 300,
-        }}
-      >
+      <View style={[styles.bottomContainer, { paddingBottom: insets.bottom }]}>
         <Streak />
 
-        <Button variant='success'>START</Button>
+        <Button3D
+          label='START'
+          variant='green'
+          onPress={() => console.log('Start pressed')}
+        />
       </View>
 
       {/* <Music /> */}
-    </OceanBackground>
+    </Background>
   );
 };
 
@@ -242,57 +266,36 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  buttonFace: {
-    width: NODE_SIZE,
-    height: BUTTON_HEIGHT,
-    borderRadius: 999,
+  button3DFace: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 92,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
     borderWidth: 4,
-    borderColor: 'rgba(0,0,0,0.05)', // Subtle inner rim
+    borderColor: 'rgba(0,0,0,0.1)',
   },
-  buttonShadow: {
+  button3DShadow: {
     position: 'absolute',
-    width: NODE_SIZE,
-    height: BUTTON_HEIGHT,
-    borderRadius: 999,
+    left: 0,
+    right: 0,
+    height: 92,
+    borderRadius: 24,
     zIndex: 1,
   },
-  floatingLabel: {
+  bottomContainer: {
     position: 'absolute',
-    top: -40,
-    backgroundColor: '#000',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 999,
-    zIndex: 50,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-    width: 100,
-  },
-  floatingLabelText: {
-    color: COLORS.background,
-    fontWeight: '900',
-    fontSize: 16,
-    letterSpacing: 1,
-    textAlign: 'center',
-  },
-  triangle: {
-    position: 'absolute',
-    bottom: -8,
-    left: 50,
-    marginLeft: -8,
-    width: 0,
-    height: 0,
-    borderLeftWidth: 8,
-    borderRightWidth: 8,
-    borderTopWidth: 8,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: '#000',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFE17B',
+    padding: 16,
+    gap: 8,
+    height: 300,
+    overflow: 'visible',
   },
 });
