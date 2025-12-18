@@ -14,15 +14,10 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Jellyfish } from '@/components/orca/jellyfish';
-import { Bubbles } from '@/components/orca/bubbles';
-import { Clouds } from '@/components/orca/clouds';
-import { Shark } from '@/components/orca/shark';
-import { Music } from '@/components/orca/music';
 import { Streak } from '@/components/map/streak';
 import { SquishyButton } from '@/components/map/squishy-button';
-import { Seafloor } from '@/components/orca/seafloor';
 import { Background } from '@/components/background';
+import { Doc } from '@/convex/_generated/dataModel';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -57,7 +52,6 @@ export interface LevelData {
   id: number;
   order: number;
   title: string;
-  stars: number;
   status: LevelStatus;
 }
 
@@ -69,20 +63,6 @@ const LEVELS: LevelData[] = Array.from({ length: 20 }).map((_, i) => ({
   stars: i < 5 ? 3 : i === 5 ? 0 : 0,
   status: i < 5 ? 'completed' : i === 5 ? 'active' : 'locked',
 }));
-
-const OceanBackground = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <View style={styles.oceanContainer}>
-      <Clouds />
-      <Bubbles />
-      <Shark />
-      <Jellyfish />
-      <Seafloor bottom={300} speed={0} />
-
-      {children}
-    </View>
-  );
-};
 
 // 3D Button Component
 const Button3D = ({
@@ -172,8 +152,20 @@ const Button3D = ({
   );
 };
 
-// --- MAIN SCREEN ---
-export const Map = () => {
+type Props = {
+  course: Doc<'courses'> & {
+    lessons: Array<
+      Doc<'lessons'> & {
+        score: number;
+        status: 'locked' | 'active' | 'completed';
+        isUnlocked: boolean;
+        isCompleted: boolean;
+      }
+    >;
+  };
+};
+
+export const Map = ({ course }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<Animated.ScrollView>(null);

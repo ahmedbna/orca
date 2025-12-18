@@ -31,10 +31,27 @@ export const get = query({
       throw new Error('No course found for the lesson');
     }
 
+    // Check if lesson is unlocked
+    const lessonProgress = await ctx.db
+      .query('lessonProgress')
+      .withIndex('by_user_lesson', (q) =>
+        q.eq('userId', userId).eq('lessonId', args.lessonId)
+      )
+      .first();
+
+    const isUnlocked = lessonProgress?.isUnlocked || false;
+
+    if (!isUnlocked) {
+      throw new Error('Lesson is locked');
+    }
+
     return {
       ...lesson,
       user,
       course,
+      score: lessonProgress?.score || 0,
+      isUnlocked,
+      isCompleted: lessonProgress?.isCompleted || false,
     };
   },
 });
@@ -48,6 +65,12 @@ export const getByCourse = query({
 
     if (!userId) {
       throw new Error('Not authenticated');
+    }
+
+    const user = await ctx.db.get(userId);
+
+    if (!user) {
+      throw new Error('User not found');
     }
 
     const course = await ctx.db.get(args.courseId);
@@ -65,18 +88,45 @@ export const getByCourse = query({
       throw new Error('No lessons found');
     }
 
+    // Sort lessons by order
+    const sortedLessons = lessons.sort((a, b) => a.order - b.order);
+
+    const currentLessonId = user.currentLesson;
+    const currentCourseId = user.currentCourse;
+    const isCurrent = currentCourseId && course._id === currentCourseId;
+
     const lessonWithProgress = await Promise.all(
-      lessons.map(async (lesson) => {
-        const progress = await ctx.db
-          .query('score')
+      sortedLessons.map(async (lesson) => {
+        const lessonProgress = await ctx.db
+          .query('lessonProgress')
           .withIndex('by_user_lesson', (q) =>
             q.eq('userId', userId).eq('lessonId', lesson._id)
           )
           .first();
 
+        // Determine status
+        let status: 'locked' | 'active' | 'completed';
+
+        if (lessonProgress?.isCompleted) {
+          status = 'completed';
+        } else if (
+          isCurrent &&
+          currentLessonId &&
+          lesson._id === currentLessonId
+        ) {
+          status = 'active';
+        } else if (lessonProgress?.isUnlocked) {
+          status = 'active';
+        } else {
+          status = 'locked';
+        }
+
         return {
           ...lesson,
-          progress,
+          score: lessonProgress?.score || 0,
+          isUnlocked: lessonProgress?.isUnlocked || false,
+          isCompleted: lessonProgress?.isCompleted || false,
+          status,
         };
       })
     );
