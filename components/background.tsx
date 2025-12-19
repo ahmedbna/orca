@@ -52,7 +52,7 @@ export const Background = ({ children }: { children: React.ReactNode }) => {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          zIndex: 99,
+          zIndex: 20,
         }}
         onPress={() => {
           if (!router.canDismiss()) return;
@@ -90,7 +90,7 @@ export const Background = ({ children }: { children: React.ReactNode }) => {
       <Bubbles />
       <Shark />
       <Jellyfish />
-      <Seafloor speed={0} bottom={300} />
+      <Seafloor speed={0} bottom={insets.bottom + 240} />
       {children}
     </View>
   );

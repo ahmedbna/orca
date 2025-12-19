@@ -79,7 +79,7 @@ export default function RootLayout() {
                 backgroundColor: Colors.dark.orca,
               }}
             >
-              <Spinner size='lg' variant='circle' />
+              <Spinner size='lg' variant='circle' color='#000000' />
             </View>
           </AuthLoading>
           <Unauthenticated>

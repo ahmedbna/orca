@@ -1,22 +1,15 @@
+import { useState } from 'react';
 import * as Speech from 'expo-speech';
 import { useColor } from '@/hooks/useColor';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Pressable } from 'react-native';
-import { useState } from 'react';
+import { Doc } from '@/convex/_generated/dataModel';
 
 type Props = {
   native: string;
   language: string;
-  lesson: {
-    order: number;
-    title: string;
-    phrases: {
-      order: number;
-      text: string;
-      dictionary: { language: string; text: string }[];
-    }[];
-  };
+  lesson: Doc<'lessons'>;
 };
 
 export const Learn = ({ lesson, native, language }: Props) => {
@@ -52,19 +45,23 @@ export const Learn = ({ lesson, native, language }: Props) => {
         >
           {currentPhrase.text}
         </Text>
-
-        <Text
-          style={[
+        {currentPhrase.dictionary && (
+          <Text
+            style={[
+              {
+                fontSize: 46,
+                fontWeight: 800,
+                color: '#000000',
+              },
+              showTranslation ? { opacity: 0.6 } : { opacity: 0 },
+            ]}
+          >
             {
-              fontSize: 46,
-              fontWeight: 800,
-              color: '#000000',
-            },
-            showTranslation ? { opacity: 0.6 } : { opacity: 0 },
-          ]}
-        >
-          {currentPhrase.dictionary.find((d) => d.language === native)?.text}
-        </Text>
+              currentPhrase.dictionary.find((d) => d.language === native)
+                ?.translation
+            }
+          </Text>
+        )}
       </View>
     </Pressable>
   );

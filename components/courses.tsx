@@ -19,7 +19,7 @@ export default function CoursesScreen() {
           // paddingTop: 40,
         }}
       >
-        <Spinner size='lg' variant='circle' />
+        <Spinner size='lg' variant='circle' color='#000000' />
       </View>
     );
   }

@@ -12,7 +12,7 @@ import Animated, {
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Image } from 'expo-image';
-import { LevelData } from './map';
+import { Doc, Id } from '@/convex/_generated/dataModel';
 
 // --- THEME CONSTANTS ---
 const COLORS = {
@@ -45,10 +45,13 @@ export const SquishyButton = ({
   y,
   onPress,
 }: {
-  level: LevelData;
+  level: Doc<'lessons'> & {
+    score: number;
+    status: 'locked' | 'active' | 'completed';
+  };
   x: number;
   y: number;
-  onPress: (id: number) => void;
+  onPress: (id: Id<'lessons'>) => void;
 }) => {
   const isLocked = level.status === 'locked';
   const isActive = level.status === 'active';
@@ -64,20 +67,6 @@ export const SquishyButton = ({
     : isCompleted
       ? COLORS.completed
       : COLORS.active;
-
-  useEffect(() => {
-    if (isActive) {
-      // Subtle breathing animation for current level
-      bounce.value = withRepeat(
-        withSequence(
-          withTiming(1.05, { duration: 1000 }),
-          withTiming(1, { duration: 1000 })
-        ),
-        -1,
-        true
-      );
-    }
-  }, [isActive]);
 
   const animatedFaceStyle = useAnimatedStyle(() => {
     // Determine how much to move down based on press state
@@ -128,7 +117,7 @@ export const SquishyButton = ({
 
       {/* The Button Structure */}
       <Pressable
-        onPress={() => !isLocked && onPress(level.id)}
+        onPress={() => !isLocked && onPress(level._id)}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         style={{ width: '100%', height: '100%' }}

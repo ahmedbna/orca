@@ -19,7 +19,7 @@ export default function HomeScreen() {
           backgroundColor: Colors.dark.orca,
         }}
       >
-        <Spinner size='lg' variant='circle' />
+        <Spinner size='lg' variant='circle' color='#000000' />
       </View>
     );
   }

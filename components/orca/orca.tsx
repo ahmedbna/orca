@@ -34,6 +34,8 @@ import { Image } from 'expo-image';
 import { Shark } from './shark';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Bubbles } from './bubbles';
+import { Doc } from '@/convex/_generated/dataModel';
+import { Background } from '../background';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -51,22 +53,6 @@ const ROUND_SECONDS = 5;
 const LIVES = 3;
 
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
-
-type Props = {
-  native: string;
-  language: string;
-  lesson: {
-    order: number;
-    title: string;
-    phrases: {
-      order: number;
-      text: string;
-      dictionary: { language: string; text: string }[];
-    }[];
-  };
-};
-
-/** --- UTILS --- */
 
 // Levenshtein distance (Same as before)
 function levenshtein(a: string, b: string) {
@@ -207,7 +193,11 @@ const formatTimeJS = (ms: number) => {
   return `${s}:${c}`;
 };
 
-// --- UPDATED TIMER FUNCTIONS END ---
+type Props = {
+  native: string;
+  language: string;
+  lesson: Doc<'lessons'>;
+};
 
 export const Orca = ({ lesson, native, language }: Props) => {
   const insets = useSafeAreaInsets();
@@ -608,8 +598,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
   const getTranslation = (phraseIndex: number): string => {
     const phrase = lesson.phrases[phraseIndex];
-    const translation = phrase.dictionary.find((d) => d.language === native);
-    return translation?.text || phrase.text;
+    const translation =
+      phrase.dictionary && phrase.dictionary.find((d) => d.language === native);
+    return translation?.translation || phrase.text;
   };
 
   const orcaContainerStyle = useAnimatedStyle(() => ({
@@ -631,41 +622,25 @@ export const Orca = ({ lesson, native, language }: Props) => {
   });
 
   return (
-    <View style={styles.container}>
-      {/* <LinearGradient
-        colors={['#FAD40B', '#FAD40B50', 'rgba(255,255,255,0.01)']}
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 0,
-          height: insets.top + 100,
-          zIndex: 99,
-        }}
-      /> */}
-
-      <View style={styles.background} />
-      <Clouds />
-      <Jellyfish />
-      <Shark />
-      <Bubbles />
-      <Seaweed />
-      <Seafloor />
-
+    <Background>
       <View style={styles.uiOverlay}>
         <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: '#000',
-            paddingHorizontal: 16,
-            paddingTop: 16,
-            paddingBottom: insets.bottom + 16,
-            gap: 32,
-            height: 220,
-          }}
+          style={[
+            {
+              paddingBottom: insets.bottom,
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: '#000',
+              // backgroundColor: '#F6C90E',
+              paddingHorizontal: 16,
+              paddingTop: 16,
+              gap: 8,
+              height: insets.bottom + 200,
+              overflow: 'visible',
+            },
+          ]}
         >
           <View
             style={{
@@ -675,8 +650,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
             }}
           >
             <View style={{ flex: 1 }}>
-              <Text variant='heading' style={{ color: '#FFF' }}>
-                Orca
+              <Text style={styles.transcriptLabel}>
+                {`${NATIVE_LANGUAGE?.flag || ''} 🗣️ ${LEARNING_LANGUAGE?.flag || ''}`}
               </Text>
             </View>
 
@@ -713,9 +688,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
             <View style={styles.transcriptHeader}>
               <Text style={styles.transcriptLabel}>
                 {isRecognizing ? '🎤 Listening' : '⏳ Initializing...'}
-              </Text>
-              <Text style={styles.transcriptLabel}>
-                {`${NATIVE_LANGUAGE?.flag || ''} 🗣️ ${LEARNING_LANGUAGE?.flag || ''}`}
               </Text>
             </View>
 
@@ -820,7 +792,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
           </View>
         ) : null}
       </View>
-    </View>
+    </Background>
   );
 };
 

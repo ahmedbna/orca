@@ -15,6 +15,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Background } from '@/components/background';
 import { useColor } from '@/hooks/useColor';
+import { useRouter } from 'expo-router';
+import { Doc } from '@/convex/_generated/dataModel';
+import { LANGUAGES } from '@/constants/languages';
+import { OrcaButton } from '../orca-button';
+import { LessonCard } from './lesson-card';
+import { TouchableOpacity } from 'react-native';
 
 // --- THEME CONSTANTS ---
 const COLORS = {
@@ -26,7 +32,7 @@ const COLORS = {
     face: '#FFFFFF',
     shadow: '#D1D5DB',
   },
-  completed: {
+  green: {
     face: '#34C759',
     shadow: '#46A302',
   },
@@ -34,6 +40,14 @@ const COLORS = {
     face: '#FAD40B',
     shadow: '#E5C000',
   },
+  purble: {
+    face: '#000',
+    shadow: '#2A2A2A',
+  },
+  // purble: {
+  //   face: '#6C63FF',
+  //   shadow: '#AFB2B7',
+  // },
 };
 
 const BUTTON_SHADOW_HEIGHT = 8;
@@ -79,187 +93,6 @@ const SCORES: ScoreData[] = [
     rank: 4,
   },
 ];
-
-// 3D Button Component
-const Button3D = ({
-  onPress,
-  label,
-  variant = 'yellow',
-}: {
-  onPress: () => void;
-  label: string;
-  variant?: 'yellow' | 'green';
-}) => {
-  const pressed = useSharedValue(0);
-  const pulse = useSharedValue(1);
-
-  useEffect(() => {
-    pulse.value = withRepeat(
-      withSequence(
-        withTiming(1.02, { duration: 1500 }),
-        withTiming(1, { duration: 1500 })
-      ),
-      -1,
-      true
-    );
-  }, []);
-
-  const colors = variant === 'yellow' ? COLORS.yellow : COLORS.completed;
-
-  const animatedFaceStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      pressed.value,
-      [0, 1],
-      [0, BUTTON_SHADOW_HEIGHT]
-    );
-    return {
-      transform: [{ translateY }, { scale: pulse.value }],
-    };
-  });
-
-  const handlePressIn = () => {
-    pressed.value = withSpring(1, { damping: 15 });
-  };
-
-  const handlePressOut = () => {
-    pressed.value = withSpring(0, { damping: 15 });
-    onPress();
-  };
-
-  return (
-    <Animated.View style={{ flex: 1, height: 100 }}>
-      {/* Shadow */}
-      <View
-        style={[
-          styles.buttonShadow,
-          {
-            backgroundColor: colors.shadow,
-            top: BUTTON_SHADOW_HEIGHT,
-          },
-        ]}
-      />
-      {/* Face */}
-      <Animated.View
-        onTouchStart={handlePressIn}
-        onTouchEnd={handlePressOut}
-        style={[
-          styles.buttonFace,
-          {
-            backgroundColor: colors.face,
-          },
-          animatedFaceStyle,
-        ]}
-      >
-        <Text
-          variant='title'
-          style={{
-            color: variant === 'yellow' ? '#000' : '#FFF',
-            fontSize: 18,
-            fontWeight: '900',
-          }}
-        >
-          {label}
-        </Text>
-      </Animated.View>
-    </Animated.View>
-  );
-};
-
-// Empty State Component
-const EmptyState = () => {
-  const float = useSharedValue(0);
-
-  useEffect(() => {
-    float.value = withRepeat(
-      withSequence(
-        withTiming(-10, { duration: 2000 }),
-        withTiming(0, { duration: 2000 })
-      ),
-      -1,
-      true
-    );
-  }, []);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: float.value }],
-  }));
-
-  return (
-    <View style={styles.emptyContainer}>
-      <Animated.View style={[styles.emptyContent, animatedStyle]}>
-        <Text style={styles.emptyEmoji}>🏆</Text>
-        <Text variant='heading' style={styles.emptyTitle}>
-          No Champions Yet!
-        </Text>
-        <Text style={styles.emptyText}>
-          Be the first to conquer this level{'\n'}and claim your spot on top!
-        </Text>
-      </Animated.View>
-    </View>
-  );
-};
-
-// Lesson Component with 3D effect
-const LessonCard = ({ onPress }: { onPress: () => void }) => {
-  const pressed = useSharedValue(0);
-  const pulse = useSharedValue(1);
-
-  useEffect(() => {
-    pulse.value = withRepeat(
-      withSequence(
-        withTiming(1.01, { duration: 2000 }),
-        withTiming(1, { duration: 2000 })
-      ),
-      -1,
-      true
-    );
-  }, []);
-
-  const animatedFaceStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      pressed.value,
-      [0, 1],
-      [0, LESSON_SHADOW_HEIGHT]
-    );
-    return {
-      transform: [{ translateY }, { scale: pulse.value }],
-    };
-  });
-
-  const handlePressIn = () => {
-    pressed.value = withSpring(1, { damping: 15 });
-  };
-
-  const handlePressOut = () => {
-    pressed.value = withSpring(0, { damping: 15 });
-    onPress();
-  };
-
-  return (
-    <Animated.View style={styles.lessonCard}>
-      {/* Shadow */}
-      <View style={styles.lessonShadow} />
-
-      {/* Face */}
-      <Animated.View
-        onTouchStart={handlePressIn}
-        onTouchEnd={handlePressOut}
-        style={[styles.lessonFace, animatedFaceStyle]}
-      >
-        <View style={styles.lessonContent}>
-          {/* Lesson Number - Fills height */}
-          <View style={styles.lessonNumberContainer}>
-            <Text style={styles.lessonNumber}>01</Text>
-          </View>
-
-          <Text style={styles.lessonTitle}>
-            Wiederholung: Begrüßung und Befinden
-          </Text>
-        </View>
-      </Animated.View>
-    </Animated.View>
-  );
-};
 
 // Rank Badge Component
 const RankBadge = ({ rank }: { rank: number }) => {
@@ -448,24 +281,19 @@ const ScoreCard = ({ score }: { score: ScoreData }) => {
   );
 };
 
-// --- MAIN SCREEN ---
-export const Level = () => {
+type Props = {
+  lesson: Doc<'lessons'> & {
+    course: Doc<'courses'>;
+  };
+};
+
+export const Level = ({ lesson }: Props) => {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const hasScores = SCORES.length > 0;
 
-  const handleLessonPress = () => {
-    console.log('Lesson card pressed!');
-    // Add your navigation or action here
-  };
-
-  const handleStudyPress = () => {
-    console.log('Study button pressed!');
-    // Add your navigation or action here
-  };
-
   const handlePlayPress = () => {
-    console.log('Play button pressed!');
-    // Add your navigation or action here
+    router.push(`/orca/${lesson._id}`);
   };
 
   return (
@@ -500,19 +328,59 @@ export const Level = () => {
             )}
           />
         ) : (
-          <EmptyState />
+          <View style={styles.emptyContainer}>
+            <View style={[styles.emptyContent]}>
+              <Text style={styles.emptyEmoji}>🏆</Text>
+              <Text variant='heading' style={styles.emptyTitle}>
+                No Champions Yet!
+              </Text>
+              <Text style={styles.emptyText}>
+                Be the first to conquer this level{'\n'}and claim your spot on
+                top!
+              </Text>
+            </View>
+          </View>
         )}
       </View>
 
       {/* Bottom Action Buttons */}
-      <View style={[styles.bottomContainer, { paddingBottom: insets.bottom }]}>
-        <LessonCard onPress={handleLessonPress} />
+      <View
+        style={[
+          {
+            paddingBottom: insets.bottom,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#F6C90E',
+            paddingHorizontal: 16,
+            gap: 8,
+            height: insets.bottom + 240,
+            overflow: 'visible',
+          },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={{ flexDirection: 'row', gap: 2, alignItems: 'center' }}
+        >
+          <Text variant='heading'>
+            {
+              LANGUAGES.find((lang) => lang.code === lesson.course.language)
+                ?.flag
+            }
+          </Text>
+          <Text
+            variant='title'
+            style={{ fontSize: 22, color: '#000', fontWeight: '800' }}
+          >
+            {lesson.course.title}
+          </Text>
+        </TouchableOpacity>
 
-        <View style={styles.buttonRow}>
-          <Button3D label='STUDY' variant='yellow' onPress={handleStudyPress} />
-          <View style={{ width: 16 }} />
-          <Button3D label='PLAY' variant='green' onPress={handlePlayPress} />
-        </View>
+        <LessonCard lesson={lesson} />
+
+        <OrcaButton label='PLAY' variant='green' onPress={handlePlayPress} />
       </View>
     </Background>
   );
@@ -672,7 +540,6 @@ const styles = StyleSheet.create({
   timeEmoji: {
     fontSize: 18,
   },
-
   timeLabel: {
     color: '#000',
     fontSize: 10,
@@ -681,98 +548,5 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-  },
-  buttonFace: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 92,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2,
-    borderWidth: 4,
-    borderColor: 'rgba(0,0,0,0.1)',
-  },
-  buttonShadow: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 92,
-    borderRadius: 24,
-    zIndex: 1,
-  },
-  bottomContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#FFE17B',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    gap: 8,
-    height: 300,
-    overflow: 'visible',
-  },
-  lessonCard: {
-    height: 150,
-    position: 'relative',
-  },
-  lessonShadow: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: LESSON_SHADOW_HEIGHT,
-    height: 140,
-    borderRadius: 20,
-    backgroundColor: '#2A2A2A',
-    zIndex: 1,
-  },
-  lessonFace: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 140,
-    backgroundColor: '#000',
-    borderRadius: 20,
-    padding: 16,
-    zIndex: 2,
-    borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  lessonContent: {
-    flex: 1,
-    flexDirection: 'row',
-    gap: 16,
-  },
-  lessonNumberContainer: {
-    backgroundColor: '#FAD40B',
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    alignSelf: 'stretch',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minWidth: 80,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  lessonNumber: {
-    color: '#000',
-    fontSize: 48,
-    fontWeight: '900',
-    letterSpacing: 2,
-  },
-
-  lessonTitle: {
-    flex: 1,
-    color: '#FFF',
-    fontSize: 26,
-    fontWeight: '900',
-    letterSpacing: 0.5,
   },
 });

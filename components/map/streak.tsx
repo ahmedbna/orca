@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -13,18 +13,12 @@ import { Text } from '../ui/text';
 import { ChevronRight } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
 const TOTAL_DAYS = 7;
 const SHADOW_HEIGHT = 6;
-
-// const STREAK_GRADIENT = [
-//   '#FFD000',
-//   '#FFA200',
-//   '#FF7A18',
-//   '#FF4D4D',
-//   '#FF2D87',
-//   '#B44CFF',
-//   '#6C4CFF',
-// ] as const;
+const HORIZONTAL_PADDING = 16; // Padding inside the card
+const DAYS_GAP = 4; // Gap between day items
 
 const STREAK_GRADIENT = [
   '#6C4CFF',
@@ -36,21 +30,17 @@ const STREAK_GRADIENT = [
   '#FFD000',
 ] as const;
 
+// Calculate day width based on screen width and spacing
+const CONTAINER_PADDING = 32; // Padding from parent (adjust to match your layout)
+const AVAILABLE_WIDTH =
+  SCREEN_WIDTH - CONTAINER_PADDING * 2 - HORIZONTAL_PADDING * 2;
+const TOTAL_GAP_WIDTH = DAYS_GAP * (TOTAL_DAYS - 1);
+const DAY_WIDTH = (AVAILABLE_WIDTH - TOTAL_GAP_WIDTH) / TOTAL_DAYS;
+
 export const Streak = () => {
   const [streak, setStreak] = useState(5);
   const pressed = useSharedValue(0);
   const pulse = useSharedValue(1);
-
-  useEffect(() => {
-    pulse.value = withRepeat(
-      withSequence(
-        withTiming(1.01, { duration: 2000 }),
-        withTiming(1, { duration: 2000 })
-      ),
-      -1,
-      true
-    );
-  }, []);
 
   const animatedFaceStyle = useAnimatedStyle(() => {
     const translateY = interpolate(pressed.value, [0, 1], [0, SHADOW_HEIGHT]);
@@ -68,7 +58,7 @@ export const Streak = () => {
   };
 
   return (
-    <Animated.View style={styles.container}>
+    <Pressable style={styles.wrapper}>
       {/* Shadow */}
       <View style={styles.shadow} />
 
@@ -80,16 +70,9 @@ export const Streak = () => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <View>
-              <Text style={styles.title}>{streak} Day Streak</Text>
-              {/* <Text style={styles.subtitle}>
-                Learn every day to keep it alive
-              </Text> */}
-            </View>
-          </View>
+          <Text style={styles.title}>{streak} Day Streak</Text>
 
-          <ChevronRight size={32} color='#aaa' />
+          <ChevronRight size={26} color='#aaa' />
         </View>
 
         {/* Gradient Streak Days */}
@@ -99,7 +82,7 @@ export const Streak = () => {
           ))}
         </View>
       </Animated.View>
-    </Animated.View>
+    </Pressable>
   );
 };
 
@@ -139,29 +122,23 @@ function StreakDay({ index, active }: StreakDayProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: 118,
-    position: 'relative',
+  wrapper: {
+    paddingBottom: SHADOW_HEIGHT, // Space for shadow
   },
   shadow: {
     position: 'absolute',
     left: 0,
     right: 0,
     top: SHADOW_HEIGHT,
-    height: 110,
-    borderRadius: 20,
+    bottom: 0,
+    borderRadius: 24,
     backgroundColor: '#2A2A2A',
     zIndex: 1,
   },
   face: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 110,
     backgroundColor: '#000',
-    borderRadius: 20,
-    padding: 16,
+    borderRadius: 24,
+    padding: HORIZONTAL_PADDING,
     gap: 8,
     zIndex: 2,
     borderWidth: 4,
@@ -181,19 +158,16 @@ const styles = StyleSheet.create({
   title: {
     color: '#FFF',
     fontSize: 20,
-    fontWeight: '900',
-  },
-  subtitle: {
-    color: '#aaa',
-    fontSize: 14,
+    fontWeight: '800',
   },
   daysContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: DAYS_GAP,
   },
   dayContainer: {
-    width: 42,
-    height: 42,
+    width: DAY_WIDTH,
+    height: 32,
     borderRadius: 999,
     overflow: 'hidden',
     backgroundColor: '#444',
@@ -219,5 +193,3 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
-export default Streak;

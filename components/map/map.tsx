@@ -19,121 +19,12 @@ import { SquishyButton } from '@/components/map/squishy-button';
 import { Background } from '@/components/background';
 import { Doc, Id } from '@/convex/_generated/dataModel';
 import { LANGUAGES } from '@/constants/languages';
-import { ChevronDown } from 'lucide-react-native';
+import { OrcaButton } from '../orca-button';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-// --- THEME CONSTANTS ---
-const COLORS = {
-  background: '#FAD40B', // Orca Yellow
-  locked: {
-    face: '#E5E7EB',
-    shadow: '#AFB2B7',
-    text: '#AFB2B7',
-  },
-  active: {
-    face: '#FFFFFF', // White face for active to make icon pop
-    shadow: '#D1D5DB',
-  },
-  completed: {
-    face: '#34C759', // Duolingo Green
-    shadow: '#46A302',
-    text: '#FFFFFF',
-  },
-  path: 'rgba(255, 255, 255, 0.4)',
-};
-
 const VERTICAL_SPACING = 96;
 const AMPLITUDE = SCREEN_WIDTH * 0.32;
-const BUTTON_SHADOW_HEIGHT = 8;
-
-// 3D Button Component
-const StartButton = ({
-  onPress,
-  label,
-  variant = 'yellow',
-}: {
-  onPress: () => void;
-  label: string;
-  variant?: 'yellow' | 'green';
-}) => {
-  const pressed = useSharedValue(0);
-  const pulse = useSharedValue(1);
-
-  useEffect(() => {
-    pulse.value = withRepeat(
-      withSequence(
-        withTiming(1.02, { duration: 1500 }),
-        withTiming(1, { duration: 1500 })
-      ),
-      -1,
-      true
-    );
-  }, []);
-
-  const colors =
-    variant === 'yellow'
-      ? { face: COLORS.background, shadow: '#E5C000' }
-      : COLORS.completed;
-
-  const animatedFaceStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      pressed.value,
-      [0, 1],
-      [0, BUTTON_SHADOW_HEIGHT]
-    );
-    return {
-      transform: [{ translateY }, { scale: pulse.value }],
-    };
-  });
-
-  const handlePressIn = () => {
-    pressed.value = withSpring(1, { damping: 15 });
-  };
-
-  const handlePressOut = () => {
-    pressed.value = withSpring(0, { damping: 15 });
-    onPress();
-  };
-
-  return (
-    <Animated.View style={{ height: 100 }}>
-      {/* Shadow */}
-      <View
-        style={[
-          styles.button3DShadow,
-          {
-            backgroundColor: colors.shadow,
-            top: BUTTON_SHADOW_HEIGHT,
-          },
-        ]}
-      />
-      {/* Face */}
-      <Animated.View
-        onTouchStart={handlePressIn}
-        onTouchEnd={handlePressOut}
-        style={[
-          styles.button3DFace,
-          {
-            backgroundColor: colors.face,
-          },
-          animatedFaceStyle,
-        ]}
-      >
-        <Text
-          variant='title'
-          style={{
-            color: variant === 'yellow' ? '#000' : '#FFF',
-            fontSize: 18,
-            fontWeight: '900',
-          }}
-        >
-          {label}
-        </Text>
-      </Animated.View>
-    </Animated.View>
-  );
-};
 
 type Props = {
   course: Doc<'courses'> & {
@@ -201,7 +92,9 @@ export const Map = ({ course }: Props) => {
     <Background>
       <Animated.ScrollView
         ref={scrollViewRef}
-        style={styles.scrollView}
+        style={{
+          flex: 1,
+        }}
         contentContainerStyle={{ height: totalHeight }}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
@@ -219,7 +112,22 @@ export const Map = ({ course }: Props) => {
         ))}
       </Animated.ScrollView>
 
-      <View style={[styles.bottomContainer, { paddingBottom: insets.bottom }]}>
+      <View
+        style={[
+          {
+            paddingBottom: insets.bottom,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#F6C90E',
+            paddingHorizontal: 16,
+            gap: 12,
+            height: insets.bottom + 240,
+            overflow: 'visible',
+          },
+        ]}
+      >
         <TouchableOpacity
           onPress={() => router.push('/courses')}
           style={{ flexDirection: 'row', gap: 2, alignItems: 'center' }}
@@ -227,16 +135,17 @@ export const Map = ({ course }: Props) => {
           <Text variant='heading'>
             {LANGUAGES.find((lang) => lang.code === course.language)?.flag}
           </Text>
-          <Text variant='title' style={{ color: '#000', fontWeight: '800' }}>
+          <Text
+            variant='title'
+            style={{ fontSize: 22, color: '#000', fontWeight: '800' }}
+          >
             {course.title}
           </Text>
-
-          {/* <ChevronDown size={26} color='#000' /> */}
         </TouchableOpacity>
 
         <Streak />
 
-        <StartButton
+        <OrcaButton
           label='START'
           variant='green'
           onPress={() =>
@@ -249,46 +158,3 @@ export const Map = ({ course }: Props) => {
     </Background>
   );
 };
-
-const styles = StyleSheet.create({
-  oceanContainer: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  button3DFace: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 92,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2,
-    borderWidth: 4,
-    borderColor: 'rgba(0,0,0,0.1)',
-  },
-  button3DShadow: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 92,
-    borderRadius: 24,
-    zIndex: 1,
-  },
-  bottomContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#FFE17B',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    gap: 12,
-    height: 300,
-    overflow: 'visible',
-  },
-});
