@@ -4,6 +4,8 @@ import Animated, {
   useAnimatedStyle,
   interpolate,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
+import { Platform } from 'react-native';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 
@@ -24,23 +26,31 @@ const COLORS = {
     face: '#000000',
     shadow: '#2A2A2A',
     text: '#FFFFFF',
-    border: 'rgba(255, 255, 255, 0.1)',
+    border: 'rgba(255,255,255,0.1)',
   },
   gray: {
     face: '#E5E7EB',
     shadow: '#AFB2B7',
-    text: '#AFB2B7',
+    text: '#6B7280',
     border: 'rgba(0,0,0,0.1)',
   },
   green: {
     face: '#34C759',
-    shadow: '#46A302',
+    shadow: '#2E9E4E',
     text: '#FFFFFF',
     border: 'rgba(0,0,0,0.1)',
   },
-};
+  red: {
+    face: '#FF3B30',
+    shadow: '#C1271D',
+    text: '#FFFFFF',
+    border: 'rgba(0,0,0,0.15)',
+  },
+} as const;
 
 const BUTTON_SHADOW_HEIGHT = 8;
+
+type ButtonVariant = keyof typeof COLORS;
 
 export const OrcaButton = ({
   onPress,
@@ -49,12 +59,12 @@ export const OrcaButton = ({
 }: {
   onPress: () => void;
   label: string;
-  variant?: 'yellow' | 'green';
+  variant?: ButtonVariant;
 }) => {
   const pulse = useSharedValue(1);
   const pressed = useSharedValue(0);
 
-  const colors = variant === 'yellow' ? COLORS.yellow : COLORS.green;
+  const colors = COLORS[variant];
 
   const animatedFaceStyle = useAnimatedStyle(() => {
     const translateY = interpolate(
@@ -62,36 +72,43 @@ export const OrcaButton = ({
       [0, 1],
       [0, BUTTON_SHADOW_HEIGHT]
     );
+
     return {
       transform: [{ translateY }, { scale: pulse.value }],
     };
   });
 
+  const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(style);
+    }
+  };
+
   const handlePressIn = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
     pressed.value = withSpring(1, { damping: 15 });
   };
 
   const handlePressOut = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
     pressed.value = withSpring(0, { damping: 15 });
     onPress();
   };
 
   return (
-    <Animated.View>
+    <Animated.View style={{ height: 64 }}>
       {/* Shadow */}
       <View
-        style={[
-          {
-            backgroundColor: colors.shadow,
-            top: BUTTON_SHADOW_HEIGHT,
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            height: 64,
-            borderRadius: 999,
-            zIndex: 1,
-          },
-        ]}
+        style={{
+          backgroundColor: colors.shadow,
+          position: 'absolute',
+          top: BUTTON_SHADOW_HEIGHT,
+          left: 0,
+          right: 0,
+          height: 64,
+          borderRadius: 999,
+          zIndex: 1,
+        }}
       />
 
       {/* Face */}
@@ -102,9 +119,9 @@ export const OrcaButton = ({
           {
             backgroundColor: colors.face,
             position: 'absolute',
+            top: 0,
             left: 0,
             right: 0,
-            top: 0,
             height: 64,
             borderRadius: 999,
             justifyContent: 'center',
@@ -120,7 +137,7 @@ export const OrcaButton = ({
           style={{
             color: colors.text,
             fontSize: 22,
-            fontWeight: 800,
+            fontWeight: '800',
           }}
         >
           {label}

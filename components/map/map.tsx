@@ -20,6 +20,7 @@ import { Background } from '@/components/background';
 import { Doc, Id } from '@/convex/_generated/dataModel';
 import { LANGUAGES } from '@/constants/languages';
 import { OrcaButton } from '../orca-button';
+import { Music } from '../orca/music';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
