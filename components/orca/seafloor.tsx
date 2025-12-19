@@ -207,7 +207,7 @@ export const Seafloor = ({
         right: 0,
         height,
         overflow: 'hidden',
-        zIndex: 20,
+        zIndex: 99,
       }}
     >
       <Animated.View

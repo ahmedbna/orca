@@ -13,7 +13,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 
-export const Background = ({ children }: { children: React.ReactNode }) => {
+export const Background = ({
+  swim,
+  children,
+}: {
+  swim?: boolean;
+  children: React.ReactNode;
+}) => {
   const yellow = useColor('orca');
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -90,7 +96,7 @@ export const Background = ({ children }: { children: React.ReactNode }) => {
       <Bubbles />
       <Shark />
       <Jellyfish />
-      <Seafloor speed={0} bottom={insets.bottom + 240} />
+      <Seafloor speed={swim ? 5000 : 0} bottom={insets.bottom + 240} />
       {children}
     </View>
   );

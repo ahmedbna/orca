@@ -1,11 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import {
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  Vibration,
-  TextInput,
-} from 'react-native';
+import { Dimensions, StyleSheet, Vibration, TextInput } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -23,19 +17,13 @@ import {
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Progress } from '@/components/orca/progress';
-import { Clouds } from '@/components/orca/clouds';
-import { Seafloor } from '@/components/orca/seafloor';
-import { Seaweed } from '@/components/orca/seaweed';
-import { Jellyfish } from '@/components/orca/jellyfish';
 import { LANGUAGES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
-import { Shark } from './shark';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Bubbles } from './bubbles';
 import { Doc } from '@/convex/_generated/dataModel';
 import { Background } from '../background';
+import { OrcaButton } from '../orca-button';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -48,9 +36,11 @@ const OBSTACLE_SIZE = 60;
 const ORCA_X = 0;
 const ORCA_Y = SCREEN_HEIGHT / 2 - (ORCA_SIZE * 0.6) / 2;
 const ORCA_COLOR = '#FAD40B';
-const OBSTACLE_TYPES = ['🪸', '🦑', '🦈', '⚓', '🪼', '🐡'];
+const OBSTACLE_TYPES = ['🦑', '🪼', '🐡', '🐙', '🦐'];
 const ROUND_SECONDS = 5;
 const LIVES = 3;
+const SHADOW_HEIGHT = 6;
+const HORIZONTAL_PADDING = 16;
 
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
 
@@ -622,85 +612,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
   });
 
   return (
-    <Background>
+    <Background swim={gameState === 'playing' ? true : false}>
       <View style={styles.uiOverlay}>
-        <View
-          style={[
-            {
-              paddingBottom: insets.bottom,
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: '#000',
-              // backgroundColor: '#F6C90E',
-              paddingHorizontal: 16,
-              paddingTop: 16,
-              gap: 8,
-              height: insets.bottom + 200,
-              overflow: 'visible',
-            },
-          ]}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <Text style={styles.transcriptLabel}>
-                {`${NATIVE_LANGUAGE?.flag || ''} 🗣️ ${LEARNING_LANGUAGE?.flag || ''}`}
-              </Text>
-            </View>
-
-            <View style={{ flex: 1, alignItems: 'center' }}>
-              <Text style={styles.scoreLabel}>TIME</Text>
-              <View style={styles.timerContainer}>
-                <AnimatedTextInput
-                  underlineColorAndroid='transparent'
-                  editable={false}
-                  value='00:00'
-                  animatedProps={animatedTimerProps}
-                  style={styles.scoreValue}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                flexDirection: 'row',
-                gap: 4,
-              }}
-            >
-              <Text style={{ fontSize: 22 }}>❤️</Text>
-              <Text variant='heading' style={{ fontSize: 24, color: '#FFF' }}>
-                {lives}
-              </Text>
-            </View>
-          </View>
-
-          <View style={{ gap: 16 }}>
-            <View style={styles.transcriptHeader}>
-              <Text style={styles.transcriptLabel}>
-                {isRecognizing ? '🎤 Listening' : '⏳ Initializing...'}
-              </Text>
-            </View>
-
-            <Progress
-              total={TOTAL_OBSTACLES}
-              correctSegments={correctSegmentIndices}
-              failedSegments={failedSegmentIndices}
-              height={16}
-            />
-          </View>
-        </View>
-
-        {currentObstacleIndex !== null && gameState === 'playing' && (
+        {currentObstacleIndex !== null && gameState === 'playing' ? (
           <View
             style={{
               paddingHorizontal: 26,
@@ -729,7 +643,37 @@ export const Orca = ({ lesson, native, language }: Props) => {
               {interimText || `Say it in ${LEARNING_LANGUAGE?.name}...`}
             </Text>
           </View>
-        )}
+        ) : gameState === 'won' ? (
+          <View style={styles.overlay}>
+            <Text style={styles.finalScore}>
+              Correct: {correctPhrases}/{TOTAL_OBSTACLES}
+            </Text>
+            <Text style={styles.winText}>{'🎉 YOU WON! 🎉'}</Text>
+            <Text
+              style={styles.finalTime}
+            >{`⏱️ ${formatTimeJS(finalTime)}`}</Text>
+          </View>
+        ) : gameState === 'lost' ? (
+          <View style={styles.overlay}>
+            <Text style={styles.finalScore}>
+              Correct: {correctPhrases} / {TOTAL_OBSTACLES}
+            </Text>
+            <Text style={styles.loseText}>{'💔 GAME OVER 💔'}</Text>
+            <Text style={styles.subText}>{`Study more and try again`}</Text>
+          </View>
+        ) : gameState === 'idle' ? (
+          <View style={styles.overlay}>
+            <Image
+              source={require('../../assets/images/icon.png')}
+              style={{ width: 110, height: 66 }}
+              contentFit='cover'
+            />
+            <Text style={styles.titleText}>{lesson.title}</Text>
+            <Text style={styles.subText}>
+              {`Pronounce all phrases correctly in ${LEARNING_LANGUAGE?.name} ${LEARNING_LANGUAGE?.flag}`}
+            </Text>
+          </View>
+        ) : null}
 
         <Animated.View
           style={[
@@ -739,7 +683,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
               zIndex: 10,
               justifyContent: 'center',
               alignItems: 'center',
-              bottom: ORCA_SIZE * 0.5 + 220,
+              bottom: ORCA_SIZE * 0.5 + 260,
             },
             orcaContainerStyle,
           ]}
@@ -755,7 +699,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
           style={[
             styles.obstacle,
             obstacleStyle,
-            { bottom: ORCA_SIZE * 0.5 + 230 },
+            { bottom: ORCA_SIZE * 0.5 + 270 },
           ]}
         >
           {currentObstacleEmoji ? (
@@ -763,34 +707,100 @@ export const Orca = ({ lesson, native, language }: Props) => {
           ) : null}
         </Animated.View>
 
-        {gameState === 'idle' ? (
-          <View style={styles.overlay}>
-            <Text style={styles.titleText}>🐋 Orca Swim 🐋</Text>
-            <Pressable style={styles.startButton} onPress={startGame}>
-              <Text style={styles.startButtonText}>TAP TO START</Text>
-            </Pressable>
-            <Text style={styles.subText}>
-              Pronounce each phrase correctly{'\n'}to clear obstacles and win!
-            </Text>
+        <View
+          style={[
+            {
+              paddingBottom: insets.bottom,
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: '#F6C90E',
+              paddingHorizontal: 16,
+              gap: 8,
+              height: insets.bottom + 240,
+              overflow: 'visible',
+              zIndex: 99,
+            },
+          ]}
+        >
+          <View style={styles.wrapper}>
+            {/* Shadow */}
+            <View style={styles.shadow} />
+
+            {/* Face */}
+            <View style={styles.face}>
+              {/* Top Row */}
+              <View style={styles.topRow}>
+                {/* Languages */}
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.transcriptLabel}>
+                    {`${NATIVE_LANGUAGE?.flag || ''} 🗣️ ${LEARNING_LANGUAGE?.flag || ''}`}
+                  </Text>
+                </View>
+
+                {/* Timer */}
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                  <Text style={styles.scoreLabel}>TIME</Text>
+                  <View style={styles.timerContainer}>
+                    <AnimatedTextInput
+                      underlineColorAndroid='transparent'
+                      editable={false}
+                      value='00:00'
+                      animatedProps={animatedTimerProps}
+                      style={styles.scoreValue}
+                    />
+                  </View>
+                </View>
+
+                {/* Lives */}
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    flexDirection: 'row',
+                    gap: 4,
+                  }}
+                >
+                  <Text style={{ fontSize: 22 }}>❤️</Text>
+                  <Text
+                    variant='heading'
+                    style={{ fontSize: 24, color: '#FFF' }}
+                  >
+                    {lives}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Bottom Section */}
+              <View style={{ gap: 16 }}>
+                <View style={styles.transcriptHeader}>
+                  <Text style={styles.transcriptLabel}>
+                    {isRecognizing ? '🎤 Listening' : '⏳ Ready...'}
+                  </Text>
+                </View>
+
+                <Progress
+                  total={TOTAL_OBSTACLES}
+                  correctSegments={correctSegmentIndices}
+                  failedSegments={failedSegmentIndices}
+                  height={16}
+                />
+              </View>
+            </View>
           </View>
-        ) : gameState === 'won' || gameState === 'lost' ? (
-          <View style={styles.overlay}>
-            <Text
-              style={gameState === 'won' ? styles.winText : styles.loseText}
-            >
-              {gameState === 'won' ? '🎉 YOU WON! 🎉' : '💔 GAME OVER 💔'}
-            </Text>
-            <Text style={styles.finalTime}>⏱️ {formatTimeJS(finalTime)}</Text>
-            <Text style={styles.finalScore}>
-              Correct: {correctPhrases}/{TOTAL_OBSTACLES}
-            </Text>
-            <Pressable style={styles.startButton} onPress={startGame}>
-              <Text style={styles.startButtonText}>
-                {gameState === 'won' ? 'PLAY AGAIN' : 'TRY AGAIN'}
-              </Text>
-            </Pressable>
-          </View>
-        ) : null}
+
+          {gameState === 'idle' ? (
+            <OrcaButton
+              label='TAP TO START'
+              variant='green'
+              onPress={startGame}
+            />
+          ) : gameState === 'lost' ? (
+            <OrcaButton label='TRY AGAIN' variant='green' onPress={startGame} />
+          ) : null}
+        </View>
       </View>
     </Background>
   );
@@ -850,12 +860,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     zIndex: 50,
+    paddingBottom: 260,
   },
   titleText: {
     color: ORCA_COLOR,
     fontSize: 34,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   startButton: {
     backgroundColor: ORCA_COLOR,
@@ -865,18 +876,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   startButtonText: { color: '#000', fontSize: 18, fontWeight: 'bold' },
-  subText: { color: '#aaa', fontSize: 13, textAlign: 'center', lineHeight: 20 },
+  subText: { color: '#aaa', fontSize: 16, textAlign: 'center', lineHeight: 20 },
   winText: {
     color: '#4ade80',
     fontSize: 34,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   loseText: {
     color: '#ef4444',
     fontSize: 34,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   finalTime: {
     color: ORCA_COLOR,
@@ -884,5 +895,34 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 12,
   },
-  finalScore: { color: '#fff', fontSize: 22, marginBottom: 8 },
+  finalScore: { color: '#fff', fontSize: 24, fontWeight: 700, marginBottom: 8 },
+
+  wrapper: {
+    paddingBottom: SHADOW_HEIGHT,
+  },
+
+  shadow: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: SHADOW_HEIGHT,
+    bottom: 0,
+    borderRadius: 24,
+    backgroundColor: '#2A2A2A',
+  },
+
+  face: {
+    backgroundColor: '#000',
+    borderRadius: 24,
+    padding: HORIZONTAL_PADDING,
+    gap: 20,
+    borderWidth: 4,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
 });

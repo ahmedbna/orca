@@ -58,8 +58,9 @@ export const LessonCard = ({ lesson }: Props) => {
               color: '#000',
               backgroundColor: '#FAD40B',
               borderRadius: 999,
-              padding: 4,
+              padding: 6,
               fontWeight: 800,
+              fontSize: 14,
             }}
           >
             {lesson.order < 10 ? `0${lesson.order}` : lesson.order}
