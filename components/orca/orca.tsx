@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Dimensions, StyleSheet, Vibration, TextInput } from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Vibration,
+  TextInput,
+  Pressable,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -24,6 +30,7 @@ import { Image } from 'expo-image';
 import { Doc } from '@/convex/_generated/dataModel';
 import { Background } from '../background';
 import { OrcaButton } from '../orca-button';
+import { useRouter } from 'expo-router';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -190,6 +197,7 @@ type Props = {
 };
 
 export const Orca = ({ lesson, native, language }: Props) => {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const green = useColor('green');
 
@@ -652,6 +660,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
             <Text
               style={styles.finalTime}
             >{`⏱️ ${formatTimeJS(finalTime)}`}</Text>
+            <Pressable style={styles.startButton} onPress={() => router.back()}>
+              <Text style={styles.startButtonText}>LEADERBOARD</Text>
+            </Pressable>
           </View>
         ) : gameState === 'lost' ? (
           <View style={styles.overlay}>
@@ -659,21 +670,23 @@ export const Orca = ({ lesson, native, language }: Props) => {
               Correct: {correctPhrases} / {TOTAL_OBSTACLES}
             </Text>
             <Text style={styles.loseText}>{'💔 GAME OVER 💔'}</Text>
-            <Text style={styles.subText}>{`Study more and try again`}</Text>
+            <Pressable style={styles.startButton} onPress={() => router.back()}>
+              <Text style={styles.startButtonText}>STUDY MORE</Text>
+            </Pressable>
           </View>
-        ) : gameState === 'idle' ? (
+        ) : (
           <View style={styles.overlay}>
             <Image
-              source={require('../../assets/images/icon.png')}
+              source={require('@/assets/images/icon.png')}
               style={{ width: 110, height: 66 }}
               contentFit='cover'
             />
             <Text style={styles.titleText}>{lesson.title}</Text>
             <Text style={styles.subText}>
-              {`Pronounce all phrases correctly in ${LEARNING_LANGUAGE?.name} ${LEARNING_LANGUAGE?.flag}`}
+              {`Pronounce all phrases correctly in ${LEARNING_LANGUAGE?.native} ${LEARNING_LANGUAGE?.flag}`}
             </Text>
           </View>
-        ) : null}
+        )}
 
         <Animated.View
           style={[
@@ -689,7 +702,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
           ]}
         >
           <Image
-            source={require('../../assets/videos/fish.webp')}
+            source={require('@/assets/videos/fish.webp')}
             style={{ width: ORCA_SIZE, height: ORCA_SIZE * 0.6 }}
             contentFit='cover'
           />
@@ -792,14 +805,18 @@ export const Orca = ({ lesson, native, language }: Props) => {
           </View>
 
           {gameState === 'idle' ? (
-            <OrcaButton
-              label='TAP TO START'
-              variant='green'
-              onPress={startGame}
-            />
+            <OrcaButton label='START' variant='green' onPress={startGame} />
           ) : gameState === 'lost' ? (
             <OrcaButton label='TRY AGAIN' variant='green' onPress={startGame} />
-          ) : null}
+          ) : gameState === 'won' ? (
+            <OrcaButton label='TRY AGAIN' variant='green' onPress={startGame} />
+          ) : (
+            <OrcaButton
+              label='STOP'
+              variant='green'
+              onPress={() => endGame(false)}
+            />
+          )}
         </View>
       </View>
     </Background>
@@ -861,19 +878,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     zIndex: 50,
     paddingBottom: 260,
+    gap: 8,
   },
   titleText: {
     color: ORCA_COLOR,
     fontSize: 34,
     fontWeight: 'bold',
-    marginBottom: 8,
   },
   startButton: {
     backgroundColor: ORCA_COLOR,
     paddingHorizontal: 36,
     paddingVertical: 14,
-    borderRadius: 24,
-    marginBottom: 20,
+    borderRadius: 999,
+    marginTop: 8,
   },
   startButtonText: { color: '#000', fontSize: 18, fontWeight: 'bold' },
   subText: { color: '#aaa', fontSize: 16, textAlign: 'center', lineHeight: 20 },
@@ -881,13 +898,11 @@ const styles = StyleSheet.create({
     color: '#4ade80',
     fontSize: 34,
     fontWeight: 'bold',
-    marginBottom: 8,
   },
   loseText: {
     color: '#ef4444',
     fontSize: 34,
     fontWeight: 'bold',
-    marginBottom: 8,
   },
   finalTime: {
     color: ORCA_COLOR,

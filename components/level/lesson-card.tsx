@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   face: {
-    backgroundColor: '#000',
+    backgroundColor: '#000000',
     borderRadius: 24,
     padding: HORIZONTAL_PADDING,
     gap: 12,

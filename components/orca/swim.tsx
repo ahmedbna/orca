@@ -1,7 +1,7 @@
 import { View } from '@/components/ui/view';
 import { useColor } from '@/hooks/useColor';
 import { useVideoPlayer, VideoView } from 'expo-video';
-const videoSource = require('../assets/videos/swim.mp4');
+const videoSource = require('@/assets/videos/swim.mp4');
 
 export const Loading = () => {
   const orca = useColor('orca');
