@@ -674,7 +674,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
               <Text style={styles.startButtonText}>STUDY MORE</Text>
             </Pressable>
           </View>
-        ) : (
+        ) : gameState === 'idle' ? (
           <View style={styles.overlay}>
             <Image
               source={require('@/assets/images/icon.png')}
@@ -686,7 +686,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
               {`Pronounce all phrases correctly in ${LEARNING_LANGUAGE?.native} ${LEARNING_LANGUAGE?.flag}`}
             </Text>
           </View>
-        )}
+        ) : null}
 
         <Animated.View
           style={[
