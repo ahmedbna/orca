@@ -656,7 +656,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
             <Text style={styles.finalScore}>
               Correct: {correctPhrases}/{TOTAL_OBSTACLES}
             </Text>
-            <Text style={styles.winText}>{'🎉 YOU WON! 🎉'}</Text>
+            <Text style={styles.winText}>
+              {correctPhrases === TOTAL_OBSTACLES
+                ? '🎉 YOU WON! 🎉'
+                : '🎉 YOU PASSED! 🎉'}
+            </Text>
             <Text
               style={styles.finalTime}
             >{`⏱️ ${formatTimeJS(finalTime)}`}</Text>
