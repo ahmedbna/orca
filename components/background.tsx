@@ -97,6 +97,23 @@ export const Background = ({
       <Shark />
       <Jellyfish />
       <Seafloor speed={swim ? 5000 : 0} bottom={insets.bottom + 240} />
+
+      <View
+        style={[
+          {
+            paddingBottom: insets.bottom,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#F6C90E',
+            paddingHorizontal: 16,
+            gap: 8,
+            height: insets.bottom + 240,
+            overflow: 'visible',
+          },
+        ]}
+      />
       {children}
     </View>
   );

@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import {
   Dimensions,
   StyleSheet,
@@ -26,11 +28,9 @@ import { Progress } from '@/components/orca/progress';
 import { LANGUAGES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Image } from 'expo-image';
 import { Doc } from '@/convex/_generated/dataModel';
-import { Background } from '../background';
-import { OrcaButton } from '../orca-button';
-import { useRouter } from 'expo-router';
+import { OrcaButton } from '@/components/orca-button';
+import { ChevronLeft } from 'lucide-react-native';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -620,7 +620,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   });
 
   return (
-    <Background swim={gameState === 'playing' ? true : false}>
+    <View style={{ flex: 1 }}>
       <View style={styles.uiOverlay}>
         {currentObstacleIndex !== null && gameState === 'playing' ? (
           <View
@@ -658,14 +658,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
             </Text>
             <Text style={styles.winText}>
               {correctPhrases === TOTAL_OBSTACLES
-                ? '🎉 YOU WON! 🎉'
+                ? '🏆 YOU WON! 🏆'
                 : '🎉 YOU PASSED! 🎉'}
             </Text>
             <Text
               style={styles.finalTime}
             >{`⏱️ ${formatTimeJS(finalTime)}`}</Text>
             <Pressable style={styles.startButton} onPress={() => router.back()}>
-              <Text style={styles.startButtonText}>LEADERBOARD</Text>
+              <Text style={styles.startButtonText}>🏆 LEADERBOARD</Text>
             </Pressable>
           </View>
         ) : gameState === 'lost' ? (
@@ -674,8 +674,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
               Correct: {correctPhrases} / {TOTAL_OBSTACLES}
             </Text>
             <Text style={styles.loseText}>{'💔 GAME OVER 💔'}</Text>
-            <Pressable style={styles.startButton} onPress={() => router.back()}>
-              <Text style={styles.startButtonText}>STUDY MORE</Text>
+            <Pressable
+              onPress={() => router.back()}
+              style={[styles.startButton]}
+            >
+              <Text style={styles.startButtonText}>📚 STUDY MORE</Text>
             </Pressable>
           </View>
         ) : gameState === 'idle' ? (
@@ -817,13 +820,13 @@ export const Orca = ({ lesson, native, language }: Props) => {
           ) : (
             <OrcaButton
               label='STOP'
-              variant='green'
+              variant='red'
               onPress={() => endGame(false)}
             />
           )}
         </View>
       </View>
-    </Background>
+    </View>
   );
 };
 

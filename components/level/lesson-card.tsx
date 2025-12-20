@@ -39,7 +39,7 @@ export const LessonCard = ({ lesson }: Props) => {
 
   return (
     <Pressable
-      onPress={() => router.push(`/study/${lesson._id}`)}
+      onPress={() => router.push(`/(home)/study/${lesson._id}`)}
       style={styles.wrapper}
     >
       {/* Shadow */}

@@ -32,7 +32,6 @@ export const Learn = ({ lesson, native, language }: Props) => {
         flex: 1,
         padding: 16,
         justifyContent: 'center',
-        backgroundColor: yellow,
       }}
     >
       <View>

@@ -1,4 +1,4 @@
-import { Level } from '@/components/level/level';
+import { Learn } from '@/components/learn';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 import { useQuery } from 'convex/react';
@@ -8,7 +8,7 @@ import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
 import { Colors } from '@/theme/colors';
 
-export default function LevelScreen() {
+export default function StudyScreen() {
   const { id } = useLocalSearchParams<{ id: Id<'lessons'> }>();
   const lesson = useQuery(api.lessons.get, { lessonId: id });
 
@@ -19,7 +19,6 @@ export default function LevelScreen() {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: Colors.dark.orca,
         }}
       >
         <Spinner size='lg' variant='circle' color='#000000' />
@@ -38,7 +37,6 @@ export default function LevelScreen() {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: Colors.dark.orca,
         }}
       >
         <Text>Lesson Not Found</Text>
@@ -46,5 +44,11 @@ export default function LevelScreen() {
     );
   }
 
-  return <Level lesson={lesson} />;
+  return (
+    <Learn
+      lesson={lesson}
+      native={lesson.user.nativeLanguage}
+      language={lesson.user.learningLanguage}
+    />
+  );
 }

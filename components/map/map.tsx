@@ -16,7 +16,6 @@ import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Streak } from '@/components/map/streak';
 import { SquishyButton } from '@/components/map/squishy-button';
-import { Background } from '@/components/background';
 import { Doc, Id } from '@/convex/_generated/dataModel';
 import { LANGUAGES } from '@/constants/languages';
 import { OrcaButton } from '../orca-button';
@@ -59,7 +58,7 @@ export const Map = ({ course }: Props) => {
   }, [course.lessons, totalHeight]);
 
   const handleLevelPress = (lessonId: Id<'lessons'>) => {
-    router.push(`/level/${lessonId}`);
+    router.push(`/(home)/level/${lessonId}`);
   };
 
   const currentLesson = useMemo(() => {
@@ -90,7 +89,7 @@ export const Map = ({ course }: Props) => {
   }, [levelCoords]);
 
   return (
-    <Background>
+    <View style={{ flex: 1 }}>
       <Animated.ScrollView
         ref={scrollViewRef}
         style={{
@@ -150,12 +149,12 @@ export const Map = ({ course }: Props) => {
           label='START'
           variant='green'
           onPress={() =>
-            currentLesson && router.push(`/level/${currentLesson._id}`)
+            currentLesson && router.push(`/(home)/level/${currentLesson._id}`)
           }
         />
       </View>
 
       {/* <Music /> */}
-    </Background>
+    </View>
   );
 };

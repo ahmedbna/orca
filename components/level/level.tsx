@@ -1,20 +1,7 @@
-import React, { useEffect } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Animated, {
-  useSharedValue,
-  withSpring,
-  useAnimatedStyle,
-  interpolate,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
-import { useColor } from '@/hooks/useColor';
-import { Background } from '@/components/background';
 import { useRouter } from 'expo-router';
 import { Doc } from '@/convex/_generated/dataModel';
 import { LANGUAGES } from '@/constants/languages';
@@ -76,11 +63,11 @@ export const Level = ({ lesson }: Props) => {
   const hasScores = SCORES.length > 0;
 
   const handlePlayPress = () => {
-    router.push(`/orca/${lesson._id}`);
+    router.push(`/(home)/orca/${lesson._id}`);
   };
 
   return (
-    <Background>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           flex: 1,
@@ -169,7 +156,7 @@ export const Level = ({ lesson }: Props) => {
 
         <OrcaButton label='PLAY' variant='green' onPress={handlePlayPress} />
       </View>
-    </Background>
+    </View>
   );
 };
 
