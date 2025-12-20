@@ -1,5 +1,5 @@
 import { v } from 'convex/values';
-import { query } from './_generated/server';
+import { query, mutation } from './_generated/server';
 import { getAuthUserId } from '@convex-dev/auth/server';
 
 export const get = query({
@@ -31,7 +31,6 @@ export const get = query({
       throw new Error('No course found for the lesson');
     }
 
-    // Check if lesson is unlocked
     const lessonProgress = await ctx.db
       .query('lessonProgress')
       .withIndex('by_user_lesson', (q) =>
@@ -88,7 +87,6 @@ export const getByCourse = query({
       throw new Error('No lessons found');
     }
 
-    // Sort lessons by order
     const sortedLessons = lessons.sort((a, b) => a.order - b.order);
 
     const currentLessonId = user.currentLesson;
@@ -104,7 +102,6 @@ export const getByCourse = query({
           )
           .first();
 
-        // Determine status
         let status: 'locked' | 'active' | 'completed';
 
         if (lessonProgress?.isCompleted) {

@@ -33,13 +33,13 @@ const RankBadge = ({ rank }: { rank: number }) => {
   const getBgColor = () => {
     switch (rank) {
       case 1:
-        return '#FF6B35';
+        return '#6C63FF';
       case 2:
         return '#4ECDC4';
       case 3:
         return '#FF8C42';
       default:
-        return '#6C63FF';
+        return '#FF6B35';
     }
   };
 
@@ -82,10 +82,6 @@ export const ScoreCard = ({ score }: { score: ScoreData }) => {
     };
   });
 
-  const sparkleStyle = useAnimatedStyle(() => ({
-    opacity: sparkle.value,
-  }));
-
   const handlePressIn = () => {
     pressed.value = withSpring(1, { damping: 15 });
   };
@@ -111,22 +107,6 @@ export const ScoreCard = ({ score }: { score: ScoreData }) => {
 
   return (
     <Animated.View style={styles.scoreContainer}>
-      {/* Sparkle effect for top 3 */}
-      {score.rank && score.rank <= 3 && (
-        <>
-          <Animated.Text
-            style={[styles.sparkle, { left: 10, top: 10 }, sparkleStyle]}
-          >
-            ✨
-          </Animated.Text>
-          <Animated.Text
-            style={[styles.sparkle, { right: 10, top: 10 }, sparkleStyle]}
-          >
-            ✨
-          </Animated.Text>
-        </>
-      )}
-
       {/* Shadow layer */}
       <View
         style={[
@@ -160,34 +140,32 @@ export const ScoreCard = ({ score }: { score: ScoreData }) => {
           <View style={styles.playerSection}>
             <View style={styles.avatarRing}>
               <Avatar size={56}>
-                <AvatarImage source={{ uri: score.image }} />
-                <AvatarFallback>
-                  <Text style={{ fontSize: 24, fontWeight: '900' }}>
-                    {score.name.charAt(0).toUpperCase()}
-                  </Text>
-                </AvatarFallback>
+                {score.image ? (
+                  <AvatarImage source={{ uri: score.image }} />
+                ) : (
+                  <AvatarFallback>
+                    <Text style={{ fontSize: 24, fontWeight: '900' }}>
+                      {score.name.charAt(0).toUpperCase()}
+                    </Text>
+                  </AvatarFallback>
+                )}
               </Avatar>
             </View>
             <View style={styles.playerInfo}>
               <Text variant='title' style={styles.nameText}>
                 {score.name}
               </Text>
-              <View style={styles.statsBadge}>
-                <Text style={styles.statsEmoji}>🎯</Text>
-                <Text style={styles.statsText}>Level Master</Text>
-              </View>
             </View>
           </View>
 
           {/* Time ScoreCard */}
           <View style={styles.timeSection}>
             <View style={styles.timeContainer}>
-              <Text style={styles.timeEmoji}>⚡</Text>
               <Text
                 variant='title'
                 style={{
                   color: yellow,
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: '900',
                 }}
               >
@@ -240,7 +218,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   rankSection: {
-    marginRight: 12,
+    marginRight: 6,
   },
   rankBadge: {
     width: 60,
@@ -263,7 +241,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
   },
   avatarRing: {
     padding: 3,
@@ -306,10 +284,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#000',
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 20,
-    gap: 6,
+    borderRadius: 18,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,

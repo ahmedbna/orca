@@ -30,11 +30,12 @@ import { useColor } from '@/hooks/useColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Doc } from '@/convex/_generated/dataModel';
 import { OrcaButton } from '@/components/orca-button';
-import { ChevronLeft } from 'lucide-react-native';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { formatTime } from '@/lib/format-time';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-// Create an Animated TextInput to display time without re-renders
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const PHRASE_TOP = SCREEN_HEIGHT * 0.3;
@@ -51,7 +52,6 @@ const HORIZONTAL_PADDING = 16;
 
 type GameStatus = 'idle' | 'playing' | 'won' | 'lost';
 
-// Levenshtein distance (Same as before)
 function levenshtein(a: string, b: string) {
   const la = a.length;
   const lb = b.length;
@@ -86,10 +86,6 @@ function normalizeText(s: string) {
     .trim();
 }
 
-/**
- * NEW: Checks if a target phrase exists within a spoken stream using a sliding window.
- * This solves the issue of "surrounding words" (e.g., "Uh yes Guten Morgen please").
- */
 function slidingWindowSimilarity(
   inputStream: string,
   targetPhrase: string
@@ -97,7 +93,6 @@ function slidingWindowSimilarity(
   const normalizedInput = normalizeText(inputStream);
   const normalizedTarget = normalizeText(targetPhrase);
 
-  // 1. Direct containment check (fastest and most accurate for clear speech)
   if (normalizedInput.includes(normalizedTarget)) {
     return 1.0;
   }
@@ -107,17 +102,13 @@ function slidingWindowSimilarity(
 
   if (targetWords.length === 0) return 0;
   if (inputWords.length < targetWords.length) {
-    // If input is shorter than target, just compare them directly
     return similarity(normalizedInput, normalizedTarget);
   }
 
-  // 2. Sliding Window: Scan the input for a chunk of words that looks like the target
-  // We scan windows of length N (target length)
   let maxSim = 0;
   const windowSize = targetWords.length;
 
   for (let i = 0; i <= inputWords.length - windowSize; i++) {
-    // Construct a phrase from the current window
     const windowPhrase = inputWords.slice(i, i + windowSize).join(' ');
     const sim = similarity(windowPhrase, normalizedTarget);
     if (sim > maxSim) maxSim = sim;
@@ -127,9 +118,7 @@ function slidingWindowSimilarity(
 }
 
 function similarity(a: string, b: string) {
-  // Assume a and b are already normalized if calling from slidingWindow,
-  // but safe to normalize again or ensure logic consistency
-  const na = a; // passed in normalized usually
+  const na = a;
   const nb = b;
   if (na.length === 0 && nb.length === 0) return 1;
   const dist = levenshtein(na, nb);
@@ -140,7 +129,6 @@ function similarity(a: string, b: string) {
 
 function baseThresholdFor(phrase: string) {
   const words = normalizeText(phrase).split(' ').filter(Boolean).length;
-  // Shorter words need higher accuracy to avoid false positives
   if (words <= 1) return 0.8;
   if (words <= 2) return 0.75;
   return 0.7;
@@ -159,34 +147,20 @@ function languageTuning(langCode: string | undefined) {
     case 'es':
       return { thresholdOffset: 0.02 };
     case 'ar':
-      return { thresholdOffset: -0.05 }; // Arabic often needs looser matching due to transliteration/vowels
+      return { thresholdOffset: -0.05 };
     default:
       return { thresholdOffset: 0.0 };
   }
 }
 
-// --- UPDATED TIMER FUNCTIONS START ---
-
 const formatTimeWorklet = (ms: number) => {
   'worklet';
-  // Total seconds (no mod 60, so it counts up: 60, 61, 62...)
-  const seconds = Math.floor(ms / 1000);
-  // Get first 2 digits of milliseconds (Centiseconds)
-  const centiseconds = Math.floor((ms % 1000) / 10);
-
-  const s = seconds < 10 ? '0' + seconds : seconds;
-  const c = centiseconds < 10 ? '0' + centiseconds : centiseconds;
-
-  // Returns SS:ms (e.g., 05:23 or 65:90)
-  return `${s}:${c}`;
-};
-
-const formatTimeJS = (ms: number) => {
   const seconds = Math.floor(ms / 1000);
   const centiseconds = Math.floor((ms % 1000) / 10);
 
   const s = seconds < 10 ? '0' + seconds : seconds;
   const c = centiseconds < 10 ? '0' + centiseconds : centiseconds;
+
   return `${s}:${c}`;
 };
 
@@ -200,13 +174,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const green = useColor('green');
+  const completeLessonMutation = useMutation(api.courses.completeLesson);
+  const submitScoreMutation = useMutation(api.scores.submitScore);
 
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const NATIVE_LANGUAGE = LANGUAGES.find((l) => l.code === native);
   const LEARNING_LANGUAGE = LANGUAGES.find((l) => l.code === language);
   const tuning = languageTuning(LEARNING_LANGUAGE?.locale);
 
-  // --- GAME STATE ---
   const [gameState, setGameState] = useState<GameStatus>('idle');
   const [currentObstacleIndex, setCurrentObstacleIndex] = useState<
     number | null
@@ -218,7 +193,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const [lives, setLives] = useState(LIVES);
   const [finalTime, setFinalTime] = useState(0);
 
-  // --- UI STATE ---
   const [interimText, setInterimText] = useState('');
   const secondsLeftRef = useRef(ROUND_SECONDS);
   const [correctSegmentIndices, setCorrectSegmentIndices] = useState<number[]>(
@@ -228,15 +202,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
     []
   );
   const [isRecognizing, setIsRecognizing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // --- ANIMATION VALUES ---
   const obstacleX = useSharedValue(SCREEN_WIDTH);
   const obstacleY = useSharedValue(ORCA_Y);
   const obstacleOpacity = useSharedValue(0);
   const orcaShake = useSharedValue(0);
   const elapsedTimeSV = useSharedValue(0);
 
-  // --- REFS ---
   const timerIntervalRef = useRef<number | null>(null);
   const roundTimerRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -247,14 +220,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const correctPhrasesRef = useRef(0);
   const processingSuccessRef = useRef(false);
 
-  // --- TRANSCRIPT HANDLING REFS ---
-  // This is the key fix for "Adding together": we track how much of the continuous
-  // transcript we have already processed/cleared.
   const transcriptOffsetRef = useRef(0);
-
-  // -------------------------------------------------------------------------
-  //   STT LOGIC
-  // -------------------------------------------------------------------------
 
   const startListening = async () => {
     try {
@@ -262,7 +228,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
         await ExpoSpeechRecognitionModule.requestPermissionsAsync();
       if (!permissions.granted) return;
 
-      // Reset offset on start
       transcriptOffsetRef.current = 0;
 
       ExpoSpeechRecognitionModule.start({
@@ -302,21 +267,16 @@ export const Orca = ({ lesson, native, language }: Props) => {
     const fullTranscript = event.results?.[0]?.transcript;
     if (!fullTranscript) return;
 
-    // FIX 1: We ignore the part of the transcript that belonged to previous rounds.
-    // "Continuous" recognition appends text. We slice it off.
     const relevantTranscript = fullTranscript
       .slice(transcriptOffsetRef.current)
       .trim();
 
     if (!relevantTranscript) return;
 
-    // Optimization: Only update state if meaningful change
     setInterimText((prev) =>
       prev === relevantTranscript ? prev : relevantTranscript
     );
 
-    // Process the *relevant* part of the transcript, plus the raw fullTranscript length
-    // so we can update the offset later if successful.
     processTranscript(relevantTranscript, fullTranscript.length);
   }, []);
 
@@ -324,7 +284,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
     if (processingSuccessRef.current) return;
     if (currentPhraseIndexRef.current >= lesson.phrases.length) return;
 
-    // Clean current input
     const clean = text
       .replace(/[^A-Za-z0-9\u00C0-\u024F\u0600-\u06FF\s]/g, '')
       .trim();
@@ -332,14 +291,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
     const targetPhrase = lesson.phrases[currentPhraseIndexRef.current].text;
 
-    // FIX 2: Use Sliding Window Similarity instead of direct Similarity.
-    // This allows "Uh... Guten Morgen" to pass.
     const sim = slidingWindowSimilarity(text, targetPhrase);
 
     const base = baseThresholdFor(targetPhrase);
     const threshold = Math.max(0, Math.min(1, base + tuning.thresholdOffset));
-
-    // console.log(`Input: "${text}" | Target: "${targetPhrase}" | Sim: ${sim.toFixed(2)} | Req: ${threshold}`);
 
     if (sim >= threshold) {
       processingSuccessRef.current = true;
@@ -349,7 +304,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
   useSpeechRecognitionEvent('start', () => {
     setIsRecognizing(true);
-    // Safety reset
     transcriptOffsetRef.current = 0;
   });
   useSpeechRecognitionEvent('end', () => {
@@ -360,16 +314,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
   });
   useSpeechRecognitionEvent('result', handleSpeechResult);
 
-  // -------------------------------------------------------------------------
-  //   GAME LOGIC
-  // -------------------------------------------------------------------------
-
   const startTimer = useCallback(() => {
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     startTimeRef.current = Date.now();
     elapsedTimeSV.value = 0;
 
-    // Update slightly faster to make milliseconds look smooth
     timerIntervalRef.current = setInterval(() => {
       elapsedTimeSV.value = Date.now() - startTimeRef.current;
     }, 16) as unknown as number;
@@ -410,16 +359,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
         return 0;
       }
 
-      // Reset for next round
       setCurrentObstacleIndex(null);
       setCurrentObstacleEmoji(null);
       setInterimText('');
-
-      // IMPORTANT: If we failed, we should probably also ignore whatever was said so far
-      // so the next phrase starts fresh. However, since the engine might not have
-      // returned a "result" event at the exact moment of failure, we rely on the
-      // next `spawnObstacle` logic or just let the offset stay as is until next result comes.
-      // But to be clean, let's just clear the UI text. The offset is handled better on success.
 
       obstacleOpacity.value = withTiming(0, { duration: 200 });
 
@@ -460,7 +402,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   }, [stopTimers]);
 
   const endGame = useCallback(
-    (won: boolean) => {
+    async (won: boolean) => {
       if (gameEndedRef.current) return;
       gameEndedRef.current = true;
 
@@ -472,8 +414,41 @@ export const Orca = ({ lesson, native, language }: Props) => {
       setCurrentObstacleEmoji(null);
       obstacleOpacity.value = 0;
       setGameState(won ? 'won' : 'lost');
+
+      // Submit score if won
+      if (won) {
+        setIsSubmitting(true);
+        try {
+          const allCorrect = correctPhrasesRef.current === TOTAL_OBSTACLES;
+
+          // Submit score to leaderboard
+          await submitScoreMutation({
+            lessonId: lesson._id,
+            time: ft,
+            correctPhrases: correctPhrasesRef.current,
+          });
+
+          // Complete lesson and unlock progression
+          await completeLessonMutation({
+            lessonId: lesson._id,
+            score: allCorrect
+              ? 100
+              : (correctPhrasesRef.current / TOTAL_OBSTACLES) * 100,
+          });
+        } catch (error) {
+          console.error('Failed to submit score:', error);
+        } finally {
+          setIsSubmitting(false);
+        }
+      }
     },
-    [cleanup]
+    [
+      cleanup,
+      lesson._id,
+      TOTAL_OBSTACLES,
+      completeLessonMutation,
+      submitScoreMutation,
+    ]
   );
 
   const markSuccess = useCallback(
@@ -485,8 +460,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
       if (roundTimerRef.current) clearInterval(roundTimerRef.current);
       cancelAnimation(obstacleX);
 
-      // FIX 1 Part B: Update the offset.
-      // We now ignore everything up to this point for the NEXT phrase.
       transcriptOffsetRef.current = fullTranscriptLength;
 
       currentPhraseIndexRef.current += 1;
@@ -533,7 +506,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setCurrentObstacleIndex(nextIndex);
     setCurrentObstacleEmoji(emoji);
 
-    // Clear visible text for the new round
     setInterimText('');
     processingSuccessRef.current = false;
     hasHitRef.current = false;
@@ -565,7 +537,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     gameEndedRef.current = false;
     currentPhraseIndexRef.current = 0;
     correctPhrasesRef.current = 0;
-    transcriptOffsetRef.current = 0; // Reset speech offset
+    transcriptOffsetRef.current = 0;
     setCorrectSegmentIndices([]);
     setFailedSegmentIndices([]);
     setCorrectPhrases(0);
@@ -619,6 +591,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
     } as any;
   });
 
+  const allCorrect = correctPhrases === TOTAL_OBSTACLES;
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.uiOverlay}>
@@ -657,16 +631,23 @@ export const Orca = ({ lesson, native, language }: Props) => {
               Correct: {correctPhrases}/{TOTAL_OBSTACLES}
             </Text>
             <Text style={styles.winText}>
-              {correctPhrases === TOTAL_OBSTACLES
-                ? '🏆 YOU WON! 🏆'
-                : '🎉 YOU PASSED! 🎉'}
+              {allCorrect ? '🏆 PERFECT! 🏆' : '🎉 YOU PASSED! 🎉'}
             </Text>
             <Text
               style={styles.finalTime}
-            >{`⏱️ ${formatTimeJS(finalTime)}`}</Text>
-            <Pressable style={styles.startButton} onPress={() => router.back()}>
-              <Text style={styles.startButtonText}>🏆 LEADERBOARD</Text>
-            </Pressable>
+            >{`⏱️ ${formatTime(finalTime)}`}</Text>
+            {isSubmitting ? (
+              <Text style={{ color: '#fff', marginTop: 8 }}>
+                Saving score...
+              </Text>
+            ) : (
+              <Pressable
+                style={styles.startButton}
+                onPress={() => router.back()}
+              >
+                <Text style={styles.startButtonText}>🏆 LEADERBOARD</Text>
+              </Pressable>
+            )}
           </View>
         ) : gameState === 'lost' ? (
           <View style={styles.overlay}>
@@ -745,21 +726,16 @@ export const Orca = ({ lesson, native, language }: Props) => {
           ]}
         >
           <View style={styles.wrapper}>
-            {/* Shadow */}
             <View style={styles.shadow} />
 
-            {/* Face */}
             <View style={styles.face}>
-              {/* Top Row */}
               <View style={styles.topRow}>
-                {/* Languages */}
                 <View style={{ flex: 1 }}>
                   <Text style={styles.transcriptLabel}>
                     {`${NATIVE_LANGUAGE?.flag || ''} 🗣️ ${LEARNING_LANGUAGE?.flag || ''}`}
                   </Text>
                 </View>
 
-                {/* Timer */}
                 <View style={{ flex: 1, alignItems: 'center' }}>
                   <Text style={styles.scoreLabel}>TIME</Text>
                   <View style={styles.timerContainer}>
@@ -773,7 +749,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
                   </View>
                 </View>
 
-                {/* Lives */}
                 <View
                   style={{
                     flex: 1,
@@ -793,7 +768,6 @@ export const Orca = ({ lesson, native, language }: Props) => {
                 </View>
               </View>
 
-              {/* Bottom Section */}
               <View style={{ gap: 16 }}>
                 <View style={styles.transcriptHeader}>
                   <Text style={styles.transcriptLabel}>

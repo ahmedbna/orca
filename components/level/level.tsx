@@ -9,47 +9,18 @@ import { OrcaButton } from '../orca-button';
 import { LessonCard } from './lesson-card';
 import { TouchableOpacity } from 'react-native';
 import { ScoreCard } from './score-card';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { Spinner } from '@/components/ui/spinner';
+import { formatTime } from '@/lib/format-time';
 
-// --- TYPES ---
 export interface ScoreData {
-  id: number;
-  time: number;
+  userId: string;
+  time: string;
   name: string;
-  image: string;
-  rank?: number;
+  image: string | null;
+  rank: number;
 }
-
-// --- MOCK DATA ---
-const SCORES: ScoreData[] = [
-  {
-    id: 1,
-    time: 10,
-    name: 'Ahmed',
-    image: 'https://avatars.githubusercontent.com/u/99088394?v=4',
-    rank: 1,
-  },
-  {
-    id: 2,
-    time: 15,
-    name: 'Sarah',
-    image: 'https://avatars.githubusercontent.com/u/99088394?v=4',
-    rank: 2,
-  },
-  {
-    id: 3,
-    time: 18,
-    name: 'Mohamed',
-    image: 'https://avatars.githubusercontent.com/u/99088394?v=4',
-    rank: 3,
-  },
-  {
-    id: 4,
-    time: 20,
-    name: 'Mohamed',
-    image: 'https://avatars.githubusercontent.com/u/99088394?v=4',
-    rank: 4,
-  },
-];
 
 type Props = {
   lesson: Doc<'lessons'> & {
@@ -60,48 +31,64 @@ type Props = {
 export const Level = ({ lesson }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const hasScores = SCORES.length > 0;
+
+  // Fetch leaderboard data
+  const leaderboard = useQuery(api.scores.getLeaderboard, {
+    lessonId: lesson._id,
+  });
 
   const handlePlayPress = () => {
     router.push(`/(home)/orca/${lesson._id}`);
   };
 
+  // Show loading state
+  if (leaderboard === undefined) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Spinner size='lg' variant='circle' color='#000000' />
+      </View>
+    );
+  }
+
+  // Transform leaderboard data to match ScoreData interface
+  const scores: ScoreData[] =
+    leaderboard?.map((entry) => ({
+      userId: entry.userId,
+      time: formatTime(entry.time), // Convert ms to seconds
+      name: entry.name,
+      image: entry.image,
+      rank: entry.rank,
+    })) || [];
+
   return (
     <View style={{ flex: 1 }}>
-      <View
-        style={{
-          flex: 1,
+      <FlatList
+        data={scores}
+        renderItem={({ item }) => <ScoreCard score={item} />}
+        keyExtractor={(item) => item.userId}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          gap: 4,
+          padding: 20,
+          paddingTop: insets.top + 60,
+          paddingBottom: 400,
         }}
-      >
-        {hasScores ? (
-          <FlatList
-            data={SCORES}
-            renderItem={({ item }) => <ScoreCard score={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: 4,
-              padding: 20,
-              paddingTop: insets.top + 60,
-              paddingBottom: 400,
-            }}
-            ListHeaderComponent={() => (
-              <View>
-                <Text
-                  variant='heading'
-                  style={{
-                    color: '#000',
-                    textShadowColor: 'rgba(255, 255, 255, 0.5)',
-                    textShadowOffset: { width: 0, height: 2 },
-                    textShadowRadius: 4,
-                  }}
-                >
-                  🏆 Leaderboard
-                </Text>
-              </View>
-            )}
-          />
-        ) : (
+        ListHeaderComponent={() => (
+          <View>
+            <Text
+              variant='heading'
+              style={{
+                color: '#000',
+                textShadowColor: 'rgba(255, 255, 255, 0.5)',
+                textShadowOffset: { width: 0, height: 2 },
+                textShadowRadius: 4,
+              }}
+            >
+              🏆 Leaderboard
+            </Text>
+          </View>
+        )}
+        ListEmptyComponent={() => (
           <View style={styles.emptyContainer}>
             <View style={[styles.emptyContent]}>
               <Text style={styles.emptyEmoji}>🏆</Text>
@@ -115,7 +102,7 @@ export const Level = ({ lesson }: Props) => {
             </View>
           </View>
         )}
-      </View>
+      />
 
       {/* Bottom Action Buttons */}
       <View
@@ -163,11 +150,12 @@ export const Level = ({ lesson }: Props) => {
 const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 40,
+    justifyContent: 'center',
+    marginTop: 16,
   },
   emptyContent: {
+    width: '100%',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     padding: 40,

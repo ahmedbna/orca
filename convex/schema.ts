@@ -19,8 +19,8 @@ export default defineSchema({
 
     nativeLanguage: v.optional(v.string()),
     learningLanguage: v.optional(v.string()),
-    currentCourse: v.optional(v.id('courses')), // Current active course (highest unlocked)
-    currentLesson: v.optional(v.id('lessons')), // Current active lesson (highest unlocked)
+    currentCourse: v.optional(v.id('courses')),
+    currentLesson: v.optional(v.id('lessons')),
     voiceId: v.optional(v.string()),
     agentId: v.optional(v.string()),
   })
@@ -78,25 +78,36 @@ export default defineSchema({
     .index('by_course', ['courseId'])
     .index('by_course_order', ['courseId', 'order']),
 
-  // Track lesson progress and completion
   lessonProgress: defineTable({
     userId: v.id('users'),
     lessonId: v.id('lessons'),
     isUnlocked: v.boolean(),
     isCompleted: v.boolean(),
-    score: v.optional(v.float64()), // Score as percentage (0-100)
+    score: v.optional(v.float64()),
   })
     .index('by_user', ['userId'])
     .index('by_user_lesson', ['userId', 'lessonId']),
 
-  // Track course progress and completion
   courseProgress: defineTable({
     userId: v.id('users'),
     courseId: v.id('courses'),
     isUnlocked: v.boolean(),
     isCompleted: v.boolean(),
-    totalScore: v.optional(v.float64()), // Average of all lesson scores
+    totalScore: v.optional(v.float64()),
   })
     .index('by_user', ['userId'])
     .index('by_user_course', ['userId', 'courseId']),
+
+  // New table for lesson leaderboard scores
+  scores: defineTable({
+    userId: v.id('users'),
+    lessonId: v.id('lessons'),
+    time: v.number(), // Time in milliseconds
+    correctPhrases: v.number(),
+    totalPhrases: v.number(),
+    allCorrect: v.boolean(), // Only true if all phrases were correct
+  })
+    .index('by_user', ['userId'])
+    .index('by_lesson', ['lessonId'])
+    .index('by_user_lesson', ['userId', 'lessonId']),
 });

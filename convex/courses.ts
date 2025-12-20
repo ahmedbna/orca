@@ -36,7 +36,6 @@ export const getCourse = query({
       throw new Error('No lessons found');
     }
 
-    // Sort lessons by order
     const sortedLessons = lessons.sort((a, b) => a.order - b.order);
 
     const currentLessonId = user.currentLesson;
@@ -50,7 +49,6 @@ export const getCourse = query({
           )
           .first();
 
-        // Determine lesson status
         let status: 'locked' | 'active' | 'completed';
 
         if (lessonProgress?.isCompleted) {
@@ -106,7 +104,6 @@ export const getAll = query({
       throw new Error('No courses found for the selected language');
     }
 
-    // Sort by order
     const sortedCourses = courses.sort((a, b) => a.order - b.order);
 
     const currentCourseId = user.currentCourse;
@@ -174,6 +171,8 @@ export const completeLesson = mutation({
       )
       .first();
 
+    // Score >= 70 means passed (at least 70% correct)
+    // Score === 100 means perfect (all phrases correct)
     const isPassing = args.score >= 70;
     const newScore = lessonProgress?.score
       ? Math.max(lessonProgress.score, args.score)
@@ -194,7 +193,7 @@ export const completeLesson = mutation({
       });
     }
 
-    // If passing score, unlock next lesson
+    // If passing (>= 70%), unlock next lesson or course
     if (isPassing) {
       const allLessons = await ctx.db
         .query('lessons')
@@ -206,7 +205,7 @@ export const completeLesson = mutation({
       const nextLesson = sortedLessons[currentIndex + 1];
 
       if (nextLesson) {
-        // Unlock next lesson
+        // Unlock next lesson in current course
         const nextLessonProgress = await ctx.db
           .query('lessonProgress')
           .withIndex('by_user_lesson', (q) =>
@@ -221,6 +220,10 @@ export const completeLesson = mutation({
             isUnlocked: true,
             isCompleted: false,
           });
+        } else if (!nextLessonProgress.isUnlocked) {
+          await ctx.db.patch(nextLessonProgress._id, {
+            isUnlocked: true,
+          });
         }
 
         // Update current lesson pointer
@@ -228,7 +231,7 @@ export const completeLesson = mutation({
           currentLesson: nextLesson._id,
         });
       } else {
-        // No more lessons - check if course is complete
+        // No more lessons in course - check if all lessons are completed
         const allLessonProgress = await Promise.all(
           sortedLessons.map((l) =>
             ctx.db
@@ -299,6 +302,10 @@ export const completeLesson = mutation({
                 isUnlocked: true,
                 isCompleted: false,
               });
+            } else if (!nextCourseProgress.isUnlocked) {
+              await ctx.db.patch(nextCourseProgress._id, {
+                isUnlocked: true,
+              });
             }
 
             // Get first lesson of next course
@@ -311,12 +318,21 @@ export const completeLesson = mutation({
 
             if (firstLesson) {
               // Unlock first lesson of next course
-              await ctx.db.insert('lessonProgress', {
-                userId,
-                lessonId: firstLesson._id,
-                isUnlocked: true,
-                isCompleted: false,
-              });
+              const firstLessonProgress = await ctx.db
+                .query('lessonProgress')
+                .withIndex('by_user_lesson', (q) =>
+                  q.eq('userId', userId).eq('lessonId', firstLesson._id)
+                )
+                .first();
+
+              if (!firstLessonProgress) {
+                await ctx.db.insert('lessonProgress', {
+                  userId,
+                  lessonId: firstLesson._id,
+                  isUnlocked: true,
+                  isCompleted: false,
+                });
+              }
 
               // Update current course and lesson
               await ctx.db.patch(userId, {
@@ -333,7 +349,7 @@ export const completeLesson = mutation({
   },
 });
 
-// Initialize user progress (call when user selects a language and starts learning)
+// Initialize user progress
 export const initializeProgress = mutation({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
@@ -347,12 +363,10 @@ export const initializeProgress = mutation({
       throw new Error('User not found');
     }
 
-    // Only initialize if user has selected a language
     if (!user.learningLanguage) {
       throw new Error('Please select a learning language first');
     }
 
-    // Find first course for the selected language
     const firstCourse = await ctx.db
       .query('courses')
       .withIndex('by_language_order', (q) =>
@@ -364,7 +378,6 @@ export const initializeProgress = mutation({
       throw new Error('No courses available for this language');
     }
 
-    // Check if already initialized
     const existingCourseProgress = await ctx.db
       .query('courseProgress')
       .withIndex('by_user_course', (q) =>
@@ -376,7 +389,6 @@ export const initializeProgress = mutation({
       return { success: true, message: 'Already initialized' };
     }
 
-    // Create course progress for first course
     await ctx.db.insert('courseProgress', {
       userId,
       courseId: firstCourse._id,
@@ -384,7 +396,6 @@ export const initializeProgress = mutation({
       isCompleted: false,
     });
 
-    // Get first lesson of first course
     const firstLesson = await ctx.db
       .query('lessons')
       .withIndex('by_course_order', (q) =>
@@ -396,7 +407,6 @@ export const initializeProgress = mutation({
       throw new Error('No lessons found for this course');
     }
 
-    // Create lesson progress for first lesson
     await ctx.db.insert('lessonProgress', {
       userId,
       lessonId: firstLesson._id,
@@ -404,7 +414,6 @@ export const initializeProgress = mutation({
       isCompleted: false,
     });
 
-    // Set current course and lesson
     await ctx.db.patch(userId, {
       currentCourse: firstCourse._id,
       currentLesson: firstLesson._id,
