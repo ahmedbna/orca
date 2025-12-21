@@ -159,14 +159,14 @@ const BubbleLayer = ({
 
 export const Bubbles = ({ layers, direction = 'up' }: BubblesProps = {}) => {
   const defaultLayers = [
-    {
-      speed: 40,
-      count: 10,
-      scale: 0.6,
-      baseOpacity: 0.3,
-      color: 'white',
-      yRange: [0, SCREEN_HEIGHT] as [number, number],
-    },
+    // {
+    //   speed: 40,
+    //   count: 10,
+    //   scale: 0.6,
+    //   baseOpacity: 0.3,
+    //   color: 'white',
+    //   yRange: [0, SCREEN_HEIGHT] as [number, number],
+    // },
     {
       speed: 50,
       count: 8,

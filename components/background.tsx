@@ -12,6 +12,7 @@ import { Text } from '@/components/ui/text';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Music } from '@/components/orca/music';
 
 export const Background = ({
   swim,
@@ -115,6 +116,8 @@ export const Background = ({
         ]}
       />
       {children}
+
+      <Music />
     </View>
   );
 };

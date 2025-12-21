@@ -34,7 +34,6 @@ export default defineSchema({
 
   conversations: defineTable({
     userId: v.id('users'),
-    studentId: v.id('students'),
     lessonId: v.id('lessons'),
     agentId: v.string(),
     conversationId: v.string(),
@@ -109,8 +108,14 @@ export default defineSchema({
     .index('by_lesson', ['lessonId'])
     .index('by_user_lesson', ['userId', 'lessonId']),
 
-  streaks: defineTable({
+  wins: defineTable({
     userId: v.id('users'),
     lessonId: v.id('lessons'),
-  }).index('by_user', ['userId']),
+    // UTC midnight timestamp (used for heatmap + streaks)
+    day: v.number(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_user_day', ['userId', 'day'])
+    .index('by_user_lesson', ['userId', 'lessonId'])
+    .index('by_user_lesson_day', ['userId', 'lessonId', 'day']),
 });

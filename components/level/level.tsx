@@ -13,6 +13,7 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Spinner } from '@/components/ui/spinner';
 import { formatTime } from '@/lib/format-time';
+import { ChevronLeft } from 'lucide-react-native';
 
 export interface ScoreData {
   userId: string;
@@ -125,6 +126,8 @@ export const Level = ({ lesson }: Props) => {
           onPress={() => router.back()}
           style={{ flexDirection: 'row', gap: 2, alignItems: 'center' }}
         >
+          <ChevronLeft size={26} color='#000' strokeWidth={3} />
+
           <Text variant='heading'>
             {
               LANGUAGES.find((lang) => lang.code === lesson.course.language)

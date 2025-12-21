@@ -174,9 +174,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const green = useColor('green');
+
   const completeLesson = useMutation(api.lessons.completeLesson);
   const submitScore = useMutation(api.scores.submitScore);
-  const addStreak = useMutation(api.streaks.add);
+  const recordWin = useMutation(api.wins.recordWin);
 
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const NATIVE_LANGUAGE = LANGUAGES.find((l) => l.code === native);
@@ -427,7 +428,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
             correctPhrases: correctPhrasesRef.current,
           });
 
-          await addStreak({ lessonId: lesson._id });
+          await recordWin({ lessonId: lesson._id });
 
           // Complete lesson and unlock progression
           await completeLesson({
@@ -446,7 +447,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
       TOTAL_OBSTACLES,
       completeLesson,
       submitScore,
-      addStreak,
+      recordWin,
     ]
   );
 

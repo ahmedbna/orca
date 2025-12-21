@@ -130,7 +130,7 @@ const CloudElement = () => {
 
 /* ---------------- Cloud field ---------------- */
 
-export const Clouds = ({ count = 18 }) => {
+export const Clouds = ({ count = 12 }) => {
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (

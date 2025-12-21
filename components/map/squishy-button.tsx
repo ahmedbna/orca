@@ -46,7 +46,6 @@ export const SquishyButton = ({
   onPress,
 }: {
   level: Doc<'lessons'> & {
-    score: number;
     status: 'locked' | 'active' | 'completed';
   };
   x: number;

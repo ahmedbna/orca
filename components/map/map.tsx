@@ -1,14 +1,8 @@
 import React, { useMemo, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import { Dimensions, TouchableOpacity } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
-  withSpring,
-  useAnimatedStyle,
-  interpolate,
-  withRepeat,
-  withSequence,
-  withTiming,
 } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,8 +12,7 @@ import { Streak } from '@/components/map/streak';
 import { SquishyButton } from '@/components/map/squishy-button';
 import { Doc, Id } from '@/convex/_generated/dataModel';
 import { LANGUAGES } from '@/constants/languages';
-import { OrcaButton } from '../orca-button';
-import { Music } from '../orca/music';
+import { OrcaButton } from '@/components/orca-button';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -30,14 +23,14 @@ type Props = {
   course: Doc<'courses'> & {
     lessons: Array<
       Doc<'lessons'> & {
-        score: number;
         status: 'locked' | 'active' | 'completed';
       }
     >;
   };
+  streak: number;
 };
 
-export const Map = ({ course }: Props) => {
+export const Map = ({ course, streak }: Props) => {
   const router = useRouter();
   const scrollY = useSharedValue(0);
   const insets = useSafeAreaInsets();
@@ -143,7 +136,7 @@ export const Map = ({ course }: Props) => {
           </Text>
         </TouchableOpacity>
 
-        <Streak />
+        <Streak streak={streak} onPress={() => router.push('/streak')} />
 
         <OrcaButton
           label='START'
@@ -153,8 +146,6 @@ export const Map = ({ course }: Props) => {
           }
         />
       </View>
-
-      {/* <Music /> */}
     </View>
   );
 };

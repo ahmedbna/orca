@@ -1,15 +1,12 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   interpolate,
-  withRepeat,
-  withSequence,
-  withTiming,
 } from 'react-native-reanimated';
-import { Text } from '../ui/text';
+import { Text } from '@/components/ui/text';
 import { ChevronRight } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -17,8 +14,8 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const TOTAL_DAYS = 7;
 const SHADOW_HEIGHT = 6;
-const HORIZONTAL_PADDING = 16; // Padding inside the card
-const DAYS_GAP = 4; // Gap between day items
+const HORIZONTAL_PADDING = 16;
+const DAYS_GAP = 4;
 
 const STREAK_GRADIENT = [
   '#6C4CFF',
@@ -30,22 +27,28 @@ const STREAK_GRADIENT = [
   '#FFD000',
 ] as const;
 
-// Calculate day width based on screen width and spacing
-const CONTAINER_PADDING = 32; // Padding from parent (adjust to match your layout)
+const CONTAINER_PADDING = 32;
 const AVAILABLE_WIDTH =
   SCREEN_WIDTH - CONTAINER_PADDING * 2 - HORIZONTAL_PADDING * 2;
 const TOTAL_GAP_WIDTH = DAYS_GAP * (TOTAL_DAYS - 1);
 const DAY_WIDTH = (AVAILABLE_WIDTH - TOTAL_GAP_WIDTH) / TOTAL_DAYS;
 
-export const Streak = () => {
-  const [streak, setStreak] = useState(5);
+export const Streak = ({
+  streak,
+  onPress,
+}: {
+  streak: number;
+  onPress?: () => void;
+}) => {
+  // Rolling window logic
+  const startDayNumber = Math.max(1, streak - TOTAL_DAYS + 1);
+
   const pressed = useSharedValue(0);
-  const pulse = useSharedValue(1);
 
   const animatedFaceStyle = useAnimatedStyle(() => {
     const translateY = interpolate(pressed.value, [0, 1], [0, SHADOW_HEIGHT]);
     return {
-      transform: [{ translateY }, { scale: pulse.value }],
+      transform: [{ translateY }],
     };
   });
 
@@ -58,7 +61,7 @@ export const Streak = () => {
   };
 
   return (
-    <Pressable style={styles.wrapper}>
+    <Pressable style={styles.wrapper} onPress={onPress}>
       {/* Shadow */}
       <View style={styles.shadow} />
 
@@ -70,16 +73,27 @@ export const Streak = () => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>{streak} Day Streak</Text>
+          <Text
+            style={styles.title}
+          >{`${streak} ${streak === 1 ? 'Day' : 'Days'} Streak`}</Text>
 
           <ChevronRight size={26} color='#aaa' />
         </View>
 
-        {/* Gradient Streak Days */}
         <View style={styles.daysContainer}>
-          {Array.from({ length: TOTAL_DAYS }).map((_, index) => (
-            <StreakDay key={index} index={index} active={index < streak} />
-          ))}
+          {Array.from({ length: TOTAL_DAYS }).map((_, index) => {
+            const dayNumber = startDayNumber + index;
+            const active = dayNumber <= streak;
+
+            return (
+              <StreakDay
+                key={index}
+                index={index}
+                active={active}
+                label={dayNumber}
+              />
+            );
+          })}
         </View>
       </Animated.View>
     </Pressable>
@@ -89,9 +103,10 @@ export const Streak = () => {
 interface StreakDayProps {
   index: number;
   active: boolean;
+  label: number;
 }
 
-function StreakDay({ index, active }: StreakDayProps) {
+function StreakDay({ index, active, label }: StreakDayProps) {
   const gradientSlice = useMemo(
     () =>
       [
@@ -110,11 +125,11 @@ function StreakDay({ index, active }: StreakDayProps) {
           end={{ x: 1, y: 0 }}
           style={styles.dayActive}
         >
-          <Text style={styles.dayNumberActive}>{index + 1}</Text>
+          <Text style={styles.dayNumberActive}>{label}</Text>
         </LinearGradient>
       ) : (
         <View style={styles.dayInactive}>
-          <Text style={styles.dayNumberInactive}>{index + 1}</Text>
+          <Text style={styles.dayNumberInactive}>{label}</Text>
         </View>
       )}
     </View>
@@ -123,7 +138,7 @@ function StreakDay({ index, active }: StreakDayProps) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingBottom: SHADOW_HEIGHT, // Space for shadow
+    paddingBottom: SHADOW_HEIGHT,
   },
   shadow: {
     position: 'absolute',
@@ -139,21 +154,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     borderRadius: 24,
     padding: HORIZONTAL_PADDING,
-    gap: 8,
+    gap: 12,
     zIndex: 2,
     borderWidth: 4,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
   },
   title: {
     color: '#FFF',
@@ -191,5 +200,15 @@ const styles = StyleSheet.create({
     color: '#777',
     fontWeight: '700',
     fontSize: 14,
+  },
+  emptyState: {
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    color: '#AAA',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

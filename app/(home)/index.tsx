@@ -7,8 +7,9 @@ import { useQuery } from 'convex/react';
 
 export default function HomeScreen() {
   const course = useQuery(api.courses.getCourse);
+  const streak = useQuery(api.wins.getCurrentStreak);
 
-  if (course === undefined) {
+  if (course === undefined || streak === undefined) {
     return (
       <View
         style={{
@@ -36,5 +37,5 @@ export default function HomeScreen() {
     );
   }
 
-  return <Map course={course} />;
+  return <Map course={course} streak={streak} />;
 }

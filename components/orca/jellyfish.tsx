@@ -229,14 +229,14 @@ export const Jellyfish = ({
       yRange: [SCREEN_HEIGHT * 0.4, SCREEN_HEIGHT * 0.6] as [number, number],
       color: 'rgba(0, 0, 40, 0.2)',
     },
-    {
-      speed: 60,
-      count: 5,
-      scale: 0.6,
-      baseOpacity: 0.6,
-      yRange: [SCREEN_HEIGHT * 0.4, SCREEN_HEIGHT * 0.6] as [number, number],
-      color: 'rgba(0, 0, 0, 0.1)',
-    },
+    // {
+    //   speed: 60,
+    //   count: 5,
+    //   scale: 0.6,
+    //   baseOpacity: 0.6,
+    //   yRange: [SCREEN_HEIGHT * 0.4, SCREEN_HEIGHT * 0.6] as [number, number],
+    //   color: 'rgba(0, 0, 0, 0.1)',
+    // },
   ];
 
   const finalLayers = layers || defaultLayers;

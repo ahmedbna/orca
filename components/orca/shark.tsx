@@ -351,14 +351,14 @@ export const Shark = ({ layers, direction = 'right' }: SharkProps = {}) => {
       yRange: [SCREEN_HEIGHT * 0.3, SCREEN_HEIGHT * 0.6] as [number, number],
       color: 'rgba(0,0,0,0.2)',
     },
-    {
-      speed: 50,
-      count: 2,
-      scale: 0.2,
-      baseOpacity: 0.3,
-      yRange: [SCREEN_HEIGHT * 0.35, SCREEN_HEIGHT * 0.8] as [number, number],
-      color: 'rgba(0,0,0,0.15)',
-    },
+    // {
+    //   speed: 50,
+    //   count: 2,
+    //   scale: 0.2,
+    //   baseOpacity: 0.3,
+    //   yRange: [SCREEN_HEIGHT * 0.35, SCREEN_HEIGHT * 0.8] as [number, number],
+    //   color: 'rgba(0,0,0,0.15)',
+    // },
   ];
 
   return (
