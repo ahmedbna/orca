@@ -174,8 +174,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const green = useColor('green');
-  const completeLessonMutation = useMutation(api.courses.completeLesson);
-  const submitScoreMutation = useMutation(api.scores.submitScore);
+  const completeLesson = useMutation(api.lessons.completeLesson);
+  const submitScore = useMutation(api.scores.submitScore);
+  const addStreak = useMutation(api.streaks.add);
 
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const NATIVE_LANGUAGE = LANGUAGES.find((l) => l.code === native);
@@ -257,7 +258,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     try {
       await ExpoSpeechRecognitionModule.stop();
     } catch (error) {
-      // ignore
+      console.log('Stop listening failed', error);
     }
   };
 
@@ -419,21 +420,18 @@ export const Orca = ({ lesson, native, language }: Props) => {
       if (won) {
         setIsSubmitting(true);
         try {
-          const allCorrect = correctPhrasesRef.current === TOTAL_OBSTACLES;
-
           // Submit score to leaderboard
-          await submitScoreMutation({
+          await submitScore({
             lessonId: lesson._id,
             time: ft,
             correctPhrases: correctPhrasesRef.current,
           });
 
+          await addStreak({ lessonId: lesson._id });
+
           // Complete lesson and unlock progression
-          await completeLessonMutation({
+          await completeLesson({
             lessonId: lesson._id,
-            score: allCorrect
-              ? 100
-              : (correctPhrasesRef.current / TOTAL_OBSTACLES) * 100,
           });
         } catch (error) {
           console.error('Failed to submit score:', error);
@@ -446,8 +444,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
       cleanup,
       lesson._id,
       TOTAL_OBSTACLES,
-      completeLessonMutation,
-      submitScoreMutation,
+      completeLesson,
+      submitScore,
+      addStreak,
     ]
   );
 

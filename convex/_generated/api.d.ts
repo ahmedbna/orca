@@ -20,6 +20,7 @@ import type * as resendOTP from "../resendOTP.js";
 import type * as resendPasswordOTP from "../resendPasswordOTP.js";
 import type * as router from "../router.js";
 import type * as scores from "../scores.js";
+import type * as streaks from "../streaks.js";
 import type * as users from "../users.js";
 
 import type {
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   resendPasswordOTP: typeof resendPasswordOTP;
   router: typeof router;
   scores: typeof scores;
+  streaks: typeof streaks;
   users: typeof users;
 }>;
 

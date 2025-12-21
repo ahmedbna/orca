@@ -83,7 +83,6 @@ export default defineSchema({
     lessonId: v.id('lessons'),
     isUnlocked: v.boolean(),
     isCompleted: v.boolean(),
-    score: v.optional(v.float64()),
   })
     .index('by_user', ['userId'])
     .index('by_user_lesson', ['userId', 'lessonId']),
@@ -93,7 +92,6 @@ export default defineSchema({
     courseId: v.id('courses'),
     isUnlocked: v.boolean(),
     isCompleted: v.boolean(),
-    totalScore: v.optional(v.float64()),
   })
     .index('by_user', ['userId'])
     .index('by_user_course', ['userId', 'courseId']),
@@ -110,4 +108,9 @@ export default defineSchema({
     .index('by_user', ['userId'])
     .index('by_lesson', ['lessonId'])
     .index('by_user_lesson', ['userId', 'lessonId']),
+
+  streaks: defineTable({
+    userId: v.id('users'),
+    lessonId: v.id('lessons'),
+  }).index('by_user', ['userId']),
 });
