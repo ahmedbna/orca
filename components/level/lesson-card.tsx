@@ -9,6 +9,7 @@ import { Text } from '../ui/text';
 import { ChevronRight } from 'lucide-react-native';
 import { Doc } from '@/convex/_generated/dataModel';
 import { useRouter } from 'expo-router';
+import { useColor } from '@/hooks/useColor';
 
 const SHADOW_HEIGHT = 6;
 const HORIZONTAL_PADDING = 16;
@@ -21,6 +22,8 @@ export const LessonCard = ({ lesson }: Props) => {
   const router = useRouter();
   const pressed = useSharedValue(0);
   const pulse = useSharedValue(1);
+
+  const yellow = useColor('orca');
 
   const animatedFaceStyle = useAnimatedStyle(() => {
     const translateY = interpolate(pressed.value, [0, 1], [0, SHADOW_HEIGHT]);
@@ -56,7 +59,7 @@ export const LessonCard = ({ lesson }: Props) => {
           <Text
             style={{
               color: '#000',
-              backgroundColor: '#FAD40B',
+              backgroundColor: yellow,
               borderRadius: 999,
               padding: 6,
               fontWeight: 800,
@@ -67,8 +70,8 @@ export const LessonCard = ({ lesson }: Props) => {
           </Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ color: '#aaa', fontWeight: 800 }}>STUDY</Text>
-            <ChevronRight size={26} color='#aaa' />
+            <Text style={{ color: yellow, fontWeight: 800 }}>STUDY</Text>
+            <ChevronRight size={26} color={yellow} />
           </View>
         </View>
 

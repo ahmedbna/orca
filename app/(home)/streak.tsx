@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Streak } from '@/components/map/streak';
 import { OrcaButton } from '@/components/orca-button';
@@ -11,25 +11,21 @@ import { useRouter } from 'expo-router';
 import { HeatmapChart } from '@/components/charts/heatmap-chart';
 import { ChartContainer } from '@/components/charts/chart-container';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft } from 'lucide-react-native';
-
-/* ----------------------------- */
-/* Helpers */
-/* ----------------------------- */
+import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 
 const MONTHS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
+  'January',
+  'February',
+  'March',
+  'April',
   'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 function getYearRange(year: number) {
@@ -39,15 +35,15 @@ function getYearRange(year: number) {
   };
 }
 
-/* ----------------------------- */
-/* Screen */
-/* ----------------------------- */
-
 export default function StreakScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  const year = new Date().getFullYear();
+  const today = new Date();
+  const year = today.getFullYear();
+
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+
   const { start, end } = getYearRange(year);
 
   const course = useQuery(api.courses.getCourse);
@@ -79,66 +75,69 @@ export default function StreakScreen() {
 
   const currentLesson = course.lessons.find((l) => l.status === 'active');
 
-  /* ----------------------------- */
-  /* Transform Convex → Heatmap */
-  /* ----------------------------- */
+  const goPrevMonth = () => {
+    setCurrentMonth((m) => Math.max(0, m - 1));
+  };
 
-  const heatmapDataset = useMemo(() => {
-    const data: {
-      row: string;
-      col: string;
-      value: number;
-    }[] = [];
-
-    for (let month = 0; month < 12; month++) {
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-      for (let day = 1; day <= daysInMonth; day++) {
-        const utcDay = Date.UTC(year, month, day);
-        const value = heatmapData[utcDay] ?? 0;
-
-        data.push({
-          row: MONTHS[month],
-          col: day.toString(),
-          value,
-        });
-      }
-    }
-
-    return data;
-  }, [heatmapData, year]);
+  const goNextMonth = () => {
+    setCurrentMonth((m) => Math.min(11, m + 1));
+  };
 
   return (
     <View style={{ flex: 1 }}>
-      {/* ---------------- Heatmap ---------------- */}
       <View
-        style={{ flex: 1, paddingTop: insets.top + 100, paddingHorizontal: 16 }}
+        style={{
+          flex: 1,
+          paddingTop: insets.top + 80,
+          paddingHorizontal: 16,
+        }}
       >
-        <ChartContainer
-          title='Winning Streak'
-          description={`Number of lesson wins per day in ${year}`}
-        >
-          <HeatmapChart
-            data={heatmapDataset}
-            config={{
-              height: 420,
-              showLabels: false,
-              animated: true,
-              duration: 800,
-              padding: 16,
-              colorScale: [
-                '#F3F4F6', // 0
-                '#FDE68A', // 1
-                '#FACC15', // 2–3
-                '#FB923C', // 4–5
-                '#EF4444', // 6+
-              ],
+        <View style={{ marginBottom: 16 }}>
+          <Text
+            variant='heading'
+            style={{
+              color: '#000',
+              textShadowColor: 'rgba(255, 255, 255, 0.5)',
+              textShadowOffset: { width: 0, height: 2 },
+              textShadowRadius: 4,
             }}
-          />
-        </ChartContainer>
+          >
+            🏆 Winning Streak
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginVertical: 12,
+          }}
+        >
+          <TouchableOpacity
+            onPress={goPrevMonth}
+            disabled={currentMonth === 0}
+            style={{ opacity: currentMonth === 0 ? 0.3 : 1 }}
+          >
+            <ChevronLeft size={28} color='#000' strokeWidth={3} />
+          </TouchableOpacity>
+
+          <Text variant='title' style={{ fontWeight: '700', color: '#000' }}>
+            {MONTHS[currentMonth]} {year}
+          </Text>
+
+          <TouchableOpacity
+            onPress={goNextMonth}
+            disabled={currentMonth === 11}
+            style={{ opacity: currentMonth === 11 ? 0.3 : 1 }}
+          >
+            <ChevronRight size={28} color='#000' strokeWidth={3} />
+          </TouchableOpacity>
+        </View>
+
+        <HeatmapChart year={year} month={currentMonth} data={heatmapData} />
       </View>
 
-      {/* ---------------- Bottom Sheet ---------------- */}
       <View
         style={{
           paddingBottom: insets.bottom,
@@ -157,7 +156,6 @@ export default function StreakScreen() {
           style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}
         >
           <ChevronLeft size={26} color='#000' strokeWidth={3} />
-
           <Text
             variant='title'
             style={{ fontSize: 22, color: '#000', fontWeight: '800' }}

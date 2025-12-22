@@ -731,8 +731,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
             <View style={styles.face}>
               <View style={styles.topRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.transcriptLabel}>
-                    {`${NATIVE_LANGUAGE?.flag || ''} 🗣️ ${LEARNING_LANGUAGE?.flag || ''}`}
+                  <Text style={{ fontSize: 22 }}>
+                    {`${NATIVE_LANGUAGE?.flag || ''}🗣️${LEARNING_LANGUAGE?.flag || ''}`}
                   </Text>
                 </View>
 
