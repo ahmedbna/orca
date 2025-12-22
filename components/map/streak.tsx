@@ -1,11 +1,18 @@
 import React, { useMemo } from 'react';
-import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Pressable,
+  StyleSheet,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   interpolate,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { Text } from '@/components/ui/text';
 import { ChevronRight } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -33,6 +40,12 @@ const AVAILABLE_WIDTH =
 const TOTAL_GAP_WIDTH = DAYS_GAP * (TOTAL_DAYS - 1);
 const DAY_WIDTH = (AVAILABLE_WIDTH - TOTAL_GAP_WIDTH) / TOTAL_DAYS;
 
+const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
+  if (Platform.OS !== 'web') {
+    Haptics.impactAsync(style);
+  }
+};
+
 export const Streak = ({
   streak,
   onPress,
@@ -40,9 +53,7 @@ export const Streak = ({
   streak: number;
   onPress?: () => void;
 }) => {
-  // Rolling window logic
   const startDayNumber = Math.max(1, streak - TOTAL_DAYS + 1);
-
   const pressed = useSharedValue(0);
 
   const animatedFaceStyle = useAnimatedStyle(() => {
@@ -52,39 +63,37 @@ export const Streak = ({
     };
   });
 
-  const handlePressIn = () => {
-    pressed.value = withSpring(1, { damping: 15 });
-  };
-
-  const handlePressOut = () => {
-    pressed.value = withSpring(0, { damping: 15 });
-  };
-
   return (
-    <Pressable style={styles.wrapper} onPress={onPress}>
+    <Pressable
+      style={styles.wrapper}
+      onPress={onPress}
+      onPressIn={() => {
+        triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+        pressed.value = withSpring(1, { damping: 16 });
+      }}
+      onPressOut={() => {
+        triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+        pressed.value = withSpring(0, { damping: 16 });
+      }}
+    >
       {/* Shadow */}
       <View style={styles.shadow} />
 
       {/* Face */}
-      <Animated.View
-        onTouchStart={handlePressIn}
-        onTouchEnd={handlePressOut}
-        style={[styles.face, animatedFaceStyle]}
-      >
+      <Animated.View style={[styles.face, animatedFaceStyle]}>
         {/* Header */}
         <View style={styles.header}>
-          <Text
-            style={styles.title}
-          >{`${streak} ${streak === 1 ? 'Day' : 'Days'} Streak`}</Text>
-
+          <Text style={styles.title}>
+            {`${streak} ${streak === 1 ? 'Day' : 'Days'} Streak`}
+          </Text>
           <ChevronRight size={26} color='#aaa' />
         </View>
 
+        {/* Days */}
         <View style={styles.daysContainer}>
           {Array.from({ length: TOTAL_DAYS }).map((_, index) => {
             const dayNumber = startDayNumber + index;
             const active = dayNumber <= streak;
-
             return (
               <StreakDay
                 key={index}
@@ -200,15 +209,5 @@ const styles = StyleSheet.create({
     color: '#777',
     fontWeight: '700',
     fontSize: 14,
-  },
-  emptyState: {
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyText: {
-    color: '#AAA',
-    fontSize: 14,
-    fontWeight: '600',
   },
 });

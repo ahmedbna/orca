@@ -1,35 +1,36 @@
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { View } from '@/components/ui/view';
-import { Text } from '@/components/ui/text';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { StyleSheet, Platform, Pressable } from 'react-native';
 import Animated, {
   useSharedValue,
-  withSpring,
   useAnimatedStyle,
+  withSpring,
   interpolate,
   withRepeat,
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
+import { View } from '@/components/ui/view';
+import { Text } from '@/components/ui/text';
+import { Image } from 'expo-image';
 import { useColor } from '@/hooks/useColor';
 import { ScoreData } from './level';
+import { FONT_SIZE } from '@/theme/globals';
+
+const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
+  if (Platform.OS !== 'web') {
+    Haptics.impactAsync(style);
+  }
+};
 
 // Rank Badge Component
-const RankBadge = ({ rank }: { rank: number }) => {
-  const getEmoji = () => {
-    switch (rank) {
-      case 1:
-        return '👑';
-      case 2:
-        return '🥈';
-      case 3:
-        return '🥉';
-      default:
-        return `#${rank}`;
-    }
-  };
-
+const RankBadge = ({
+  rank,
+  children,
+}: {
+  rank: number;
+  children: React.ReactNode;
+}) => {
   const getBgColor = () => {
     switch (rank) {
       case 1:
@@ -48,21 +49,26 @@ const RankBadge = ({ rank }: { rank: number }) => {
   return (
     <View style={[styles.rankBadge, { backgroundColor: getBgColor() }]}>
       <Text style={[styles.rankText, { fontSize: isTopThree ? 28 : 20 }]}>
-        {getEmoji()}
+        {children}
       </Text>
     </View>
   );
 };
 
-// ScoreCard Component with 3D effect
-export const ScoreCard = ({ score }: { score: ScoreData }) => {
+// ScoreCard Component with 3D press effect and haptic
+export const ScoreCard = ({
+  score,
+  onPress,
+}: {
+  score: ScoreData;
+  onPress: () => void;
+}) => {
   const yellow = useColor('orca');
 
   const pressed = useSharedValue(0);
   const sparkle = useSharedValue(0);
 
   useEffect(() => {
-    // Sparkle animation for top 3
     if (score.rank && score.rank <= 3) {
       sparkle.value = withRepeat(
         withSequence(
@@ -82,14 +88,6 @@ export const ScoreCard = ({ score }: { score: ScoreData }) => {
     };
   });
 
-  const handlePressIn = () => {
-    pressed.value = withSpring(1, { damping: 15 });
-  };
-
-  const handlePressOut = () => {
-    pressed.value = withSpring(0, { damping: 15 });
-  };
-
   const getRankColor = () => {
     switch (score.rank) {
       case 1:
@@ -100,6 +98,19 @@ export const ScoreCard = ({ score }: { score: ScoreData }) => {
         return { bg: '#CD7F32', shadow: '#8B5A2B' };
       default:
         return { bg: '#FFFFFF', shadow: '#D1D5DB' };
+    }
+  };
+
+  const getEmoji = () => {
+    switch (score.rank) {
+      case 1:
+        return '👑';
+      case 2:
+        return '🥈';
+      case 3:
+        return '🥉';
+      default:
+        return `#${score.rank}`;
     }
   };
 
@@ -119,63 +130,73 @@ export const ScoreCard = ({ score }: { score: ScoreData }) => {
       />
 
       {/* Main card */}
-      <Animated.View
-        onTouchStart={handlePressIn}
-        onTouchEnd={handlePressOut}
-        style={[
-          styles.scoreCard,
-          {
-            backgroundColor: colors.bg,
-          },
-          animatedStyle,
-        ]}
+      <Pressable
+        onPress={onPress}
+        onPressIn={() => {
+          triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+          pressed.value = withSpring(1, { damping: 16 });
+        }}
+        onPressOut={() => {
+          triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+          pressed.value = withSpring(0, { damping: 16 });
+        }}
       >
-        <View style={styles.scoreContent}>
-          {/* Rank Badge - Large and prominent */}
-          <View style={styles.rankSection}>
-            <RankBadge rank={score.rank || 0} />
-          </View>
+        <Animated.View
+          style={[
+            styles.scoreCard,
+            { backgroundColor: colors.bg },
+            animatedStyle,
+          ]}
+        >
+          <View style={styles.scoreContent}>
+            <View style={styles.playerSection}>
+              <RankBadge rank={score.rank || 0}>{getEmoji()}</RankBadge>
 
-          {/* Player Info */}
-          <View style={styles.playerSection}>
-            <View style={styles.avatarRing}>
-              <Avatar size={56}>
-                {score.image ? (
-                  <AvatarImage source={{ uri: score.image }} />
+              <RankBadge rank={score.rank || 0}>
+                {score?.image ? (
+                  <Image
+                    source={{ uri: score?.image }}
+                    style={{ width: '100%', height: '100%' }}
+                    contentFit='cover'
+                  />
                 ) : (
-                  <AvatarFallback>
-                    <Text style={{ fontSize: 24, fontWeight: '900' }}>
-                      {score.name.charAt(0).toUpperCase()}
-                    </Text>
-                  </AvatarFallback>
+                  <Text
+                    style={{
+                      color: '#FFF',
+                      fontSize: FONT_SIZE,
+                      fontWeight: '800',
+                    }}
+                  >
+                    {score?.name
+                      ?.split(' ')
+                      .map((part) => part.charAt(0).toUpperCase())
+                      .join('')}
+                  </Text>
                 )}
-              </Avatar>
-            </View>
-            <View style={styles.playerInfo}>
+              </RankBadge>
+
               <Text variant='title' style={styles.nameText}>
                 {score.name}
               </Text>
             </View>
-          </View>
 
-          {/* Time ScoreCard */}
-          <View style={styles.timeSection}>
-            <View style={styles.timeContainer}>
-              <Text
-                variant='title'
-                style={{
-                  color: yellow,
-                  fontSize: 22,
-                  fontWeight: '900',
-                }}
-              >
-                {score.time}
-              </Text>
+            <View style={styles.timeSection}>
+              <View style={styles.timeContainer}>
+                <Text
+                  variant='title'
+                  style={{
+                    color: yellow,
+                    fontSize: 22,
+                    fontWeight: '900',
+                  }}
+                >
+                  {score.time}
+                </Text>
+              </View>
             </View>
-            <Text style={styles.timeLabel}>seconds</Text>
           </View>
-        </View>
-      </Animated.View>
+        </Animated.View>
+      </Pressable>
     </Animated.View>
   );
 };
@@ -212,14 +233,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 12,
   },
-  sparkle: {
-    position: 'absolute',
-    fontSize: 20,
-    zIndex: 10,
-  },
-  rankSection: {
-    marginRight: 6,
-  },
   rankBadge: {
     width: 60,
     height: 60,
@@ -230,8 +243,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.5)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     elevation: 6,
   },
   rankText: {
@@ -241,40 +254,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-  },
-  avatarRing: {
-    padding: 3,
-    borderRadius: 32,
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
-  },
-  playerInfo: {
-    flex: 1,
     gap: 4,
   },
   nameText: {
     color: '#000',
     fontSize: 18,
     fontWeight: '900',
-  },
-  statsBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    alignSelf: 'flex-start',
-  },
-  statsEmoji: {
-    fontSize: 12,
-  },
-  statsText: {
-    color: '#000',
-    fontSize: 11,
-    fontWeight: '700',
-    opacity: 0.8,
   },
   timeSection: {
     alignItems: 'center',
@@ -292,14 +277,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
-  },
-  timeEmoji: {
-    fontSize: 18,
-  },
-  timeLabel: {
-    color: '#000',
-    fontSize: 10,
-    fontWeight: '700',
-    opacity: 0.6,
   },
 });

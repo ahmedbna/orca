@@ -1,11 +1,11 @@
+import { Platform, Pressable } from 'react-native';
 import Animated, {
   useSharedValue,
-  withSpring,
   useAnimatedStyle,
+  withSpring,
   interpolate,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { Platform } from 'react-native';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 
@@ -61,20 +61,17 @@ export const OrcaButton = ({
   label: string;
   variant?: ButtonVariant;
 }) => {
-  const pulse = useSharedValue(1);
   const pressed = useSharedValue(0);
-
   const colors = COLORS[variant];
 
-  const animatedFaceStyle = useAnimatedStyle(() => {
+  const animatedStyle = useAnimatedStyle(() => {
     const translateY = interpolate(
       pressed.value,
       [0, 1],
       [0, BUTTON_SHADOW_HEIGHT]
     );
-
     return {
-      transform: [{ translateY }, { scale: pulse.value }],
+      transform: [{ translateY }],
     };
   });
 
@@ -84,21 +81,22 @@ export const OrcaButton = ({
     }
   };
 
-  const handlePressIn = () => {
-    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-    pressed.value = withSpring(1, { damping: 15 });
-  };
-
-  const handlePressOut = () => {
-    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
-    pressed.value = withSpring(0, { damping: 15 });
-    onPress();
-  };
-
   return (
-    <Animated.View style={{ height: 64 }}>
+    <Pressable
+      onPress={onPress}
+      onPressIn={() => {
+        pressed.value = withSpring(1, { damping: 15 });
+        triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+      }}
+      onPressOut={() => {
+        pressed.value = withSpring(0, { damping: 15 });
+        triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+      }}
+      style={{ height: 64 }}
+    >
       {/* Shadow */}
       <View
+        pointerEvents='none'
         style={{
           backgroundColor: colors.shadow,
           position: 'absolute',
@@ -113,8 +111,7 @@ export const OrcaButton = ({
 
       {/* Face */}
       <Animated.View
-        onTouchStart={handlePressIn}
-        onTouchEnd={handlePressOut}
+        pointerEvents='none'
         style={[
           {
             backgroundColor: colors.face,
@@ -130,7 +127,7 @@ export const OrcaButton = ({
             borderWidth: 4,
             borderColor: colors.border,
           },
-          animatedFaceStyle,
+          animatedStyle,
         ]}
       >
         <Text
@@ -143,6 +140,6 @@ export const OrcaButton = ({
           {label}
         </Text>
       </Animated.View>
-    </Animated.View>
+    </Pressable>
   );
 };

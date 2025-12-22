@@ -1,12 +1,15 @@
-import { Profile } from '@/components/profile';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
+import { useQuery } from 'convex/react';
+import { useLocalSearchParams } from 'expo-router';
 import { Spinner } from '@/components/ui/spinner';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
-import { api } from '@/convex/_generated/api';
-import { useQuery } from 'convex/react';
+import { Profile } from '@/components/profile';
 
-export default function ProfileScreen() {
-  const user = useQuery(api.users.get);
+export default function StudentScreen() {
+  const { id } = useLocalSearchParams<{ id: Id<'users'> }>();
+  const user = useQuery(api.users.getbyId, { userId: id });
 
   if (user === undefined) {
     return (
@@ -31,7 +34,7 @@ export default function ProfileScreen() {
           justifyContent: 'center',
         }}
       >
-        <Text>User Not Found!</Text>
+        <Text>User Not Found</Text>
       </View>
     );
   }

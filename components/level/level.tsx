@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
-import { Doc } from '@/convex/_generated/dataModel';
+import { Doc, Id } from '@/convex/_generated/dataModel';
 import { LANGUAGES } from '@/constants/languages';
 import { OrcaButton } from '../orca-button';
 import { LessonCard } from './lesson-card';
@@ -16,7 +16,7 @@ import { formatTime } from '@/lib/format-time';
 import { ChevronLeft } from 'lucide-react-native';
 
 export interface ScoreData {
-  userId: string;
+  userId: Id<'users'>;
   time: string;
   name: string;
   image: string | null;
@@ -65,7 +65,12 @@ export const Level = ({ lesson }: Props) => {
     <View style={{ flex: 1 }}>
       <FlatList
         data={scores}
-        renderItem={({ item }) => <ScoreCard score={item} />}
+        renderItem={({ item }) => (
+          <ScoreCard
+            score={item}
+            onPress={() => router.push(`/(home)/student/${item.userId}`)}
+          />
+        )}
         keyExtractor={(item) => item.userId}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{

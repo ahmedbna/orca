@@ -9,15 +9,18 @@ import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '@/components/ui/text';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar } from '@/components/ui/avatar';
 import { Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Music } from '@/components/orca/music';
+import { Doc } from '@/convex/_generated/dataModel';
 
 export const Background = ({
+  user,
   swim,
   children,
 }: {
+  user?: Doc<'users'>;
   swim?: boolean;
   children: React.ReactNode;
 }) => {
@@ -83,14 +86,12 @@ export const Background = ({
           </Text>
         </View>
 
-        <Avatar size={42}>
-          <AvatarImage
-            source={{
-              uri: 'https://avatars.githubusercontent.com/u/99088394?v=4',
-            }}
-          />
-          <AvatarFallback>AB</AvatarFallback>
-        </Avatar>
+        <Avatar
+          size={42}
+          image={user?.image}
+          name={user?.name}
+          onPress={() => router.push('/profile')}
+        />
       </Pressable>
 
       <Clouds />
