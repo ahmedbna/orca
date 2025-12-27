@@ -9,7 +9,6 @@ import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import { useRouter } from 'expo-router';
 import { HeatmapChart } from '@/components/charts/heatmap-chart';
-import { ChartContainer } from '@/components/charts/chart-container';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 
@@ -28,13 +27,6 @@ const MONTHS = [
   'December',
 ];
 
-function getYearRange(year: number) {
-  return {
-    start: Date.UTC(year, 0, 1),
-    end: Date.UTC(year, 11, 31),
-  };
-}
-
 export default function StreakScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -44,14 +36,9 @@ export default function StreakScreen() {
 
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
 
-  const { start, end } = getYearRange(year);
-
   const course = useQuery(api.courses.getCourse);
   const streak = useQuery(api.wins.getCurrentStreak);
-  const heatmapData = useQuery(api.wins.getWinHeatmap, {
-    yearStart: start,
-    yearEnd: end,
-  });
+  const heatmapData = useQuery(api.wins.getWinHeatmap);
 
   if (
     course === undefined ||
@@ -155,10 +142,15 @@ export default function StreakScreen() {
           onPress={() => router.back()}
           style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}
         >
-          <ChevronLeft size={26} color='#000' strokeWidth={3} />
+          <ChevronLeft size={26} color='#000' strokeWidth={3} opacity={0.7} />
           <Text
             variant='title'
-            style={{ fontSize: 22, color: '#000', fontWeight: '800' }}
+            style={{
+              fontSize: 22,
+              color: '#000',
+              fontWeight: 800,
+              opacity: 0.7,
+            }}
           >
             Back
           </Text>

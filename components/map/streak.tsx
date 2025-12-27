@@ -86,7 +86,7 @@ export const Streak = ({
           <Text style={styles.title}>
             {`${streak} ${streak === 1 ? 'Day' : 'Days'} Streak`}
           </Text>
-          <ChevronRight size={26} color='#aaa' />
+          {onPress ? <ChevronRight size={26} color='#aaa' /> : null}
         </View>
 
         {/* Days */}

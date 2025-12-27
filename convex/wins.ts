@@ -2,12 +2,6 @@ import { v } from 'convex/values';
 import { query, mutation } from './_generated/server';
 import { getAuthUserId } from '@convex-dev/auth/server';
 
-const getUTCDay = (timestamp = Date.now()) => {
-  const d = new Date(timestamp);
-  d.setUTCHours(0, 0, 0, 0);
-  return d.getTime();
-};
-
 export const getCurrentStreak = query({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
@@ -35,22 +29,20 @@ export const getCurrentStreak = query({
 });
 
 export const getWinHeatmap = query({
-  args: {
-    yearStart: v.number(),
-    yearEnd: v.number(),
-  },
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error('Not authenticated');
+
+    const today = new Date();
+    const year = today.getFullYear();
+
+    const { start, end } = getYearRange(year);
 
     const wins = await ctx.db
       .query('wins')
       .withIndex('by_user', (q) => q.eq('userId', userId))
       .filter((q) =>
-        q.and(
-          q.gte(q.field('day'), args.yearStart),
-          q.lte(q.field('day'), args.yearEnd)
-        )
+        q.and(q.gte(q.field('day'), start), q.lte(q.field('day'), end))
       )
       .collect();
 
@@ -91,3 +83,16 @@ export const recordWin = mutation({
     });
   },
 });
+
+const getUTCDay = (timestamp = Date.now()) => {
+  const d = new Date(timestamp);
+  d.setUTCHours(0, 0, 0, 0);
+  return d.getTime();
+};
+
+const getYearRange = (year: number) => {
+  return {
+    start: Date.UTC(year, 0, 1),
+    end: Date.UTC(year, 11, 31),
+  };
+};

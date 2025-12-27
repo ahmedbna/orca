@@ -29,9 +29,9 @@ const COLORS = {
     border: 'rgba(255,255,255,0.1)',
   },
   gray: {
-    face: '#E5E7EB',
+    face: '#D1D5DB',
     shadow: '#AFB2B7',
-    text: '#6B7280',
+    text: '#000',
     border: 'rgba(0,0,0,0.1)',
   },
   green: {

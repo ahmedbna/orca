@@ -16,7 +16,24 @@ export const get = query({
       throw new Error('User not found');
     }
 
-    return user;
+    const today = getUTCDay();
+
+    const wins = await ctx.db
+      .query('wins')
+      .withIndex('by_user', (q) => q.eq('userId', user._id))
+      .collect();
+
+    const days = new Set(wins.map((w) => w.day));
+
+    let streak = 0;
+    let cursor = today;
+
+    while (days.has(cursor)) {
+      streak++;
+      cursor -= 24 * 60 * 60 * 1000;
+    }
+
+    return { ...user, streak };
   },
 });
 
@@ -89,3 +106,9 @@ export const update = mutation({
     });
   },
 });
+
+const getUTCDay = (timestamp = Date.now()) => {
+  const d = new Date(timestamp);
+  d.setUTCHours(0, 0, 0, 0);
+  return d.getTime();
+};

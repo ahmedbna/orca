@@ -131,6 +131,48 @@ export default function RootLayout() {
                     : colorScheme === 'dark'
                       ? 'dark'
                       : 'light',
+
+                  animation: 'slide_from_bottom',
+                }}
+              />
+              <Stack.Screen
+                name='settings'
+                options={{
+                  headerShown: false,
+                  sheetGrabberVisible: true,
+                  sheetAllowedDetents: [0.4, 0.7, 1],
+                  contentStyle: {
+                    backgroundColor: isLiquidGlassAvailable()
+                      ? 'transparent'
+                      : colorScheme === 'dark'
+                        ? Colors.dark.card
+                        : Colors.light.card,
+                  },
+                  headerTransparent: Platform.OS === 'ios' ? true : false,
+                  headerLargeTitle: false,
+                  title: '',
+                  presentation:
+                    Platform.OS === 'ios'
+                      ? isLiquidGlassAvailable() && osName !== 'iPadOS'
+                        ? 'formSheet'
+                        : 'modal'
+                      : 'modal',
+                  sheetInitialDetentIndex: 0,
+                  headerStyle: {
+                    backgroundColor:
+                      Platform.OS === 'ios'
+                        ? 'transparent'
+                        : colorScheme === 'dark'
+                          ? Colors.dark.card
+                          : Colors.light.card,
+                  },
+                  headerBlurEffect: isLiquidGlassAvailable()
+                    ? undefined
+                    : colorScheme === 'dark'
+                      ? 'dark'
+                      : 'light',
+
+                  animation: 'slide_from_bottom',
                 }}
               />
               <Stack.Screen name='+not-found' />
