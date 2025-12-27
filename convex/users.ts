@@ -33,7 +33,81 @@ export const get = query({
       cursor -= 24 * 60 * 60 * 1000;
     }
 
-    return { ...user, streak };
+    // Get current course
+    let currentCourse = null;
+    if (user.currentCourse) {
+      currentCourse = await ctx.db.get(user.currentCourse);
+    }
+
+    // Get current lesson
+    let currentLesson = null;
+    if (user.currentLesson) {
+      currentLesson = await ctx.db.get(user.currentLesson);
+    }
+
+    // Get all courses for the learning language
+    let allCourses: any[] = [];
+    if (user.learningLanguage) {
+      const courses = await ctx.db
+        .query('courses')
+        .withIndex('by_language', (q) =>
+          q.eq('language', user.learningLanguage!)
+        )
+        .collect();
+
+      const sortedCourses = courses.sort((a, b) => a.order - b.order);
+
+      // Get progress for each course
+      allCourses = await Promise.all(
+        sortedCourses.map(async (course) => {
+          const progress = await ctx.db
+            .query('courseProgress')
+            .withIndex('by_user_course', (q) =>
+              q.eq('userId', user._id).eq('courseId', course._id)
+            )
+            .first();
+
+          return {
+            ...course,
+            isUnlocked: progress?.isUnlocked || false,
+            isCompleted: progress?.isCompleted || false,
+            isCurrent: user.currentCourse === course._id,
+          };
+        })
+      );
+    }
+
+    // Count completed courses
+    const coursesCompleted = allCourses.filter((c) => c.isCompleted).length;
+
+    // Count completed lessons
+    const completedLessonProgress = await ctx.db
+      .query('lessonProgress')
+      .withIndex('by_user', (q) => q.eq('userId', user._id))
+      .filter((q) => q.eq(q.field('isCompleted'), true))
+      .collect();
+
+    const lessonsCompleted = completedLessonProgress.length;
+
+    const totalWins = wins.length;
+
+    // Get credits
+    const credits = await ctx.db
+      .query('credits')
+      .withIndex('by_user', (q) => q.eq('userId', user._id))
+      .first();
+
+    return {
+      ...user,
+      currentCourse,
+      currentLesson,
+      allCourses,
+      coursesCompleted,
+      lessonsCompleted,
+      totalWins,
+      streak,
+      credits: credits?.balance || 0,
+    };
   },
 });
 
