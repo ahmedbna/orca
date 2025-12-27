@@ -7,8 +7,9 @@ import { useQuery } from 'convex/react';
 
 export default function ProfileScreen() {
   const user = useQuery(api.users.get, {});
+  const userId = useQuery(api.users.getId);
 
-  if (user === undefined) {
+  if (user === undefined || userId === undefined) {
     return (
       <View
         style={{
@@ -22,7 +23,7 @@ export default function ProfileScreen() {
     );
   }
 
-  if (user === null) {
+  if (user === null || userId === null) {
     return (
       <View
         style={{
@@ -31,10 +32,10 @@ export default function ProfileScreen() {
           justifyContent: 'center',
         }}
       >
-        <Text>User Not Found!</Text>
+        <Text>User Not Found</Text>
       </View>
     );
   }
 
-  return <Profile user={user} />;
+  return <Profile user={user} userId={userId} />;
 }

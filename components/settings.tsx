@@ -1,22 +1,43 @@
-import { useQuery } from 'convex/react';
+import { useState } from 'react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Spinner } from '@/components/ui/spinner';
 import { ScrollView } from '@/components/ui/scroll-view';
-import { Card } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
+import { Input } from '@/components/ui/input';
+import { User } from 'lucide-react-native';
+import { TextArea } from '@/components/ui/text-area';
+import { Button } from '@/components/ui/button';
+import { SignOutButton } from '@/components/auth/singout';
 
-export default function CoursesScreen() {
-  const courses = useQuery(api.courses.getAll);
+export default function SettingsScreen() {
+  const user = useQuery(api.users.get, {});
+  const update = useMutation(api.users.update);
 
-  if (courses === undefined) {
+  const userbirthday = user?.birthday ? new Date(user.birthday) : undefined;
+
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState(user?.name || '');
+  const [bio, setBio] = useState(user?.bio || '');
+  const [gender, setGender] = useState(user?.gender || '');
+  const [birthday, setBirthday] = useState<Date | undefined>(userbirthday);
+
+  const today = new Date();
+  const maxSelectableBirthday = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate()
+  );
+
+  if (user === undefined) {
     return (
       <View
         style={{
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          // paddingTop: 40,
         }}
       >
         <Spinner size='lg' variant='circle' color='#000000' />
@@ -24,7 +45,7 @@ export default function CoursesScreen() {
     );
   }
 
-  if (courses === null || courses.length === 0) {
+  if (user === null) {
     return (
       <View
         style={{
@@ -35,14 +56,24 @@ export default function CoursesScreen() {
         }}
       >
         <Text variant='heading' style={{ marginBottom: 8 }}>
-          No Courses Available
-        </Text>
-        <Text style={{ textAlign: 'center', opacity: 0.7 }}>
-          Please select a learning language to view available courses.
+          No User Found
         </Text>
       </View>
     );
   }
+
+  const handleUpdateProfile = async () => {
+    setLoading(true);
+
+    await update({
+      name,
+      bio,
+      gender,
+      birthday: birthday ? birthday.getTime() : undefined,
+    });
+
+    setLoading(false);
+  };
 
   return (
     <ScrollView
@@ -53,49 +84,71 @@ export default function CoursesScreen() {
         paddingBottom: 100,
       }}
     >
-      <Text variant='heading' style={{ marginBottom: 8 }}>
-        Your Courses
-      </Text>
-      <Text style={{ marginBottom: 24, opacity: 0.7 }}>
-        Continue your learning journey
+      <Text variant='heading' style={{ marginBottom: 8, fontSize: 32 }}>
+        {user.name}
       </Text>
 
-      {courses.map((course) => (
-        <Card
-          key={course._id}
-          style={{
-            marginBottom: 16,
-            padding: 16,
-            opacity: course.isUnlocked ? 1 : 0.5,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              marginBottom: 8,
-            }}
+      <View style={{ gap: 12, marginVertical: 24 }}>
+        <Input
+          variant='outline'
+          label='Full Name'
+          placeholder='Enter your full name'
+          icon={User}
+          value={name}
+          onChangeText={setName}
+          disabled={loading}
+        />
+
+        <DatePicker
+          variant='outline'
+          label='Birthday'
+          value={birthday}
+          onChange={setBirthday}
+          maximumDate={maxSelectableBirthday}
+          placeholder='Select your birthday'
+          disabled={loading}
+        />
+
+        <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+          <Button
+            style={{ flex: 1 }}
+            variant={gender === 'male' ? 'default' : 'outline'}
+            onPress={() => setGender('male')}
+            disabled={loading}
           >
-            <View style={{ flex: 1 }}>
-              <Text variant='title' style={{ marginBottom: 4 }}>
-                {course.title}
-              </Text>
-              <Text style={{ opacity: 0.7, fontSize: 14 }}>
-                {course.description}
-              </Text>
-            </View>
+            Male
+          </Button>
+          <Button
+            style={{ flex: 1 }}
+            variant={gender === 'female' ? 'default' : 'outline'}
+            onPress={() => setGender('female')}
+            disabled={loading}
+          >
+            Female
+          </Button>
+        </View>
 
-            <View style={{ flexDirection: 'row', gap: 6, marginLeft: 8 }}>
-              {course.isCurrent && (
-                <Text style={{ fontSize: 12 }}>Current</Text>
-              )}
-              {course.isCompleted && <Text style={{ fontSize: 12 }}>✓</Text>}
-              {!course.isUnlocked && <Text style={{ fontSize: 12 }}>🔒</Text>}
-            </View>
-          </View>
-        </Card>
-      ))}
+        <TextArea
+          variant='outline'
+          placeholder='Tell us about yourself in your bio...'
+          value={bio}
+          onChangeText={setBio}
+          numberOfLines={4}
+          disabled={loading}
+        />
+
+        <Button
+          variant='success'
+          onPress={handleUpdateProfile}
+          style={{ marginVertical: 8 }}
+          disabled={loading}
+          loading={loading}
+        >
+          Update Profile
+        </Button>
+
+        <SignOutButton disabled={loading} />
+      </View>
     </ScrollView>
   );
 }

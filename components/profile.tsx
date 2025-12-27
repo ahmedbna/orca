@@ -6,13 +6,14 @@ import { View } from '@/components/ui/view';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, BookOpen, Trophy, Zap } from 'lucide-react-native';
-import { Doc } from '@/convex/_generated/dataModel';
+import { Doc, Id } from '@/convex/_generated/dataModel';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { LANGUAGES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
 
 type Props = {
+  userId: Id<'users'>;
   user: Doc<'users'> & {
     course: Doc<'courses'> | null;
     lesson: Doc<'lessons'> | null;
@@ -25,7 +26,7 @@ type Props = {
   };
 };
 
-export const Profile = ({ user }: Props) => {
+export const Profile = ({ user, userId }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -437,11 +438,13 @@ export const Profile = ({ user }: Props) => {
           onPress={() => router.push('/(home)/streak')}
         />
 
-        <OrcaButton
-          label='SETTINGS'
-          variant='gray'
-          onPress={() => router.push('/settings')}
-        />
+        {user._id === userId ? (
+          <OrcaButton
+            label='SETTINGS'
+            variant='gray'
+            onPress={() => router.push('/settings')}
+          />
+        ) : null}
       </View>
     </View>
   );

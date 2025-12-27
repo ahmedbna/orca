@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
-export const SignOutButton = () => {
+export const SignOutButton = ({ disabled }: { disabled: boolean }) => {
   const router = useRouter();
   const { signOut } = useAuthActions();
   const { isAuthenticated } = useConvexAuth();
@@ -29,6 +29,7 @@ export const SignOutButton = () => {
       variant='destructive'
       onPress={handleSignOut}
       icon={LogOut}
+      disabled={disabled}
     >
       Logout
     </Button>

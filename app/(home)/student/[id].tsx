@@ -10,8 +10,9 @@ import { Profile } from '@/components/profile';
 export default function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: Id<'users'> }>();
   const user = useQuery(api.users.get, { userId: id });
+  const userId = useQuery(api.users.getId);
 
-  if (user === undefined) {
+  if (user === undefined || userId === undefined) {
     return (
       <View
         style={{
@@ -25,7 +26,7 @@ export default function StudentScreen() {
     );
   }
 
-  if (user === null) {
+  if (user === null || userId === null) {
     return (
       <View
         style={{
@@ -39,5 +40,5 @@ export default function StudentScreen() {
     );
   }
 
-  return <Profile user={user} />;
+  return <Profile user={user} userId={userId} />;
 }

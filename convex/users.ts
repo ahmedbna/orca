@@ -2,6 +2,24 @@ import { v } from 'convex/values';
 import { getAuthUserId } from '@convex-dev/auth/server';
 import { mutation, query } from './_generated/server';
 
+export const getId = query({
+  handler: async (ctx) => {
+    const authId = await getAuthUserId(ctx);
+
+    if (!authId) {
+      throw new Error('Not authenticated');
+    }
+
+    const user = await ctx.db.get(authId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user._id;
+  },
+});
+
 export const get = query({
   args: {
     userId: v.optional(v.id('users')),
