@@ -141,7 +141,12 @@ export const Level = ({ lesson }: Props) => {
           </Text>
           <Text
             variant='title'
-            style={{ fontSize: 22, color: '#000', fontWeight: '800' }}
+            style={{
+              fontSize: 22,
+              color: '#000',
+              fontWeight: '800',
+              opacity: 0.7,
+            }}
           >
             {lesson.course.title}
           </Text>

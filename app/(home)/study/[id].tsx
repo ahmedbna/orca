@@ -26,11 +26,7 @@ export default function StudyScreen() {
     );
   }
 
-  if (
-    lesson === null ||
-    !lesson.user.nativeLanguage ||
-    !lesson.user.learningLanguage
-  ) {
+  if (lesson === null || !lesson.user.nativeLanguage) {
     return (
       <View
         style={{
@@ -44,11 +40,5 @@ export default function StudyScreen() {
     );
   }
 
-  return (
-    <Learn
-      lesson={lesson}
-      native={lesson.user.nativeLanguage}
-      language={lesson.user.learningLanguage}
-    />
-  );
+  return <Learn lesson={lesson} native={lesson.user.nativeLanguage} />;
 }

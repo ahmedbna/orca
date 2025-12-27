@@ -427,7 +427,12 @@ export const Profile = ({ user, userId }: Props) => {
 
           <Text
             variant='title'
-            style={{ fontSize: 22, color: '#000', fontWeight: '800' }}
+            style={{
+              fontSize: 22,
+              color: '#000',
+              fontWeight: '800',
+              opacity: 0.7,
+            }}
           >
             Back
           </Text>

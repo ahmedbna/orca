@@ -46,6 +46,12 @@ const COLORS = {
     text: '#FFFFFF',
     border: 'rgba(0,0,0,0.15)',
   },
+  indigo: {
+    face: '#5E5CE6',
+    shadow: '#3F3DB8',
+    text: '#FFFFFF',
+    border: 'rgba(0,0,0,0.15)',
+  },
 } as const;
 
 const BUTTON_SHADOW_HEIGHT = 8;
@@ -137,6 +143,81 @@ export const OrcaButton = ({
             fontWeight: '800',
           }}
         >
+          {label}
+        </Text>
+      </Animated.View>
+    </Pressable>
+  );
+};
+
+export const OrcaSquareButton = ({
+  onPress,
+  label,
+  variant = 'yellow',
+  disabled = false,
+  flex = 1,
+}: {
+  onPress: () => void;
+  label: string;
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  flex?: number;
+}) => {
+  const pressed = useSharedValue(0);
+  const colors = COLORS[disabled ? 'gray' : variant];
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      pressed.value,
+      [0, 1],
+      [0, disabled ? 0 : 8]
+    );
+    return { transform: [{ translateY }] };
+  });
+
+  return (
+    <Pressable
+      disabled={disabled}
+      onPress={onPress}
+      onPressIn={() => {
+        if (!disabled) pressed.value = withSpring(1, { damping: 15 });
+      }}
+      onPressOut={() => {
+        if (!disabled) pressed.value = withSpring(0, { damping: 15 });
+      }}
+      style={{ flex, height: 64, opacity: disabled ? 0.6 : 1 }}
+    >
+      {/* Shadow */}
+      <View
+        pointerEvents='none'
+        style={{
+          position: 'absolute',
+          top: 8,
+          left: 0,
+          right: 0,
+          height: 64,
+          backgroundColor: colors.shadow,
+          borderRadius: 20,
+        }}
+      />
+
+      {/* Face */}
+      <Animated.View
+        pointerEvents='none'
+        style={[
+          {
+            height: 64,
+            backgroundColor: colors.face,
+            borderRadius: 20,
+            borderWidth: 4,
+            borderColor: colors.border,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          animatedStyle,
+        ]}
+      >
+        <Text style={{ fontSize: 22, fontWeight: '900', color: colors.text }}>
           {label}
         </Text>
       </Animated.View>

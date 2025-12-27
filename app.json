@@ -3,7 +3,7 @@
     "name": "orca",
     "slug": "orca",
     "scheme": "orca",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/orca.png",
     "userInterfaceStyle": "automatic",
