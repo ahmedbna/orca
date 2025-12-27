@@ -9,7 +9,7 @@ import { Profile } from '@/components/profile';
 
 export default function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: Id<'users'> }>();
-  const user = useQuery(api.users.getbyId, { userId: id });
+  const user = useQuery(api.users.get, { userId: id });
 
   if (user === undefined) {
     return (

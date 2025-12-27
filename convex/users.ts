@@ -3,7 +3,10 @@ import { getAuthUserId } from '@convex-dev/auth/server';
 import { mutation, query } from './_generated/server';
 
 export const get = query({
-  handler: async (ctx) => {
+  args: {
+    userId: v.optional(v.id('users')),
+  },
+  handler: async (ctx, args) => {
     const authId = await getAuthUserId(ctx);
 
     if (!authId) {
@@ -16,11 +19,13 @@ export const get = query({
       throw new Error('User not found');
     }
 
+    const userId = args.userId || user._id;
+
     const today = getUTCDay();
 
     const wins = await ctx.db
       .query('wins')
-      .withIndex('by_user', (q) => q.eq('userId', user._id))
+      .withIndex('by_user', (q) => q.eq('userId', userId))
       .collect();
 
     const days = new Set(wins.map((w) => w.day));
@@ -34,15 +39,15 @@ export const get = query({
     }
 
     // Get current course
-    let currentCourse = null;
+    let course = null;
     if (user.currentCourse) {
-      currentCourse = await ctx.db.get(user.currentCourse);
+      course = await ctx.db.get(user.currentCourse);
     }
 
     // Get current lesson
-    let currentLesson = null;
+    let lesson = null;
     if (user.currentLesson) {
-      currentLesson = await ctx.db.get(user.currentLesson);
+      lesson = await ctx.db.get(user.currentLesson);
     }
 
     // Get all courses for the learning language
@@ -63,7 +68,7 @@ export const get = query({
           const progress = await ctx.db
             .query('courseProgress')
             .withIndex('by_user_course', (q) =>
-              q.eq('userId', user._id).eq('courseId', course._id)
+              q.eq('userId', userId).eq('courseId', course._id)
             )
             .first();
 
@@ -83,7 +88,7 @@ export const get = query({
     // Count completed lessons
     const completedLessonProgress = await ctx.db
       .query('lessonProgress')
-      .withIndex('by_user', (q) => q.eq('userId', user._id))
+      .withIndex('by_user', (q) => q.eq('userId', userId))
       .filter((q) => q.eq(q.field('isCompleted'), true))
       .collect();
 
@@ -94,13 +99,13 @@ export const get = query({
     // Get credits
     const credits = await ctx.db
       .query('credits')
-      .withIndex('by_user', (q) => q.eq('userId', user._id))
+      .withIndex('by_user', (q) => q.eq('userId', userId))
       .first();
 
     return {
       ...user,
-      currentCourse,
-      currentLesson,
+      course,
+      lesson,
       allCourses,
       coursesCompleted,
       lessonsCompleted,
@@ -108,43 +113,6 @@ export const get = query({
       streak,
       credits: credits?.balance || 0,
     };
-  },
-});
-
-export const getbyId = query({
-  args: {
-    userId: v.id('users'),
-  },
-  handler: async (ctx, args) => {
-    const authId = await getAuthUserId(ctx);
-
-    if (!authId) {
-      throw new Error('Not authenticated');
-    }
-
-    const user = await ctx.db.get(args.userId);
-
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    return user;
-  },
-});
-
-export const getAll = query({
-  handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-
-    if (!userId) {
-      throw new Error('Not authenticated');
-    }
-
-    const allUser = await ctx.db.query('users').take(100);
-
-    const users = allUser.filter((user) => user._id !== userId);
-
-    return users;
   },
 });
 

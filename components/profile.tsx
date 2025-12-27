@@ -10,12 +10,13 @@ import { Doc } from '@/convex/_generated/dataModel';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { LANGUAGES } from '@/constants/languages';
+import { useColor } from '@/hooks/useColor';
 
 type Props = {
   user: Doc<'users'> & {
-    currentCourse: Doc<'courses'>;
-    currentLesson: Doc<'lessons'>;
-    allCourses: Doc<'courses'>[];
+    course: Doc<'courses'> | null;
+    lesson: Doc<'lessons'> | null;
+    allCourses: any[];
     coursesCompleted: number;
     lessonsCompleted: number;
     totalWins: number;
@@ -27,6 +28,11 @@ type Props = {
 export const Profile = ({ user }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+
+  const card = useColor('card');
+  const text = useColor('text');
+  const muted = useColor('textMuted');
+  const background = useColor('background');
 
   const AVATAR_SHADOW_OFFSET = 6;
   const size = 100;
@@ -49,7 +55,7 @@ export const Profile = ({ user }: Props) => {
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
-          paddingTop: insets.top + 60,
+          paddingTop: insets.top + 70,
           paddingHorizontal: 16,
           paddingBottom: insets.bottom + 300,
         }}
@@ -57,9 +63,10 @@ export const Profile = ({ user }: Props) => {
         {/* Profile Header */}
         <View
           style={{
-            backgroundColor: '#FFF',
+            backgroundColor: background,
             borderRadius: 24,
             padding: 20,
+            paddingBottom: 26,
             marginBottom: 16,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 4 },
@@ -71,9 +78,8 @@ export const Profile = ({ user }: Props) => {
           <View
             style={{
               flexDirection: 'row',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               gap: 16,
-              marginBottom: 16,
             }}
           >
             <View>
@@ -136,7 +142,7 @@ export const Profile = ({ user }: Props) => {
                 style={{
                   fontSize: 24,
                   fontWeight: '900',
-                  color: '#000',
+                  color: text,
                   marginBottom: 4,
                 }}
               >
@@ -146,7 +152,7 @@ export const Profile = ({ user }: Props) => {
                 <Text
                   style={{
                     fontSize: 14,
-                    color: '#666',
+                    color: muted,
                     lineHeight: 18,
                   }}
                 >
@@ -155,15 +161,26 @@ export const Profile = ({ user }: Props) => {
               )}
             </View>
           </View>
+        </View>
 
+        <View
+          style={{
+            backgroundColor: background,
+            borderRadius: 24,
+            padding: 20,
+            marginBottom: 16,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
+            elevation: 5,
+          }}
+        >
           {/* Stats Row */}
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-around',
-              paddingTop: 16,
-              borderTopWidth: 1,
-              borderTopColor: '#F0F0F0',
             }}
           >
             <View style={{ alignItems: 'center' }}>
@@ -180,10 +197,10 @@ export const Profile = ({ user }: Props) => {
               >
                 <Zap size={24} color='#FF9800' fill='#FF9800' />
               </View>
-              <Text style={{ fontSize: 20, fontWeight: '800', color: '#000' }}>
+              <Text style={{ fontSize: 20, fontWeight: '800', color: text }}>
                 {user.streak}
               </Text>
-              <Text style={{ fontSize: 12, color: '#666' }}>Day Streak</Text>
+              <Text style={{ fontSize: 12, color: muted }}>Day Streak</Text>
             </View>
 
             <View style={{ alignItems: 'center' }}>
@@ -200,10 +217,10 @@ export const Profile = ({ user }: Props) => {
               >
                 <BookOpen size={24} color='#4CAF50' />
               </View>
-              <Text style={{ fontSize: 20, fontWeight: '800', color: '#000' }}>
+              <Text style={{ fontSize: 20, fontWeight: '800', color: text }}>
                 {user.coursesCompleted}
               </Text>
-              <Text style={{ fontSize: 12, color: '#666' }}>Completed</Text>
+              <Text style={{ fontSize: 12, color: muted }}>Completed</Text>
             </View>
 
             <View style={{ alignItems: 'center' }}>
@@ -220,10 +237,10 @@ export const Profile = ({ user }: Props) => {
               >
                 <Trophy size={24} color='#9C27B0' />
               </View>
-              <Text style={{ fontSize: 20, fontWeight: '800', color: '#000' }}>
+              <Text style={{ fontSize: 20, fontWeight: '800', color: text }}>
                 {user.lessonsCompleted}
               </Text>
-              <Text style={{ fontSize: 12, color: '#666' }}>Lessons</Text>
+              <Text style={{ fontSize: 12, color: muted }}>Lessons</Text>
             </View>
           </View>
         </View>
@@ -231,7 +248,7 @@ export const Profile = ({ user }: Props) => {
         {/* Languages Section */}
         <View
           style={{
-            backgroundColor: '#FFF',
+            backgroundColor: background,
             borderRadius: 24,
             padding: 20,
             marginBottom: 16,
@@ -246,7 +263,7 @@ export const Profile = ({ user }: Props) => {
             style={{
               fontSize: 18,
               fontWeight: '800',
-              color: '#000',
+              color: text,
               marginBottom: 16,
             }}
           >
@@ -260,14 +277,14 @@ export const Profile = ({ user }: Props) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: 12,
-                backgroundColor: '#F8F8F8',
+                backgroundColor: card,
                 borderRadius: 12,
               }}
             >
-              <Text style={{ fontSize: 14, color: '#666', fontWeight: '600' }}>
+              <Text style={{ fontSize: 14, color: muted, fontWeight: '600' }}>
                 Your Language
               </Text>
-              <Text style={{ fontSize: 16, fontWeight: '700', color: '#000' }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: text }}>
                 {nativeLanguag?.name} {nativeLanguag?.flag}
               </Text>
             </View>
@@ -278,11 +295,11 @@ export const Profile = ({ user }: Props) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: 12,
-                backgroundColor: '#F8F8F8',
+                backgroundColor: card,
                 borderRadius: 12,
               }}
             >
-              <Text style={{ fontSize: 14, color: '#666', fontWeight: '600' }}>
+              <Text style={{ fontSize: 14, color: muted, fontWeight: '600' }}>
                 Learning
               </Text>
               <Text
@@ -295,10 +312,10 @@ export const Profile = ({ user }: Props) => {
         </View>
 
         {/* Current Course Section */}
-        {user.currentCourse && (
+        {user.course && (
           <View
             style={{
-              backgroundColor: '#FFF',
+              backgroundColor: background,
               borderRadius: 24,
               padding: 20,
               marginBottom: 16,
@@ -313,7 +330,7 @@ export const Profile = ({ user }: Props) => {
               style={{
                 fontSize: 18,
                 fontWeight: '800',
-                color: '#000',
+                color: text,
                 marginBottom: 16,
               }}
             >
@@ -337,7 +354,7 @@ export const Profile = ({ user }: Props) => {
                   marginBottom: 8,
                 }}
               >
-                {user.currentCourse.title}
+                {user.course.title}
               </Text>
               <Text
                 style={{
@@ -347,10 +364,10 @@ export const Profile = ({ user }: Props) => {
                   marginBottom: 12,
                 }}
               >
-                {user.currentCourse.description}
+                {user.course.description}
               </Text>
 
-              {user.currentLesson && (
+              {user.lesson && (
                 <View
                   style={{
                     backgroundColor: 'rgba(255,255,255,0.2)',
@@ -375,7 +392,7 @@ export const Profile = ({ user }: Props) => {
                       color: '#FFF',
                     }}
                   >
-                    {user.currentLesson.title}
+                    {user.lesson.title}
                   </Text>
                 </View>
               )}
@@ -415,7 +432,10 @@ export const Profile = ({ user }: Props) => {
           </Text>
         </TouchableOpacity>
 
-        <Streak streak={user.streak} />
+        <Streak
+          streak={user.streak}
+          onPress={() => router.push('/(home)/streak')}
+        />
 
         <OrcaButton
           label='SETTINGS'
