@@ -1,13 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import {
-  Dimensions,
-  StyleSheet,
-  Vibration,
-  TextInput,
-  Pressable,
-} from 'react-native';
+import { Dimensions, StyleSheet, Vibration, TextInput } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -209,6 +203,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const [isStartingGame, setIsStartingGame] = useState(false);
 
   const obstacleX = useSharedValue(SCREEN_WIDTH);
   const obstacleY = useSharedValue(ORCA_Y);
@@ -555,8 +550,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
         clearInterval(countdownInterval);
         setCountdown(null);
         setGameState('playing');
+        setIsStartingGame(false); // Re-enable the button when game starts
 
-        // Animate orca swimming in when countdown finishes
         orcaX.value = withTiming(ORCA_X, {
           duration: 800,
           easing: Easing.out(Easing.cubic),
@@ -568,6 +563,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
   }, [spawnObstacle]);
 
   const startGame = async () => {
+    setIsStartingGame(true); // Disable the button
+
     await cleanup();
 
     gameEndedRef.current = false;
@@ -589,14 +586,11 @@ export const Orca = ({ lesson, native, language }: Props) => {
     obstacleX.value = SCREEN_WIDTH;
     obstacleOpacity.value = 0;
     orcaShake.value = 0;
-    orcaX.value = -ORCA_SIZE - 50; // Reset to off-screen (stays there during countdown)
+    orcaX.value = -ORCA_SIZE - 50;
 
-    // Set countdown to 3 and start listening
     setCountdown(3);
-    setGameState('idle'); // Keep in idle state during countdown
+    setGameState('idle');
     await startListening();
-
-    // The countdown will start automatically when mic initializes (in the 'start' event handler)
   };
 
   useEffect(() => {
@@ -640,8 +634,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
         <View style={styles.uiOverlay}>
           {countdown !== null ? (
             <View style={styles.overlay}>
-              <Text style={styles.countdownText}>{countdown}</Text>
-              <Text style={styles.countdownLabel}>
+              <Text style={styles.countdownText}>
                 {countdown === 3 ? 'Steady' : countdown === 2 ? 'Ready' : 'GO'}
               </Text>
             </View>
@@ -690,14 +683,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
                   Saving score...
                 </Text>
               ) : (
-                <Pressable
-                  style={styles.startButton}
-                  onPress={() => router.back()}
-                >
-                  <Text style={styles.startButtonText}>
-                    {allCorrect ? '🏆 LEADERBOARD' : '📚 STUDY MORE'}
-                  </Text>
-                </Pressable>
+                <View style={{ width: '100%', paddingHorizontal: 60 }}>
+                  <OrcaButton
+                    label={allCorrect ? '🏆 LEADERBOARD' : '📚 STUDY MORE'}
+                    variant='indigo'
+                    onPress={() => router.back()}
+                    disabled={isSubmitting || isStartingGame}
+                  />
+                </View>
               )}
             </View>
           ) : gameState === 'lost' ? (
@@ -706,12 +699,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
                 Correct: {correctPhrases} / {TOTAL_OBSTACLES}
               </Text>
               <Text style={styles.loseText}>{'💔 GAME OVER 💔'}</Text>
-              <Pressable
-                onPress={() => router.back()}
-                style={[styles.startButton]}
-              >
-                <Text style={styles.startButtonText}>📚 STUDY MORE</Text>
-              </Pressable>
+              <View style={{ width: '100%', paddingHorizontal: 60 }}>
+                <OrcaButton
+                  label='📚 STUDY MORE'
+                  variant='indigo'
+                  onPress={() => router.back()}
+                  disabled={isSubmitting || isStartingGame}
+                />
+              </View>
             </View>
           ) : gameState === 'idle' ? (
             <View style={styles.overlay}>
@@ -838,24 +833,24 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
             {gameState === 'idle' ? (
               <OrcaButton
-                label='START'
+                label={isStartingGame ? 'LOADING...' : 'START'}
                 variant='green'
                 onPress={startGame}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isStartingGame}
               />
             ) : gameState === 'lost' ? (
               <OrcaButton
                 label='TRY AGAIN'
                 variant='green'
                 onPress={startGame}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isStartingGame}
               />
             ) : gameState === 'won' ? (
               <OrcaButton
                 label='TRY AGAIN'
                 variant='green'
                 onPress={startGame}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isStartingGame}
               />
             ) : (
               <OrcaButton
@@ -1002,8 +997,8 @@ const styles = StyleSheet.create({
 
   countdownText: {
     color: ORCA_COLOR,
-    fontSize: 120,
-    fontWeight: 'bold',
+    fontSize: 90,
+    fontWeight: 900,
   },
 
   countdownLabel: {
