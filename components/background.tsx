@@ -12,21 +12,58 @@ import { Text } from '@/components/ui/text';
 import { Avatar } from '@/components/ui/avatar';
 import { Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Music } from '@/components/orca/music';
 import { Doc } from '@/convex/_generated/dataModel';
+import { useAudioPlayer } from 'expo-audio';
+import { useEffect } from 'react';
+
+const audioSource = require('@/assets/music/orca.mp3');
 
 export const Background = ({
   user,
-  swim,
+  swim = false,
+  music = false,
   children,
 }: {
   user?: Doc<'users'>;
   swim?: boolean;
+  music?: boolean;
   children: React.ReactNode;
 }) => {
   const yellow = useColor('orca');
-  const insets = useSafeAreaInsets();
+
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const player = useAudioPlayer(audioSource);
+
+  // Handle audio playback based on game state
+  useEffect(() => {
+    const handleAudio = async () => {
+      if (!player || !music) return;
+
+      if (player.isLoaded) {
+        try {
+          if (player.playing) {
+            await player.seekTo(0);
+          } else {
+            await player.play();
+          }
+        } catch (error) {
+          console.error('Error playing audio:', error);
+        }
+      } else {
+        try {
+          if (player.playing) {
+            await player.pause();
+            await player.seekTo(0);
+          }
+        } catch (error) {
+          console.error('Error stopping audio:', error);
+        }
+      }
+    };
+
+    handleAudio();
+  }, [player]);
 
   return (
     <View
@@ -117,8 +154,6 @@ export const Background = ({
         ]}
       />
       {children}
-
-      <Music />
     </View>
   );
 };

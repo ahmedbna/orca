@@ -39,7 +39,7 @@ export const Level = ({ lesson }: Props) => {
   });
 
   const handlePlayPress = () => {
-    router.push(`/(home)/orca/${lesson._id}`);
+    router.push(`/orca/${lesson._id}`);
   };
 
   // Show loading state

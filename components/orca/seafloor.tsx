@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   withRepeat,
   Easing,
+  cancelAnimation,
 } from 'react-native-reanimated';
 import {
   Canvas,
@@ -175,6 +176,18 @@ export const Seafloor = ({
   );
 
   useEffect(() => {
+    // Cancel any existing animation first
+    cancelAnimation(translateX);
+
+    // If speed is 0, don't animate
+    if (speed === 0) {
+      translateX.value = direction === 'left' ? 0 : -SCREEN_WIDTH * 1.5;
+      return;
+    }
+
+    // Reset position and start animation
+    translateX.value = direction === 'left' ? 0 : -SCREEN_WIDTH * 1.5;
+
     translateX.value = withRepeat(
       withTiming(direction === 'left' ? -loopWidth : loopWidth, {
         duration: speed,
