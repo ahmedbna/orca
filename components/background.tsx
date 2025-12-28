@@ -35,35 +35,42 @@ export const Background = ({
   const insets = useSafeAreaInsets();
   const player = useAudioPlayer(audioSource);
 
-  // Handle audio playback based on game state
+  // Handle audio playback based on music prop
   useEffect(() => {
     const handleAudio = async () => {
-      if (!player || !music) return;
+      if (!player) return;
 
-      if (player.isLoaded) {
-        try {
-          if (player.playing) {
-            await player.seekTo(0);
-          } else {
+      try {
+        if (music) {
+          // If music should play
+          if (!player.playing) {
+            player.loop = true; // Enable looping
             await player.play();
           }
-        } catch (error) {
-          console.error('Error playing audio:', error);
-        }
-      } else {
-        try {
+        } else {
+          // If music should stop
           if (player.playing) {
             await player.pause();
-            await player.seekTo(0);
           }
-        } catch (error) {
-          console.error('Error stopping audio:', error);
         }
+      } catch (error) {
+        console.error('Error handling audio:', error);
+      }
+    };
+
+    const clearAudio = async () => {
+      if (player && player.playing) {
+        await player.pause();
       }
     };
 
     handleAudio();
-  }, [player]);
+
+    // Cleanup: pause music when component unmounts
+    return () => {
+      clearAudio();
+    };
+  }, [player, music]);
 
   return (
     <View
@@ -71,6 +78,7 @@ export const Background = ({
         flex: 1,
         backgroundColor: yellow,
       }}
+      pointerEvents='box-none'
     >
       <LinearGradient
         colors={[
