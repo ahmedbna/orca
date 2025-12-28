@@ -597,7 +597,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const allCorrect = correctPhrases === TOTAL_OBSTACLES;
 
   return (
-    <Background user={lesson.user} swim={gameState === 'playing'} music={false}>
+    <Background user={lesson.user} swim={gameState === 'playing'}>
       <View style={{ flex: 1 }}>
         <View style={styles.uiOverlay}>
           {currentObstacleIndex !== null && gameState === 'playing' ? (

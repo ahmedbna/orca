@@ -23,7 +23,7 @@ export default function HomeLayout() {
   }
 
   return (
-    <Background user={user} music>
+    <Background user={user}>
       <Slot />
     </Background>
   );

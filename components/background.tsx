@@ -1,85 +1,88 @@
+import { useEffect, useRef, useState } from 'react';
+import { Pressable } from 'react-native';
+import { usePathname, useRouter } from 'expo-router';
+import { useAudioPlayer } from 'expo-audio';
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Doc } from '@/convex/_generated/dataModel';
+
+import { useColor } from '@/hooks/useColor';
+import { Text } from '@/components/ui/text';
+import { Avatar } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { Jellyfish } from '@/components/orca/jellyfish';
 import { Bubbles } from '@/components/orca/bubbles';
 import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
 import { Seafloor } from '@/components/orca/seafloor';
 import { View } from '@/components/ui/view';
-import { useColor } from '@/hooks/useColor';
-import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text } from '@/components/ui/text';
-import { Avatar } from '@/components/ui/avatar';
-import { Pressable } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Doc } from '@/convex/_generated/dataModel';
-import { useAudioPlayer } from 'expo-audio';
-import { useEffect } from 'react';
 
 const audioSource = require('@/assets/music/orca.mp3');
 
 export const Background = ({
   user,
   swim = false,
-  music = false,
   children,
 }: {
   user?: Doc<'users'>;
   swim?: boolean;
-  music?: boolean;
   children: React.ReactNode;
 }) => {
   const yellow = useColor('orca');
-
   const router = useRouter();
+  const pathname = usePathname();
   const insets = useSafeAreaInsets();
+
+  const [mute, setMute] = useState(false);
+  const userMuteBeforeOrcaRef = useRef<boolean | null>(null);
   const player = useAudioPlayer(audioSource);
+  const isOrcaRoute = pathname.startsWith('/orca/');
 
-  // Handle audio playback based on music prop
+  /**
+   * 🎵 Audio lifecycle controller
+   */
   useEffect(() => {
-    const handleAudio = async () => {
-      if (!player) return;
+    if (!player) return;
 
+    const syncAudio = async () => {
       try {
-        if (music) {
-          // If music should play
-          if (!player.playing) {
-            player.loop = true; // Enable looping
-            await player.play();
+        // 🐋 ENTER ORCA
+        if (isOrcaRoute) {
+          // Save user preference ONCE
+          if (userMuteBeforeOrcaRef.current === null) {
+            userMuteBeforeOrcaRef.current = mute;
           }
-        } else {
-          // If music should stop
-          if (player.playing) {
-            await player.pause();
-          }
+
+          await player.pause();
+          return;
         }
-      } catch (error) {
-        console.error('Error handling audio:', error);
+
+        // 🏊 EXIT ORCA
+        if (userMuteBeforeOrcaRef.current !== null) {
+          setMute(userMuteBeforeOrcaRef.current);
+          userMuteBeforeOrcaRef.current = null;
+        }
+
+        // 🔇 User muted
+        if (mute) {
+          await player.pause();
+          return;
+        }
+
+        // 🔊 Normal playback
+        player.loop = true;
+        await player.play();
+      } catch (e) {
+        console.warn('Audio sync error:', e);
       }
     };
 
-    const clearAudio = async () => {
-      if (player && player.playing) {
-        await player.pause();
-      }
-    };
-
-    handleAudio();
-
-    // Cleanup: pause music when component unmounts
-    return () => {
-      clearAudio();
-    };
-  }, [player, music]);
+    syncAudio();
+  }, [isOrcaRoute, mute]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: yellow,
-      }}
-      pointerEvents='box-none'
-    >
+    <View style={{ flex: 1, backgroundColor: yellow }} pointerEvents='box-none'>
       <LinearGradient
         colors={[
           '#FAD40B',
@@ -96,6 +99,7 @@ export const Background = ({
         }}
       />
 
+      {/* Header */}
       <Pressable
         style={{
           position: 'absolute',
@@ -110,17 +114,12 @@ export const Background = ({
           zIndex: 20,
         }}
         onPress={() => {
-          if (!router.canDismiss()) return;
-          router.dismissAll();
+          if (router.canDismiss()) {
+            router.dismissAll();
+          }
         }}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image
             source={require('@/assets/images/icon.png')}
             style={{ width: 54, height: 54, borderRadius: 14 }}
@@ -131,14 +130,27 @@ export const Background = ({
           </Text>
         </View>
 
-        <Avatar
-          size={42}
-          image={user?.image}
-          name={user?.name}
-          onPress={() => router.push('/profile')}
-        />
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          {!isOrcaRoute ? (
+            <Button
+              size='icon'
+              variant='ghost'
+              onPress={() => setMute((prev) => !prev)}
+            >
+              <Text style={{ fontSize: 36 }}>{mute ? '🔇' : '🔊'}</Text>
+            </Button>
+          ) : null}
+
+          <Avatar
+            size={42}
+            image={user?.image}
+            name={user?.name}
+            onPress={() => router.push('/profile')}
+          />
+        </View>
       </Pressable>
 
+      {/* Background Elements */}
       <Clouds />
       <Bubbles />
       <Shark />
@@ -146,21 +158,18 @@ export const Background = ({
       <Seafloor speed={swim ? 5000 : 0} bottom={insets.bottom + 240} />
 
       <View
-        style={[
-          {
-            paddingBottom: insets.bottom,
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: '#F6C90E',
-            paddingHorizontal: 16,
-            gap: 8,
-            height: insets.bottom + 240,
-            overflow: 'visible',
-          },
-        ]}
+        style={{
+          paddingBottom: insets.bottom,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: '#F6C90E',
+          paddingHorizontal: 16,
+          height: insets.bottom + 240,
+        }}
       />
+
       {children}
     </View>
   );
