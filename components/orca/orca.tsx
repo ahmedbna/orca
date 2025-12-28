@@ -42,11 +42,11 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 const PHRASE_TOP = SCREEN_HEIGHT * 0.3;
 const ORCA_SIZE = 150;
 const OBSTACLE_SIZE = 60;
-const ORCA_X = 0;
+const ORCA_X = 6;
 const ORCA_Y = SCREEN_HEIGHT / 2 - (ORCA_SIZE * 0.6) / 2;
 const ORCA_COLOR = '#FAD40B';
 const OBSTACLE_TYPES = ['🦑', '🪼', '🐡', '🐙', '🦐'];
-const ROUND_SECONDS = 5;
+const ROUND_SECONDS = 10;
 const LIVES = 3;
 const SHADOW_HEIGHT = 6;
 const HORIZONTAL_PADDING = 16;
@@ -214,6 +214,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const obstacleY = useSharedValue(ORCA_Y);
   const obstacleOpacity = useSharedValue(0);
   const orcaShake = useSharedValue(0);
+  const orcaX = useSharedValue(-ORCA_SIZE - 50); // Start off-screen to the left
   const elapsedTimeSV = useSharedValue(0);
 
   const timerIntervalRef = useRef<number | null>(null);
@@ -406,9 +407,12 @@ export const Orca = ({ lesson, native, language }: Props) => {
     cancelAnimation(obstacleOpacity);
     cancelAnimation(obstacleY);
     cancelAnimation(orcaShake);
+    cancelAnimation(orcaX);
 
     isMovingRef.current = false;
     hasHitRef.current = false;
+
+    orcaX.value = -ORCA_SIZE - 50; // Reset to off-screen
   }, [stopTimers]);
 
   const endGame = useCallback(
@@ -551,6 +555,13 @@ export const Orca = ({ lesson, native, language }: Props) => {
         clearInterval(countdownInterval);
         setCountdown(null);
         setGameState('playing');
+
+        // Animate orca swimming in when countdown finishes
+        orcaX.value = withTiming(ORCA_X, {
+          duration: 800,
+          easing: Easing.out(Easing.cubic),
+        });
+
         spawnObstacle();
       }
     }, 1000);
@@ -578,6 +589,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     obstacleX.value = SCREEN_WIDTH;
     obstacleOpacity.value = 0;
     orcaShake.value = 0;
+    orcaX.value = -ORCA_SIZE - 50; // Reset to off-screen (stays there during countdown)
 
     // Set countdown to 3 and start listening
     setCountdown(3);
@@ -601,7 +613,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
   };
 
   const orcaContainerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: orcaShake.value }],
+    transform: [
+      { translateX: orcaX.value + orcaShake.value }, // Combine swim-in with shake
+    ],
   }));
 
   const obstacleStyle = useAnimatedStyle(() => ({
@@ -662,15 +676,15 @@ export const Orca = ({ lesson, native, language }: Props) => {
             </View>
           ) : gameState === 'won' ? (
             <View style={styles.overlay}>
-              <Text style={styles.finalScore}>
-                Correct: {correctPhrases}/{TOTAL_OBSTACLES}
+              <Text style={styles.finalTime}>
+                {allCorrect ? `⏱️ ${formatTime(finalTime)}` : ''}
               </Text>
               <Text style={styles.winText}>
                 {allCorrect ? '🏆 PERFECT! 🏆' : '🎉 YOU PASSED! 🎉'}
               </Text>
-              <Text
-                style={styles.finalTime}
-              >{`⏱️ ${formatTime(finalTime)}`}</Text>
+              <Text style={styles.finalScore}>
+                Correct: {correctPhrases}/{TOTAL_OBSTACLES}
+              </Text>
               {isSubmitting ? (
                 <Text style={{ color: '#fff', marginTop: 8 }}>
                   Saving score...
@@ -680,7 +694,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
                   style={styles.startButton}
                   onPress={() => router.back()}
                 >
-                  <Text style={styles.startButtonText}>🏆 LEADERBOARD</Text>
+                  <Text style={styles.startButtonText}>
+                    {allCorrect ? '🏆 LEADERBOARD' : '📚 STUDY MORE'}
+                  </Text>
                 </Pressable>
               )}
             </View>

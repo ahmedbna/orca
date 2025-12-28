@@ -226,7 +226,7 @@ export const Jellyfish = ({
       count: 8,
       scale: 1,
       baseOpacity: 0.4,
-      yRange: [SCREEN_HEIGHT * 0.4, SCREEN_HEIGHT * 0.6] as [number, number],
+      yRange: [SCREEN_HEIGHT * 0.3, SCREEN_HEIGHT * 0.55] as [number, number],
       color: 'rgba(0, 0, 40, 0.2)',
     },
     // {

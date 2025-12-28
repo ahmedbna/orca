@@ -100,7 +100,7 @@ export const Background = ({
       />
 
       {/* Header */}
-      <Pressable
+      <View
         style={{
           position: 'absolute',
           top: 0,
@@ -113,22 +113,33 @@ export const Background = ({
           justifyContent: 'space-between',
           zIndex: 20,
         }}
-        onPress={() => {
-          if (router.canDismiss()) {
-            router.dismissAll();
-          }
-        }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Button
+          variant='ghost'
+          style={{
+            padding: 0,
+            paddingHorizontal: 0,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            if (router.canDismiss()) {
+              router.dismissAll();
+            }
+          }}
+        >
           <Image
             source={require('@/assets/images/icon.png')}
-            style={{ width: 54, height: 54, borderRadius: 14 }}
+            style={{ width: 56, height: 56 }}
             contentFit='contain'
           />
-          <Text variant='heading' style={{ color: '#000', fontSize: 32 }}>
+          <Text
+            variant='heading'
+            style={{ color: '#000', fontSize: 32, marginLeft: -6 }}
+          >
             Orca
           </Text>
-        </View>
+        </Button>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
           {!isOrcaRoute ? (
@@ -148,7 +159,7 @@ export const Background = ({
             onPress={() => router.push('/profile')}
           />
         </View>
-      </Pressable>
+      </View>
 
       {/* Background Elements */}
       <Clouds />

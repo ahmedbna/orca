@@ -12,15 +12,17 @@ import { Canvas, Group, Circle } from '@shopify/react-native-skia';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
+export interface BubbleLayers {
+  speed?: number;
+  count?: number;
+  scale?: number;
+  baseOpacity?: number;
+  color?: string;
+  yRange?: [number, number];
+}
+
 interface BubblesProps {
-  layers?: Array<{
-    speed?: number;
-    count?: number;
-    scale?: number;
-    baseOpacity?: number;
-    color?: string;
-    yRange?: [number, number];
-  }>;
+  layers?: Array<BubbleLayers>;
   direction?: 'up' | 'down';
 }
 
