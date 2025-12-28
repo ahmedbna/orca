@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable } from 'react-native';
 import { usePathname, useRouter } from 'expo-router';
 import { useAudioPlayer } from 'expo-audio';
 import { Image } from 'expo-image';
@@ -107,7 +106,7 @@ export const Background = ({
           left: 0,
           right: 0,
           paddingHorizontal: 16,
-          paddingTop: insets.bottom + 16,
+          paddingTop: insets.top + 4,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -130,7 +129,7 @@ export const Background = ({
         >
           <Image
             source={require('@/assets/images/icon.png')}
-            style={{ width: 56, height: 56 }}
+            style={{ width: 62, height: 62 }}
             contentFit='contain'
           />
           <Text

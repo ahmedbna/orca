@@ -126,8 +126,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cellText: {
-    fontSize: 10,
-    fontWeight: '800',
+    fontSize: 16,
+    fontWeight: 700,
     color: '#000',
   },
 });
