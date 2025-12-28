@@ -208,6 +208,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   );
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [countdown, setCountdown] = useState<number | null>(null);
 
   const obstacleX = useSharedValue(SCREEN_WIDTH);
   const obstacleY = useSharedValue(ORCA_Y);
@@ -310,6 +311,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
   useSpeechRecognitionEvent('start', () => {
     setIsRecognizing(true);
     transcriptOffsetRef.current = 0;
+    // If we're in countdown mode and mic just started, begin countdown
+    if (countdown !== null && countdown === 3) {
+      beginCountdown();
+    }
   });
   useSpeechRecognitionEvent('end', () => {
     setIsRecognizing(false);
@@ -534,6 +539,23 @@ export const Orca = ({ lesson, native, language }: Props) => {
     );
   }, [endGame, startRoundTimer, startTimer, handleCollisionJS]);
 
+  const beginCountdown = useCallback(() => {
+    let count = 3;
+    setCountdown(count);
+
+    const countdownInterval = setInterval(() => {
+      count -= 1;
+      if (count > 0) {
+        setCountdown(count);
+      } else {
+        clearInterval(countdownInterval);
+        setCountdown(null);
+        setGameState('playing');
+        spawnObstacle();
+      }
+    }, 1000);
+  }, [spawnObstacle]);
+
   const startGame = async () => {
     await cleanup();
 
@@ -557,10 +579,12 @@ export const Orca = ({ lesson, native, language }: Props) => {
     obstacleOpacity.value = 0;
     orcaShake.value = 0;
 
+    // Set countdown to 3 and start listening
+    setCountdown(3);
+    setGameState('idle'); // Keep in idle state during countdown
     await startListening();
 
-    setGameState('playing');
-    spawnObstacle();
+    // The countdown will start automatically when mic initializes (in the 'start' event handler)
   };
 
   useEffect(() => {
@@ -600,7 +624,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
     <Background user={lesson.user} swim={gameState === 'playing'}>
       <View style={{ flex: 1 }}>
         <View style={styles.uiOverlay}>
-          {currentObstacleIndex !== null && gameState === 'playing' ? (
+          {countdown !== null ? (
+            <View style={styles.overlay}>
+              <Text style={styles.countdownText}>{countdown}</Text>
+              <Text style={styles.countdownLabel}>
+                {countdown === 3 ? 'Steady' : countdown === 2 ? 'Ready' : 'GO'}
+              </Text>
+            </View>
+          ) : currentObstacleIndex !== null && gameState === 'playing' ? (
             <View
               style={{
                 paddingHorizontal: 26,
@@ -933,5 +964,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+
+  countdownOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    zIndex: 100,
+    paddingBottom: 260,
+    gap: 16,
+  },
+
+  countdownText: {
+    color: ORCA_COLOR,
+    fontSize: 120,
+    fontWeight: 'bold',
+  },
+
+  countdownLabel: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: '600',
   },
 });
