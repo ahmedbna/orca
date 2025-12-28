@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Streak } from '@/components/map/streak';
 import { OrcaButton } from '@/components/orca-button';
-import { Spinner } from '@/components/ui/spinner';
+import { Loading } from '@/components/loading';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
 import { api } from '@/convex/_generated/api';
@@ -45,11 +45,7 @@ export default function StreakScreen() {
     streak === undefined ||
     heatmapData === undefined
   ) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Spinner size='lg' variant='circle' color='#000' />
-      </View>
-    );
+    return <Loading />;
   }
 
   if (course === null) {
@@ -136,6 +132,8 @@ export default function StreakScreen() {
           paddingHorizontal: 16,
           gap: 12,
           height: insets.bottom + 240,
+          overflow: 'hidden',
+          zIndex: 99,
         }}
       >
         <TouchableOpacity

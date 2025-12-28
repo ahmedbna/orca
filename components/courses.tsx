@@ -2,9 +2,9 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Spinner } from '@/components/ui/spinner';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { Card } from '@/components/ui/card';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function CoursesScreen() {
   const courses = useQuery(api.courses.getAll);
@@ -16,7 +16,6 @@ export default function CoursesScreen() {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          // paddingTop: 40,
         }}
       >
         <Spinner size='lg' variant='circle' color='#000000' />

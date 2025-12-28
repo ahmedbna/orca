@@ -3,7 +3,6 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Spinner } from '@/components/ui/spinner';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
@@ -11,6 +10,7 @@ import { User } from 'lucide-react-native';
 import { TextArea } from '@/components/ui/text-area';
 import { Button } from '@/components/ui/button';
 import { SignOutButton } from '@/components/auth/singout';
+import { ButtonSpinner } from '@/components/ui/spinner';
 
 export default function SettingsScreen() {
   const user = useQuery(api.users.get, {});
@@ -40,7 +40,7 @@ export default function SettingsScreen() {
           justifyContent: 'center',
         }}
       >
-        <Spinner size='lg' variant='circle' color='#000000' />
+        <ButtonSpinner size='lg' variant='circle' color='#000000' />
       </View>
     );
   }

@@ -86,8 +86,10 @@ export const Learn = ({ lesson, native }: Props) => {
           backgroundColor: '#F6C90E',
           paddingBottom: insets.bottom,
           paddingHorizontal: 16,
-          height: insets.bottom + 240,
           gap: 16,
+          height: insets.bottom + 240,
+          overflow: 'hidden',
+          zIndex: 99,
         }}
       >
         {/* Back */}

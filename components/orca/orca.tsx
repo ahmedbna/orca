@@ -771,7 +771,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
                 paddingHorizontal: 16,
                 gap: 8,
                 height: insets.bottom + 240,
-                overflow: 'visible',
+                overflow: 'hidden',
                 zIndex: 99,
               },
             ]}
@@ -837,24 +837,32 @@ export const Orca = ({ lesson, native, language }: Props) => {
             </View>
 
             {gameState === 'idle' ? (
-              <OrcaButton label='START' variant='green' onPress={startGame} />
+              <OrcaButton
+                label='START'
+                variant='green'
+                onPress={startGame}
+                disabled={isRecognizing || isSubmitting}
+              />
             ) : gameState === 'lost' ? (
               <OrcaButton
                 label='TRY AGAIN'
                 variant='green'
                 onPress={startGame}
+                disabled={isRecognizing || isSubmitting}
               />
             ) : gameState === 'won' ? (
               <OrcaButton
                 label='TRY AGAIN'
                 variant='green'
                 onPress={startGame}
+                disabled={isRecognizing || isSubmitting}
               />
             ) : (
               <OrcaButton
                 label='STOP'
                 variant='red'
                 onPress={() => endGame(false)}
+                disabled={isRecognizing || isSubmitting}
               />
             )}
           </View>

@@ -62,10 +62,12 @@ export const OrcaButton = ({
   onPress,
   label,
   variant = 'yellow',
+  disabled = false,
 }: {
   onPress: () => void;
   label: string;
   variant?: ButtonVariant;
+  disabled?: boolean;
 }) => {
   const pressed = useSharedValue(0);
   const colors = COLORS[variant];
@@ -89,6 +91,7 @@ export const OrcaButton = ({
 
   return (
     <Pressable
+      disabled={disabled}
       onPress={onPress}
       onPressIn={() => {
         pressed.value = withSpring(1, { damping: 15 });

@@ -117,7 +117,8 @@ export const Map = ({ course, streak }: Props) => {
             paddingHorizontal: 16,
             gap: 12,
             height: insets.bottom + 240,
-            overflow: 'visible',
+            overflow: 'hidden',
+            zIndex: 99,
           },
         ]}
       >

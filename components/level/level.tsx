@@ -11,7 +11,7 @@ import { TouchableOpacity } from 'react-native';
 import { ScoreCard } from './score-card';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { Spinner } from '@/components/ui/spinner';
+import { Loading } from '@/components/loading';
 import { formatTime } from '@/lib/format-time';
 import { ChevronLeft } from 'lucide-react-native';
 
@@ -46,7 +46,7 @@ export const Level = ({ lesson }: Props) => {
   if (leaderboard === undefined) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Spinner size='lg' variant='circle' color='#000000' />
+        <Loading />
       </View>
     );
   }
@@ -123,7 +123,8 @@ export const Level = ({ lesson }: Props) => {
             paddingHorizontal: 16,
             gap: 8,
             height: insets.bottom + 240,
-            overflow: 'visible',
+            overflow: 'hidden',
+            zIndex: 99,
           },
         ]}
       >

@@ -1,5 +1,5 @@
 import { Profile } from '@/components/profile';
-import { Spinner } from '@/components/ui/spinner';
+import { Loading } from '@/components/loading';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
 import { api } from '@/convex/_generated/api';
@@ -10,17 +10,7 @@ export default function ProfileScreen() {
   const userId = useQuery(api.users.getId);
 
   if (user === undefined || userId === undefined) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Spinner size='lg' variant='circle' color='#000000' />
-      </View>
-    );
+    return <Loading />;
   }
 
   if (user === null || userId === null) {

@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     borderWidth: 5,
     borderColor: 'rgba(0, 0, 0, 0.15)',
-    overflow: 'visible',
+    overflow: 'hidden',
   },
   scoreContent: {
     flex: 1,

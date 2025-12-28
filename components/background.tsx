@@ -178,6 +178,7 @@ export const Background = ({
           backgroundColor: '#F6C90E',
           paddingHorizontal: 16,
           height: insets.bottom + 240,
+          zIndex: 44,
         }}
       />
 
