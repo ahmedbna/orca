@@ -841,28 +841,28 @@ export const Orca = ({ lesson, native, language }: Props) => {
                 label='START'
                 variant='green'
                 onPress={startGame}
-                disabled={isRecognizing || isSubmitting}
+                disabled={isSubmitting}
               />
             ) : gameState === 'lost' ? (
               <OrcaButton
                 label='TRY AGAIN'
                 variant='green'
                 onPress={startGame}
-                disabled={isRecognizing || isSubmitting}
+                disabled={isSubmitting}
               />
             ) : gameState === 'won' ? (
               <OrcaButton
                 label='TRY AGAIN'
                 variant='green'
                 onPress={startGame}
-                disabled={isRecognizing || isSubmitting}
+                disabled={isSubmitting}
               />
             ) : (
               <OrcaButton
                 label='STOP'
                 variant='red'
                 onPress={() => endGame(false)}
-                disabled={isRecognizing || isSubmitting}
+                disabled={isSubmitting}
               />
             )}
           </View>
