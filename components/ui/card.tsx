@@ -10,7 +10,7 @@ interface CardProps {
 }
 
 export function Card({ children, style }: CardProps) {
-  const cardColor = useColor('card');
+  const cardColor = useColor('background');
   const foregroundColor = useColor('foreground');
 
   return (

@@ -1,127 +1,124 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from '@/components/ui/card';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Link } from '@/components/ui/link';
-import { ScrollView } from '@/components/ui/scroll-view';
-import { AvoidKeyboard } from '@/components/ui/avoid-keyboard';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { SignInWithGoogle } from '@/components/auth/google';
 import { SignInWithApple } from '@/components/auth/apple';
 import { Password } from '@/components/auth/password';
-import { EmailOTP } from './email-otp';
 import { Dimensions } from 'react-native';
-import { Button } from '@/components/ui/button';
-import { useAuthActions } from '@convex-dev/auth/react';
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Jellyfish } from '@/components/orca/jellyfish';
+import { Bubbles } from '@/components/orca/bubbles';
+import { Clouds } from '@/components/orca/clouds';
+import { Shark } from '@/components/orca/shark';
+import { Seafloor } from '@/components/orca/seafloor';
 import { useColor } from '@/hooks/useColor';
 
-const { width: screenWidth } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const tabWidth = (screenWidth - 44) / 3; // 16 padding on each side
+const bubbles = [
+  {
+    speed: 40,
+    count: 15,
+    scale: 0.6,
+    baseOpacity: 0.3,
+    color: 'white',
+    yRange: [0, SCREEN_HEIGHT] as [number, number],
+  },
+  {
+    speed: 50,
+    count: 14,
+    scale: 1,
+    baseOpacity: 0.5,
+    color: 'white',
+    yRange: [0, SCREEN_HEIGHT] as [number, number],
+  },
+  {
+    speed: 60,
+    count: 12,
+    scale: 1.2,
+    baseOpacity: 0.7,
+    color: 'white',
+    yRange: [0, SCREEN_HEIGHT] as [number, number],
+  },
+];
 
 export const Auth = () => {
-  const background = useColor('background');
-  const { signIn } = useAuthActions();
+  const yellow = useColor('orca');
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, backgroundColor: background }}>
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 96 }}
-        keyboardShouldPersistTaps='handled'
+    <View style={{ flex: 1, backgroundColor: yellow }} pointerEvents='box-none'>
+      <LinearGradient
+        colors={[
+          '#FAD40B',
+          'rgba(250, 212, 11, 0.5)',
+          'rgba(250, 212, 11, 0.01)',
+        ]}
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          height: insets.top + 120,
+          zIndex: 10,
+        }}
+      />
+
+      {/* Background Elements */}
+      <Clouds />
+      <Bubbles layers={bubbles} />
+      <Shark />
+      <Jellyfish />
+
+      <View
+        style={{
+          flex: 1,
+          gap: 16,
+          justifyContent: 'center',
+          paddingHorizontal: 16,
+        }}
       >
-        <Text
+        <View
           style={{
-            fontSize: 60,
-            fontWeight: 700,
-            textAlign: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginVertical: -38,
           }}
         >
-          🚀
-        </Text>
-        <Text
-          style={{
-            fontSize: 60,
-            fontWeight: 800,
-            textAlign: 'center',
-            marginBottom: 16,
-          }}
-        >
-          BNA
-        </Text>
+          <Image
+            source={require('@/assets/images/icon.png')}
+            style={{ width: 190, height: 190 }}
+            contentFit='contain'
+          />
+        </View>
 
-        <Tabs defaultValue='password' enableSwipe={false} style={{ flex: 1 }}>
-          <TabsList>
-            <TabsTrigger value='password' style={{ width: tabWidth }}>
-              Password
-            </TabsTrigger>
-            <TabsTrigger value='oauth' style={{ width: tabWidth }}>
-              OAuth
-            </TabsTrigger>
-            <TabsTrigger value='otp' style={{ width: tabWidth }}>
-              OTP
-            </TabsTrigger>
-          </TabsList>
+        <Password />
 
-          <TabsContent value='password'>
-            <Password />
-          </TabsContent>
+        <View style={{ gap: 8 }}>
+          <SignInWithGoogle />
 
-          <TabsContent value='oauth'>
-            <Card>
-              <CardHeader style={{ paddingBottom: 16 }}>
-                <CardDescription style={{ textAlign: 'center' }}>
-                  Login to your account
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent>
-                <View style={{ gap: 16 }}>
-                  <SignInWithGoogle />
-
-                  <SignInWithApple />
-                </View>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value='otp'>
-            <EmailOTP />
-          </TabsContent>
-        </Tabs>
-
-        <View style={{ padding: 24 }}>
-          <Button
-            variant='destructive'
-            onPress={() => void signIn('anonymous')}
-          >
-            Login anonymously
-          </Button>
+          <SignInWithApple />
         </View>
 
         <View style={{ paddingHorizontal: 36 }}>
-          <Text variant='caption' style={{ textAlign: 'center' }}>
-            By clicking continue, you agree to our{' '}
+          <Text style={{ textAlign: 'center', color: '#000' }}>
+            By continuing, you agree to our{'\n'}
             <Link href='https://ui.ahmedbna.com'>
-              <Text variant='link' style={{ fontSize: 14 }}>
+              <Text variant='link' style={{ fontSize: 14, color: '#000' }}>
                 Terms of Service
               </Text>
             </Link>{' '}
             and{' '}
             <Link href='https://ui.ahmedbna.com'>
-              <Text variant='link' style={{ fontSize: 14 }}>
+              <Text variant='link' style={{ fontSize: 14, color: '#000' }}>
                 Privacy Policy
               </Text>
             </Link>
           </Text>
         </View>
-      </ScrollView>
-
-      <AvoidKeyboard />
+      </View>
     </View>
   );
 };

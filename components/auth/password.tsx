@@ -6,6 +6,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { View } from '@/components/ui/view';
@@ -236,13 +237,9 @@ export const Password = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardDescription style={{ textAlign: 'center' }}>
-          {isSigningIn
-            ? 'Welcome back! Login to continue.'
-            : 'Create an account to get started.'}
-        </CardDescription>
-      </CardHeader>
+      <CardTitle style={{ textAlign: 'center', marginBottom: 16 }}>
+        Orca
+      </CardTitle>
       <CardContent style={{ gap: 16 }}>
         {step === 'signUp' ? (
           <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -289,11 +286,13 @@ export const Password = () => {
           autoComplete={isSigningIn ? 'current-password' : 'new-password'}
           editable={!loading}
         />
+
         {!!error && (
           <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>
         )}
 
         <Button
+          variant='success'
           onPress={handleSignInUpSubmit}
           disabled={loading}
           loading={loading}
@@ -301,34 +300,26 @@ export const Password = () => {
           {isSigningIn ? 'Login' : 'Create new account'}
         </Button>
 
-        <View
-          style={{
-            flexDirection: isSigningIn ? 'row' : 'column',
-            justifyContent: 'space-between',
-          }}
+        <Button
+          variant='link'
+          onPress={() => changeStep(isSigningIn ? 'signUp' : 'signIn')}
+          disabled={loading}
         >
-          {isSigningIn && (
-            <Button
-              variant='link'
-              disabled={loading}
-              textStyle={{ fontSize: 14 }}
-              onPress={() => changeStep('forgotPassword')}
-            >
-              Forgot password
-            </Button>
-          )}
+          {isSigningIn
+            ? 'Create new account'
+            : 'Already have an account, Login'}
+        </Button>
 
+        {isSigningIn && (
           <Button
             variant='link'
             disabled={loading}
             textStyle={{ fontSize: 14 }}
-            onPress={() => changeStep(isSigningIn ? 'signUp' : 'signIn')}
+            onPress={() => changeStep('forgotPassword')}
           >
-            {isSigningIn
-              ? 'Create new account'
-              : 'Already have an account, Login'}
+            Forgot password
           </Button>
-        </View>
+        )}
       </CardContent>
     </Card>
   );
