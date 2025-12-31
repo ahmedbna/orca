@@ -1,3 +1,4 @@
+// components/auth/auth.tsx
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Link } from '@/components/ui/link';
@@ -12,7 +13,6 @@ import { Jellyfish } from '@/components/orca/jellyfish';
 import { Bubbles } from '@/components/orca/bubbles';
 import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
-import { Seafloor } from '@/components/orca/seafloor';
 import { useColor } from '@/hooks/useColor';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -61,7 +61,7 @@ export const Auth = () => {
           left: 0,
           right: 0,
           top: 0,
-          height: insets.top + 120,
+          height: insets.top + 24,
           zIndex: 10,
         }}
       />
@@ -74,9 +74,11 @@ export const Auth = () => {
 
       <View
         style={{
-          flex: 1,
+          position: 'absolute',
+          top: insets.top + 24,
+          left: 0,
+          right: 0,
           gap: 16,
-          justifyContent: 'center',
           paddingHorizontal: 16,
         }}
       >
@@ -84,7 +86,8 @@ export const Auth = () => {
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-            marginVertical: -38,
+            marginTop: -36,
+            marginBottom: -46,
           }}
         >
           <Image
@@ -96,14 +99,13 @@ export const Auth = () => {
 
         <Password />
 
-        <View style={{ gap: 8 }}>
+        <View style={{ gap: 16 }}>
           <SignInWithGoogle />
-
           <SignInWithApple />
         </View>
 
-        <View style={{ paddingHorizontal: 36 }}>
-          <Text style={{ textAlign: 'center', color: '#000' }}>
+        <View style={{ paddingHorizontal: 32, marginTop: 4 }}>
+          <Text style={{ fontSize: 16, textAlign: 'center', color: '#000' }}>
             By continuing, you agree to our{'\n'}
             <Link href='https://ui.ahmedbna.com'>
               <Text variant='link' style={{ fontSize: 14, color: '#000' }}>

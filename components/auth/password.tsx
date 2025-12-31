@@ -1,28 +1,376 @@
+// components/auth/password.tsx
+
 import React, { useState } from 'react';
 import { useAuthActions } from '@convex-dev/auth/react';
-import { KeyRound } from 'lucide-react-native';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Platform, Pressable, TextInput } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  interpolate,
+} from 'react-native-reanimated';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Input } from '@/components/ui/input';
 import { useColor } from '@/hooks/useColor';
+import * as Haptics from 'expo-haptics';
 
 type AuthStep = 'signIn' | 'signUp' | 'forgotPassword' | 'resetPassword';
 
-export const Password = () => {
+const SHADOW_HEIGHT = 8;
+
+const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
+  if (Platform.OS !== 'web') {
+    Haptics.impactAsync(style);
+  }
+};
+
+// 3D Squishy Button Component
+interface SquishyButtonProps {
+  onPress: () => void;
+  label: string;
+  variant?: 'yellow' | 'white' | 'black' | 'green' | 'gray' | 'red';
+  disabled?: boolean;
+  loading?: boolean;
+  icon?: string;
+}
+
+const SquishyButton: React.FC<SquishyButtonProps> = ({
+  onPress,
+  label,
+  variant = 'yellow',
+  disabled = false,
+  loading = false,
+  icon,
+}) => {
+  const pressed = useSharedValue(0);
+
+  const colors = {
+    yellow: {
+      face: '#FAD40B',
+      shadow: '#E5C000',
+      text: '#000000',
+      border: 'rgba(0,0,0,0.1)',
+    },
+    white: {
+      face: '#FFFFFF',
+      shadow: '#D1D5DB',
+      text: '#000000',
+      border: 'rgba(0,0,0,0.1)',
+    },
+    black: {
+      face: '#000000',
+      shadow: '#2A2A2A',
+      text: '#FFFFFF',
+      border: 'rgba(255,255,255,0.1)',
+    },
+    green: {
+      face: '#34C759',
+      shadow: '#2E9E4E',
+      text: '#FFFFFF',
+      border: 'rgba(0,0,0,0.1)',
+    },
+    gray: {
+      face: '#D1D5DB',
+      shadow: '#AFB2B7',
+      text: '#000',
+      border: 'rgba(0,0,0,0.1)',
+    },
+    red: {
+      face: '#FF3B30',
+      shadow: '#C1271D',
+      text: '#FFFFFF',
+      border: 'rgba(0,0,0,0.15)',
+    },
+  };
+
+  const buttonColors = disabled ? colors.gray : colors[variant];
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(pressed.value, [0, 1], [0, SHADOW_HEIGHT]);
+    return { transform: [{ translateY }] };
+  });
+
+  return (
+    <Pressable
+      disabled={disabled || loading}
+      onPress={onPress}
+      onPressIn={() => {
+        pressed.value = withSpring(1, { damping: 15 });
+        triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+      }}
+      onPressOut={() => {
+        pressed.value = withSpring(0, { damping: 15 });
+        triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+      }}
+      style={{ height: 64, width: '100%', opacity: disabled ? 0.6 : 1 }}
+    >
+      {/* Shadow */}
+      <View
+        pointerEvents='none'
+        style={{
+          backgroundColor: buttonColors.shadow,
+          position: 'absolute',
+          top: SHADOW_HEIGHT,
+          left: 0,
+          right: 0,
+          height: 64,
+          borderRadius: 999,
+          zIndex: 1,
+        }}
+      />
+
+      {/* Face */}
+      <Animated.View
+        pointerEvents='none'
+        style={[
+          {
+            backgroundColor: buttonColors.face,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 64,
+            borderRadius: 999,
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 2,
+            borderWidth: 4,
+            borderColor: buttonColors.border,
+            flexDirection: 'row',
+            gap: 12,
+          },
+          animatedStyle,
+        ]}
+      >
+        {icon && <Text style={{ fontSize: 22 }}>{icon}</Text>}
+        <Text
+          style={{ color: buttonColors.text, fontSize: 18, fontWeight: '800' }}
+        >
+          {loading ? 'Loading...' : label}
+        </Text>
+      </Animated.View>
+    </Pressable>
+  );
+};
+
+// 3D Squishy Input Component
+interface SquishyInputProps {
+  value: string;
+  onChangeText: (text: string) => void;
+  placeholder: string;
+  secureTextEntry?: boolean;
+  keyboardType?: 'default' | 'email-address' | 'number-pad';
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  error?: string;
+  editable?: boolean;
+  icon?: string;
+  containerStyle?: object;
+  maxLength?: number;
+}
+
+const SquishyInput: React.FC<SquishyInputProps> = ({
+  value,
+  onChangeText,
+  placeholder,
+  secureTextEntry = false,
+  keyboardType = 'default',
+  autoCapitalize = 'none',
+  error = '',
+  editable = true,
+  icon,
+  containerStyle = {},
+  maxLength,
+}) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const focusAnim = useSharedValue(0);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    focusAnim.value = withSpring(1, { damping: 15 });
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    focusAnim.value = withSpring(0, { damping: 15 });
+  };
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(focusAnim.value, [0, 1], [0, 3]);
+    return { transform: [{ translateY }] };
+  });
+
+  return (
+    <View style={[{ width: '100%' }, containerStyle]}>
+      <View style={{ height: 64, position: 'relative' }}>
+        {/* Shadow */}
+        <View
+          style={{
+            backgroundColor: '#38383A',
+            position: 'absolute',
+            top: 6,
+            left: 0,
+            right: 0,
+            height: 64,
+            borderRadius: 999,
+            zIndex: 1,
+          }}
+        />
+
+        {/* Input Face */}
+        <Animated.View
+          style={[
+            {
+              backgroundColor: '#1C1C1E',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 64,
+              borderRadius: 999,
+              borderWidth: 4,
+              borderColor: isFocused ? '#FAD40B' : '#38383A',
+              zIndex: 2,
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingHorizontal: 20,
+              gap: 12,
+            },
+            animatedStyle,
+          ]}
+        >
+          {icon && <Text style={{ fontSize: 20 }}>{icon}</Text>}
+          <TextInput
+            value={value}
+            onChangeText={onChangeText}
+            placeholder={placeholder}
+            placeholderTextColor='#a1a1aa'
+            secureTextEntry={secureTextEntry}
+            keyboardType={keyboardType}
+            autoCapitalize={autoCapitalize}
+            autoCorrect={false}
+            editable={editable}
+            maxLength={maxLength}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            style={{
+              flex: 1,
+              fontSize: 18,
+              fontWeight: 700,
+              color: '#FFF',
+              height: '100%',
+            }}
+          />
+        </Animated.View>
+      </View>
+      {error ? (
+        <Text
+          style={{
+            color: '#FF3B30',
+            fontSize: 14,
+            marginTop: 8,
+            marginLeft: 4,
+            fontWeight: '600',
+          }}
+        >
+          {error}
+        </Text>
+      ) : null}
+    </View>
+  );
+};
+
+// 3D Card Component
+interface SquishyCardProps {
+  children: React.ReactNode;
+  style?: object;
+}
+
+const SquishyCard: React.FC<SquishyCardProps> = ({ children, style = {} }) => {
+  return (
+    <View style={[{ position: 'relative' }, style]}>
+      {/* Shadow */}
+      <View
+        style={{
+          backgroundColor: '#E5C000',
+          position: 'absolute',
+          top: 8,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderRadius: 32,
+        }}
+      />
+
+      {/* Card Face */}
+      <View
+        style={{
+          backgroundColor: '#000',
+          borderRadius: 32,
+          padding: 24,
+          borderWidth: 5,
+          borderColor: 'rgba(0,0,0,0.1)',
+        }}
+      >
+        {children}
+      </View>
+    </View>
+  );
+};
+
+// Link Button Component
+interface LinkButtonProps {
+  onPress: () => void;
+  children: React.ReactNode;
+  disabled?: boolean;
+}
+
+const LinkButton: React.FC<LinkButtonProps> = ({
+  onPress,
+  children,
+  disabled = false,
+}) => {
+  const pressed = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(pressed.value, [0, 1], [1, 0.7]),
+    transform: [{ scale: interpolate(pressed.value, [0, 1], [1, 0.98]) }],
+  }));
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      onPressIn={() => {
+        pressed.value = withSpring(1, { damping: 15 });
+        triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+      }}
+      onPressOut={() => (pressed.value = withSpring(0, { damping: 15 }))}
+      style={{ marginTop: 8 }}
+    >
+      <Animated.Text
+        style={[
+          {
+            color: '#FFF',
+            fontSize: 15,
+            fontWeight: '700',
+            textAlign: 'center',
+            textDecorationLine: 'underline',
+          },
+          animatedStyle,
+        ]}
+      >
+        {children}
+      </Animated.Text>
+    </Pressable>
+  );
+};
+
+export const Password: React.FC = () => {
   const { signIn } = useAuthActions();
-  const green = useColor('green');
 
   const [step, setStep] = useState<AuthStep>('signIn');
   const [name, setName] = useState('');
-  const [gender, setGender] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
@@ -77,7 +425,7 @@ export const Password = () => {
     setError('');
 
     try {
-      await signIn('password', { name, gender, email, password, flow: step });
+      await signIn('password', { name, email, password, flow: step });
 
       if (step === 'signUp') {
         setPassword('');
@@ -138,97 +486,127 @@ export const Password = () => {
 
   if (step === 'forgotPassword') {
     return (
-      <Card>
-        <CardHeader>
-          <View style={{ alignItems: 'center', marginBottom: 16 }}>
-            <KeyRound color={green} size={40} />
-          </View>
-          <Text variant='title' style={{ textAlign: 'center' }}>
-            Reset your password
+      <SquishyCard>
+        <View style={{ alignItems: 'center', marginBottom: 24 }}>
+          <Text style={{ fontSize: 48 }}>🔑</Text>
+          <Text
+            style={{
+              fontSize: 28,
+              fontWeight: '900',
+              color: '#FFF',
+              marginTop: 8,
+            }}
+          >
+            Reset Password
           </Text>
-          <CardDescription style={{ textAlign: 'center' }}>
-            Enter your email to receive a password reset code.
-          </CardDescription>
-        </CardHeader>
-        <CardContent style={{ gap: 16 }}>
-          <Input
+          <Text
+            style={{
+              fontSize: 15,
+              color: '#71717a',
+              marginTop: 8,
+              textAlign: 'center',
+              fontWeight: '600',
+            }}
+          >
+            Enter your email to receive a reset code
+          </Text>
+        </View>
+
+        <View style={{ gap: 16 }}>
+          <SquishyInput
             value={email}
-            variant='outline'
             placeholder='me@example.com'
             onChangeText={setEmail}
             keyboardType='email-address'
-            autoCapitalize='none'
-            autoComplete='email'
             error={error}
             editable={!loading}
+            icon='📧'
           />
-          <Button
+
+          <SquishyButton
             onPress={handleSendResetCode}
             disabled={loading}
             loading={loading}
-          >
-            Send Reset Code
-          </Button>
-          <Button
-            variant='link'
-            onPress={() => changeStep('signIn')}
-            disabled={loading}
-          >
+            label='Send Reset Code'
+            variant='red'
+            icon='📨'
+          />
+
+          <LinkButton onPress={() => changeStep('signIn')} disabled={loading}>
             Back to Login
-          </Button>
-        </CardContent>
-      </Card>
+          </LinkButton>
+        </View>
+      </SquishyCard>
     );
   }
 
   if (step === 'resetPassword') {
     return (
-      <Card>
-        <CardHeader>
-          <Text variant='title' style={{ textAlign: 'center' }}>
-            Create a new password
+      <SquishyCard>
+        <View style={{ alignItems: 'center', marginBottom: 24 }}>
+          <Text style={{ fontSize: 48 }}>✅</Text>
+          <Text
+            style={{
+              fontSize: 28,
+              fontWeight: '900',
+              color: '#000',
+              marginTop: 8,
+            }}
+          >
+            Enter Reset Code
           </Text>
-          <CardDescription style={{ textAlign: 'center' }}>
-            A reset code was sent to {email}.
-          </CardDescription>
-        </CardHeader>
-        <CardContent style={{ gap: 16 }}>
-          <Input
+          <Text
+            style={{
+              fontSize: 15,
+              color: '#71717a',
+              marginTop: 8,
+              textAlign: 'center',
+              fontWeight: '600',
+            }}
+          >
+            Check your email for the 6-digit code
+          </Text>
+        </View>
+
+        <View style={{ gap: 16 }}>
+          <SquishyInput
             value={code}
-            variant='outline'
-            placeholder='6-digit reset code'
+            placeholder='6-digit code'
             onChangeText={setCode}
             keyboardType='number-pad'
             maxLength={6}
             error={error.includes('code') ? error : undefined}
             editable={!loading}
+            icon='🔢'
           />
-          <Input
+
+          <SquishyInput
             value={newPassword}
-            variant='outline'
             placeholder='New password'
             onChangeText={setNewPassword}
             secureTextEntry
-            autoComplete='new-password'
             error={error.includes('password') ? error : undefined}
             editable={!loading}
+            icon='🔑'
           />
-          <Button
+
+          <SquishyButton
             onPress={handleResetPassword}
             disabled={loading}
             loading={loading}
-          >
-            Reset Password
-          </Button>
-          <Button
-            variant='link'
+            label='Reset Password'
+            variant='green'
+            icon='🎯'
+          />
+
+          <LinkButton
             onPress={() => changeStep('forgotPassword')}
             disabled={loading}
           >
             Use a different email
-          </Button>
-        </CardContent>
-      </Card>
+          </LinkButton>
+        </View>
+      </SquishyCard>
     );
   }
 
@@ -236,91 +614,94 @@ export const Password = () => {
   const isSigningIn = step === 'signIn';
 
   return (
-    <Card>
-      <CardTitle style={{ textAlign: 'center', marginBottom: 16 }}>
-        Orca
-      </CardTitle>
-      <CardContent style={{ gap: 16 }}>
-        {step === 'signUp' ? (
+    <SquishyCard>
+      <View style={{ alignItems: 'center', marginBottom: 16 }}>
+        <Text
+          style={{
+            fontSize: 32,
+            fontWeight: 800,
+            color: '#fff',
+            textAlign: 'center',
+          }}
+        >
+          Orca
+        </Text>
+      </View>
+
+      <View style={{ gap: 16 }}>
+        {step === 'signUp' && (
           <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Input
+            <SquishyInput
               value={name}
-              variant='outline'
-              placeholder='Name'
+              placeholder='Full Name'
               onChangeText={setName}
               autoCapitalize='words'
-              autoCorrect={false}
               editable={!loading}
-              containerStyle={{ width: '49%' }}
-            />
-            <Input
-              value={gender}
-              variant='outline'
-              placeholder='Gender'
-              onChangeText={setGender}
-              autoCapitalize='words'
-              autoCorrect={false}
-              editable={!loading}
-              containerStyle={{ width: '49%' }}
+              containerStyle={{ flex: 1 }}
+              icon='🙋‍♂️'
             />
           </View>
-        ) : null}
+        )}
 
-        <Input
+        <SquishyInput
           value={email}
-          variant='outline'
           placeholder='me@example.com'
           onChangeText={setEmail}
           keyboardType='email-address'
-          autoCapitalize='none'
-          autoCorrect={false}
-          autoComplete='email'
           editable={!loading}
+          icon='📮'
         />
-        <Input
+
+        <SquishyInput
           value={password}
-          variant='outline'
           placeholder='Password'
           onChangeText={setPassword}
           secureTextEntry
-          autoComplete={isSigningIn ? 'current-password' : 'new-password'}
           editable={!loading}
+          icon='🔑'
         />
 
         {!!error && (
-          <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>
+          <Text
+            style={{
+              color: '#FF3B30',
+              textAlign: 'center',
+              fontWeight: '600',
+              fontSize: 14,
+            }}
+          >
+            {error}
+          </Text>
         )}
 
-        <Button
-          variant='success'
+        <SquishyButton
+          variant='green'
           onPress={handleSignInUpSubmit}
           disabled={loading}
           loading={loading}
-        >
-          {isSigningIn ? 'Login' : 'Create new account'}
-        </Button>
+          label={isSigningIn ? 'Login' : 'Create Account'}
+        />
 
-        <Button
-          variant='link'
-          onPress={() => changeStep(isSigningIn ? 'signUp' : 'signIn')}
-          disabled={loading}
-        >
-          {isSigningIn
-            ? 'Create new account'
-            : 'Already have an account, Login'}
-        </Button>
-
-        {isSigningIn && (
-          <Button
-            variant='link'
+        <View style={{ gap: 2 }}>
+          <LinkButton
+            onPress={() => changeStep(isSigningIn ? 'signUp' : 'signIn')}
             disabled={loading}
-            textStyle={{ fontSize: 14 }}
-            onPress={() => changeStep('forgotPassword')}
           >
-            Forgot password
-          </Button>
-        )}
-      </CardContent>
-    </Card>
+            {isSigningIn
+              ? "Don't have an account? Sign Up"
+              : 'Already have an account? Login'}
+          </LinkButton>
+
+          {isSigningIn && (
+            <LinkButton
+              disabled={loading}
+              onPress={() => changeStep('forgotPassword')}
+            >
+              Forgot Password?
+            </LinkButton>
+          )}
+        </View>
+      </View>
+    </SquishyCard>
   );
 };
