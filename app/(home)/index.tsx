@@ -4,7 +4,6 @@ import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
-import { Piper } from '@/components/piper';
 
 export default function HomeScreen() {
   const course = useQuery(api.courses.getCourse);
@@ -28,6 +27,5 @@ export default function HomeScreen() {
     );
   }
 
-  // return <Map course={course} streak={streak} />;
-  return <Piper />;
+  return <Map course={course} streak={streak} />;
 }
