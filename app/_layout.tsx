@@ -23,6 +23,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 import * as SecureStore from 'expo-secure-store';
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 SplashScreen.setOptions({
   duration: 200,
@@ -60,125 +61,127 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>
-        <StatusBar style={'dark'} animated />
+        <KeyboardProvider>
+          <StatusBar style={'dark'} animated />
 
-        <ConvexAuthProvider
-          client={convex}
-          storage={
-            Platform.OS === 'android' || Platform.OS === 'ios'
-              ? secureStorage
-              : undefined
-          }
-        >
-          <AuthLoading>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: Colors.dark.orca,
-              }}
-            >
-              <Spinner size='lg' variant='circle' color='#000000' />
-            </View>
-          </AuthLoading>
-          <Unauthenticated>
-            <Auth />
-          </Unauthenticated>
-          <Authenticated>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name='(home)/index' />
-              <Stack.Screen name='(home)/level/[id]' />
-              <Stack.Screen name='orca/[id]' />
-              <Stack.Screen name='(home)/student/[id]' />
-              <Stack.Screen name='(home)/study/[id]' />
-              <Stack.Screen name='(home)/streak' />
-              <Stack.Screen name='(home)/profile' />
+          <ConvexAuthProvider
+            client={convex}
+            storage={
+              Platform.OS === 'android' || Platform.OS === 'ios'
+                ? secureStorage
+                : undefined
+            }
+          >
+            <AuthLoading>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: Colors.dark.orca,
+                }}
+              >
+                <Spinner size='lg' variant='circle' color='#000000' />
+              </View>
+            </AuthLoading>
+            <Unauthenticated>
+              <Auth />
+            </Unauthenticated>
+            <Authenticated>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name='(home)/index' />
+                <Stack.Screen name='(home)/level/[id]' />
+                <Stack.Screen name='orca/[id]' />
+                <Stack.Screen name='(home)/student/[id]' />
+                <Stack.Screen name='(home)/study/[id]' />
+                <Stack.Screen name='(home)/streak' />
+                <Stack.Screen name='(home)/profile' />
 
-              <Stack.Screen
-                name='courses'
-                options={{
-                  headerShown: false,
-                  sheetGrabberVisible: true,
-                  sheetAllowedDetents: [0.4, 0.7, 1],
-                  contentStyle: {
-                    backgroundColor: isLiquidGlassAvailable()
-                      ? 'transparent'
-                      : colorScheme === 'dark'
-                        ? Colors.dark.card
-                        : Colors.light.card,
-                  },
-                  headerTransparent: Platform.OS === 'ios' ? true : false,
-                  headerLargeTitle: false,
-                  title: '',
-                  presentation:
-                    Platform.OS === 'ios'
-                      ? isLiquidGlassAvailable() && osName !== 'iPadOS'
-                        ? 'formSheet'
-                        : 'modal'
-                      : 'modal',
-                  sheetInitialDetentIndex: 0,
-                  headerStyle: {
-                    backgroundColor:
-                      Platform.OS === 'ios'
+                <Stack.Screen
+                  name='courses'
+                  options={{
+                    headerShown: false,
+                    sheetGrabberVisible: true,
+                    sheetAllowedDetents: [0.4, 0.7, 1],
+                    contentStyle: {
+                      backgroundColor: isLiquidGlassAvailable()
                         ? 'transparent'
                         : colorScheme === 'dark'
                           ? Colors.dark.card
                           : Colors.light.card,
-                  },
-                  headerBlurEffect: isLiquidGlassAvailable()
-                    ? undefined
-                    : colorScheme === 'dark'
-                      ? 'dark'
-                      : 'light',
-
-                  animation: 'slide_from_bottom',
-                }}
-              />
-              <Stack.Screen
-                name='settings'
-                options={{
-                  headerShown: false,
-                  sheetGrabberVisible: true,
-                  sheetAllowedDetents: [1],
-                  contentStyle: {
-                    backgroundColor: isLiquidGlassAvailable()
-                      ? 'transparent'
-                      : colorScheme === 'dark'
-                        ? Colors.dark.card
-                        : Colors.light.card,
-                  },
-                  headerTransparent: Platform.OS === 'ios' ? true : false,
-                  headerLargeTitle: false,
-                  title: '',
-                  presentation:
-                    Platform.OS === 'ios'
-                      ? isLiquidGlassAvailable() && osName !== 'iPadOS'
-                        ? 'formSheet'
-                        : 'modal'
-                      : 'modal',
-                  sheetInitialDetentIndex: 0,
-                  headerStyle: {
-                    backgroundColor:
+                    },
+                    headerTransparent: Platform.OS === 'ios' ? true : false,
+                    headerLargeTitle: false,
+                    title: '',
+                    presentation:
                       Platform.OS === 'ios'
+                        ? isLiquidGlassAvailable() && osName !== 'iPadOS'
+                          ? 'formSheet'
+                          : 'modal'
+                        : 'modal',
+                    sheetInitialDetentIndex: 0,
+                    headerStyle: {
+                      backgroundColor:
+                        Platform.OS === 'ios'
+                          ? 'transparent'
+                          : colorScheme === 'dark'
+                            ? Colors.dark.card
+                            : Colors.light.card,
+                    },
+                    headerBlurEffect: isLiquidGlassAvailable()
+                      ? undefined
+                      : colorScheme === 'dark'
+                        ? 'dark'
+                        : 'light',
+
+                    animation: 'slide_from_bottom',
+                  }}
+                />
+                <Stack.Screen
+                  name='settings'
+                  options={{
+                    headerShown: false,
+                    sheetGrabberVisible: true,
+                    sheetAllowedDetents: [1],
+                    contentStyle: {
+                      backgroundColor: isLiquidGlassAvailable()
                         ? 'transparent'
                         : colorScheme === 'dark'
                           ? Colors.dark.card
                           : Colors.light.card,
-                  },
-                  headerBlurEffect: isLiquidGlassAvailable()
-                    ? undefined
-                    : colorScheme === 'dark'
-                      ? 'dark'
-                      : 'light',
+                    },
+                    headerTransparent: Platform.OS === 'ios' ? true : false,
+                    headerLargeTitle: false,
+                    title: '',
+                    presentation:
+                      Platform.OS === 'ios'
+                        ? isLiquidGlassAvailable() && osName !== 'iPadOS'
+                          ? 'formSheet'
+                          : 'modal'
+                        : 'modal',
+                    sheetInitialDetentIndex: 0,
+                    headerStyle: {
+                      backgroundColor:
+                        Platform.OS === 'ios'
+                          ? 'transparent'
+                          : colorScheme === 'dark'
+                            ? Colors.dark.card
+                            : Colors.light.card,
+                    },
+                    headerBlurEffect: isLiquidGlassAvailable()
+                      ? undefined
+                      : colorScheme === 'dark'
+                        ? 'dark'
+                        : 'light',
 
-                  animation: 'slide_from_bottom',
-                }}
-              />
-              <Stack.Screen name='+not-found' />
-            </Stack>
-          </Authenticated>
-        </ConvexAuthProvider>
+                    animation: 'slide_from_bottom',
+                  }}
+                />
+                <Stack.Screen name='+not-found' />
+              </Stack>
+            </Authenticated>
+          </ConvexAuthProvider>
+        </KeyboardProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );

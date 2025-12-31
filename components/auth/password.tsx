@@ -11,7 +11,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { useColor } from '@/hooks/useColor';
 import * as Haptics from 'expo-haptics';
 
 type AuthStep = 'signIn' | 'signUp' | 'forgotPassword' | 'resetPassword';
@@ -104,7 +103,6 @@ const SquishyButton: React.FC<SquishyButtonProps> = ({
       }}
       style={{ height: 64, width: '100%', opacity: disabled ? 0.6 : 1 }}
     >
-      {/* Shadow */}
       <View
         pointerEvents='none'
         style={{
@@ -119,7 +117,6 @@ const SquishyButton: React.FC<SquishyButtonProps> = ({
         }}
       />
 
-      {/* Face */}
       <Animated.View
         pointerEvents='none'
         style={[
@@ -203,7 +200,6 @@ const SquishyInput: React.FC<SquishyInputProps> = ({
   return (
     <View style={[{ width: '100%' }, containerStyle]}>
       <View style={{ height: 64, position: 'relative' }}>
-        {/* Shadow */}
         <View
           style={{
             backgroundColor: '#38383A',
@@ -217,7 +213,6 @@ const SquishyInput: React.FC<SquishyInputProps> = ({
           }}
         />
 
-        {/* Input Face */}
         <Animated.View
           style={[
             {
@@ -256,7 +251,7 @@ const SquishyInput: React.FC<SquishyInputProps> = ({
             style={{
               flex: 1,
               fontSize: 18,
-              fontWeight: 700,
+              fontWeight: '700',
               color: '#FFF',
               height: '100%',
             }}
@@ -289,7 +284,6 @@ interface SquishyCardProps {
 const SquishyCard: React.FC<SquishyCardProps> = ({ children, style = {} }) => {
   return (
     <View style={[{ position: 'relative' }, style]}>
-      {/* Shadow */}
       <View
         style={{
           backgroundColor: '#E5C000',
@@ -302,7 +296,6 @@ const SquishyCard: React.FC<SquishyCardProps> = ({ children, style = {} }) => {
         }}
       />
 
-      {/* Card Face */}
       <View
         style={{
           backgroundColor: '#000',
@@ -549,7 +542,7 @@ export const Password: React.FC = () => {
             style={{
               fontSize: 28,
               fontWeight: '900',
-              color: '#000',
+              color: '#FFF',
               marginTop: 8,
             }}
           >
@@ -610,7 +603,6 @@ export const Password: React.FC = () => {
     );
   }
 
-  // Default view for 'signIn' and 'signUp'
   const isSigningIn = step === 'signIn';
 
   return (
@@ -619,7 +611,7 @@ export const Password: React.FC = () => {
         <Text
           style={{
             fontSize: 32,
-            fontWeight: 800,
+            fontWeight: '800',
             color: '#fff',
             textAlign: 'center',
           }}

@@ -14,6 +14,7 @@ import { Bubbles } from '@/components/orca/bubbles';
 import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
 import { useColor } from '@/hooks/useColor';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -82,22 +83,28 @@ export const Auth = () => {
           paddingHorizontal: 16,
         }}
       >
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: -36,
-            marginBottom: -46,
-          }}
+        <KeyboardAwareScrollView
+          bottomOffset={24}
+          keyboardShouldPersistTaps='handled'
+          showsVerticalScrollIndicator={false}
         >
-          <Image
-            source={require('@/assets/images/icon.png')}
-            style={{ width: 190, height: 190 }}
-            contentFit='contain'
-          />
-        </View>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: -36,
+              marginBottom: -46,
+            }}
+          >
+            <Image
+              source={require('@/assets/images/icon.png')}
+              style={{ width: 190, height: 190 }}
+              contentFit='contain'
+            />
+          </View>
 
-        <Password />
+          <Password />
+        </KeyboardAwareScrollView>
 
         <View style={{ gap: 16 }}>
           <SignInWithGoogle />
