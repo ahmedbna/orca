@@ -1,4 +1,4 @@
-import { Learn } from '@/components/learn';
+import { Study } from '@/components/study';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 import { useQuery } from 'convex/react';
@@ -16,7 +16,11 @@ export default function StudyScreen() {
     return <Loading />;
   }
 
-  if (lesson === null || !lesson.user.nativeLanguage) {
+  if (
+    lesson === null ||
+    !lesson.user.nativeLanguage ||
+    !lesson.user.learningLanguage
+  ) {
     return (
       <View
         style={{
@@ -30,5 +34,11 @@ export default function StudyScreen() {
     );
   }
 
-  return <Learn lesson={lesson} native={lesson.user.nativeLanguage} />;
+  return (
+    <Study
+      lesson={lesson}
+      language={lesson.user.learningLanguage}
+      native={lesson.user.nativeLanguage}
+    />
+  );
 }

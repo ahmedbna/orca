@@ -124,14 +124,28 @@ export const Map = ({ course, streak }: Props) => {
       >
         <TouchableOpacity
           onPress={() => router.push('/courses')}
-          style={{ flexDirection: 'row', gap: 2, alignItems: 'center' }}
+          style={{
+            flexDirection: 'row',
+            gap: 2,
+            alignItems: 'center',
+            flex: 1, // 👈 allows truncation
+            marginRight: 12, // spacing from speed button
+          }}
         >
           <Text variant='heading'>
             {LANGUAGES.find((lang) => lang.code === course.language)?.flag}
           </Text>
           <Text
             variant='title'
-            style={{ fontSize: 22, color: '#000', fontWeight: '800' }}
+            numberOfLines={1}
+            ellipsizeMode='tail'
+            style={{
+              fontSize: 22,
+              color: '#000',
+              fontWeight: '800',
+              opacity: 0.7,
+              flexShrink: 1, // 👈 critical for row layouts
+            }}
           >
             {course.title}
           </Text>

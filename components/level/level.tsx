@@ -130,7 +130,13 @@ export const Level = ({ lesson }: Props) => {
       >
         <TouchableOpacity
           onPress={() => router.back()}
-          style={{ flexDirection: 'row', gap: 2, alignItems: 'center' }}
+          style={{
+            flexDirection: 'row',
+            gap: 2,
+            alignItems: 'center',
+            flex: 1, // 👈 allows truncation
+            marginRight: 12, // spacing from speed button
+          }}
         >
           <ChevronLeft size={26} color='#000' strokeWidth={3} />
 
@@ -142,11 +148,14 @@ export const Level = ({ lesson }: Props) => {
           </Text>
           <Text
             variant='title'
+            numberOfLines={1}
+            ellipsizeMode='tail'
             style={{
               fontSize: 22,
               color: '#000',
               fontWeight: '800',
               opacity: 0.7,
+              flexShrink: 1, // 👈 critical for row layouts
             }}
           >
             {lesson.course.title}

@@ -142,7 +142,7 @@ export const Background = ({
         </Button>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          {!isOrcaRoute ? (
+          {!isOrcaRoute && !isLearnRoute ? (
             <Button
               size='icon'
               variant='ghost'

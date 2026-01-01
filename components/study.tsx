@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react';
+// components/study.tsx
+
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Pressable, TouchableOpacity } from 'react-native';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
@@ -9,18 +11,41 @@ import { ChevronLeft } from 'lucide-react-native';
 import { OrcaButton, OrcaSquareButton } from '@/components/squishy/orca-button';
 import { Progress } from '@/components/squishy/progress';
 import { LANGUAGES } from '@/constants/languages';
-import * as Speech from 'expo-speech';
+import { usePiperTTS } from '@/hooks/usePiperTTS';
 
-type Props = {
-  native: string;
-  lesson: Doc<'lessons'> & {
-    course: Doc<'courses'>;
-  };
+const LANGUAGE_TO_PIPER_MODEL: Record<string, string> = {
+  en: 'en-US-Amy',
+  fr: 'fr-FR-Siwis',
+  de: 'de-DE-Thorsten',
+  es: 'es-ES-Carlfm',
+  it: 'it-IT-Riccardo',
 };
 
-export const Learn = ({ lesson, native }: Props) => {
+// Ordered speeds for cycling
+const SPEED_ORDER = ['x0.25', 'x0.5', 'x1.0', 'x1.5', 'x2.0'] as const;
+
+type SpeedKey = (typeof SPEED_ORDER)[number];
+
+const VOICE_SPEED: Record<SpeedKey, number> = {
+  'x0.25': 0.25,
+  'x0.5': 0.5,
+  'x1.0': 0.75,
+  'x1.5': 0.85,
+  'x2.0': 1,
+};
+
+type Props = {
+  language: string;
+  native: string;
+  lesson: Doc<'lessons'> & { course: Doc<'courses'> };
+};
+
+export const Study = ({ language, native, lesson }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+
+  const { initializeTTS, speak, currentModelId, isInitializing } =
+    usePiperTTS();
 
   const phrases = useMemo(
     () => [...lesson.phrases].sort((a, b) => a.order - b.order),
@@ -32,9 +57,29 @@ export const Learn = ({ lesson, native }: Props) => {
 
   const currentPhrase = phrases[index];
 
-  const handleSpeak = () => {
-    Speech.speak(currentPhrase.text);
-  };
+  // New state to track speed
+  const [speedIndex, setSpeedIndex] = useState(2); // default x1.0
+
+  const currentSpeedKey = SPEED_ORDER[speedIndex];
+  const currentSpeedValue = VOICE_SPEED[currentSpeedKey];
+
+  useEffect(() => {
+    const modelId = LANGUAGE_TO_PIPER_MODEL[language];
+    if (!modelId) {
+      console.warn(`No Piper model for language: ${language}`);
+      return;
+    }
+    if (currentModelId !== modelId) {
+      initializeTTS(modelId);
+    }
+  }, [language, currentModelId, initializeTTS]);
+
+  const handleSpeak = useCallback(() => {
+    if (isInitializing) return;
+    if (!currentPhrase?.text) return;
+
+    speak(currentPhrase.text, currentSpeedValue);
+  }, [currentPhrase, speak, isInitializing, currentSpeedValue]);
 
   const translation = currentPhrase.dictionary?.find(
     (d) => d.language === native
@@ -42,6 +87,11 @@ export const Learn = ({ lesson, native }: Props) => {
 
   const isFirst = index === 0;
   const isLast = index === phrases.length - 1;
+
+  // Cycle speed on button press
+  const handleSpeedPress = () => {
+    setSpeedIndex((i) => (i + 1) % SPEED_ORDER.length);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -59,7 +109,6 @@ export const Learn = ({ lesson, native }: Props) => {
           <Text style={{ color: '#000', fontSize: 36, fontWeight: '800' }}>
             {currentPhrase.text}
           </Text>
-
           {showTranslation && translation && (
             <Text
               style={{
@@ -92,25 +141,56 @@ export const Learn = ({ lesson, native }: Props) => {
           zIndex: 99,
         }}
       >
-        {/* Back */}
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
         >
-          <ChevronLeft size={26} strokeWidth={3} />
-          <Text
+          <TouchableOpacity
+            onPress={() => router.back()}
             style={{
-              color: '#000',
-              fontSize: 22,
-              fontWeight: '800',
-              opacity: 0.7,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 4,
+              flex: 1, // 👈 allows truncation
+              marginRight: 12, // spacing from speed button
             }}
           >
-            {lesson.title}
-          </Text>
-        </TouchableOpacity>
+            <ChevronLeft size={26} strokeWidth={3} />
 
-        {/* ✅ Progress shows CURRENT phrase */}
+            <Text
+              numberOfLines={1}
+              ellipsizeMode='tail'
+              style={{
+                color: '#000',
+                fontSize: 22,
+                fontWeight: '800',
+                opacity: 0.7,
+                flexShrink: 1, // 👈 critical for row layouts
+              }}
+            >
+              {lesson.title}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Speed button */}
+          <TouchableOpacity onPress={handleSpeedPress}>
+            <Text
+              style={{
+                color: '#000',
+                fontSize: 18,
+                fontWeight: '800',
+                opacity: 0.7,
+              }}
+            >
+              {currentSpeedKey}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Progress */}
         <Progress
           total={phrases.length}
           correctSegments={Array.from({ length: index + 1 }, (_, i) => i)}
@@ -118,14 +198,7 @@ export const Learn = ({ lesson, native }: Props) => {
         />
 
         {/* Controls */}
-        <View
-          style={{
-            flexDirection: 'row',
-            gap: 12,
-            marginTop: 8,
-          }}
-        >
-          {/* Previous */}
+        <View style={{ flexDirection: 'row', gap: 12, marginTop: 8 }}>
           <OrcaSquareButton
             label='◀︎'
             variant='indigo'
@@ -135,15 +208,11 @@ export const Learn = ({ lesson, native }: Props) => {
               setIndex((i) => Math.max(0, i - 1));
             }}
           />
-
-          {/* Translation */}
           <OrcaSquareButton
             label={LANGUAGES.find((l) => l.code === native)?.flag || '🌐'}
             variant='green'
             onPress={() => setShowTranslation((v) => !v)}
           />
-
-          {/* Next */}
           <OrcaSquareButton
             label='▶︎'
             variant='indigo'
@@ -155,8 +224,12 @@ export const Learn = ({ lesson, native }: Props) => {
           />
         </View>
 
-        {/* Listen */}
-        <OrcaButton label='🔊 LISTEN' variant='red' onPress={handleSpeak} />
+        <OrcaButton
+          label={isInitializing ? '⏳ LOADING VOICE' : '🔊 LISTEN'}
+          variant='red'
+          disabled={isInitializing}
+          onPress={handleSpeak}
+        />
       </View>
     </View>
   );
