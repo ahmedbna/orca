@@ -5,7 +5,7 @@ import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import { Doc, Id } from '@/convex/_generated/dataModel';
 import { LANGUAGES } from '@/constants/languages';
-import { OrcaButton } from '../orca-button';
+import { OrcaButton } from '@/components/squishy/orca-button';
 import { LessonCard } from './lesson-card';
 import { TouchableOpacity } from 'react-native';
 import { ScoreCard } from './score-card';

@@ -1,12 +1,7 @@
 // components/onboarding/onboarding.tsx
+
 import React, { useState } from 'react';
-import { Dimensions, Pressable, TextInput } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  interpolate,
-} from 'react-native-reanimated';
+import { Dimensions } from 'react-native';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -16,15 +11,19 @@ import { Bubbles } from '@/components/orca/bubbles';
 import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
 import { useColor } from '@/hooks/useColor';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { NATIVES, LANGUAGES } from '@/constants/languages';
 import { Platform } from 'react-native';
+import { OrcaButton } from '@/components/squishy/orca-button';
+import { Seafloor } from '@/components/orca/seafloor';
+import { DatePicker } from '@/components/ui/date-picker';
+import { Progress } from '@/components/orca/progress';
+import { Image } from 'expo-image';
 import * as Haptics from 'expo-haptics';
+import { ScrollView } from '../ui/scroll-view';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-const SHADOW_HEIGHT = 8;
 
 const bubbles = [
   {
@@ -59,291 +58,11 @@ const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
   }
 };
 
-// 3D Squishy Button Component
-interface SquishyButtonProps {
-  onPress: () => void;
-  label: string;
-  variant?: 'yellow' | 'white' | 'black' | 'green' | 'gray' | 'red';
-  disabled?: boolean;
-  loading?: boolean;
-  icon?: string;
-  selected?: boolean;
-  style?: any;
-}
-
-const SquishyButton: React.FC<SquishyButtonProps> = ({
-  onPress,
-  label,
-  variant = 'yellow',
-  disabled = false,
-  loading = false,
-  icon,
-  selected = false,
-  style = {},
-}) => {
-  const pressed = useSharedValue(0);
-
-  const colors = {
-    yellow: {
-      face: '#FAD40B',
-      shadow: '#E5C000',
-      text: '#000000',
-      border: 'rgba(0,0,0,0.1)',
-    },
-    white: {
-      face: '#FFFFFF',
-      shadow: '#D1D5DB',
-      text: '#000000',
-      border: 'rgba(0,0,0,0.1)',
-    },
-    black: {
-      face: '#000000',
-      shadow: '#2A2A2A',
-      text: '#FFFFFF',
-      border: 'rgba(255,255,255,0.1)',
-    },
-    green: {
-      face: '#34C759',
-      shadow: '#2E9E4E',
-      text: '#FFFFFF',
-      border: 'rgba(0,0,0,0.1)',
-    },
-    gray: {
-      face: '#D1D5DB',
-      shadow: '#AFB2B7',
-      text: '#000',
-      border: 'rgba(0,0,0,0.1)',
-    },
-    red: {
-      face: '#FF3B30',
-      shadow: '#C1271D',
-      text: '#FFFFFF',
-      border: 'rgba(0,0,0,0.15)',
-    },
-  };
-
-  const buttonColors = disabled ? colors.gray : colors[variant];
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(pressed.value, [0, 1], [0, SHADOW_HEIGHT]);
-    return { transform: [{ translateY }] };
-  });
-
-  return (
-    <Pressable
-      disabled={disabled || loading}
-      onPress={onPress}
-      onPressIn={() => {
-        pressed.value = withSpring(1, { damping: 15 });
-        triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-      }}
-      onPressOut={() => {
-        pressed.value = withSpring(0, { damping: 15 });
-        triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
-      }}
-      style={[
-        { height: 64, width: '100%', opacity: disabled ? 0.6 : 1 },
-        style,
-      ]}
-    >
-      <View
-        pointerEvents='none'
-        style={{
-          backgroundColor: buttonColors.shadow,
-          position: 'absolute',
-          top: SHADOW_HEIGHT,
-          left: 0,
-          right: 0,
-          height: 64,
-          borderRadius: 999,
-          zIndex: 1,
-        }}
-      />
-
-      <Animated.View
-        pointerEvents='none'
-        style={[
-          {
-            backgroundColor: selected ? '#34C759' : buttonColors.face,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 64,
-            borderRadius: 999,
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 2,
-            borderWidth: 4,
-            borderColor: selected ? 'rgba(0,0,0,0.2)' : buttonColors.border,
-            flexDirection: 'row',
-            gap: 12,
-          },
-          animatedStyle,
-        ]}
-      >
-        {icon && <Text style={{ fontSize: 22 }}>{icon}</Text>}
-        <Text
-          style={{
-            color: selected ? '#FFF' : buttonColors.text,
-            fontSize: 18,
-            fontWeight: '800',
-          }}
-        >
-          {loading ? 'Loading...' : label}
-        </Text>
-      </Animated.View>
-    </Pressable>
-  );
-};
-
-// 3D Squishy TextArea Component
-interface SquishyTextAreaProps {
-  value: string;
-  onChangeText: (text: string) => void;
-  placeholder: string;
-  icon?: string;
-  maxLength?: number;
-}
-
-const SquishyTextArea: React.FC<SquishyTextAreaProps> = ({
-  value,
-  onChangeText,
-  placeholder,
-  icon,
-  maxLength = 150,
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const focusAnim = useSharedValue(0);
-
-  const handleFocus = () => {
-    setIsFocused(true);
-    focusAnim.value = withSpring(1, { damping: 15 });
-    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-    focusAnim.value = withSpring(0, { damping: 15 });
-  };
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(focusAnim.value, [0, 1], [0, 3]);
-    return { transform: [{ translateY }] };
-  });
-
-  return (
-    <View style={{ width: '100%' }}>
-      <View style={{ minHeight: 120, position: 'relative' }}>
-        <View
-          style={{
-            backgroundColor: '#38383A',
-            position: 'absolute',
-            top: 6,
-            left: 0,
-            right: 0,
-            height: '100%',
-            borderRadius: 24,
-            zIndex: 1,
-          }}
-        />
-
-        <Animated.View
-          style={[
-            {
-              backgroundColor: '#1C1C1E',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              minHeight: 120,
-              borderRadius: 24,
-              borderWidth: 4,
-              borderColor: isFocused ? '#FAD40B' : '#38383A',
-              zIndex: 2,
-              padding: 16,
-              gap: 8,
-            },
-            animatedStyle,
-          ]}
-        >
-          {icon && (
-            <Text style={{ fontSize: 20, alignSelf: 'flex-start' }}>
-              {icon}
-            </Text>
-          )}
-          <TextInput
-            value={value}
-            onChangeText={onChangeText}
-            placeholder={placeholder}
-            placeholderTextColor='#a1a1aa'
-            multiline
-            maxLength={maxLength}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            style={{
-              flex: 1,
-              fontSize: 16,
-              fontWeight: '600',
-              color: '#FFF',
-              textAlignVertical: 'top',
-              minHeight: 80,
-            }}
-          />
-          <Text
-            style={{
-              color: '#a1a1aa',
-              fontSize: 12,
-              alignSelf: 'flex-end',
-              fontWeight: '600',
-            }}
-          >
-            {value.length}/{maxLength}
-          </Text>
-        </Animated.View>
-      </View>
-    </View>
-  );
-};
-
-// Progress Indicator
-interface ProgressIndicatorProps {
-  currentStep: number;
-  totalSteps: number;
-}
-
-const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
-  currentStep,
-  totalSteps,
-}) => {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        gap: 8,
-        justifyContent: 'center',
-        marginBottom: 24,
-      }}
-    >
-      {Array.from({ length: totalSteps }).map((_, index) => (
-        <View
-          key={index}
-          style={{
-            width: 40,
-            height: 8,
-            borderRadius: 4,
-            backgroundColor: index <= currentStep ? '#FAD40B' : '#38383A',
-          }}
-        />
-      ))}
-    </View>
-  );
-};
-
-export const Onboarding: React.FC<{ onComplete: () => void }> = ({
-  onComplete,
-}) => {
+export const Onboarding = () => {
   const yellow = useColor('orca');
+  const border = useColor('border');
+  const background = useColor('background');
+
   const insets = useSafeAreaInsets();
   const updateUser = useMutation(api.users.update);
 
@@ -352,14 +71,16 @@ export const Onboarding: React.FC<{ onComplete: () => void }> = ({
 
   // Form state
   const [gender, setGender] = useState<string>('');
-  const [bio, setBio] = useState<string>('');
+  // const [bio, setBio] = useState<string>('');
+  const [birthday, setBirthday] = useState<Date | undefined>();
   const [nativeLanguage, setNativeLanguage] = useState<string>('');
   const [learningLanguage, setLearningLanguage] = useState<string>('');
 
   const canProceed = () => {
     switch (currentStep) {
       case 0:
-        return gender !== '' && bio.trim().length >= 10;
+        // return gender !== '' && bio.trim().length >= 10;
+        return gender !== '' && birthday !== undefined;
       case 1:
         return nativeLanguage !== '';
       case 2:
@@ -378,13 +99,13 @@ export const Onboarding: React.FC<{ onComplete: () => void }> = ({
       setLoading(true);
       try {
         await updateUser({
+          // bio,
           gender,
-          bio,
+          birthday: birthday ? birthday.getTime() : undefined,
           nativeLanguage,
           learningLanguage,
         });
         triggerHaptic(Haptics.ImpactFeedbackStyle.Heavy);
-        onComplete();
       } catch (error) {
         console.error('Failed to update user:', error);
       } finally {
@@ -399,6 +120,15 @@ export const Onboarding: React.FC<{ onComplete: () => void }> = ({
       triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
     }
   };
+
+  const today = new Date();
+  const maxSelectableBirthday = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate()
+  );
+
+  const BOTTOM_BAR_HEIGHT = insets.bottom + 140;
 
   return (
     <View style={{ flex: 1, backgroundColor: yellow }} pointerEvents='box-none'>
@@ -423,91 +153,168 @@ export const Onboarding: React.FC<{ onComplete: () => void }> = ({
       <Bubbles layers={bubbles} />
       <Shark />
       <Jellyfish />
+      <Seafloor speed={0} bottom={BOTTOM_BAR_HEIGHT} />
+
+      <View
+        style={[
+          {
+            paddingBottom: insets.bottom,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#F6C90E',
+            paddingHorizontal: 16,
+            gap: 16,
+            height: BOTTOM_BAR_HEIGHT,
+            overflow: 'hidden',
+            zIndex: 99,
+          },
+        ]}
+      >
+        <Progress
+          total={3}
+          correctSegments={Array.from({ length: currentStep + 1 }, (_, i) => i)}
+          failedSegments={[]}
+        />
+
+        {/* Navigation Buttons */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          {currentStep > 0 && (
+            <OrcaButton
+              onPress={handleBack}
+              label='Back'
+              variant='gray'
+              disabled={loading}
+              style={{ flex: 1 }}
+            />
+          )}
+
+          <OrcaButton
+            onPress={handleNext}
+            label={currentStep === 2 ? 'Setup Profile' : 'Next'}
+            variant='green'
+            disabled={!canProceed()}
+            loading={loading}
+            style={{ flex: 3 }}
+          />
+        </View>
+      </View>
 
       <View
         style={{
           flex: 1,
           paddingTop: insets.top + 24,
           paddingHorizontal: 16,
-          paddingBottom: insets.bottom + 16,
         }}
       >
-        <KeyboardAwareScrollView
-          bottomOffset={24}
-          keyboardShouldPersistTaps='handled'
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
-          <View style={{ flex: 1, gap: 24 }}>
-            <ProgressIndicator currentStep={currentStep} totalSteps={3} />
+        {/* Step 1: Gender and Bio */}
+        {currentStep === 0 && (
+          <View style={{ gap: 24 }}>
+            <View style={{ alignItems: 'center' }}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: -36,
+                  marginBottom: -46,
+                }}
+              >
+                <Image
+                  source={require('@/assets/images/icon.png')}
+                  style={{ width: 190, height: 190 }}
+                  contentFit='contain'
+                />
+              </View>
 
-            {/* Step 1: Gender and Bio */}
-            {currentStep === 0 && (
-              <View style={{ gap: 20 }}>
-                <View style={{ alignItems: 'center' }}>
-                  <Text style={{ fontSize: 48 }}>👤</Text>
-                  <Text
-                    style={{
-                      fontSize: 28,
-                      fontWeight: '900',
-                      color: '#FFF',
-                      marginTop: 8,
-                    }}
-                  >
-                    Tell us about yourself
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: '#71717a',
-                      marginTop: 8,
-                      textAlign: 'center',
-                      fontWeight: '600',
-                    }}
-                  >
-                    Help us personalize your experience
-                  </Text>
-                </View>
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: '900',
+                  color: background,
+                  marginTop: 8,
+                }}
+              >
+                Tell us about yourself
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: border,
+                  marginTop: 8,
+                  textAlign: 'center',
+                  fontWeight: '600',
+                }}
+              >
+                Help us personalize your experience
+              </Text>
+            </View>
 
-                <View style={{ gap: 16 }}>
-                  <Text
-                    style={{
-                      color: '#FFF',
-                      fontSize: 16,
-                      fontWeight: '700',
-                      marginBottom: -8,
-                    }}
-                  >
-                    Select your gender
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      gap: 12,
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <SquishyButton
-                      onPress={() => setGender('male')}
-                      label='Male'
-                      variant='black'
-                      selected={gender === 'male'}
-                      icon='👨'
-                      style={{ flex: 1 }}
-                    />
-                    <SquishyButton
-                      onPress={() => setGender('female')}
-                      label='Female'
-                      variant='black'
-                      selected={gender === 'female'}
-                      icon='👩'
-                      style={{ flex: 1 }}
-                    />
-                  </View>
+            <View style={{ gap: 16 }}>
+              <Text
+                style={{
+                  color: background,
+                  fontSize: 16,
+                  fontWeight: '700',
+                  marginBottom: -8,
+                }}
+              >
+                Select your gender
+              </Text>
+              <View
+                style={{
+                  gap: 12,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <OrcaButton
+                  label='👨 Male'
+                  style={{ flex: 1 }}
+                  onPress={() => setGender('male')}
+                  variant={gender === 'male' ? 'green' : 'black'}
+                />
 
+                <OrcaButton
+                  label='👩 Female'
+                  style={{ flex: 1 }}
+                  onPress={() => setGender('female')}
+                  variant={gender === 'female' ? 'green' : 'black'}
+                />
+              </View>
+            </View>
+
+            <View style={{ gap: 16 }}>
+              <Text
+                style={{
+                  color: background,
+                  fontSize: 16,
+                  fontWeight: '700',
+                  marginBottom: -8,
+                }}
+              >
+                Select your Birthday
+              </Text>
+              <DatePicker
+                variant='orca'
+                label='Birthday'
+                value={birthday}
+                onChange={setBirthday}
+                maximumDate={maxSelectableBirthday}
+                disabled={loading}
+              />
+            </View>
+
+            {/* <View>
                   <Text
                     style={{
-                      color: '#FFF',
+                      color: background,
                       fontSize: 16,
                       fontWeight: '700',
                       marginTop: 8,
@@ -523,127 +330,109 @@ export const Onboarding: React.FC<{ onComplete: () => void }> = ({
                     icon='✍️'
                     maxLength={150}
                   />
-                </View>
-              </View>
-            )}
-
-            {/* Step 2: Native Language */}
-            {currentStep === 1 && (
-              <View style={{ gap: 20 }}>
-                <View style={{ alignItems: 'center' }}>
-                  <Text style={{ fontSize: 48 }}>🌍</Text>
-                  <Text
-                    style={{
-                      fontSize: 28,
-                      fontWeight: '900',
-                      color: '#FFF',
-                      marginTop: 8,
-                    }}
-                  >
-                    Native Language
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: '#71717a',
-                      marginTop: 8,
-                      textAlign: 'center',
-                      fontWeight: '600',
-                    }}
-                  >
-                    Select your mother tongue
-                  </Text>
-                </View>
-
-                <View style={{ gap: 12, maxHeight: 400 }}>
-                  <KeyboardAwareScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ gap: 12 }}
-                  >
-                    {NATIVES.map((lang) => (
-                      <SquishyButton
-                        key={lang.code}
-                        onPress={() => setNativeLanguage(lang.code)}
-                        label={`${lang.flag} ${lang.name}`}
-                        variant='black'
-                        selected={nativeLanguage === lang.code}
-                      />
-                    ))}
-                  </KeyboardAwareScrollView>
-                </View>
-              </View>
-            )}
-
-            {/* Step 3: Learning Language */}
-            {currentStep === 2 && (
-              <View style={{ gap: 20 }}>
-                <View style={{ alignItems: 'center' }}>
-                  <Text style={{ fontSize: 48 }}>🎯</Text>
-                  <Text
-                    style={{
-                      fontSize: 28,
-                      fontWeight: '900',
-                      color: '#FFF',
-                      marginTop: 8,
-                    }}
-                  >
-                    Learning Language
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: '#71717a',
-                      marginTop: 8,
-                      textAlign: 'center',
-                      fontWeight: '600',
-                    }}
-                  >
-                    Which language do you want to learn?
-                  </Text>
-                </View>
-
-                <View style={{ gap: 12, maxHeight: 400 }}>
-                  <KeyboardAwareScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ gap: 12 }}
-                  >
-                    {LANGUAGES.map((lang) => (
-                      <SquishyButton
-                        key={lang.code}
-                        onPress={() => setLearningLanguage(lang.code)}
-                        label={`${lang.flag} ${lang.name}`}
-                        variant='black'
-                        selected={learningLanguage === lang.code}
-                      />
-                    ))}
-                  </KeyboardAwareScrollView>
-                </View>
-              </View>
-            )}
-
-            {/* Navigation Buttons */}
-            <View style={{ gap: 12, marginTop: 46 }}>
-              <SquishyButton
-                onPress={handleNext}
-                label={currentStep === 2 ? 'Setup Profile' : 'Next'}
-                variant='green'
-                disabled={!canProceed()}
-                loading={loading}
-                icon={currentStep === 2 ? '✅' : '→'}
-              />
-
-              {currentStep > 0 && (
-                <SquishyButton
-                  onPress={handleBack}
-                  label='Back'
-                  variant='gray'
-                  disabled={loading}
-                  icon='←'
-                />
-              )}
-            </View>
+                </View> */}
           </View>
-        </KeyboardAwareScrollView>
+        )}
+
+        {/* Step 2: Native Language */}
+        {currentStep === 1 && (
+          <View style={{ flex: 1, gap: 20 }}>
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontSize: 48 }}>🌍</Text>
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: '900',
+                  color: background,
+                  marginTop: 8,
+                }}
+              >
+                Native Language
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: border,
+                  marginTop: 8,
+                  textAlign: 'center',
+                  fontWeight: '600',
+                }}
+              >
+                Select your mother tongue
+              </Text>
+            </View>
+
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                gap: 12,
+                paddingTop: 16,
+                paddingBottom: BOTTOM_BAR_HEIGHT + 120,
+                flexGrow: 1,
+              }}
+            >
+              {NATIVES.map((lang) => (
+                <OrcaButton
+                  key={lang.code}
+                  onPress={() => setNativeLanguage(lang.code)}
+                  label={`${lang.flag} ${lang.native}`}
+                  variant={nativeLanguage === lang.code ? 'green' : 'black'}
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Step 3: Learning Language */}
+        {currentStep === 2 && (
+          <View style={{ gap: 20 }}>
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontSize: 48 }}>🎯</Text>
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: '900',
+                  color: background,
+                  marginTop: 8,
+                }}
+              >
+                Learning Language
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: border,
+                  marginTop: 8,
+                  textAlign: 'center',
+                  fontWeight: '600',
+                }}
+              >
+                Which language do you want to learn?
+              </Text>
+            </View>
+
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                gap: 12,
+                paddingTop: 16,
+                paddingBottom: BOTTOM_BAR_HEIGHT + 120,
+                flexGrow: 1,
+              }}
+            >
+              {LANGUAGES.filter((lan) => lan.code !== nativeLanguage).map(
+                (lang) => (
+                  <OrcaButton
+                    key={lang.code}
+                    onPress={() => setLearningLanguage(lang.code)}
+                    label={`${lang.flag} ${lang.native}`}
+                    variant={learningLanguage === lang.code ? 'green' : 'black'}
+                  />
+                )
+              )}
+            </ScrollView>
+          </View>
+        )}
       </View>
     </View>
   );

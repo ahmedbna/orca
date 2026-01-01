@@ -23,7 +23,7 @@ import { LANGUAGES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Doc } from '@/convex/_generated/dataModel';
-import { OrcaButton } from '@/components/orca-button';
+import { OrcaButton } from '@/components/squishy/orca-button';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { formatTime } from '@/lib/format-time';

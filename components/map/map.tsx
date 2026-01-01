@@ -12,7 +12,7 @@ import { Streak } from '@/components/map/streak';
 import { SquishyButton } from '@/components/map/squishy-button';
 import { Doc, Id } from '@/convex/_generated/dataModel';
 import { LANGUAGES } from '@/constants/languages';
-import { OrcaButton } from '@/components/orca-button';
+import { OrcaButton } from '@/components/squishy/orca-button';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 

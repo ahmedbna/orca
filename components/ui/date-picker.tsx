@@ -16,8 +16,14 @@ import {
   CalendarRange,
   ArrowRight,
 } from 'lucide-react-native';
-import { useCallback, useMemo, useState } from 'react';
-import { TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import {
+  ScrollView as RNScrollView,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
+import { OrcaButton } from '@/components/squishy/orca-button';
 
 export interface DateRange {
   startDate: Date | null;
@@ -34,7 +40,7 @@ interface BaseDatePickerProps {
   minimumDate?: Date;
   maximumDate?: Date;
   timeFormat?: '12' | '24';
-  variant?: 'filled' | 'outline' | 'group';
+  variant?: 'filled' | 'outline' | 'group' | 'orca';
   labelStyle?: TextStyle;
   errorStyle?: TextStyle;
 }
@@ -118,6 +124,11 @@ export function DatePicker(props: DatePickerProps) {
     }
     return (value as Date) || new Date();
   }, [value, mode]);
+
+  const monthScrollRef = useRef<RNScrollView>(null);
+  const yearScrollRef = useRef<RNScrollView>(null);
+  const MONTH_ITEM_HEIGHT = 16 * 2 + FONT_SIZE + 4; // paddingVertical + text + margin
+  const YEAR_ITEM_HEIGHT = MONTH_ITEM_HEIGHT;
 
   const [currentDate, setCurrentDate] = useState(() => getCurrentDate());
   const [viewMode, setViewMode] = useState<'date' | 'time' | 'month' | 'year'>(
@@ -206,6 +217,26 @@ export function DatePicker(props: DatePickerProps) {
         return dateValue.toLocaleDateString();
     }
   }, [value, mode, placeholder, timeFormat]);
+
+  const getInitialOpenDate = useCallback(() => {
+    if (mode === 'range' && isDateRange(value) && value.startDate) {
+      return value.startDate;
+    }
+
+    if (value instanceof Date) {
+      return value;
+    }
+
+    if (maximumDate) {
+      return maximumDate;
+    }
+
+    if (minimumDate) {
+      return minimumDate;
+    }
+
+    return new Date();
+  }, [value, mode, minimumDate, maximumDate]);
 
   // Helper function to check if a date is disabled
   const isDateDisabled = useCallback(
@@ -373,11 +404,14 @@ export function DatePicker(props: DatePickerProps) {
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     const newDate = new Date(currentDate);
-    if (direction === 'prev') {
-      newDate.setMonth(newDate.getMonth() - 1);
-    } else {
-      newDate.setMonth(newDate.getMonth() + 1);
-    }
+
+    direction === 'prev'
+      ? newDate.setMonth(newDate.getMonth() - 1)
+      : newDate.setMonth(newDate.getMonth() + 1);
+
+    if (maximumDate && newDate > maximumDate) return;
+    if (minimumDate && newDate < minimumDate) return;
+
     setCurrentDate(newDate);
   };
 
@@ -457,7 +491,16 @@ export function DatePicker(props: DatePickerProps) {
         }}
       >
         <TouchableOpacity
-          onPress={() => setShowMonthPicker(true)}
+          onPress={() => {
+            setShowMonthPicker(true);
+
+            requestAnimationFrame(() => {
+              monthScrollRef.current?.scrollTo({
+                y: calendarData.month * MONTH_ITEM_HEIGHT,
+                animated: false,
+              });
+            });
+          }}
           style={{
             flex: 1,
             flexDirection: 'row',
@@ -476,7 +519,18 @@ export function DatePicker(props: DatePickerProps) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => setShowYearPicker(true)}
+          onPress={() => {
+            setShowYearPicker(true);
+
+            const yearIndex = YEARS.indexOf(calendarData.year);
+
+            requestAnimationFrame(() => {
+              yearScrollRef.current?.scrollTo({
+                y: yearIndex * YEAR_ITEM_HEIGHT,
+                animated: false,
+              });
+            });
+          }}
           style={{
             flex: 1,
             flexDirection: 'row',
@@ -610,10 +664,10 @@ export function DatePicker(props: DatePickerProps) {
                             rangeEndpoints.isStart || rangeEndpoints.isEnd
                               ? primaryColor
                               : inRange
-                              ? primaryColor
-                              : isSelected
-                              ? primaryColor
-                              : 'transparent',
+                                ? primaryColor
+                                : isSelected
+                                  ? primaryColor
+                                  : 'transparent',
                           borderWidth:
                             isToday && !isSelected && !inRange ? 1 : 0,
                           borderColor: primaryColor,
@@ -637,12 +691,12 @@ export function DatePicker(props: DatePickerProps) {
                             rangeEndpoints.isStart || rangeEndpoints.isEnd
                               ? primaryForegroundColor
                               : inRange
-                              ? primaryForegroundColor
-                              : isSelected
-                              ? primaryForegroundColor
-                              : disabled
-                              ? mutedForegroundColor
-                              : textColor,
+                                ? primaryForegroundColor
+                                : isSelected
+                                  ? primaryForegroundColor
+                                  : disabled
+                                    ? mutedForegroundColor
+                                    : textColor,
                           fontWeight:
                             rangeEndpoints.isStart ||
                             rangeEndpoints.isEnd ||
@@ -741,8 +795,8 @@ export function DatePicker(props: DatePickerProps) {
                         ? 12
                         : 0
                       : isPM
-                      ? hour + 12
-                      : hour
+                        ? hour + 12
+                        : hour
                     : hour;
 
                 const isSelected = actualHour === selectedHours;
@@ -852,8 +906,8 @@ export function DatePicker(props: DatePickerProps) {
                             ? selectedHours - 12
                             : selectedHours
                           : selectedHours < 12
-                          ? selectedHours + 12
-                          : selectedHours;
+                            ? selectedHours + 12
+                            : selectedHours;
                         handleTimeChange(newHours, selectedMinutes);
                       }}
                       style={{
@@ -891,10 +945,9 @@ export function DatePicker(props: DatePickerProps) {
   const renderMonthPicker = () => (
     <View style={{ height: 300 }}>
       <ScrollView
+        ref={monthScrollRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingVertical: 20,
-        }}
+        contentContainerStyle={{ paddingVertical: 20 }}
       >
         {MONTHS.map((month, index) => (
           <TouchableOpacity
@@ -931,10 +984,9 @@ export function DatePicker(props: DatePickerProps) {
   const renderYearPicker = () => (
     <View style={{ height: 300 }}>
       <ScrollView
+        ref={yearScrollRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingVertical: 20,
-        }}
+        contentContainerStyle={{ paddingVertical: 20 }}
       >
         {YEARS.map((year) => (
           <TouchableOpacity
@@ -996,7 +1048,9 @@ export function DatePicker(props: DatePickerProps) {
   };
 
   const handleOpenPicker = () => {
-    setCurrentDate(new Date());
+    const initialDate = getInitialOpenDate();
+
+    setCurrentDate(initialDate);
     setViewMode('date');
     setShowMonthPicker(false);
     setShowYearPicker(false);
@@ -1017,72 +1071,81 @@ export function DatePicker(props: DatePickerProps) {
 
   return (
     <>
-      <TouchableOpacity
-        style={[triggerStyle, disabled && { opacity: 0.5 }, style]}
-        onPress={handleOpenPicker}
-        disabled={disabled}
-      >
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 8,
-          }}
+      {variant === 'orca' ? (
+        <OrcaButton
+          label={value ? formatDisplayValue() : label ? label : 'Select Date'}
+          onPress={handleOpenPicker}
+          disabled={disabled}
+          variant={value ? 'green' : 'black'}
+        />
+      ) : (
+        <TouchableOpacity
+          style={[triggerStyle, disabled && { opacity: 0.5 }, style]}
+          onPress={handleOpenPicker}
+          disabled={disabled}
         >
           <View
             style={{
-              width: label ? 120 : 'auto',
+              flex: 1,
               flexDirection: 'row',
               alignItems: 'center',
               gap: 8,
             }}
           >
-            {mode === 'time' ? (
-              <Icon name={Clock} size={20} strokeWidth={1} />
-            ) : mode === 'datetime' ? (
-              <Icon name={CalendarClock} size={20} strokeWidth={1} />
-            ) : mode === 'range' ? (
-              <Icon name={CalendarRange} size={20} strokeWidth={1} />
-            ) : (
-              <Icon name={Calendar} size={20} strokeWidth={1} />
-            )}
-
-            {/* Label takes 1/3 of available width when present */}
-            {label && (
-              <View style={{ flex: 1 }}>
-                <Text
-                  variant='caption'
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
-                  style={[
-                    {
-                      color: error ? errorColor : textMutedColor,
-                    },
-                    labelStyle,
-                  ]}
-                >
-                  {label}
-                </Text>
-              </View>
-            )}
-          </View>
-
-          {/* Text takes 2/3 of available width when label is present, or full width when no label */}
-          <View style={{ flex: 1 }}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode='tail'
+            <View
               style={{
-                color: value ? textColor : textMutedColor,
-                fontSize: FONT_SIZE,
+                width: label ? 120 : 'auto',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 8,
               }}
             >
-              {formatDisplayValue()}
-            </Text>
+              {mode === 'time' ? (
+                <Icon name={Clock} size={20} strokeWidth={1} />
+              ) : mode === 'datetime' ? (
+                <Icon name={CalendarClock} size={20} strokeWidth={1} />
+              ) : mode === 'range' ? (
+                <Icon name={CalendarRange} size={20} strokeWidth={1} />
+              ) : (
+                <Icon name={Calendar} size={20} strokeWidth={1} />
+              )}
+
+              {/* Label takes 1/3 of available width when present */}
+              {label && (
+                <View style={{ flex: 1 }}>
+                  <Text
+                    variant='caption'
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                    style={[
+                      {
+                        color: error ? errorColor : textMutedColor,
+                      },
+                      labelStyle,
+                    ]}
+                  >
+                    {label}
+                  </Text>
+                </View>
+              )}
+            </View>
+
+            {/* Text takes 2/3 of available width when label is present, or full width when no label */}
+            <View style={{ flex: 1 }}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode='tail'
+                style={{
+                  color: value ? textColor : textMutedColor,
+                  fontSize: FONT_SIZE,
+                }}
+              >
+                {formatDisplayValue()}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      )}
 
       <BottomSheet
         isVisible={isVisible}
@@ -1113,9 +1176,9 @@ export function DatePicker(props: DatePickerProps) {
                 gap: 8,
               }}
             >
-              <Button variant='outline' onPress={resetToToday}>
+              {/* <Button variant='outline' onPress={resetToToday}>
                 Today
-              </Button>
+              </Button> */}
 
               <Button
                 variant='outline'

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Streak } from '@/components/map/streak';
-import { OrcaButton } from '@/components/orca-button';
+import { OrcaButton } from '@/components/squishy/orca-button';
 import { Loading } from '@/components/loading';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';

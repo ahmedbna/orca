@@ -1,4 +1,4 @@
-import { Platform, Pressable } from 'react-native';
+import { Platform, Pressable, ViewStyle } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,6 +8,7 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
+import { Spinner } from '../ui/spinner';
 
 const COLORS = {
   yellow: {
@@ -63,11 +64,15 @@ export const OrcaButton = ({
   label,
   variant = 'yellow',
   disabled = false,
+  loading = false,
+  style,
 }: {
   onPress: () => void;
   label: string;
   variant?: ButtonVariant;
   disabled?: boolean;
+  loading?: boolean;
+  style?: ViewStyle;
 }) => {
   const pressed = useSharedValue(0);
   const colors = COLORS[variant];
@@ -91,7 +96,7 @@ export const OrcaButton = ({
 
   return (
     <Pressable
-      disabled={disabled}
+      disabled={disabled || loading}
       onPress={onPress}
       onPressIn={() => {
         pressed.value = withSpring(1, { damping: 15 });
@@ -101,7 +106,7 @@ export const OrcaButton = ({
         pressed.value = withSpring(0, { damping: 15 });
         triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
       }}
-      style={{ height: 64 }}
+      style={[{ height: 64 }, style]}
     >
       {/* Shadow */}
       <View
@@ -139,15 +144,19 @@ export const OrcaButton = ({
           animatedStyle,
         ]}
       >
-        <Text
-          style={{
-            color: colors.text,
-            fontSize: 22,
-            fontWeight: '800',
-          }}
-        >
-          {label}
-        </Text>
+        {loading ? (
+          <Spinner variant='dots' color='#000' />
+        ) : (
+          <Text
+            style={{
+              color: colors.text,
+              fontSize: 22,
+              fontWeight: '800',
+            }}
+          >
+            {label}
+          </Text>
+        )}
       </Animated.View>
     </Pressable>
   );

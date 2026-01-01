@@ -6,8 +6,8 @@ import { Doc } from '@/convex/_generated/dataModel';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
-import { OrcaButton, OrcaSquareButton } from './orca-button';
-import { Progress } from './orca/progress';
+import { OrcaButton, OrcaSquareButton } from '@/components/squishy/orca-button';
+import { Progress } from '@/components/orca/progress';
 import { LANGUAGES } from '@/constants/languages';
 import * as Speech from 'expo-speech';
 
