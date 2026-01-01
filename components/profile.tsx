@@ -15,7 +15,7 @@ import { useColor } from '@/hooks/useColor';
 type Props = {
   userId: Id<'users'>;
   user: Doc<'users'> & {
-    course: Doc<'courses'> | null;
+    course: Doc<'courses'> | null | undefined;
     lesson: Doc<'lessons'> | null;
     allCourses: any[];
     coursesCompleted: number;
