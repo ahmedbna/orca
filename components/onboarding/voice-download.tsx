@@ -53,6 +53,7 @@ export const VoiceDownload = ({
   const border = useColor('border');
   const background = useColor('background');
   const updateUser = useMutation(api.users.update);
+  const initializeProgress = useMutation(api.courses.initializeProgress);
   const { initializeTTS, downloadProgress, isDownloading } = usePiperTTS();
 
   const [initComplete, setInitComplete] = useState(false);
@@ -101,6 +102,7 @@ export const VoiceDownload = ({
         }
 
         await updateUser(userData);
+        await initializeProgress();
         setBackendUpdateComplete(true);
       } catch (e) {
         console.error(e);

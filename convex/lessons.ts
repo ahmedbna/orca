@@ -1,46 +1,36 @@
+// lessons.ts
 import { v } from 'convex/values';
 import { query, mutation } from './_generated/server';
 import { getAuthUserId } from '@convex-dev/auth/server';
 
+/* -------------------------------------------------- */
+/* GET SINGLE LESSON */
+/* -------------------------------------------------- */
 export const get = query({
   args: {
     lessonId: v.id('lessons'),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
-
-    if (!userId) {
-      throw new Error('Not authenticated');
-    }
+    if (!userId) throw new Error('Not authenticated');
 
     const user = await ctx.db.get(userId);
-
-    if (!user) {
-      throw new Error('User not found');
-    }
+    if (!user) throw new Error('No user found');
 
     const lesson = await ctx.db.get(args.lessonId);
-
-    if (!lesson) {
-      throw new Error('No lesson found');
-    }
+    if (!lesson) throw new Error('No lesson found');
 
     const course = await ctx.db.get(lesson.courseId);
-
-    if (!course) {
-      throw new Error('No course found for the lesson');
-    }
+    if (!course) throw new Error('No course found for the lesson');
 
     const lessonProgress = await ctx.db
       .query('lessonProgress')
       .withIndex('by_user_lesson', (q) =>
-        q.eq('userId', userId).eq('lessonId', args.lessonId)
+        q.eq('userId', userId).eq('lessonId', lesson._id)
       )
       .first();
 
-    const isUnlocked = lessonProgress?.isUnlocked || false;
-
-    if (!isUnlocked) {
+    if (!lessonProgress?.isUnlocked) {
       throw new Error('Lesson is locked');
     }
 
@@ -48,275 +38,228 @@ export const get = query({
       ...lesson,
       user,
       course,
-      isUnlocked,
-      isCompleted: lessonProgress?.isCompleted || false,
+      isUnlocked: true,
+      isCompleted: lessonProgress.isCompleted,
     };
   },
 });
 
+/* -------------------------------------------------- */
+/* GET LESSONS BY COURSE */
+/* -------------------------------------------------- */
 export const getByCourse = query({
   args: {
     courseId: v.id('courses'),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
-
-    if (!userId) {
-      throw new Error('Not authenticated');
-    }
-
-    const user = await ctx.db.get(userId);
-
-    if (!user) {
-      throw new Error('User not found');
-    }
+    if (!userId) throw new Error('Not authenticated');
 
     const course = await ctx.db.get(args.courseId);
-
-    if (!course) {
-      throw new Error('Course not found');
-    }
+    if (!course) throw new Error('Course not found');
 
     const lessons = await ctx.db
       .query('lessons')
       .withIndex('by_course', (q) => q.eq('courseId', args.courseId))
       .collect();
 
-    if (!lessons) {
-      throw new Error('No lessons found');
-    }
-
     const sortedLessons = lessons.sort((a, b) => a.order - b.order);
 
-    const currentLessonId = user.currentLesson;
-    const currentCourseId = user.currentCourse;
-    const isCurrent = currentCourseId && course._id === currentCourseId;
+    const lessonProgressList = await ctx.db
+      .query('lessonProgress')
+      .withIndex('by_user', (q) => q.eq('userId', userId))
+      .collect();
 
-    const lessonWithProgress = await Promise.all(
-      sortedLessons.map(async (lesson) => {
-        const lessonProgress = await ctx.db
-          .query('lessonProgress')
-          .withIndex('by_user_lesson', (q) =>
-            q.eq('userId', userId).eq('lessonId', lesson._id)
-          )
-          .first();
+    const lessonsWithProgress = sortedLessons.map((lesson) => {
+      const progress = lessonProgressList.find(
+        (p) => p.lessonId === lesson._id
+      );
 
-        let status: 'locked' | 'active' | 'completed';
+      let status: 'locked' | 'active' | 'completed' = 'locked';
 
-        if (lessonProgress?.isCompleted) {
-          status = 'completed';
-        } else if (
-          isCurrent &&
-          currentLessonId &&
-          lesson._id === currentLessonId
-        ) {
-          status = 'active';
-        } else if (lessonProgress?.isUnlocked) {
-          status = 'active';
-        } else {
-          status = 'locked';
-        }
+      if (progress?.isCompleted) {
+        status = 'completed';
+      } else if (progress?.isUnlocked) {
+        status = 'active';
+      }
 
-        return {
-          ...lesson,
-          isUnlocked: lessonProgress?.isUnlocked || false,
-          isCompleted: lessonProgress?.isCompleted || false,
-          status,
-        };
-      })
-    );
+      return {
+        ...lesson,
+        isUnlocked: progress?.isUnlocked ?? false,
+        isCompleted: progress?.isCompleted ?? false,
+        status,
+      };
+    });
 
-    return { lessons: lessonWithProgress, course };
+    return {
+      course,
+      lessons: lessonsWithProgress,
+    };
   },
 });
 
-// Complete a lesson and update progress
+/* -------------------------------------------------- */
+/* COMPLETE LESSON */
+/* -------------------------------------------------- */
 export const completeLesson = mutation({
   args: {
     lessonId: v.id('lessons'),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
-
-    if (!userId) {
-      throw new Error('Not authenticated');
-    }
-
-    const user = await ctx.db.get(userId);
-    if (!user) {
-      throw new Error('User not found');
-    }
+    if (!userId) throw new Error('Not authenticated');
 
     const lesson = await ctx.db.get(args.lessonId);
-    if (!lesson) {
-      throw new Error('Lesson not found');
-    }
+    if (!lesson) throw new Error('Lesson not found');
 
     const course = await ctx.db.get(lesson.courseId);
-    if (!course) {
-      throw new Error('Course not found');
-    }
+    if (!course) throw new Error('Course not found');
 
-    // Update or create lesson progress
+    /* ---------- mark lesson completed ---------- */
     const lessonProgress = await ctx.db
       .query('lessonProgress')
       .withIndex('by_user_lesson', (q) =>
-        q.eq('userId', userId).eq('lessonId', args.lessonId)
+        q.eq('userId', userId).eq('lessonId', lesson._id)
       )
       .first();
 
     if (lessonProgress) {
       await ctx.db.patch(lessonProgress._id, {
-        isCompleted: lessonProgress.isCompleted,
+        isCompleted: true,
       });
     } else {
       await ctx.db.insert('lessonProgress', {
         userId,
-        lessonId: args.lessonId,
+        lessonId: lesson._id,
         isUnlocked: true,
         isCompleted: true,
       });
     }
 
+    /* ---------- find next lesson ---------- */
     const allLessons = await ctx.db
       .query('lessons')
-      .withIndex('by_course', (q) => q.eq('courseId', lesson.courseId))
+      .withIndex('by_course', (q) => q.eq('courseId', course._id))
       .collect();
 
     const sortedLessons = allLessons.sort((a, b) => a.order - b.order);
     const currentIndex = sortedLessons.findIndex((l) => l._id === lesson._id);
     const nextLesson = sortedLessons[currentIndex + 1];
 
+    /* ---------- unlock next lesson ---------- */
     if (nextLesson) {
-      // Unlock next lesson in current course
-      const nextLessonProgress = await ctx.db
+      const nextProgress = await ctx.db
         .query('lessonProgress')
         .withIndex('by_user_lesson', (q) =>
           q.eq('userId', userId).eq('lessonId', nextLesson._id)
         )
         .first();
 
-      if (!nextLessonProgress) {
+      if (!nextProgress) {
         await ctx.db.insert('lessonProgress', {
           userId,
           lessonId: nextLesson._id,
           isUnlocked: true,
           isCompleted: false,
         });
-      } else if (!nextLessonProgress.isUnlocked) {
-        await ctx.db.patch(nextLessonProgress._id, {
+      } else if (!nextProgress.isUnlocked) {
+        await ctx.db.patch(nextProgress._id, {
           isUnlocked: true,
         });
       }
 
-      // Update current lesson pointer
-      await ctx.db.patch(userId, {
-        currentLesson: nextLesson._id,
-      });
-    } else {
-      // No more lessons in course - check if all lessons are completed
-      const allLessonProgress = await Promise.all(
-        sortedLessons.map((l) =>
-          ctx.db
-            .query('lessonProgress')
-            .withIndex('by_user_lesson', (q) =>
-              q.eq('userId', userId).eq('lessonId', l._id)
-            )
-            .first()
-        )
-      );
+      return { success: true };
+    }
 
-      const allCompleted = allLessonProgress.every((p) => p?.isCompleted);
-
-      if (allCompleted) {
-        // Mark course as completed
-        const courseProgress = await ctx.db
-          .query('courseProgress')
-          .withIndex('by_user_course', (q) =>
-            q.eq('userId', userId).eq('courseId', lesson.courseId)
+    /* ---------- course completion ---------- */
+    const allProgress = await Promise.all(
+      sortedLessons.map((l) =>
+        ctx.db
+          .query('lessonProgress')
+          .withIndex('by_user_lesson', (q) =>
+            q.eq('userId', userId).eq('lessonId', l._id)
           )
-          .first();
+          .first()
+      )
+    );
 
-        if (courseProgress) {
-          await ctx.db.patch(courseProgress._id, {
-            isCompleted: true,
-          });
-        } else {
-          await ctx.db.insert('courseProgress', {
-            userId,
-            courseId: lesson.courseId,
-            isUnlocked: true,
-            isCompleted: true,
-          });
-        }
+    const allCompleted = allProgress.every((p) => p?.isCompleted);
+    if (!allCompleted) return { success: true };
 
-        // Find and unlock next course
-        const allCourses = await ctx.db
-          .query('courses')
-          .withIndex('by_language', (q) => q.eq('language', course.language))
-          .collect();
+    /* ---------- mark course completed ---------- */
+    const courseProgress = await ctx.db
+      .query('courseProgress')
+      .withIndex('by_user_course', (q) =>
+        q.eq('userId', userId).eq('courseId', course._id)
+      )
+      .first();
 
-        const sortedCourses = allCourses.sort((a, b) => a.order - b.order);
-        const currentCourseIndex = sortedCourses.findIndex(
-          (c) => c._id === course._id
-        );
-        const nextCourse = sortedCourses[currentCourseIndex + 1];
+    if (courseProgress) {
+      await ctx.db.patch(courseProgress._id, { isCompleted: true });
+    } else {
+      await ctx.db.insert('courseProgress', {
+        userId,
+        courseId: course._id,
+        isUnlocked: true,
+        isCompleted: true,
+      });
+    }
 
-        if (nextCourse) {
-          // Unlock next course
-          const nextCourseProgress = await ctx.db
-            .query('courseProgress')
-            .withIndex('by_user_course', (q) =>
-              q.eq('userId', userId).eq('courseId', nextCourse._id)
-            )
-            .first();
+    /* ---------- unlock next course ---------- */
+    const courses = await ctx.db
+      .query('courses')
+      .withIndex('by_language', (q) => q.eq('language', course.language))
+      .collect();
 
-          if (!nextCourseProgress) {
-            await ctx.db.insert('courseProgress', {
-              userId,
-              courseId: nextCourse._id,
-              isUnlocked: true,
-              isCompleted: false,
-            });
-          } else if (!nextCourseProgress.isUnlocked) {
-            await ctx.db.patch(nextCourseProgress._id, {
-              isUnlocked: true,
-            });
-          }
+    const sortedCourses = courses.sort((a, b) => a.order - b.order);
+    const courseIndex = sortedCourses.findIndex((c) => c._id === course._id);
+    const nextCourse = sortedCourses[courseIndex + 1];
 
-          // Get first lesson of next course
-          const firstLesson = await ctx.db
-            .query('lessons')
-            .withIndex('by_course_order', (q) =>
-              q.eq('courseId', nextCourse._id).eq('order', 1)
-            )
-            .first();
+    if (!nextCourse) return { success: true };
 
-          if (firstLesson) {
-            // Unlock first lesson of next course
-            const firstLessonProgress = await ctx.db
-              .query('lessonProgress')
-              .withIndex('by_user_lesson', (q) =>
-                q.eq('userId', userId).eq('lessonId', firstLesson._id)
-              )
-              .first();
+    const nextCourseProgress = await ctx.db
+      .query('courseProgress')
+      .withIndex('by_user_course', (q) =>
+        q.eq('userId', userId).eq('courseId', nextCourse._id)
+      )
+      .first();
 
-            if (!firstLessonProgress) {
-              await ctx.db.insert('lessonProgress', {
-                userId,
-                lessonId: firstLesson._id,
-                isUnlocked: true,
-                isCompleted: false,
-              });
-            }
+    if (!nextCourseProgress) {
+      await ctx.db.insert('courseProgress', {
+        userId,
+        courseId: nextCourse._id,
+        isUnlocked: true,
+        isCompleted: false,
+      });
+    } else if (!nextCourseProgress.isUnlocked) {
+      await ctx.db.patch(nextCourseProgress._id, {
+        isUnlocked: true,
+      });
+    }
 
-            // Update current course and lesson
-            await ctx.db.patch(userId, {
-              currentCourse: nextCourse._id,
-              currentLesson: firstLesson._id,
-            });
-          }
-        }
+    /* ---------- unlock first lesson of next course ---------- */
+    const firstLesson = await ctx.db
+      .query('lessons')
+      .withIndex('by_course_order', (q) =>
+        q.eq('courseId', nextCourse._id).eq('order', 1)
+      )
+      .first();
+
+    if (firstLesson) {
+      const firstProgress = await ctx.db
+        .query('lessonProgress')
+        .withIndex('by_user_lesson', (q) =>
+          q.eq('userId', userId).eq('lessonId', firstLesson._id)
+        )
+        .first();
+
+      if (!firstProgress) {
+        await ctx.db.insert('lessonProgress', {
+          userId,
+          lessonId: firstLesson._id,
+          isUnlocked: true,
+          isCompleted: false,
+        });
       }
     }
 

@@ -9,6 +9,7 @@ import * as Haptics from 'expo-haptics';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Spinner } from '../ui/spinner';
+import { ReactNode } from 'react';
 
 const COLORS = {
   yellow: {
@@ -65,6 +66,7 @@ export const OrcaButton = ({
   variant = 'yellow',
   disabled = false,
   loading = false,
+  icon,
   style,
 }: {
   onPress: () => void;
@@ -72,6 +74,7 @@ export const OrcaButton = ({
   variant?: ButtonVariant;
   disabled?: boolean;
   loading?: boolean;
+  icon?: any;
   style?: ViewStyle;
 }) => {
   const pressed = useSharedValue(0);
@@ -147,15 +150,18 @@ export const OrcaButton = ({
         {loading ? (
           <Spinner variant='dots' color='#000' />
         ) : (
-          <Text
-            style={{
-              color: colors.text,
-              fontSize: 22,
-              fontWeight: '800',
-            }}
-          >
-            {label}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            {icon && icon}
+            <Text
+              style={{
+                color: colors.text,
+                fontSize: 22,
+                fontWeight: '800',
+              }}
+            >
+              {label}
+            </Text>
+          </View>
         )}
       </Animated.View>
     </Pressable>

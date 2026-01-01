@@ -1,5 +1,4 @@
 // components/auth/password.tsx
-
 import React, { useState } from 'react';
 import { useAuthActions } from '@convex-dev/auth/react';
 import { Platform, Pressable } from 'react-native';

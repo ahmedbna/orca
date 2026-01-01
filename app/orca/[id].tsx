@@ -6,6 +6,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { Loading } from '@/components/loading';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
+import { Onboarding } from '@/components/onboarding/onboarding';
 
 export default function OrcaScreen() {
   const { id } = useLocalSearchParams<{ id: Id<'lessons'> }>();
@@ -33,7 +34,12 @@ export default function OrcaScreen() {
     );
   }
 
-  return (
+  return !lesson.user.gender ||
+    !lesson.user.birthday ||
+    !lesson.user.nativeLanguage ||
+    !lesson.user.learningLanguage ? (
+    <Onboarding />
+  ) : (
     <Orca
       lesson={lesson}
       native={lesson.user.nativeLanguage}

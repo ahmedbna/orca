@@ -13,7 +13,7 @@ import { usePiperTTS } from '@/hooks/usePiperTTS';
 
 export default function HomeLayout() {
   const user = useQuery(api.users.get, {});
-  const { availableModels, currentModelId } = usePiperTTS();
+  const { availableModels } = usePiperTTS();
 
   if (user === undefined) {
     return (

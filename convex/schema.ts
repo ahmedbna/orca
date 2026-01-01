@@ -19,8 +19,6 @@ export default defineSchema({
 
     nativeLanguage: v.optional(v.string()),
     learningLanguage: v.optional(v.string()),
-    currentCourse: v.optional(v.id('courses')),
-    currentLesson: v.optional(v.id('lessons')),
     voiceId: v.optional(v.string()),
     agentId: v.optional(v.string()),
   })
@@ -54,6 +52,15 @@ export default defineSchema({
     .index('by_language', ['language'])
     .index('by_language_order', ['language', 'order']),
 
+  courseProgress: defineTable({
+    userId: v.id('users'),
+    courseId: v.id('courses'),
+    isUnlocked: v.boolean(),
+    isCompleted: v.boolean(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_user_course', ['userId', 'courseId']),
+
   lessons: defineTable({
     courseId: v.id('courses'),
     order: v.number(),
@@ -85,15 +92,6 @@ export default defineSchema({
   })
     .index('by_user', ['userId'])
     .index('by_user_lesson', ['userId', 'lessonId']),
-
-  courseProgress: defineTable({
-    userId: v.id('users'),
-    courseId: v.id('courses'),
-    isUnlocked: v.boolean(),
-    isCompleted: v.boolean(),
-  })
-    .index('by_user', ['userId'])
-    .index('by_user_course', ['userId', 'courseId']),
 
   // New table for lesson leaderboard scores
   scores: defineTable({

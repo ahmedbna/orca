@@ -37,6 +37,7 @@ export const Background = ({
   const userMuteBeforeOrcaRef = useRef<boolean | null>(null);
   const player = useAudioPlayer(audioSource);
   const isOrcaRoute = pathname.startsWith('/orca/');
+  const isLearnRoute = pathname.startsWith('/study/');
 
   /**
    * 🎵 Audio lifecycle controller
@@ -47,7 +48,7 @@ export const Background = ({
     const syncAudio = async () => {
       try {
         // 🐋 ENTER ORCA
-        if (isOrcaRoute) {
+        if (isOrcaRoute || isLearnRoute) {
           // Save user preference ONCE
           if (userMuteBeforeOrcaRef.current === null) {
             userMuteBeforeOrcaRef.current = mute;
@@ -78,7 +79,7 @@ export const Background = ({
     };
 
     syncAudio();
-  }, [isOrcaRoute, mute]);
+  }, [isOrcaRoute, isLearnRoute, mute]);
 
   return (
     <View style={{ flex: 1, backgroundColor: yellow }} pointerEvents='box-none'>
