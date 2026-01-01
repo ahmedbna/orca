@@ -21,6 +21,8 @@ import { Image } from 'expo-image';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { VoiceDownload } from '@/components/onboarding/voice-download';
 import * as Haptics from 'expo-haptics';
+import { Doc } from '@/convex/_generated/dataModel';
+import { SquishyInput } from '../squishy/squishy-input';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -57,7 +59,7 @@ const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
   }
 };
 
-export const Onboarding = () => {
+export const Onboarding = ({ user }: { user?: Doc<'users'> }) => {
   const insets = useSafeAreaInsets();
   const yellow = useColor('orca');
   const border = useColor('border');
@@ -67,6 +69,7 @@ export const Onboarding = () => {
   const [showDownload, setShowDownload] = useState(false);
 
   // Form state
+  const [name, setName] = useState(user?.name || '');
   const [gender, setGender] = useState<string>('');
   const [birthday, setBirthday] = useState<Date | undefined>();
   const [nativeLanguage, setNativeLanguage] = useState<string>('');
@@ -193,6 +196,27 @@ export const Onboarding = () => {
                 >
                   Help us personalize your experience
                 </Text>
+              </View>
+
+              <View style={{ gap: 16, marginBottom: 64 }}>
+                <Text
+                  style={{
+                    color: background,
+                    fontSize: 16,
+                    fontWeight: '700',
+                    marginBottom: -8,
+                  }}
+                >
+                  Type your name
+                </Text>
+                <SquishyInput
+                  value={name}
+                  placeholder='Full Name'
+                  onChangeText={setName}
+                  autoCapitalize='words'
+                  containerStyle={{ flex: 1 }}
+                  icon='🙋‍♂️'
+                />
               </View>
 
               <View style={{ gap: 16 }}>

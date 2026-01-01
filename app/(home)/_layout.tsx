@@ -49,7 +49,7 @@ export default function HomeLayout() {
     !user.nativeLanguage ||
     !user.learningLanguage ||
     availableModels.length === 0 ? (
-    <Onboarding />
+    <Onboarding user={user} />
   ) : (
     <Background user={user}>
       <Slot />
