@@ -9,9 +9,11 @@ import { useQuery } from 'convex/react';
 import { Onboarding } from '@/components/onboarding/onboarding';
 import { Colors } from '@/theme/colors';
 import { Spinner } from '@/components/ui/spinner';
+import { usePiperTTS } from '@/hooks/usePiperTTS';
 
 export default function HomeLayout() {
   const user = useQuery(api.users.get, {});
+  const { availableModels, currentModelId } = usePiperTTS();
 
   if (user === undefined) {
     return (
@@ -43,10 +45,10 @@ export default function HomeLayout() {
   }
 
   return !user.gender ||
-    !user.bio ||
     !user.birthday ||
     !user.nativeLanguage ||
-    !user.learningLanguage ? (
+    !user.learningLanguage ||
+    availableModels.length === 0 ? (
     <Onboarding />
   ) : (
     <Background user={user}>

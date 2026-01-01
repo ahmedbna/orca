@@ -1,6 +1,5 @@
 import { getAuthUserId } from '@convex-dev/auth/server';
 import { query, mutation } from './_generated/server';
-import { v } from 'convex/values';
 
 export const getCourse = query({
   handler: async (ctx) => {
@@ -16,7 +15,14 @@ export const getCourse = query({
       throw new Error('Not found');
     }
 
+    const learningLanguage = user.learningLanguage;
+
+    if (!learningLanguage) {
+      throw new Error('Select language first');
+    }
+
     const currentCourse = user.currentCourse;
+
     if (!currentCourse) {
       throw new Error('Select language first');
     }

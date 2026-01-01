@@ -18,7 +18,7 @@ import {
 } from 'expo-speech-recognition';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Progress } from '@/components/orca/progress';
+import { Progress } from '@/components/squishy/progress';
 import { LANGUAGES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
