@@ -1,7 +1,7 @@
 // components/study.tsx
 
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import { Pressable, TouchableOpacity } from 'react-native';
+import { Dimensions, Pressable, TouchableOpacity } from 'react-native';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Doc } from '@/convex/_generated/dataModel';
@@ -12,6 +12,8 @@ import { OrcaButton, OrcaSquareButton } from '@/components/squishy/orca-button';
 import { Progress } from '@/components/squishy/progress';
 import { LANGUAGES } from '@/constants/languages';
 import { usePiperTTS } from '@/hooks/usePiperTTS';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const LANGUAGE_TO_PIPER_MODEL: Record<string, string> = {
   en: 'en-US-Amy',
@@ -102,7 +104,7 @@ export const Study = ({ language, native, lesson }: Props) => {
           flex: 1,
           padding: 16,
           position: 'absolute',
-          top: insets.top + 140,
+          top: SCREEN_HEIGHT * 0.3,
         }}
       >
         <View>
