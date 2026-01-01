@@ -159,6 +159,15 @@ const formatTimeWorklet = (ms: number) => {
   return `${s}:${c}`;
 };
 
+function shuffleArray<T>(array: T[]): T[] {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 type Props = {
   native: string;
   language: string;
@@ -181,6 +190,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const LEARNING_LANGUAGE = LANGUAGES.find((l) => l.code === language);
   const tuning = languageTuning(LEARNING_LANGUAGE?.locale);
 
+  const shuffledPhrasesRef = useRef(lesson.phrases);
+  const [shuffledPhrases, setShuffledPhrases] = useState(lesson.phrases);
   const [gameState, setGameState] = useState<GameStatus>('idle');
   const [currentObstacleIndex, setCurrentObstacleIndex] = useState<
     number | null
@@ -291,7 +302,8 @@ export const Orca = ({ lesson, native, language }: Props) => {
       .trim();
     if (clean.length < 2) return;
 
-    const targetPhrase = lesson.phrases[currentPhraseIndexRef.current].text;
+    const targetPhrase =
+      shuffledPhrasesRef.current[currentPhraseIndexRef.current].text;
 
     const sim = slidingWindowSimilarity(text, targetPhrase);
 
@@ -563,14 +575,20 @@ export const Orca = ({ lesson, native, language }: Props) => {
   }, [spawnObstacle]);
 
   const startGame = async () => {
-    setIsStartingGame(true); // Disable the button
+    setIsStartingGame(true);
 
     await cleanup();
+
+    // 🔀 Shuffle phrases ONCE per game
+    const shuffled = shuffleArray(lesson.phrases);
+    setShuffledPhrases(shuffled);
+    shuffledPhrasesRef.current = shuffled;
 
     gameEndedRef.current = false;
     currentPhraseIndexRef.current = 0;
     correctPhrasesRef.current = 0;
     transcriptOffsetRef.current = 0;
+
     setCorrectSegmentIndices([]);
     setFailedSegmentIndices([]);
     setCorrectPhrases(0);
@@ -578,8 +596,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
     setCurrentObstacleIndex(null);
     setCurrentObstacleEmoji(null);
     setFinalTime(0);
-    elapsedTimeSV.value = 0;
     setInterimText('');
+
+    elapsedTimeSV.value = 0;
     secondsLeftRef.current = ROUND_SECONDS;
     processingSuccessRef.current = false;
 
@@ -590,6 +609,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
     setCountdown(3);
     setGameState('idle');
+
     await startListening();
   };
 
@@ -600,9 +620,9 @@ export const Orca = ({ lesson, native, language }: Props) => {
   }, []);
 
   const getTranslation = (phraseIndex: number): string => {
-    const phrase = lesson.phrases[phraseIndex];
-    const translation =
-      phrase.dictionary && phrase.dictionary.find((d) => d.language === native);
+    const phrase = shuffledPhrases[phraseIndex];
+    const translation = phrase.dictionary?.find((d) => d.language === native);
+
     return translation?.translation || phrase.text;
   };
 
