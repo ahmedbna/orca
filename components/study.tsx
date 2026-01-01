@@ -24,16 +24,16 @@ const LANGUAGE_TO_PIPER_MODEL: Record<string, string> = {
 };
 
 // Ordered speeds for cycling
-const SPEED_ORDER = ['x0.25', 'x0.5', 'x1.0', 'x1.5', 'x2.0'] as const;
+const SPEED_ORDER = ['0.2x', '0.5x', '1.0x', '1.5x', '2.0x'] as const;
 
 type SpeedKey = (typeof SPEED_ORDER)[number];
 
 const VOICE_SPEED: Record<SpeedKey, number> = {
-  'x0.25': 0.25,
-  'x0.5': 0.5,
-  'x1.0': 0.75,
-  'x1.5': 0.85,
-  'x2.0': 1,
+  '0.2x': 0.25,
+  '0.5x': 0.5,
+  '1.0x': 0.75,
+  '1.5x': 0.85,
+  '2.0x': 1,
 };
 
 type Props = {
