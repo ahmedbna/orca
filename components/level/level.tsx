@@ -103,7 +103,7 @@ export const Level = ({ lesson }: Props) => {
                 },
               ]}
             >
-              Pronounce every phrase perfectly and compete for the top of the
+              Pronounce all phrase correctly and compete for the top of the
               leaderboard.
             </Text>
           </View>
