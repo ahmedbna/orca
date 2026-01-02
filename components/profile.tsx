@@ -130,8 +130,9 @@ export const Profile = ({ user, userId }: Props) => {
                     }}
                   >
                     {user.name
-                      ?.split(' ')
-                      .map((part) => part.charAt(0).toUpperCase())
+                      ?.trim()
+                      .split(/\s+/)
+                      .map((part) => part[0]?.toUpperCase())
                       .join('')}
                   </Text>
                 )}
