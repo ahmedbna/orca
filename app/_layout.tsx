@@ -104,11 +104,12 @@ export default function RootLayout() {
                     sheetGrabberVisible: true,
                     sheetAllowedDetents: [0.4, 0.7, 1],
                     contentStyle: {
-                      backgroundColor: isLiquidGlassAvailable()
-                        ? 'transparent'
-                        : colorScheme === 'dark'
-                          ? Colors.dark.card
-                          : Colors.light.card,
+                      backgroundColor:
+                        isLiquidGlassAvailable() && osName !== 'iPadOS'
+                          ? 'transparent'
+                          : colorScheme === 'dark'
+                            ? Colors.dark.card
+                            : Colors.light.card,
                     },
                     headerTransparent: Platform.OS === 'ios' ? true : false,
                     headerLargeTitle: false,
@@ -128,11 +129,12 @@ export default function RootLayout() {
                             ? Colors.dark.card
                             : Colors.light.card,
                     },
-                    headerBlurEffect: isLiquidGlassAvailable()
-                      ? undefined
-                      : colorScheme === 'dark'
-                        ? 'dark'
-                        : 'light',
+                    headerBlurEffect:
+                      isLiquidGlassAvailable() && osName !== 'iPadOS'
+                        ? undefined
+                        : colorScheme === 'dark'
+                          ? 'dark'
+                          : 'light',
 
                     animation: 'slide_from_bottom',
                   }}
@@ -144,11 +146,12 @@ export default function RootLayout() {
                     sheetGrabberVisible: true,
                     sheetAllowedDetents: [1],
                     contentStyle: {
-                      backgroundColor: isLiquidGlassAvailable()
-                        ? 'transparent'
-                        : colorScheme === 'dark'
-                          ? Colors.dark.card
-                          : Colors.light.card,
+                      backgroundColor:
+                        isLiquidGlassAvailable() && osName !== 'iPadOS'
+                          ? 'transparent'
+                          : colorScheme === 'dark'
+                            ? Colors.dark.card
+                            : Colors.light.card,
                     },
                     headerTransparent: Platform.OS === 'ios' ? true : false,
                     headerLargeTitle: false,
@@ -168,11 +171,12 @@ export default function RootLayout() {
                             ? Colors.dark.card
                             : Colors.light.card,
                     },
-                    headerBlurEffect: isLiquidGlassAvailable()
-                      ? undefined
-                      : colorScheme === 'dark'
-                        ? 'dark'
-                        : 'light',
+                    headerBlurEffect:
+                      isLiquidGlassAvailable() && osName !== 'iPadOS'
+                        ? undefined
+                        : colorScheme === 'dark'
+                          ? 'dark'
+                          : 'light',
 
                     animation: 'slide_from_bottom',
                   }}
