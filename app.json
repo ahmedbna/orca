@@ -13,9 +13,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ahmedbna.orca",
       "infoPlist": {
-        "UIBackgroundModes": ["audio"],
-        "NSMicrophoneUsageDescription": "This app needs microphone access to perform speech recognition.",
-        "NSSpeechRecognitionUsageDescription": "This app uses speech recognition to detect spoken phrases."
+        "UIBackgroundModes": [
+          "audio"
+        ],
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use the microphone.",
+        "NSSpeechRecognitionUsageDescription": "Allow $(PRODUCT_NAME) to use speech recognition."
       }
     },
     "android": {
@@ -108,6 +110,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "79717126-cf5d-46a3-a380-11ee0efe1fba"
+      }
     }
   }
 }

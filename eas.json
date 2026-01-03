@@ -1,0 +1,33 @@
+{
+  "cli": {
+    "version": ">= 16.28.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_CONVEX_URL": "https://graceful-aardvark-513.convex.cloud",
+        "CONVEX_DEPLOY_KEY": "prod:graceful-aardvark-513|eyJ2MiI6IjA3N2U1OGU4ZTEyYTRjNDRhMDg0YzI3NWU2NmJhY2I1In0="
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_CONVEX_URL": "https://graceful-aardvark-513.convex.cloud",
+        "CONVEX_DEPLOY_KEY": "prod:graceful-aardvark-513|eyJ2MiI6IjA3N2U1OGU4ZTEyYTRjNDRhMDg0YzI3NWU2NmJhY2I1In0="
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_CONVEX_URL": "https://graceful-aardvark-513.convex.cloud",
+        "CONVEX_DEPLOY_KEY": "prod:graceful-aardvark-513|eyJ2MiI6IjA3N2U1OGU4ZTEyYTRjNDRhMDg0YzI3NWU2NmJhY2I1In0="
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
