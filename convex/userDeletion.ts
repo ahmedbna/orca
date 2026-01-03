@@ -326,3 +326,28 @@ async function deleteUserDataInline(ctx: any, userId: string) {
   // Finally, delete the user
   await ctx.db.delete(userId);
 }
+
+export const checkAndCancelDeletionOnLogin = mutation({
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return { cancelled: false, message: 'Not authenticated' };
+
+    const user = await ctx.db.get(userId);
+    if (!user) return { cancelled: false, message: 'User not found' };
+
+    // Check if user has a scheduled deletion
+    if (user.scheduledForDeletion) {
+      // Cancel the deletion
+      await ctx.db.patch(userId, {
+        scheduledForDeletion: undefined,
+      });
+
+      return {
+        cancelled: true,
+        message: 'Welcome back! Your account deletion has been cancelled.',
+      };
+    }
+
+    return { cancelled: false, message: 'No deletion scheduled' };
+  },
+});
