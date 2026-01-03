@@ -114,13 +114,13 @@ export const Auth = () => {
         <View style={{ paddingHorizontal: 32, marginTop: 4 }}>
           <Text style={{ fontSize: 16, textAlign: 'center', color: '#000' }}>
             By continuing, you agree to our{'\n'}
-            <Link href='https://ui.ahmedbna.com'>
+            <Link href='https://orca.ahmedbna.com/terms'>
               <Text variant='link' style={{ fontSize: 14, color: '#000' }}>
                 Terms of Service
               </Text>
             </Link>{' '}
             and{' '}
-            <Link href='https://ui.ahmedbna.com'>
+            <Link href='https://orca.ahmedbna.com/privacy'>
               <Text variant='link' style={{ fontSize: 14, color: '#000' }}>
                 Privacy Policy
               </Text>
