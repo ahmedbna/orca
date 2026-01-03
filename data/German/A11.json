@@ -10,9 +10,9 @@
         "dictionary": [
           { "language": "ar", "translation": "مرحباً!" },
           { "language": "en", "translation": "Hello!" },
-          { "language": "fr", "translation": "Salut !" },
+          { "language": "fr", "translation": "Salut!" },
           { "language": "es", "translation": "¡Hola!" },
-          { "language": "zh", "translation": "你好！" },
+          { "language": "zh", "translation": "你好" },
           { "language": "hi", "translation": "नमस्ते!" }
         ]
       },

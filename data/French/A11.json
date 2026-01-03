@@ -1,0 +1,2611 @@
+[
+  {
+    "lessonId": 1,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Salutations formelles",
+        "phrases": [
+          { "order": 1, "text": "Bonjour, monsieur" },
+          { "order": 2, "text": "Bonjour, madame" },
+          { "order": 3, "text": "Bonjour, mademoiselle" },
+          { "order": 4, "text": "Bonjour tout le monde" },
+          { "order": 5, "text": "Bonsoir, monsieur" },
+          { "order": 6, "text": "Bonsoir, madame" },
+          { "order": 7, "text": "Bonsoir tout le monde" },
+          { "order": 8, "text": "Bonjour, comment allez-vous ?" },
+          { "order": 9, "text": "Bonsoir, comment allez-vous ?" },
+          { "order": 10, "text": "Bonjour, je m'appelle Marc" },
+          { "order": 11, "text": "Bonjour, je m'appelle Marie" },
+          { "order": 12, "text": "Bonjour, enchanté de vous rencontrer" },
+          { "order": 13, "text": "Bonsoir, enchanté de vous voir" },
+          { "order": 14, "text": "Bonjour, c'est un plaisir" },
+          { "order": 15, "text": "Bonsoir, je suis très heureux" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 2,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Salutations informelles",
+        "phrases": [
+          { "order": 1, "text": "Salut, ça va ?" },
+          { "order": 2, "text": "Salut, Thomas !" },
+          { "order": 3, "text": "Salut, Julie !" },
+          { "order": 4, "text": "Coucou, tout le monde !" },
+          { "order": 5, "text": "Salut, comment ça va ?" },
+          { "order": 6, "text": "Ça va bien, merci" },
+          { "order": 7, "text": "Salut, et toi ?" },
+          { "order": 8, "text": "Salut, moi aussi ça va" },
+          { "order": 9, "text": "Coucou, comment tu vas ?" },
+          { "order": 10, "text": "Je vais bien, merci" },
+          { "order": 11, "text": "Ça va super !" },
+          { "order": 12, "text": "Salut, ça va aujourd'hui ?" },
+          { "order": 13, "text": "Oui, ça va très bien" },
+          { "order": 14, "text": "Salut, bonne journée !" },
+          { "order": 15, "text": "Salut, à plus tard !" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 3,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Se présenter",
+        "phrases": [
+          { "order": 1, "text": "Je m'appelle Paul" },
+          { "order": 2, "text": "Je m'appelle Sophie" },
+          { "order": 3, "text": "Je suis français" },
+          { "order": 4, "text": "Je suis française" },
+          { "order": 5, "text": "Je suis étudiant" },
+          { "order": 6, "text": "Je suis étudiante" },
+          { "order": 7, "text": "Mon nom est Martin" },
+          { "order": 8, "text": "Mon prénom est Lucas" },
+          { "order": 9, "text": "Je suis de Paris" },
+          { "order": 10, "text": "Je suis de Lyon" },
+          { "order": 11, "text": "Je m'appelle David et toi ?" },
+          { "order": 12, "text": "Je suis un homme" },
+          { "order": 13, "text": "Je suis une femme" },
+          { "order": 14, "text": "Voici mon ami" },
+          { "order": 15, "text": "Voici mon amie" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 4,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Demander l'identité",
+        "phrases": [
+          { "order": 1, "text": "Comment t'appelles-tu ?" },
+          { "order": 2, "text": "Comment vous appelez-vous ?" },
+          { "order": 3, "text": "Tu t'appelles comment ?" },
+          { "order": 4, "text": "Qui est-ce ?" },
+          { "order": 5, "text": "C'est qui ?" },
+          { "order": 6, "text": "Est-ce que tu es français ?" },
+          { "order": 7, "text": "Est-ce que vous êtes anglais ?" },
+          { "order": 8, "text": "Tu es étudiant ?" },
+          { "order": 9, "text": "Vous êtes monsieur Richard ?" },
+          { "order": 10, "text": "Quel est ton nom ?" },
+          { "order": 11, "text": "Quel est votre prénom ?" },
+          { "order": 12, "text": "Tu viens d'où ?" },
+          { "order": 13, "text": "Vous venez d'où ?" },
+          { "order": 14, "text": "Est-ce que c'est Marie ?" },
+          { "order": 15, "text": "Est-ce que c'est Jean ?" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 5,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les nombres 0 à 10",
+        "phrases": [
+          { "order": 1, "text": "J'ai un livre" },
+          { "order": 2, "text": "Tu as deux pommes" },
+          { "order": 3, "text": "Il y a trois chats" },
+          { "order": 4, "text": "Elle a quatre stylos" },
+          { "order": 5, "text": "Nous avons cinq euros" },
+          { "order": 6, "text": "Vous avez six chaises" },
+          { "order": 7, "text": "Ils ont sept chiens" },
+          { "order": 8, "text": "Il y a huit tables" },
+          { "order": 9, "text": "J'ai neuf crayons" },
+          { "order": 10, "text": "Il y a dix étudiants" },
+          { "order": 11, "text": "Zéro plus un égale un" },
+          { "order": 12, "text": "Deux et deux font quatre" },
+          { "order": 13, "text": "Cinq et cinq font dix" },
+          { "order": 14, "text": "J'ai trois frères" },
+          { "order": 15, "text": "Tu as deux sœurs" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 6,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les nombres 11 à 20",
+        "phrases": [
+          { "order": 1, "text": "Il y a onze élèves" },
+          { "order": 2, "text": "J'ai douze ans" },
+          { "order": 3, "text": "Elle a treize ans" },
+          { "order": 4, "text": "Il y a quatorze jours" },
+          { "order": 5, "text": "J'ai quinze euros" },
+          { "order": 6, "text": "Il y a seize voitures" },
+          { "order": 7, "text": "J'ai dix-sept ans" },
+          { "order": 8, "text": "Il y a dix-huit vélos" },
+          { "order": 9, "text": "J'ai dix-neuf ans" },
+          { "order": 10, "text": "Il y a vingt enfants" },
+          { "order": 11, "text": "Dix plus dix égale vingt" },
+          { "order": 12, "text": "J'ai onze cahiers" },
+          { "order": 13, "text": "Tu as douze tasses" },
+          { "order": 14, "text": "Il y a quinze fleurs" },
+          { "order": 15, "text": "Vingt personnes sont ici" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 7,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Demander et dire l'âge",
+        "phrases": [
+          { "order": 1, "text": "Quel âge as-tu ?" },
+          { "order": 2, "text": "J'ai dix ans" },
+          { "order": 3, "text": "Quel âge avez-vous ?" },
+          { "order": 4, "text": "J'ai vingt ans" },
+          { "order": 5, "text": "Elle a huit ans" },
+          { "order": 6, "text": "Il a neuf ans" },
+          { "order": 7, "text": "Tu as quel âge ?" },
+          { "order": 8, "text": "Quel âge a ton frère ?" },
+          { "order": 9, "text": "Mon frère a cinq ans" },
+          { "order": 10, "text": "Quel âge a ta sœur ?" },
+          { "order": 11, "text": "Ma sœur a douze ans" },
+          { "order": 12, "text": "J'ai dix-huit ans aujourd'hui" },
+          { "order": 13, "text": "Il a vingt-deux ans" },
+          { "order": 14, "text": "Quel âge a l'enfant ?" },
+          { "order": 15, "text": "L'enfant a trois ans" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 8,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les couleurs de base (1)",
+        "phrases": [
+          { "order": 1, "text": "Le ciel est bleu" },
+          { "order": 2, "text": "La pomme est rouge" },
+          { "order": 3, "text": "Le soleil est jaune" },
+          { "order": 4, "text": "L'herbe est verte" },
+          { "order": 5, "text": "Le nuage est blanc" },
+          { "order": 6, "text": "La nuit est noire" },
+          { "order": 7, "text": "J'ai un sac bleu" },
+          { "order": 8, "text": "Tu as une voiture rouge" },
+          { "order": 9, "text": "C'est un vélo jaune" },
+          { "order": 10, "text": "C'est une fleur verte" },
+          { "order": 11, "text": "Le livre est blanc" },
+          { "order": 12, "text": "Le stylo est noir" },
+          { "order": 13, "text": "Ma chemise est bleue" },
+          { "order": 14, "text": "Ta robe est rouge" },
+          { "order": 15, "text": "Le chat est blanc" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 9,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les couleurs de base (2)",
+        "phrases": [
+          { "order": 1, "text": "Le cochon est rose" },
+          { "order": 2, "text": "L'orange est orange" },
+          { "order": 3, "text": "Le chocolat est marron" },
+          { "order": 4, "text": "La souris est grise" },
+          { "order": 5, "text": "Le raisin est violet" },
+          { "order": 6, "text": "J'ai un chapeau rose" },
+          { "order": 7, "text": "Tu as un pull orange" },
+          { "order": 8, "text": "C'est une table marron" },
+          { "order": 9, "text": "C'est un mur gris" },
+          { "order": 10, "text": "La fleur est violette" },
+          { "order": 11, "text": "Le chien est marron" },
+          { "order": 12, "text": "Le papier est gris" },
+          { "order": 13, "text": "Elle porte une jupe rose" },
+          { "order": 14, "text": "Il a un manteau gris" },
+          { "order": 15, "text": "L'oiseau est bleu et jaune" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 10,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Dans la salle de classe (1)",
+        "phrases": [
+          { "order": 1, "text": "C'est un bureau" },
+          { "order": 2, "text": "C'est une chaise" },
+          { "order": 3, "text": "C'est un tableau" },
+          { "order": 4, "text": "C'est une fenêtre" },
+          { "order": 5, "text": "C'est une porte" },
+          { "order": 6, "text": "Le professeur est ici" },
+          { "order": 7, "text": "L'élève est là-bas" },
+          { "order": 8, "text": "Où est le livre ?" },
+          { "order": 9, "text": "Le livre est sur la table" },
+          { "order": 10, "text": "Où est le stylo ?" },
+          { "order": 11, "text": "Le stylo est dans le sac" },
+          { "order": 12, "text": "Il y a une horloge" },
+          { "order": 13, "text": "La classe est grande" },
+          { "order": 14, "text": "Le bureau est petit" },
+          { "order": 15, "text": "Fermez la porte, s'il vous plaît" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 11,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Dans la salle de classe (2)",
+        "phrases": [
+          { "order": 1, "text": "Prenez un cahier" },
+          { "order": 2, "text": "Ouvrez le livre" },
+          { "order": 3, "text": "Écrivez la date" },
+          { "order": 4, "text": "Lisez la phrase" },
+          { "order": 5, "text": "Écoutez le professeur" },
+          { "order": 6, "text": "Regardez le tableau" },
+          { "order": 7, "text": "Levez la main" },
+          { "order": 8, "text": "Asseyez-vous, s'il vous plaît" },
+          { "order": 9, "text": "Levez-vous, s'il vous plaît" },
+          { "order": 10, "text": "Répétez après moi" },
+          { "order": 11, "text": "J'ai une question" },
+          { "order": 12, "text": "Je ne comprends pas" },
+          { "order": 13, "text": "Est-ce que je peux sortir ?" },
+          { "order": 14, "text": "Pardon, je suis en retard" },
+          { "order": 15, "text": "Merci beaucoup, monsieur" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 12,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les jours de la semaine (1)",
+        "phrases": [
+          { "order": 1, "text": "Aujourd'hui, c'est lundi" },
+          { "order": 2, "text": "Demain, c'est mardi" },
+          { "order": 3, "text": "Hier, c'était dimanche" },
+          { "order": 4, "text": "Nous sommes mercredi" },
+          { "order": 5, "text": "C'est jeudi aujourd'hui" },
+          { "order": 6, "text": "Demain, c'est vendredi" },
+          { "order": 7, "text": "Le samedi est mon jour préféré" },
+          { "order": 8, "text": "Le dimanche est un jour de repos" },
+          { "order": 9, "text": "Je travaille le lundi" },
+          { "order": 10, "text": "Tu étudies le mardi" },
+          { "order": 11, "text": "Il vient le mercredi" },
+          { "order": 12, "text": "Elle part le jeudi" },
+          { "order": 13, "text": "Nous mangeons ensemble le vendredi" },
+          { "order": 14, "text": "Vous jouez le samedi" },
+          { "order": 15, "text": "Ils dorment le dimanche" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 13,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les mois de l'année (1)",
+        "phrases": [
+          { "order": 1, "text": "Janvier est le premier mois" },
+          { "order": 2, "text": "Février est court" },
+          { "order": 3, "text": "Mars est le troisième mois" },
+          { "order": 4, "text": "Avril est un mois de printemps" },
+          { "order": 5, "text": "Mai est très beau" },
+          { "order": 6, "text": "Juin est le début de l'été" },
+          { "order": 7, "text": "Juillet est chaud" },
+          { "order": 8, "text": "Août est le mois des vacances" },
+          { "order": 9, "text": "Septembre est la rentrée" },
+          { "order": 10, "text": "Octobre est en automne" },
+          { "order": 11, "text": "Novembre est gris" },
+          { "order": 12, "text": "Décembre est le dernier mois" },
+          { "order": 13, "text": "Mon anniversaire est en mai" },
+          { "order": 14, "text": "Nous sommes en janvier" },
+          { "order": 15, "text": "C'est le mois d'août" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 14,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La famille (1)",
+        "phrases": [
+          { "order": 1, "text": "Voici mon père" },
+          { "order": 2, "text": "Voici ma mère" },
+          { "order": 3, "text": "Ce sont mes parents" },
+          { "order": 4, "text": "J'ai un frère" },
+          { "order": 5, "text": "J'ai une sœur" },
+          { "order": 6, "text": "Mon frère s'appelle Paul" },
+          { "order": 7, "text": "Ma sœur s'appelle Julie" },
+          { "order": 8, "text": "Mon père est grand" },
+          { "order": 9, "text": "Ma mère est gentille" },
+          { "order": 10, "text": "J'aime ma famille" },
+          { "order": 11, "text": "Mon grand-père est vieux" },
+          { "order": 12, "text": "Ma grand-mère est vieille" },
+          { "order": 13, "text": "J'ai deux cousins" },
+          { "order": 14, "text": "Ma cousine est ici" },
+          { "order": 15, "text": "C'est mon oncle" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 15,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La famille (2)",
+        "phrases": [
+          { "order": 1, "text": "C'est ma tante" },
+          { "order": 2, "text": "J'ai un fils" },
+          { "order": 3, "text": "J'ai une fille" },
+          { "order": 4, "text": "Mes enfants sont petits" },
+          { "order": 5, "text": "Mon mari est français" },
+          { "order": 6, "text": "Ma femme est italienne" },
+          { "order": 7, "text": "Nous sommes mariés" },
+          { "order": 8, "text": "Est-ce que tu as des frères ?" },
+          { "order": 9, "text": "Non, je suis fils unique" },
+          { "order": 10, "text": "Non, je suis fille unique" },
+          { "order": 11, "text": "C'est le bébé" },
+          { "order": 12, "text": "Mon cousin a dix ans" },
+          { "order": 13, "text": "Ma famille habite à Lyon" },
+          { "order": 14, "text": "Voici une photo de ma famille" },
+          { "order": 15, "text": "Ils sont très contents" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 16,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les animaux domestiques",
+        "phrases": [
+          { "order": 1, "text": "J'ai un chien" },
+          { "order": 2, "text": "Tu as un chat" },
+          { "order": 3, "text": "Le chat est petit" },
+          { "order": 4, "text": "Le chien est grand" },
+          { "order": 5, "text": "Le chat dort sur le canapé" },
+          { "order": 6, "text": "Le chien joue dans le jardin" },
+          { "order": 7, "text": "J'ai un poisson rouge" },
+          { "order": 8, "text": "Le poisson nage" },
+          { "order": 9, "text": "Elle a un lapin blanc" },
+          { "order": 10, "text": "L'oiseau chante" },
+          { "order": 11, "text": "C'est mon chat préféré" },
+          { "order": 12, "text": "Le chien s'appelle Médor" },
+          { "order": 13, "text": "Est-ce que tu aimes les animaux ?" },
+          { "order": 14, "text": "Oui, j'adore les chats" },
+          { "order": 15, "text": "Le hamster est mignon" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 17,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Le corps humain (1)",
+        "phrases": [
+          { "order": 1, "text": "Voici ma tête" },
+          { "order": 2, "text": "J'ai deux yeux" },
+          { "order": 3, "text": "Mes yeux sont bleus" },
+          { "order": 4, "text": "Voici mon nez" },
+          { "order": 5, "text": "Voici ma bouche" },
+          { "order": 6, "text": "J'ai deux oreilles" },
+          { "order": 7, "text": "Mes cheveux sont noirs" },
+          { "order": 8, "text": "J'ai un visage rond" },
+          { "order": 9, "text": "Voici mon bras" },
+          { "order": 10, "text": "Voici ma main" },
+          { "order": 11, "text": "J'ai cinq doigts" },
+          { "order": 12, "text": "Voici ma jambe" },
+          { "order": 13, "text": "Voici mon pied" },
+          { "order": 14, "text": "Je suis grand" },
+          { "order": 15, "text": "Elle est petite" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 18,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La maison (1)",
+        "phrases": [
+          { "order": 1, "text": "C'est ma maison" },
+          { "order": 2, "text": "La maison est blanche" },
+          { "order": 3, "text": "Il y a un salon" },
+          { "order": 4, "text": "La cuisine est moderne" },
+          { "order": 5, "text": "Il y a une chambre" },
+          { "order": 6, "text": "La salle de bain est petite" },
+          { "order": 7, "text": "Il y a un jardin" },
+          { "order": 8, "text": "La porte est ouverte" },
+          { "order": 9, "text": "La fenêtre est fermée" },
+          { "order": 10, "text": "Je suis dans la maison" },
+          { "order": 11, "text": "Il y a un garage" },
+          { "order": 12, "text": "Le toit est rouge" },
+          { "order": 13, "text": "Il y a des fleurs devant la maison" },
+          { "order": 14, "text": "Ma chambre est à l'étage" },
+          { "order": 15, "text": "C'est une grande maison" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 19,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les meubles",
+        "phrases": [
+          { "order": 1, "text": "Il y a un lit dans la chambre" },
+          { "order": 2, "text": "La table est dans la cuisine" },
+          { "order": 3, "text": "Il y a quatre chaises" },
+          { "order": 4, "text": "Le canapé est dans le salon" },
+          { "order": 5, "text": "Il y a une armoire" },
+          { "order": 6, "text": "Le tapis est bleu" },
+          { "order": 7, "text": "La lampe est sur la table" },
+          { "order": 8, "text": "Le miroir est dans la salle de bain" },
+          { "order": 9, "text": "Il y a une télévision" },
+          { "order": 10, "text": "L'ordinateur est sur le bureau" },
+          { "order": 11, "text": "Les livres sont sur l'étagère" },
+          { "order": 12, "text": "Il y a un rideau à la fenêtre" },
+          { "order": 13, "text": "Le fauteuil est confortable" },
+          { "order": 14, "text": "Il y a une horloge au mur" },
+          { "order": 15, "text": "Le placard est plein" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 20,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La nourriture (1)",
+        "phrases": [
+          { "order": 1, "text": "Je mange du pain" },
+          { "order": 2, "text": "Tu manges une pomme" },
+          { "order": 3, "text": "Il mange du fromage" },
+          { "order": 4, "text": "Elle mange du riz" },
+          { "order": 5, "text": "Nous mangeons de la viande" },
+          { "order": 6, "text": "Vous mangez du poisson" },
+          { "order": 7, "text": "Ils mangent des légumes" },
+          { "order": 8, "text": "J'aime le chocolat" },
+          { "order": 9, "text": "Je n'aime pas la soupe" },
+          { "order": 10, "text": "Le pain est bon" },
+          { "order": 11, "text": "La pomme est sucrée" },
+          { "order": 12, "text": "C'est un gâteau" },
+          { "order": 13, "text": "Il y a des œufs" },
+          { "order": 14, "text": "C'est une banane jaune" },
+          { "order": 15, "text": "Je mange une salade" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 21,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les boissons",
+        "phrases": [
+          { "order": 1, "text": "Je bois de l'eau" },
+          { "order": 2, "text": "Tu bois du lait" },
+          { "order": 3, "text": "Il boit du thé" },
+          { "order": 4, "text": "Elle boit du café" },
+          { "order": 5, "text": "Nous buvons du jus d'orange" },
+          { "order": 6, "text": "Vous buvez du vin" },
+          { "order": 7, "text": "Ils boivent de la bière" },
+          { "order": 8, "text": "Le café est chaud" },
+          { "order": 9, "text": "L'eau est froide" },
+          { "order": 10, "text": "Je voudrais un verre d'eau" },
+          { "order": 11, "text": "Tu veux un café ?" },
+          { "order": 12, "text": "Non merci, je bois du thé" },
+          { "order": 13, "text": "C'est un jus de fruit" },
+          { "order": 14, "text": "Le lait est blanc" },
+          { "order": 15, "text": "Santé !" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 22,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les verbes du premier groupe (1)",
+        "phrases": [
+          { "order": 1, "text": "Je parle français" },
+          { "order": 2, "text": "Tu parles anglais" },
+          { "order": 3, "text": "Il parle espagnol" },
+          { "order": 4, "text": "Elle parle italien" },
+          { "order": 5, "text": "Nous parlons beaucoup" },
+          { "order": 6, "text": "Vous parlez bien" },
+          { "order": 7, "text": "Ils parlent doucement" },
+          { "order": 8, "text": "J'écoute la radio" },
+          { "order": 9, "text": "Tu regardes la télévision" },
+          { "order": 10, "text": "Il habite à Paris" },
+          { "order": 11, "text": "Elle travaille ici" },
+          { "order": 12, "text": "Nous aimons le français" },
+          { "order": 13, "text": "Vous chantez bien" },
+          { "order": 14, "text": "Ils dansent ensemble" },
+          { "order": 15, "text": "J'étudie la leçon" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 23,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les vêtements (1)",
+        "phrases": [
+          { "order": 1, "text": "Je porte un pantalon" },
+          { "order": 2, "text": "Tu portes une chemise" },
+          { "order": 3, "text": "Il porte un t-shirt" },
+          { "order": 4, "text": "Elle porte une robe" },
+          { "order": 5, "text": "Je porte des chaussures" },
+          { "order": 6, "text": "Il porte un manteau" },
+          { "order": 7, "text": "Elle porte une jupe" },
+          { "order": 8, "text": "C'est mon chapeau" },
+          { "order": 9, "text": "Le pantalon est noir" },
+          { "order": 10, "text": "La chemise est blanche" },
+          { "order": 11, "text": "La robe est rouge" },
+          { "order": 12, "text": "J'ai un pull bleu" },
+          { "order": 13, "text": "Tu as des baskets" },
+          { "order": 14, "text": "Il porte une cravate" },
+          { "order": 15, "text": "Elle a un sac à main" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 24,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La météo (1)",
+        "phrases": [
+          { "order": 1, "text": "Il fait beau" },
+          { "order": 2, "text": "Il fait chaud" },
+          { "order": 3, "text": "Il fait froid" },
+          { "order": 4, "text": "Il pleut" },
+          { "order": 5, "text": "Il neige" },
+          { "order": 6, "text": "Il y a du soleil" },
+          { "order": 7, "text": "Il y a du vent" },
+          { "order": 8, "text": "Le ciel est gris" },
+          { "order": 9, "text": "Le ciel est bleu" },
+          { "order": 10, "text": "Il fait mauvais" },
+          { "order": 11, "text": "Il y a des nuages" },
+          { "order": 12, "text": "C'est le printemps" },
+          { "order": 13, "text": "C'est l'été" },
+          { "order": 14, "text": "C'est l'automne" },
+          { "order": 15, "text": "C'est l'hiver" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 25,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les sentiments",
+        "phrases": [
+          { "order": 1, "text": "Je suis heureux" },
+          { "order": 2, "text": "Je suis heureuse" },
+          { "order": 3, "text": "Tu es triste" },
+          { "order": 4, "text": "Il est fatigué" },
+          { "order": 5, "text": "Elle est fatiguée" },
+          { "order": 6, "text": "Nous sommes contents" },
+          { "order": 7, "text": "Vous êtes fâchés ?" },
+          { "order": 8, "text": "Ils sont malades" },
+          { "order": 9, "text": "J'ai peur" },
+          { "order": 10, "text": "J'ai faim" },
+          { "order": 11, "text": "J'ai soif" },
+          { "order": 12, "text": "Elle est surprise" },
+          { "order": 13, "text": "Il est calme" },
+          { "order": 14, "text": "Nous sommes pressés" },
+          { "order": 15, "text": "Je suis désolé" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 26,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "L'heure (1)",
+        "phrases": [
+          { "order": 1, "text": "Quelle heure est-il ?" },
+          { "order": 2, "text": "Il est une heure" },
+          { "order": 3, "text": "Il est deux heures" },
+          { "order": 4, "text": "Il est trois heures cinq" },
+          { "order": 5, "text": "Il est quatre heures dix" },
+          { "order": 6, "text": "Il est cinq heures et quart" },
+          { "order": 7, "text": "Il est six heures et demie" },
+          { "order": 8, "text": "Il est sept heures moins le quart" },
+          { "order": 9, "text": "Il est huit heures vingt" },
+          { "order": 10, "text": "Il est midi" },
+          { "order": 11, "text": "Il est minuit" },
+          { "order": 12, "text": "À quelle heure est le train ?" },
+          { "order": 13, "text": "Le train est à neuf heures" },
+          { "order": 14, "text": "Il est tard" },
+          { "order": 15, "text": "Il est tôt" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 27,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les lieux de la ville (1)",
+        "phrases": [
+          { "order": 1, "text": "C'est une boulangerie" },
+          { "order": 2, "text": "C'est une école" },
+          { "order": 3, "text": "C'est un parc" },
+          { "order": 4, "text": "C'est un restaurant" },
+          { "order": 5, "text": "Je vais à la banque" },
+          { "order": 6, "text": "Il va au cinéma" },
+          { "order": 7, "text": "Elle va à la bibliothèque" },
+          { "order": 8, "text": "Nous allons au supermarché" },
+          { "order": 9, "text": "Où est la gare ?" },
+          { "order": 10, "text": "La poste est à côté" },
+          { "order": 11, "text": "L'hôpital est loin" },
+          { "order": 12, "text": "Le musée est fermé" },
+          { "order": 13, "text": "Il y a une église" },
+          { "order": 14, "text": "C'est une petite rue" },
+          { "order": 15, "text": "La place est grande" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 28,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les directions simples",
+        "phrases": [
+          { "order": 1, "text": "Allez tout droit" },
+          { "order": 2, "text": "Tournez à gauche" },
+          { "order": 3, "text": "Tournez à droite" },
+          { "order": 4, "text": "C'est à gauche" },
+          { "order": 5, "text": "C'est à droite" },
+          { "order": 6, "text": "C'est ici" },
+          { "order": 7, "text": "C'est là-bas" },
+          { "order": 8, "text": "La gare est proche" },
+          { "order": 9, "text": "L'école est loin" },
+          { "order": 10, "text": "Où est le restaurant ?" },
+          { "order": 11, "text": "Traversez la rue" },
+          { "order": 12, "text": "Prenez la première rue" },
+          { "order": 13, "text": "C'est après le pont" },
+          { "order": 14, "text": "C'est devant le parc" },
+          { "order": 15, "text": "C'est derrière l'église" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 29,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les passe-temps (1)",
+        "phrases": [
+          { "order": 1, "text": "J'aime lire" },
+          { "order": 2, "text": "Tu aimes chanter" },
+          { "order": 3, "text": "Il aime danser" },
+          { "order": 4, "text": "Elle aime voyager" },
+          { "order": 5, "text": "Nous aimons le sport" },
+          { "order": 6, "text": "Vous aimez cuisiner" },
+          { "order": 7, "text": "Ils aiment la musique" },
+          { "order": 8, "text": "Je joue au football" },
+          { "order": 9, "text": "Tu joues du piano" },
+          { "order": 10, "text": "Il joue de la guitare" },
+          { "order": 11, "text": "Elle regarde un film" },
+          { "order": 12, "text": "Nous écoutons une chanson" },
+          { "order": 13, "text": "Vous dessinez" },
+          { "order": 14, "text": "Ils nagent à la piscine" },
+          { "order": 15, "text": "C'est mon hobby" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 30,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Le transport (1)",
+        "phrases": [
+          { "order": 1, "text": "Je prends le bus" },
+          { "order": 2, "text": "Tu prends le train" },
+          { "order": 3, "text": "Il prend l'avion" },
+          { "order": 4, "text": "Elle prend le métro" },
+          { "order": 5, "text": "Nous prenons le vélo" },
+          { "order": 6, "text": "Vous prenez la voiture" },
+          { "order": 7, "text": "Ils vont à pied" },
+          { "order": 8, "text": "Où est l'arrêt de bus ?" },
+          { "order": 9, "text": "La gare est ici" },
+          { "order": 10, "text": "Le billet coûte dix euros" },
+          { "order": 11, "text": "Un billet, s'il vous plaît" },
+          { "order": 12, "text": "Le taxi est là" },
+          { "order": 13, "text": "Je vais au travail en voiture" },
+          { "order": 14, "text": "C'est un voyage rapide" },
+          { "order": 15, "text": "Bon voyage !" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 31,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Adjectifs simples (1)",
+        "phrases": [
+          { "order": 1, "text": "Le sac est lourd" },
+          { "order": 2, "text": "La valise est légère" },
+          { "order": 3, "text": "Le café est chaud" },
+          { "order": 4, "text": "La glace est froide" },
+          { "order": 5, "text": "Le livre est intéressant" },
+          { "order": 6, "text": "Le film est ennuyeux" },
+          { "order": 7, "text": "La voiture est rapide" },
+          { "order": 8, "text": "Le vélo est lent" },
+          { "order": 9, "text": "L'appartement est grand" },
+          { "order": 10, "text": "Le studio est petit" },
+          { "order": 11, "text": "La maison est vieille" },
+          { "order": 12, "text": "La voiture est neuve" },
+          { "order": 13, "text": "C'est facile" },
+          { "order": 14, "text": "C'est difficile" },
+          { "order": 15, "text": "C'est parfait" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 32,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Au restaurant (1)",
+        "phrases": [
+          { "order": 1, "text": "La carte, s'il vous plaît" },
+          { "order": 2, "text": "Je voudrais une table" },
+          { "order": 3, "text": "Pour deux personnes, s'il vous plaît" },
+          { "order": 4, "text": "Qu'est-ce que vous voulez manger ?" },
+          { "order": 5, "text": "Je voudrais un steak" },
+          { "order": 6, "text": "Je voudrais une salade" },
+          { "order": 7, "text": "Et comme boisson ?" },
+          { "order": 8, "text": "Un verre de vin rouge, s'il vous plaît" },
+          { "order": 9, "text": "Une bouteille d'eau minérale" },
+          { "order": 10, "text": "C'est délicieux !" },
+          { "order": 11, "text": "L'addition, s'il vous plaît" },
+          { "order": 12, "text": "Où sont les toilettes ?" },
+          { "order": 13, "text": "Bon appétit !" },
+          { "order": 14, "text": "Je suis végétarien" },
+          { "order": 15, "text": "Merci, c'était très bon" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 33,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Faire les courses (1)",
+        "phrases": [
+          { "order": 1, "text": "Je vais au marché" },
+          { "order": 2, "text": "Combien ça coûte ?" },
+          { "order": 3, "text": "C'est trois euros" },
+          { "order": 4, "text": "Je voudrais un kilo de tomates" },
+          { "order": 5, "text": "Je voudrais deux baguettes" },
+          { "order": 6, "text": "Avez-vous du fromage ?" },
+          { "order": 7, "text": "C'est cher" },
+          { "order": 8, "text": "C'est bon marché" },
+          { "order": 9, "text": "Je prends ça" },
+          { "order": 10, "text": "Un sac, s'il vous plaît" },
+          { "order": 11, "text": "C'est tout, merci" },
+          { "order": 12, "text": "Où est la caisse ?" },
+          { "order": 13, "text": "Vous payez par carte ?" },
+          { "order": 14, "text": "Je paye en espèces" },
+          { "order": 15, "text": "Voici votre monnaie" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 34,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Ma routine (1)",
+        "phrases": [
+          { "order": 1, "text": "Je me lève à sept heures" },
+          { "order": 2, "text": "Je prends une douche" },
+          { "order": 3, "text": "Je m'habille" },
+          { "order": 4, "text": "Je prends mon petit-déjeuner" },
+          { "order": 5, "text": "Je mange des céréales" },
+          { "order": 6, "text": "Je bois un café" },
+          { "order": 7, "text": "Je me brosse les dents" },
+          { "order": 8, "text": "Je pars au travail" },
+          { "order": 9, "text": "Je prends le bus" },
+          { "order": 10, "text": "Je commence à neuf heures" },
+          { "order": 11, "text": "Je travaille au bureau" },
+          { "order": 12, "text": "Je déjeune à midi" },
+          { "order": 13, "text": "Je finis à dix-sept heures" },
+          { "order": 14, "text": "Je rentre à la maison" },
+          { "order": 15, "text": "Je dîne avec ma famille" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 35,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Ma routine (2)",
+        "phrases": [
+          { "order": 1, "text": "Le soir, je regarde la télé" },
+          { "order": 2, "text": "Je lis un livre dans mon lit" },
+          { "order": 3, "text": "Je me couche à onze heures" },
+          { "order": 4, "text": "Je dors huit heures" },
+          { "order": 5, "text": "Le samedi, je fais du sport" },
+          { "order": 6, "text": "Je fais les courses le matin" },
+          { "order": 7, "text": "Je nettoie la maison" },
+          { "order": 8, "text": "Je prépare le dîner" },
+          { "order": 9, "text": "Je téléphone à mes amis" },
+          { "order": 10, "text": "Je sors le chien" },
+          { "order": 11, "text": "Je me repose le dimanche" },
+          { "order": 12, "text": "Je vais au parc" },
+          { "order": 13, "text": "Je cuisine un bon repas" },
+          { "order": 14, "text": "Je lave ma voiture" },
+          { "order": 15, "text": "Je passe une bonne soirée" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 36,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Demander de l'aide",
+        "phrases": [
+          { "order": 1, "text": "S'il vous plaît, aidez-moi" },
+          { "order": 2, "text": "Pouvez-vous m'aider ?" },
+          { "order": 3, "text": "Je suis perdu" },
+          { "order": 4, "text": "J'ai un problème" },
+          { "order": 5, "text": "Comment dit-on 'apple' en français ?" },
+          { "order": 6, "text": "Que signifie ce mot ?" },
+          { "order": 7, "text": "Parlez plus lentement, s'il vous plaît" },
+          { "order": 8, "text": "Pouvez-vous répéter ?" },
+          { "order": 9, "text": "Je ne comprends pas" },
+          { "order": 10, "text": "Pardon, je ne sais pas" },
+          { "order": 11, "text": "Est-ce que vous parlez anglais ?" },
+          { "order": 12, "text": "Où sont les secours ?" },
+          { "order": 13, "text": "J'ai besoin d'un médecin" },
+          { "order": 14, "text": "C'est urgent !" },
+          { "order": 15, "text": "Merci pour votre aide" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 37,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les prépositions de lieu",
+        "phrases": [
+          { "order": 1, "text": "Le chat est sur la table" },
+          { "order": 2, "text": "Le chien est sous la chaise" },
+          { "order": 3, "text": "Le stylo est dans le sac" },
+          { "order": 4, "text": "La voiture est devant la maison" },
+          { "order": 5, "text": "Le jardin est derrière la maison" },
+          { "order": 6, "text": "Le tableau est au mur" },
+          { "order": 7, "text": "Je suis à côté de la fenêtre" },
+          { "order": 8, "text": "Il est entre Paul et Marie" },
+          { "order": 9, "text": "Le livre est près de la lampe" },
+          { "order": 10, "text": "La ville est loin d'ici" },
+          { "order": 11, "text": "L'école est en face de la banque" },
+          { "order": 12, "text": "Le dictionnaire est sur l'étagère" },
+          { "order": 13, "text": "Nous sommes dans la voiture" },
+          { "order": 14, "text": "La clé est sur la porte" },
+          { "order": 15, "text": "Le tapis est par terre" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 38,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les nationalités (1)",
+        "phrases": [
+          { "order": 1, "text": "Je suis français" },
+          { "order": 2, "text": "Elle est française" },
+          { "order": 3, "text": "Il est anglais" },
+          { "order": 4, "text": "Elle est anglaise" },
+          { "order": 5, "text": "Tu es espagnol ?" },
+          { "order": 6, "text": "Elle est espagnole" },
+          { "order": 7, "text": "Il est américain" },
+          { "order": 8, "text": "Elle est américaine" },
+          { "order": 9, "text": "Nous sommes canadiens" },
+          { "order": 10, "text": "Vous êtes italiens ?" },
+          { "order": 11, "text": "Il est allemand" },
+          { "order": 12, "text": "Elle est allemande" },
+          { "order": 13, "text": "Ils sont japonais" },
+          { "order": 14, "text": "Elles sont chinoises" },
+          { "order": 15, "text": "Je suis du Mexique" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 39,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les métiers (1)",
+        "phrases": [
+          { "order": 1, "text": "Je suis professeur" },
+          { "order": 2, "text": "Tu es médecin" },
+          { "order": 3, "text": "Il est ingénieur" },
+          { "order": 4, "text": "Elle est infirmière" },
+          { "order": 5, "text": "Il est boulanger" },
+          { "order": 6, "text": "Elle est secrétaire" },
+          { "order": 7, "text": "Il est serveur" },
+          { "order": 8, "text": "Elle est serveuse" },
+          { "order": 9, "text": "Je suis étudiant" },
+          { "order": 10, "text": "Il est chauffeur de taxi" },
+          { "order": 11, "text": "Elle est photographe" },
+          { "order": 12, "text": "Ils sont artistes" },
+          { "order": 13, "text": "C'est un bon travail" },
+          { "order": 14, "text": "Je cherche un emploi" },
+          { "order": 15, "text": "Il travaille dans un bureau" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 40,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Négations simples",
+        "phrases": [
+          { "order": 1, "text": "Je ne parle pas chinois" },
+          { "order": 2, "text": "Tu ne manges pas de viande" },
+          { "order": 3, "text": "Il ne pleut pas" },
+          { "order": 4, "text": "Elle n'est pas fatiguée" },
+          { "order": 5, "text": "Nous ne sommes pas en retard" },
+          { "order": 6, "text": "Vous ne travaillez pas aujourd'hui" },
+          { "order": 7, "text": "Ils ne regardent pas la télé" },
+          { "order": 8, "text": "Je ne sais pas" },
+          { "order": 9, "text": "Ce n'est pas bon" },
+          { "order": 10, "text": "Ce n'est pas cher" },
+          { "order": 11, "text": "Il n'y a pas de pain" },
+          { "order": 12, "text": "Je n'aime pas le café" },
+          { "order": 13, "text": "Elle n'habite pas ici" },
+          { "order": 14, "text": "Tu n'écoutes pas" },
+          { "order": 15, "text": "Ce n'est pas grave" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 41,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Possession simple",
+        "phrases": [
+          { "order": 1, "text": "C'est mon livre" },
+          { "order": 2, "text": "C'est ton stylo" },
+          { "order": 3, "text": "C'est sa voiture" },
+          { "order": 4, "text": "C'sont nos amis" },
+          { "order": 5, "text": "C'est votre sac" },
+          { "order": 6, "text": "C'est leur maison" },
+          { "order": 7, "text": "C'est ma chaise" },
+          { "order": 8, "text": "C'est ta pomme" },
+          { "order": 9, "text": "C'est sa montre" },
+          { "order": 10, "text": "Voici mes clés" },
+          { "order": 11, "text": "Où sont tes lunettes ?" },
+          { "order": 12, "text": "C'est son chien" },
+          { "order": 13, "text": "Ce sont leurs enfants" },
+          { "order": 14, "text": "C'est notre professeur" },
+          { "order": 15, "text": "C'est votre chambre" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 42,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les objets personnels",
+        "phrases": [
+          { "order": 1, "text": "J'ai mon téléphone" },
+          { "order": 2, "text": "Où est mon portefeuille ?" },
+          { "order": 3, "text": "J'ai mes clés dans ma poche" },
+          { "order": 4, "text": "Voici mon passeport" },
+          { "order": 5, "text": "J'ai besoin de ma carte d'identité" },
+          { "order": 6, "text": "Ma montre est sur la table" },
+          { "order": 7, "text": "J'ai un parapluie noir" },
+          { "order": 8, "text": "Où sont mes lunettes de soleil ?" },
+          { "order": 9, "text": "Voici mon sac à dos" },
+          { "order": 10, "text": "J'ai un ordinateur portable" },
+          { "order": 11, "text": "Ma batterie est faible" },
+          { "order": 12, "text": "C'est mon chargeur" },
+          { "order": 13, "text": "J'ai un mouchoir" },
+          { "order": 14, "text": "Voici mon agenda" },
+          { "order": 15, "text": "J'ai mon ticket de métro" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 43,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les questions avec 'Est-ce que'",
+        "phrases": [
+          { "order": 1, "text": "Est-ce que tu parles français ?" },
+          { "order": 2, "text": "Est-ce qu'il est là ?" },
+          { "order": 3, "text": "Est-ce que vous avez l'heure ?" },
+          { "order": 4, "text": "Est-ce qu'elle mange de la viande ?" },
+          { "order": 5, "text": "Est-ce qu'ils habitent ici ?" },
+          { "order": 6, "text": "Est-ce que nous avons un examen ?" },
+          { "order": 7, "text": "Est-ce que c'est fini ?" },
+          { "order": 8, "text": "Est-ce que tu aimes le café ?" },
+          { "order": 9, "text": "Est-ce que vous travaillez demain ?" },
+          { "order": 10, "text": "Est-ce que c'est possible ?" },
+          { "order": 11, "text": "Est-ce que c'est cher ?" },
+          { "order": 12, "text": "Est-ce qu'il fait chaud ?" },
+          { "order": 13, "text": "Est-ce que tu viens avec nous ?" },
+          { "order": 14, "text": "Est-ce que c'est ouvert ?" },
+          { "order": 15, "text": "Est-ce que vous êtes prêt ?" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 44,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Mots interrogatifs",
+        "phrases": [
+          { "order": 1, "text": "Qui est-ce ?" },
+          { "order": 2, "text": "Où vas-tu ?" },
+          { "order": 3, "text": "Quand est ton anniversaire ?" },
+          { "order": 4, "text": "Pourquoi es-tu triste ?" },
+          { "order": 5, "text": "Comment allez-vous ?" },
+          { "order": 6, "text": "Combien ça coûte ?" },
+          { "order": 7, "text": "Quel est ton nom ?" },
+          { "order": 8, "text": "Qu'est-ce que tu fais ?" },
+          { "order": 9, "text": "Où habites-tu ?" },
+          { "order": 10, "text": "Comment on dit ça ?" },
+          { "order": 11, "text": "Qui est ton professeur ?" },
+          { "order": 12, "text": "Pourquoi tu ris ?" },
+          { "order": 13, "text": "Quand commence le film ?" },
+          { "order": 14, "text": "Quel livre tu lis ?" },
+          { "order": 15, "text": "Comment ça s'écrit ?" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 45,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Verbes d'action courants",
+        "phrases": [
+          { "order": 1, "text": "Je marche dans la rue" },
+          { "order": 2, "text": "Il court très vite" },
+          { "order": 3, "text": "Elle saute de joie" },
+          { "order": 4, "text": "Nous nageons dans la mer" },
+          { "order": 5, "text": "Vous chantez une chanson" },
+          { "order": 6, "text": "Ils dansent à la fête" },
+          { "order": 7, "text": "Je porte mon sac" },
+          { "order": 8, "text": "Il ouvre la porte" },
+          { "order": 9, "text": "Elle ferme le livre" },
+          { "order": 10, "text": "Nous montons l'escalier" },
+          { "order": 11, "text": "Vous descendez l'escalier" },
+          { "order": 12, "text": "Je cherche mes clés" },
+          { "order": 13, "text": "Elle trouve son stylo" },
+          { "order": 14, "text": "Ils travaillent beaucoup" },
+          { "order": 15, "text": "Nous étudions ensemble" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 46,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "L'état de santé (1)",
+        "phrases": [
+          { "order": 1, "text": "Je suis malade" },
+          { "order": 2, "text": "J'ai mal à la tête" },
+          { "order": 3, "text": "J'ai mal au ventre" },
+          { "order": 4, "text": "J'ai de la fièvre" },
+          { "order": 5, "text": "Je tousse beaucoup" },
+          { "order": 6, "text": "J'ai mal à la gorge" },
+          { "order": 7, "text": "Je suis très fatigué" },
+          { "order": 8, "text": "J'ai besoin de dormir" },
+          { "order": 9, "text": "Elle a mal aux dents" },
+          { "order": 10, "text": "Je vais chez le médecin" },
+          { "order": 11, "text": "Il prend un médicament" },
+          { "order": 12, "text": "Elle est à l'hôpital" },
+          { "order": 13, "text": "Je me sens mieux" },
+          { "order": 14, "text": "Repose-toi bien" },
+          { "order": 15, "text": "Bonne santé !" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 47,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les magasins",
+        "phrases": [
+          { "order": 1, "text": "Je vais à la boulangerie" },
+          { "order": 2, "text": "Elle est à la boucherie" },
+          { "order": 3, "text": "Il va à la pharmacie" },
+          { "order": 4, "text": "Nous sommes à la librairie" },
+          { "order": 5, "text": "Le supermarché est ouvert" },
+          { "order": 6, "text": "C'est un magasin de vêtements" },
+          { "order": 7, "text": "Où est la pâtisserie ?" },
+          { "order": 8, "text": "La boutique est fermée" },
+          { "order": 9, "text": "Je cherche une épicerie" },
+          { "order": 10, "text": "Le kiosque à journaux est là" },
+          { "order": 11, "text": "La bijouterie est chère" },
+          { "order": 12, "text": "Le fleuriste vend des roses" },
+          { "order": 13, "text": "Je vais au centre commercial" },
+          { "order": 14, "text": "Il y a beaucoup de magasins" },
+          { "order": 15, "text": "Le marché est le dimanche" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 48,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Exprimer ses goûts",
+        "phrases": [
+          { "order": 1, "text": "J'aime le chocolat" },
+          { "order": 2, "text": "J'adore le café" },
+          { "order": 3, "text": "Je déteste le froid" },
+          { "order": 4, "text": "Je n'aime pas le sport" },
+          { "order": 5, "text": "Elle aime beaucoup lire" },
+          { "order": 6, "text": "Tu aimes les chats ?" },
+          { "order": 7, "text": "Mon plat préféré est la pizza" },
+          { "order": 8, "text": "C'est délicieux" },
+          { "order": 9, "text": "C'est génial !" },
+          { "order": 10, "text": "C'est nul" },
+          { "order": 11, "text": "Je préfère le thé" },
+          { "order": 12, "text": "Il aime le cinéma" },
+          { "order": 13, "text": "Nous aimons voyager" },
+          { "order": 14, "text": "Ils n'aiment pas attendre" },
+          { "order": 15, "text": "C'est mon film préféré" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 49,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Verbes de mouvement",
+        "phrases": [
+          { "order": 1, "text": "Je vais à la plage" },
+          { "order": 2, "text": "Tu viens chez moi ?" },
+          { "order": 3, "text": "Il part demain" },
+          { "order": 4, "text": "Elle arrive ce soir" },
+          { "order": 5, "text": "Nous sortons ce week-end" },
+          { "order": 6, "text": "Vous entrez dans la pièce" },
+          { "order": 7, "text": "Ils reviennent bientôt" },
+          { "order": 8, "text": "Je reste à la maison" },
+          { "order": 9, "text": "Il monte dans le train" },
+          { "order": 10, "text": "Elle descend du bus" },
+          { "order": 11, "text": "Nous passons par le parc" },
+          { "order": 12, "text": "Vous tombez par terre" },
+          { "order": 13, "text": "Il rentre tard" },
+          { "order": 14, "text": "Elle quitte le bureau" },
+          { "order": 15, "text": "Je marche jusqu'à l'école" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 50,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les adjectifs qualificatifs (2)",
+        "phrases": [
+          { "order": 1, "text": "Il est gentil" },
+          { "order": 2, "text": "Elle est gentille" },
+          { "order": 3, "text": "Le film est drôle" },
+          { "order": 4, "text": "C'est un beau paysage" },
+          { "order": 5, "text": "La robe est belle" },
+          { "order": 6, "text": "Il est intelligent" },
+          { "order": 7, "text": "Elle est intelligente" },
+          { "order": 8, "text": "C'est une personne sérieuse" },
+          { "order": 9, "text": "Le garçon est calme" },
+          { "order": 10, "text": "La fille est sportive" },
+          { "order": 11, "text": "Il est poli" },
+          { "order": 12, "text": "Elle est timide" },
+          { "order": 13, "text": "Nous sommes contents" },
+          { "order": 14, "text": "Ils sont sympathiques" },
+          { "order": 15, "text": "Elle est très mignonne" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 51,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les nombres 20 à 50",
+        "phrases": [
+          { "order": 1, "text": "Il y a vingt-et-un étudiants" },
+          { "order": 2, "text": "J'ai vingt-deux euros" },
+          { "order": 3, "text": "Elle a vingt-cinq ans" },
+          { "order": 4, "text": "Il y a trente chaises" },
+          { "order": 5, "text": "J'ai trente-et-un jours" },
+          { "order": 6, "text": "C'est la page trente-deux" },
+          { "order": 7, "text": "Il y a quarante personnes" },
+          { "order": 8, "text": "Il a quarante-cinq ans" },
+          { "order": 9, "text": "C'est cinquante euros" },
+          { "order": 10, "text": "Vingt plus vingt font quarante" },
+          { "order": 11, "text": "Trente et vingt font cinquante" },
+          { "order": 12, "text": "J'ai vingt-huit livres" },
+          { "order": 13, "text": "Il y a quarante-huit heures" },
+          { "order": 14, "text": "Il y a trente-six mois" },
+          { "order": 15, "text": "Cinquante personnes sont là" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 52,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Dire l'heure (2)",
+        "phrases": [
+          { "order": 1, "text": "Il est treize heures" },
+          { "order": 2, "text": "Il est quatorze heures trente" },
+          { "order": 3, "text": "Il est quinze heures quinze" },
+          { "order": 4, "text": "Il est seize heures quarante-cinq" },
+          { "order": 5, "text": "Le rendez-vous est à dix-huit heures" },
+          { "order": 6, "text": "Le magasin ferme à dix-neuf heures" },
+          { "order": 7, "text": "Il est vingt heures" },
+          { "order": 8, "text": "Le film finit à vingt-deux heures" },
+          { "order": 9, "text": "C'est l'heure du dîner" },
+          { "order": 10, "text": "C'est l'heure du déjeuner" },
+          { "order": 11, "text": "Il est sept heures du matin" },
+          { "order": 12, "text": "Il est huit heures du soir" },
+          { "order": 13, "text": "Dépêchez-vous, il est tard !" },
+          { "order": 14, "text": "Il est presque midi" },
+          { "order": 15, "text": "J'ai un peu de temps" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 53,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La météo (2)",
+        "phrases": [
+          { "order": 1, "text": "Il y a du brouillard" },
+          { "order": 2, "text": "Il y a de l'orage" },
+          { "order": 3, "text": "Il fait humide" },
+          { "order": 4, "text": "La température est basse" },
+          { "order": 5, "text": "Il fait zéro degré" },
+          { "order": 6, "text": "Il fait trente degrés" },
+          { "order": 7, "text": "Il y a des éclairs" },
+          { "order": 8, "text": "Le ciel se dégage" },
+          { "order": 9, "text": "C'est une belle journée" },
+          { "order": 10, "text": "Il va pleuvoir" },
+          { "order": 11, "text": "Prenez votre parapluie" },
+          { "order": 12, "text": "Mettez un manteau chaud" },
+          { "order": 13, "text": "Le vent souffle fort" },
+          { "order": 14, "text": "La neige est blanche" },
+          { "order": 15, "text": "Le soleil brille" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 54,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les animaux sauvages",
+        "phrases": [
+          { "order": 1, "text": "Le lion est fort" },
+          { "order": 2, "text": "L'éléphant est énorme" },
+          { "order": 3, "text": "La girafe est grande" },
+          { "order": 4, "text": "Le tigre a des rayures" },
+          { "order": 5, "text": "Le singe grimpe aux arbres" },
+          { "order": 6, "text": "L'ours est marron" },
+          { "order": 7, "text": "Le loup habite dans la forêt" },
+          { "order": 8, "text": "Le serpent rampe" },
+          { "order": 9, "text": "Le crocodile vit dans l'eau" },
+          { "order": 10, "text": "Le zèbre est noir et blanc" },
+          { "order": 11, "text": "L'oiseau vole haut" },
+          { "order": 12, "text": "La tortue est lente" },
+          { "order": 13, "text": "Le kangourou saute" },
+          { "order": 14, "text": "Le dauphin nage bien" },
+          { "order": 15, "text": "Regardez les animaux au zoo" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 55,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Au café",
+        "phrases": [
+          { "order": 1, "text": "Un café, s'il vous plaît" },
+          { "order": 2, "text": "Un café au lait, s'il vous plaît" },
+          { "order": 3, "text": "Je voudrais un thé noir" },
+          { "order": 4, "text": "Un chocolat chaud pour l'enfant" },
+          { "order": 5, "text": "Vous avez des croissants ?" },
+          { "order": 6, "text": "Un verre d'eau, s'il vous plaît" },
+          { "order": 7, "text": "Avec du sucre ?" },
+          { "order": 8, "text": "Sans sucre, merci" },
+          { "order": 9, "text": "C'est combien ?" },
+          { "order": 10, "text": "C'est deux euros cinquante" },
+          { "order": 11, "text": "En terrasse ou à l'intérieur ?" },
+          { "order": 12, "text": "En terrasse, s'il vous plaît" },
+          { "order": 13, "text": "Garçon, s'il vous plaît !" },
+          { "order": 14, "text": "Gardez la monnaie" },
+          { "order": 15, "text": "Merci, au revoir" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 56,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La géographie simple",
+        "phrases": [
+          { "order": 1, "text": "La France est en Europe" },
+          { "order": 2, "text": "Paris est la capitale" },
+          { "order": 3, "text": "Le fleuve s'appelle la Seine" },
+          { "order": 4, "text": "Il y a des montagnes" },
+          { "order": 5, "text": "La mer est au sud" },
+          { "order": 6, "text": "L'océan est à l'ouest" },
+          { "order": 7, "text": "La campagne est verte" },
+          { "order": 8, "text": "La forêt est grande" },
+          { "order": 9, "text": "Le lac est calme" },
+          { "order": 10, "text": "L'île est petite" },
+          { "order": 11, "text": "Il y a un volcan" },
+          { "order": 12, "text": "La terre est ronde" },
+          { "order": 13, "text": "C'est un pays magnifique" },
+          { "order": 14, "text": "J'habite au nord" },
+          { "order": 15, "text": "Elle voyage dans le monde" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 57,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les verbes 'être' et 'avoir'",
+        "phrases": [
+          { "order": 1, "text": "Je suis fatigué" },
+          { "order": 2, "text": "Tu es très gentil" },
+          { "order": 3, "text": "Il est à la maison" },
+          { "order": 4, "text": "Elle est médecin" },
+          { "order": 5, "text": "Nous sommes prêts" },
+          { "order": 6, "text": "Vous êtes en retard" },
+          { "order": 7, "text": "Ils sont heureux" },
+          { "order": 8, "text": "J'ai un frère" },
+          { "order": 9, "text": "Tu as une voiture" },
+          { "order": 10, "text": "Il a dix ans" },
+          { "order": 11, "text": "Elle a un chat" },
+          { "order": 12, "text": "Nous avons faim" },
+          { "order": 13, "text": "Vous avez raison" },
+          { "order": 14, "text": "Ils ont froid" },
+          { "order": 15, "text": "Elles ont soif" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 58,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "L'ordinateur et internet",
+        "phrases": [
+          { "order": 1, "text": "J'allume mon ordinateur" },
+          { "order": 2, "text": "Je tape mon mot de passe" },
+          { "order": 3, "text": "J'ouvre mon navigateur" },
+          { "order": 4, "text": "Je regarde mes e-mails" },
+          { "order": 5, "text": "Je réponds à un message" },
+          { "order": 6, "text": "J'utilise ma souris" },
+          { "order": 7, "text": "Le clavier est français" },
+          { "order": 8, "text": "L'écran est grand" },
+          { "order": 9, "text": "Je cherche sur internet" },
+          { "order": 10, "text": "Je télécharge un fichier" },
+          { "order": 11, "text": "C'est un site web" },
+          { "order": 12, "text": "Je suis sur les réseaux sociaux" },
+          { "order": 13, "text": "Le wifi ne marche pas" },
+          { "order": 14, "text": "J'éteins l'ordinateur" },
+          { "order": 15, "text": "Je sauvegarde mon travail" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 59,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les fruits et légumes",
+        "phrases": [
+          { "order": 1, "text": "La pomme est croquante" },
+          { "order": 2, "text": "La banane est douce" },
+          { "order": 3, "text": "L'orange a beaucoup de jus" },
+          { "order": 4, "text": "La fraise est rouge" },
+          { "order": 5, "text": "Le raisin est sucré" },
+          { "order": 6, "text": "La tomate est rouge" },
+          { "order": 7, "text": "La carotte est orange" },
+          { "order": 8, "text": "La pomme de terre est cuite" },
+          { "order": 9, "text": "La salade est fraîche" },
+          { "order": 10, "text": "L'oignon pique les yeux" },
+          { "order": 11, "text": "L'ail est fort" },
+          { "order": 12, "text": "Le citron est acide" },
+          { "order": 13, "text": "Le concombre est vert" },
+          { "order": 14, "text": "Les petits pois sont ronds" },
+          { "order": 15, "text": "J'aime les fruits frais" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 60,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La plage et les vacances",
+        "phrases": [
+          { "order": 1, "text": "Je vais à la mer" },
+          { "order": 2, "text": "Le sable est chaud" },
+          { "order": 3, "text": "L'eau est bleue" },
+          { "order": 4, "text": "Je nage dans l'océan" },
+          { "order": 5, "text": "Il y a des vagues" },
+          { "order": 6, "text": "Je porte mon maillot de bain" },
+          { "order": 7, "text": "J'ai une serviette de plage" },
+          { "order": 8, "text": "Je mets de la crème solaire" },
+          { "order": 9, "text": "Je porte mes lunettes de soleil" },
+          { "order": 10, "text": "Je ramasse des coquillages" },
+          { "order": 11, "text": "Il y a un bateau au loin" },
+          { "order": 12, "text": "Le soleil se couche" },
+          { "order": 13, "text": "C'est l'été, il fait beau" },
+          { "order": 14, "text": "Nous sommes en vacances" },
+          { "order": 15, "text": "J'adore la plage" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 61,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Faire la fête",
+        "phrases": [
+          { "order": 1, "text": "C'est mon anniversaire !" },
+          { "order": 2, "text": "Bon anniversaire !" },
+          { "order": 3, "text": "Il y a une fête ce soir" },
+          { "order": 4, "text": "Je suis invité chez Marc" },
+          { "order": 5, "text": "On va danser" },
+          { "order": 6, "text": "On va chanter" },
+          { "order": 7, "text": "Il y a beaucoup de musique" },
+          { "order": 8, "text": "Il y a un gâteau" },
+          { "order": 9, "text": "Il y a des bougies" },
+          { "order": 10, "text": "Voici ton cadeau" },
+          { "order": 11, "text": "Merci beaucoup pour l'invitation" },
+          { "order": 12, "text": "Tout le monde s'amuse" },
+          { "order": 13, "text": "Voulez-vous boire quelque chose ?" },
+          { "order": 14, "text": "Félicitations !" },
+          { "order": 15, "text": "C'est une super soirée" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 62,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les parties de la journée",
+        "phrases": [
+          { "order": 1, "text": "Le matin, je bois un thé" },
+          { "order": 2, "text": "À midi, je mange" },
+          { "order": 3, "text": "L'après-midi, je travaille" },
+          { "order": 4, "text": "Le soir, je me repose" },
+          { "order": 5, "text": "La nuit, je dors" },
+          { "order": 6, "text": "À l'aube, le soleil se lève" },
+          { "order": 7, "text": "Au crépuscule, le soleil se couche" },
+          { "order": 8, "text": "Je me réveille tôt le matin" },
+          { "order": 9, "text": "Je finis tard le soir" },
+          { "order": 10, "text": "Passez une bonne matinée" },
+          { "order": 11, "text": "Passez un bon après-midi" },
+          { "order": 12, "text": "Bonne soirée à tous" },
+          { "order": 13, "text": "Bonne nuit, à demain" },
+          { "order": 14, "text": "Il est minuit pile" },
+          { "order": 15, "text": "Je suis occupé toute la journée" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 63,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Description physique (1)",
+        "phrases": [
+          { "order": 1, "text": "Il est grand" },
+          { "order": 2, "text": "Elle est petite" },
+          { "order": 3, "text": "Il est mince" },
+          { "order": 4, "text": "Elle est brune" },
+          { "order": 5, "text": "Il est blond" },
+          { "order": 6, "text": "Elle a les cheveux longs" },
+          { "order": 7, "text": "Il a les cheveux courts" },
+          { "order": 8, "text": "Il a les yeux bleus" },
+          { "order": 9, "text": "Elle a les yeux marron" },
+          { "order": 10, "text": "Il est jeune" },
+          { "order": 11, "text": "Elle est âgée" },
+          { "order": 12, "text": "Il porte des lunettes" },
+          { "order": 13, "text": "Il a une barbe" },
+          { "order": 14, "text": "Elle est très belle" },
+          { "order": 15, "text": "Il est très beau" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 64,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Dans le salon",
+        "phrases": [
+          { "order": 1, "text": "Asseyez-vous sur le canapé" },
+          { "order": 2, "text": "Il y a une petite table" },
+          { "order": 3, "text": "La télévision est allumée" },
+          { "order": 4, "text": "Le tapis est doux" },
+          { "order": 5, "text": "Il y a des tableaux au mur" },
+          { "order": 6, "text": "La lumière est forte" },
+          { "order": 7, "text": "Je lis un livre dans le fauteuil" },
+          { "order": 8, "text": "Il y a des fleurs dans un vase" },
+          { "order": 9, "text": "La cheminée est chaude" },
+          { "order": 10, "text": "Ouvre les rideaux" },
+          { "order": 11, "text": "Ferme la fenêtre" },
+          { "order": 12, "text": "Il y a une étagère avec des livres" },
+          { "order": 13, "text": "Le salon est accueillant" },
+          { "order": 14, "text": "Je regarde un film le soir" },
+          { "order": 15, "text": "On écoute de la musique ici" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 65,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Dans la cuisine",
+        "phrases": [
+          { "order": 1, "text": "Le frigo est plein" },
+          { "order": 2, "text": "Je cherche une fourchette" },
+          { "order": 3, "text": "Voici un couteau" },
+          { "order": 4, "text": "Voici une cuillère" },
+          { "order": 5, "text": "L'assiette est sur la table" },
+          { "order": 6, "text": "Le verre est vide" },
+          { "order": 7, "text": "Je cuisine le repas" },
+          { "order": 8, "text": "La poêle est chaude" },
+          { "order": 9, "text": "Le four est allumé" },
+          { "order": 10, "text": "Lave les légumes" },
+          { "order": 11, "text": "Il y a du sel et du poivre" },
+          { "order": 12, "text": "L'évier est propre" },
+          { "order": 13, "text": "Je prépare le café" },
+          { "order": 14, "text": "Où est la poubelle ?" },
+          { "order": 15, "text": "La cuisine est petite mais pratique" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 66,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Dans la chambre",
+        "phrases": [
+          { "order": 1, "text": "Le lit est confortable" },
+          { "order": 2, "text": "Il y a deux oreillers" },
+          { "order": 3, "text": "La couette est chaude" },
+          { "order": 4, "text": "Mes vêtements sont dans l'armoire" },
+          { "order": 5, "text": "Il y a une table de nuit" },
+          { "order": 6, "text": "La lampe est allumée" },
+          { "order": 7, "text": "Je dors bien ici" },
+          { "order": 8, "text": "Réveille-moi à huit heures" },
+          { "order": 9, "text": "Le réveil sonne" },
+          { "order": 10, "text": "Il y a un grand miroir" },
+          { "order": 11, "text": "La fenêtre donne sur le jardin" },
+          { "order": 12, "text": "Je range ma chambre" },
+          { "order": 13, "text": "Le sol est en bois" },
+          { "order": 14, "text": "C'est ma chambre personnelle" },
+          { "order": 15, "text": "Bonne nuit, je vais dormir" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 67,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Dans la salle de bain",
+        "phrases": [
+          { "order": 1, "text": "Je prends une douche" },
+          { "order": 2, "text": "Je prends un bain" },
+          { "order": 3, "text": "L'eau est chaude" },
+          { "order": 4, "text": "Il y a du savon" },
+          { "order": 5, "text": "Le shampoing est là" },
+          { "order": 6, "text": "J'ai besoin d'une serviette" },
+          { "order": 7, "text": "Je me lave le visage" },
+          { "order": 8, "text": "Je me brosse les cheveux" },
+          { "order": 9, "text": "Voici ma brosse à dents" },
+          { "order": 10, "text": "Le dentifrice est sur le lavabo" },
+          { "order": 11, "text": "Il y a un miroir au-dessus du lavabo" },
+          { "order": 12, "text": "Les toilettes sont à côté" },
+          { "order": 13, "text": "Je me rase le matin" },
+          { "order": 14, "text": "La salle de bain est propre" },
+          { "order": 15, "text": "Je me regarde dans la glace" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 68,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Verbes réguliers en -ir (A1)",
+        "phrases": [
+          { "order": 1, "text": "Je finis mon travail" },
+          { "order": 2, "text": "Tu finis ton repas" },
+          { "order": 3, "text": "Il finit à six heures" },
+          { "order": 4, "text": "Elle choisit une robe" },
+          { "order": 5, "text": "Nous choisissons un film" },
+          { "order": 6, "text": "Vous choisissez le menu" },
+          { "order": 7, "text": "Ils choisissent leur destination" },
+          { "order": 8, "text": "Je réussis mon examen" },
+          { "order": 9, "text": "Tu réussis tes exercices" },
+          { "order": 10, "text": "L'enfant grandit vite" },
+          { "order": 11, "text": "Nous grandissons tous" },
+          { "order": 12, "text": "Vous rougissez un peu" },
+          { "order": 13, "text": "Elle réfléchit à la question" },
+          { "order": 14, "text": "Ils obéissent aux parents" },
+          { "order": 15, "text": "Je finis ma phrase" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 69,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Aller + Lieu",
+        "phrases": [
+          { "order": 1, "text": "Je vais au cinéma" },
+          { "order": 2, "text": "Tu vas à la bibliothèque" },
+          { "order": 3, "text": "Il va au bureau" },
+          { "order": 4, "text": "Elle va à l'école" },
+          { "order": 5, "text": "Nous allons au parc" },
+          { "order": 6, "text": "Vous allez au restaurant ?" },
+          { "order": 7, "text": "Ils vont au théâtre" },
+          { "order": 8, "text": "Elles vont à la piscine" },
+          { "order": 9, "text": "Je vais à Paris" },
+          { "order": 10, "text": "Tu vas en France" },
+          { "order": 11, "text": "Il va aux États-Unis" },
+          { "order": 12, "text": "Elle va en Italie" },
+          { "order": 13, "text": "Nous allons en vacances" },
+          { "order": 14, "text": "Où allez-vous ?" },
+          { "order": 15, "text": "Je vais chez le coiffeur" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 70,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Le futur proche (aller + infinitif)",
+        "phrases": [
+          { "order": 1, "text": "Je vais manger bientôt" },
+          { "order": 2, "text": "Tu vas dormir maintenant" },
+          { "order": 3, "text": "Il va pleuvoir ce soir" },
+          { "order": 4, "text": "Elle va arriver tard" },
+          { "order": 5, "text": "Nous allons partir demain" },
+          { "order": 6, "text": "Vous allez voir un film" },
+          { "order": 7, "text": "Ils vont chanter une chanson" },
+          { "order": 8, "text": "Je vais travailler lundi" },
+          { "order": 9, "text": "Tu vas acheter du pain ?" },
+          { "order": 10, "text": "Il va faire beau demain" },
+          { "order": 11, "text": "Nous allons fêter ça" },
+          { "order": 12, "text": "Vous allez comprendre vite" },
+          { "order": 13, "text": "Elles vont danser ensemble" },
+          { "order": 14, "text": "Je vais téléphoner à maman" },
+          { "order": 15, "text": "On va s'amuser !" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 71,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les adverbes de fréquence",
+        "phrases": [
+          { "order": 1, "text": "Je mange toujours à midi" },
+          { "order": 2, "text": "Il travaille souvent le samedi" },
+          { "order": 3, "text": "Elle boit parfois du thé" },
+          { "order": 4, "text": "Nous allons rarement au cinéma" },
+          { "order": 5, "text": "Je ne fume jamais" },
+          { "order": 6, "text": "D'habitude, je me lève tôt" },
+          { "order": 7, "text": "Il est toujours en retard" },
+          { "order": 8, "text": "Elle étudie tous les jours" },
+          { "order": 9, "text": "Nous sortons une fois par semaine" },
+          { "order": 10, "text": "Il pleut souvent ici" },
+          { "order": 11, "text": "Je prends le bus chaque matin" },
+          { "order": 12, "text": "Elle regarde la télé le soir" },
+          { "order": 13, "text": "Vous voyagez de temps en temps" },
+          { "order": 14, "text": "Ils courent régulièrement" },
+          { "order": 15, "text": "C'est ma routine habituelle" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 72,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Exprimer la quantité",
+        "phrases": [
+          { "order": 1, "text": "Je mange un peu de pain" },
+          { "order": 2, "text": "Il boit beaucoup d'eau" },
+          { "order": 3, "text": "Il y a trop de sucre" },
+          { "order": 4, "text": "Elle a assez d'argent" },
+          { "order": 5, "text": "Nous voulons plus de fruits" },
+          { "order": 6, "text": "Je prends moins de sel" },
+          { "order": 7, "text": "Il n'y a pas assez de chaises" },
+          { "order": 8, "text": "Il y a beaucoup d'étudiants" },
+          { "order": 9, "text": "Donnez-moi un peu de lait" },
+          { "order": 10, "text": "Il travaille trop" },
+          { "order": 11, "text": "Elle a beaucoup d'amis" },
+          { "order": 12, "text": "J'ai assez mangé" },
+          { "order": 13, "text": "Il y a trop de voitures" },
+          { "order": 14, "text": "Un kilo de sucre, s'il vous plaît" },
+          { "order": 15, "text": "Un litre d'huile" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 73,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les saisons",
+        "phrases": [
+          { "order": 1, "text": "Le printemps commence en mars" },
+          { "order": 2, "text": "Les fleurs poussent au printemps" },
+          { "order": 3, "text": "L'été est la saison la plus chaude" },
+          { "order": 4, "text": "On va à la mer en été" },
+          { "order": 5, "text": "L'automne est une saison pluvieuse" },
+          { "order": 6, "text": "Les feuilles tombent en automne" },
+          { "order": 7, "text": "L'hiver est froid" },
+          { "order": 8, "text": "Il neige souvent en hiver" },
+          { "order": 9, "text": "Quelle est ta saison préférée ?" },
+          { "order": 10, "text": "J'adore les couleurs de l'automne" },
+          { "order": 11, "text": "Le soleil brille en été" },
+          { "order": 12, "text": "Les oiseaux chantent au printemps" },
+          { "order": 13, "text": "Il fait nuit tôt en hiver" },
+          { "order": 14, "text": "C'est une belle saison" },
+          { "order": 15, "text": "Les vacances sont en été" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 74,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La communication simple",
+        "phrases": [
+          { "order": 1, "text": "Allô, qui est à l'appareil ?" },
+          { "order": 2, "text": "Je voudrais parler à Paul" },
+          { "order": 3, "text": "Ne quittez pas, s'il vous plaît" },
+          { "order": 4, "text": "Un instant, s'il vous plaît" },
+          { "order": 5, "text": "Je vous entends mal" },
+          { "order": 6, "text": "Pouvez-vous parler plus fort ?" },
+          { "order": 7, "text": "Je vous rappelle plus tard" },
+          { "order": 8, "text": "Laissez un message après le bip" },
+          { "order": 9, "text": "Voici mon numéro de téléphone" },
+          { "order": 10, "text": "J'envoie un SMS" },
+          { "order": 11, "text": "Quel est votre e-mail ?" },
+          { "order": 12, "text": "Je vous envoie un courriel" },
+          { "order": 13, "text": "Merci pour l'appel" },
+          { "order": 14, "text": "Je n'ai plus de batterie" },
+          { "order": 15, "text": "À bientôt au téléphone" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 75,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Vouloir, Pouvoir, Devoir",
+        "phrases": [
+          { "order": 1, "text": "Je veux un gâteau" },
+          { "order": 2, "text": "Tu veux sortir ?" },
+          { "order": 3, "text": "Il veut partir" },
+          { "order": 4, "text": "Je peux vous aider ?" },
+          { "order": 5, "text": "Tu peux parler français ?" },
+          { "order": 6, "text": "Il peut venir ce soir" },
+          { "order": 7, "text": "Je dois travailler" },
+          { "order": 8, "text": "Tu dois étudier" },
+          { "order": 9, "text": "Il doit partir maintenant" },
+          { "order": 10, "text": "Nous voulons manger" },
+          { "order": 11, "text": "Vous pouvez m'aider ?" },
+          { "order": 12, "text": "Ils doivent dormir" },
+          { "order": 13, "text": "Je ne peux pas venir" },
+          { "order": 14, "text": "Tu ne dois pas fumer" },
+          { "order": 15, "text": "On peut y aller ?" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 76,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "L'école et les études",
+        "phrases": [
+          { "order": 1, "text": "Je suis à l'école" },
+          { "order": 2, "text": "Le professeur explique la leçon" },
+          { "order": 3, "text": "Les élèves écoutent" },
+          { "order": 4, "text": "J'ai un examen demain" },
+          { "order": 5, "text": "Je révise mes cours" },
+          { "order": 6, "text": "Il y a beaucoup de devoirs" },
+          { "order": 7, "text": "J'aime les mathématiques" },
+          { "order": 8, "text": "Le français est difficile mais beau" },
+          { "order": 9, "text": "Où est ton sac d'école ?" },
+          { "order": 10, "text": "C'est mon cahier de texte" },
+          { "order": 11, "text": "Le professeur écrit au tableau" },
+          { "order": 12, "text": "La récréation commence" },
+          { "order": 13, "text": "La bibliothèque est silencieuse" },
+          { "order": 14, "text": "Je passe mon bac" },
+          { "order": 15, "text": "L'école finit à quatre heures" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 77,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Vêtements et accessoires (2)",
+        "phrases": [
+          { "order": 1, "text": "Je mets mon écharpe" },
+          { "order": 2, "text": "Il porte un bonnet" },
+          { "order": 3, "text": "Elle a des gants" },
+          { "order": 4, "text": "Je porte ma ceinture" },
+          { "order": 5, "text": "C'est une jolie montre" },
+          { "order": 6, "text": "Il a une casquette bleue" },
+          { "order": 7, "text": "Le manteau est trop grand" },
+          { "order": 8, "text": "Les chaussettes sont blanches" },
+          { "order": 9, "text": "Je cherche mon portefeuille" },
+          { "order": 10, "text": "Elle porte des bijoux" },
+          { "order": 11, "text": "Il met ses bottes" },
+          { "order": 12, "text": "Le pyjama est confortable" },
+          { "order": 13, "text": "Le maillot est dans le sac" },
+          { "order": 14, "text": "Je change mes chaussures" },
+          { "order": 15, "text": "C'est une cravate en soie" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 78,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Comparer des objets",
+        "phrases": [
+          { "order": 1, "text": "C'est plus grand" },
+          { "order": 2, "text": "C'est moins cher" },
+          { "order": 3, "text": "C'est aussi beau" },
+          { "order": 4, "text": "Ce livre est meilleur" },
+          { "order": 5, "text": "Cette voiture est plus rapide" },
+          { "order": 6, "text": "Le café est plus chaud que le thé" },
+          { "order": 7, "text": "La pomme est plus sucrée" },
+          { "order": 8, "text": "C'est moins loin que je pensais" },
+          { "order": 9, "text": "Il est plus grand que son frère" },
+          { "order": 10, "text": "Elle est moins timide maintenant" },
+          { "order": 11, "text": "C'est la même couleur" },
+          { "order": 12, "text": "C'est différent" },
+          { "order": 13, "text": "C'est plus facile comme ça" },
+          { "order": 14, "text": "C'est moins dangereux" },
+          { "order": 15, "text": "Le meilleur est ici" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 79,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "L'environnement",
+        "phrases": [
+          { "order": 1, "text": "La nature est belle" },
+          { "order": 2, "text": "Il y a beaucoup d'arbres" },
+          { "order": 3, "text": "Les fleurs sentent bon" },
+          { "order": 4, "text": "L'air est pur à la campagne" },
+          { "order": 5, "text": "La rivière coule doucement" },
+          { "order": 6, "text": "Le ciel est dégagé" },
+          { "order": 7, "text": "Il faut protéger la planète" },
+          { "order": 8, "text": "Le soleil est une source d'énergie" },
+          { "order": 9, "text": "Je recycle le papier" },
+          { "order": 10, "text": "Il y a des animaux dans la forêt" },
+          { "order": 11, "text": "La montagne est haute" },
+          { "order": 12, "text": "L'herbe est mouillée" },
+          { "order": 13, "text": "Il y a un arc-en-ciel" },
+          { "order": 14, "text": "La mer est calme aujourd'hui" },
+          { "order": 15, "text": "C'est un beau paysage naturel" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 80,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les loisirs et sports",
+        "phrases": [
+          { "order": 1, "text": "Je fais du tennis" },
+          { "order": 2, "text": "Il fait du vélo le week-end" },
+          { "order": 3, "text": "Elle fait du yoga" },
+          { "order": 4, "text": "Nous faisons de la natation" },
+          { "order": 5, "text": "Ils jouent au basket" },
+          { "order": 6, "text": "Je cours tous les matins" },
+          { "order": 7, "text": "C'est un match important" },
+          { "order": 8, "text": "Qui gagne le match ?" },
+          { "order": 9, "text": "Le score est de un à zéro" },
+          { "order": 10, "text": "Je supporte l'équipe de France" },
+          { "order": 11, "text": "C'est un sport d'équipe" },
+          { "order": 12, "text": "Elle aime la gym" },
+          { "order": 13, "text": "Il est très sportif" },
+          { "order": 14, "text": "Je vais au stade" },
+          { "order": 15, "text": "C'est mon activité préférée" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 81,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Arts et Culture",
+        "phrases": [
+          { "order": 1, "text": "J'aime la peinture" },
+          { "order": 2, "text": "Nous allons au musée" },
+          { "order": 3, "text": "C'est un beau tableau" },
+          { "order": 4, "text": "L'artiste est célèbre" },
+          { "order": 5, "text": "J'écoute de la musique classique" },
+          { "order": 6, "text": "Elle joue du violon" },
+          { "order": 7, "text": "Il y a un concert ce soir" },
+          { "order": 8, "text": "J'aime lire des romans" },
+          { "order": 9, "text": "C'est un écrivain français" },
+          { "order": 10, "text": "Nous allons au théâtre" },
+          { "order": 11, "text": "La pièce est intéressante" },
+          { "order": 12, "text": "Il dessine très bien" },
+          { "order": 13, "text": "C'est une sculpture moderne" },
+          { "order": 14, "text": "J'adore le cinéma" },
+          { "order": 15, "text": "La culture est importante" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 82,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Voyager à l'étranger",
+        "phrases": [
+          { "order": 1, "text": "Je prépare ma valise" },
+          { "order": 2, "text": "J'ai mon passeport" },
+          { "order": 3, "text": "Je prends l'avion à dix heures" },
+          { "order": 4, "text": "L'aéroport est grand" },
+          { "order": 5, "text": "Voici ma carte d'embarquement" },
+          { "order": 6, "text": "Je voyage en Italie" },
+          { "order": 7, "text": "Je réserve un hôtel" },
+          { "order": 8, "text": "Je visite la ville" },
+          { "order": 9, "text": "Je prends des photos" },
+          { "order": 10, "text": "Le vol est à l'heure" },
+          { "order": 11, "text": "J'aime découvrir de nouveaux pays" },
+          { "order": 12, "text": "Où est le terminal ?" },
+          { "order": 13, "text": "Je parle un peu la langue" },
+          { "order": 14, "text": "C'est un voyage inoubliable" },
+          { "order": 15, "text": "Bonnes vacances !" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 83,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Exprimer l'opinion",
+        "phrases": [
+          { "order": 1, "text": "À mon avis, c'est bien" },
+          { "order": 2, "text": "Je pense que oui" },
+          { "order": 3, "text": "Je crois que non" },
+          { "order": 4, "text": "Qu'est-ce que tu en penses ?" },
+          { "order": 5, "text": "Je suis d'accord" },
+          { "order": 6, "text": "Je ne suis pas d'accord" },
+          { "order": 7, "text": "C'est vrai" },
+          { "order": 8, "text": "C'est faux" },
+          { "order": 9, "text": "C'est une bonne idée" },
+          { "order": 10, "text": "C'est dommage" },
+          { "order": 11, "text": "Je trouve ça intéressant" },
+          { "order": 12, "text": "C'est magnifique !" },
+          { "order": 13, "text": "C'est possible" },
+          { "order": 14, "text": "Tu as raison" },
+          { "order": 15, "text": "C'est difficile à dire" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 84,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les corvées ménagères",
+        "phrases": [
+          { "order": 1, "text": "Je fais la vaisselle" },
+          { "order": 2, "text": "Je nettoie la table" },
+          { "order": 3, "text": "Je passe l'aspirateur" },
+          { "order": 4, "text": "Je fais mon lit" },
+          { "order": 5, "text": "Je lave le sol" },
+          { "order": 6, "text": "Je range mes affaires" },
+          { "order": 7, "text": "Je fais la cuisine" },
+          { "order": 8, "text": "Il faut sortir la poubelle" },
+          { "order": 9, "text": "Je lave mes vêtements" },
+          { "order": 10, "text": "Je repasse ma chemise" },
+          { "order": 11, "text": "La maison est propre" },
+          { "order": 12, "text": "Il y a beaucoup de poussière" },
+          { "order": 13, "text": "Peux-tu m'aider à ranger ?" },
+          { "order": 14, "text": "Le jardin est en désordre" },
+          { "order": 15, "text": "Tout est prêt maintenant" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 85,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Santé et Hygiène",
+        "phrases": [
+          { "order": 1, "text": "Lavez-vous les mains" },
+          { "order": 2, "text": "Brossez-vous les dents" },
+          { "order": 3, "text": "Je prends une douche" },
+          { "order": 4, "text": "C'est important d'être propre" },
+          { "order": 5, "text": "Il faut manger sainement" },
+          { "order": 6, "text": "Je bois beaucoup d'eau" },
+          { "order": 7, "text": "Je fais du sport pour ma santé" },
+          { "order": 8, "text": "Je dors bien la nuit" },
+          { "order": 9, "text": "Voici du savon" },
+          { "order": 10, "text": "Utilisez un mouchoir" },
+          { "order": 11, "text": "Le médecin me conseille" },
+          { "order": 12, "text": "Je me sens en forme" },
+          { "order": 13, "text": "Elle a bonne mine" },
+          { "order": 14, "text": "Il faut se reposer" },
+          { "order": 15, "text": "Prends soin de toi" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 86,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Technologie simple",
+        "phrases": [
+          { "order": 1, "text": "Où est la télécommande ?" },
+          { "order": 2, "text": "Allume la télévision" },
+          { "order": 3, "text": "Éteins la lumière" },
+          { "order": 4, "text": "Mon téléphone sonne" },
+          { "order": 5, "text": "J'écoute de la musique" },
+          { "order": 6, "text": "Je regarde une vidéo" },
+          { "order": 7, "text": "C'est une tablette tactile" },
+          { "order": 8, "text": "J'ai besoin d'un chargeur" },
+          { "order": 9, "text": "La batterie est pleine" },
+          { "order": 10, "text": "Je prends un selfie" },
+          { "order": 11, "text": "Envoie-moi le lien" },
+          { "order": 12, "text": "Je télécharge une application" },
+          { "order": 13, "text": "C'est un gadget utile" },
+          { "order": 14, "text": "L'écran est cassé" },
+          { "order": 15, "text": "Internet est rapide" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 87,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les sorties",
+        "phrases": [
+          { "order": 1, "text": "On sort ce soir ?" },
+          { "order": 2, "text": "On va au restaurant" },
+          { "order": 3, "text": "Je t'invite" },
+          { "order": 4, "text": "On se retrouve à huit heures" },
+          { "order": 5, "text": "C'est devant le cinéma" },
+          { "order": 6, "text": "Je suis en route" },
+          { "order": 7, "text": "On va boire un verre" },
+          { "order": 8, "text": "La soirée est agréable" },
+          { "order": 9, "text": "Il y a du monde" },
+          { "order": 10, "text": "C'est une ambiance sympa" },
+          { "order": 11, "text": "On s'amuse bien" },
+          { "order": 12, "text": "Tu viens avec nous ?" },
+          { "order": 13, "text": "C'est une sortie entre amis" },
+          { "order": 14, "text": "On rentre en taxi" },
+          { "order": 15, "text": "À plus tard !" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 88,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "La banque et l'argent",
+        "phrases": [
+          { "order": 1, "text": "Où est la banque ?" },
+          { "order": 2, "text": "Où est le distributeur ?" },
+          { "order": 3, "text": "Je voudrais retirer de l'argent" },
+          { "order": 4, "text": "J'ai ma carte bancaire" },
+          { "order": 5, "text": "C'est gratuit" },
+          { "order": 6, "text": "C'est payant" },
+          { "order": 7, "text": "Quel est le prix ?" },
+          { "order": 8, "text": "Je paye par carte" },
+          { "order": 9, "text": "Vous avez de la monnaie ?" },
+          { "order": 10, "text": "C'est un billet de dix euros" },
+          { "order": 11, "text": "C'est une pièce de deux euros" },
+          { "order": 12, "text": "J'ai besoin d'un reçu" },
+          { "order": 13, "text": "L'argent ne fait pas le bonheur" },
+          { "order": 14, "text": "C'est cher pour moi" },
+          { "order": 15, "text": "C'est une bonne affaire" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 89,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Le travail et le bureau",
+        "phrases": [
+          { "order": 1, "text": "Je travaille dans un bureau" },
+          { "order": 2, "text": "J'ai une réunion à dix heures" },
+          { "order": 3, "text": "Voici mon collègue" },
+          { "order": 4, "text": "Je réponds au téléphone" },
+          { "order": 5, "text": "J'écris un rapport" },
+          { "order": 6, "text": "Où est l'imprimante ?" },
+          { "order": 7, "text": "J'ai besoin de papier" },
+          { "order": 8, "text": "Je suis très occupé" },
+          { "order": 9, "text": "C'est mon chef" },
+          { "order": 10, "text": "Je travaille sur ordinateur" },
+          { "order": 11, "text": "La pause café est à onze heures" },
+          { "order": 12, "text": "Je finis ma journée" },
+          { "order": 13, "text": "Le bureau est au troisième étage" },
+          { "order": 14, "text": "Je cherche un document" },
+          { "order": 15, "text": "Bon courage pour ton travail" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 90,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Vivre en ville",
+        "phrases": [
+          { "order": 1, "text": "La ville est bruyante" },
+          { "order": 2, "text": "Il y a beaucoup de circulation" },
+          { "order": 3, "text": "Le métro est rapide" },
+          { "order": 4, "text": "J'habite en centre-ville" },
+          { "order": 5, "text": "Le quartier est calme" },
+          { "order": 6, "text": "Il y a un parc près d'ici" },
+          { "order": 7, "text": "Les magasins sont ouverts" },
+          { "order": 8, "text": "La rue est étroite" },
+          { "order": 9, "text": "C'est un bel immeuble" },
+          { "order": 10, "text": "Il y a des monuments historiques" },
+          { "order": 11, "text": "La ville est illuminée le soir" },
+          { "order": 12, "text": "Je marche sur le trottoir" },
+          { "order": 13, "text": "C'est une grande métropole" },
+          { "order": 14, "text": "Il y a trop de pollution" },
+          { "order": 15, "text": "J'aime la vie citadine" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 91,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Le logement",
+        "phrases": [
+          { "order": 1, "text": "Je cherche un appartement" },
+          { "order": 2, "text": "Le loyer est cher" },
+          { "order": 3, "text": "Il y a trois pièces" },
+          { "order": 4, "text": "C'est au deuxième étage" },
+          { "order": 5, "text": "Il y a un ascenseur" },
+          { "order": 6, "text": "Le balcon est petit" },
+          { "order": 7, "text": "La cuisine est équipée" },
+          { "order": 8, "text": "C'est un quartier résidentiel" },
+          { "order": 9, "text": "Je signe le contrat" },
+          { "order": 10, "text": "J'ai les clés de l'appartement" },
+          { "order": 11, "text": "L'immeuble est moderne" },
+          { "order": 12, "text": "Il y a un parking" },
+          { "order": 13, "text": "C'est très lumineux" },
+          { "order": 14, "text": "C'est un studio pour étudiant" },
+          { "order": 15, "text": "Je déménage demain" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 92,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Le temps (Durée)",
+        "phrases": [
+          { "order": 1, "text": "Ça prend cinq minutes" },
+          { "order": 2, "text": "J'ai une heure de pause" },
+          { "order": 3, "text": "Pendant la journée, je travaille" },
+          { "order": 4, "text": "Il y a deux semaines" },
+          { "order": 5, "text": "Le mois prochain, je pars" },
+          { "order": 6, "text": "L'année dernière, j'étais ici" },
+          { "order": 7, "text": "C'est bientôt fini" },
+          { "order": 8, "text": "Attends un instant" },
+          { "order": 9, "text": "Ça dure longtemps" },
+          { "order": 10, "text": "C'est pour trois jours" },
+          { "order": 11, "text": "Depuis hier, il pleut" },
+          { "order": 12, "text": "Dans dix minutes, on arrive" },
+          { "order": 13, "text": "C'est pour toute la vie" },
+          { "order": 14, "text": "À tout à l'heure !" },
+          { "order": 15, "text": "Le temps passe vite" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 93,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Adverbes de lieu",
+        "phrases": [
+          { "order": 1, "text": "Viens ici" },
+          { "order": 2, "text": "Regarde là-bas" },
+          { "order": 3, "text": "C'est partout" },
+          { "order": 4, "text": "Ce n'est nulle part" },
+          { "order": 5, "text": "Il est dehors" },
+          { "order": 6, "text": "Elle est dedans" },
+          { "order": 7, "text": "Monte en haut" },
+          { "order": 8, "text": "Descends en bas" },
+          { "order": 9, "text": "C'est devant" },
+          { "order": 10, "text": "C'est derrière" },
+          { "order": 11, "text": "C'est à l'intérieur" },
+          { "order": 12, "text": "C'est à l'extérieur" },
+          { "order": 13, "text": "Où est mon sac ?" },
+          { "order": 14, "text": "Il est juste là" },
+          { "order": 15, "text": "C'est loin d'ici" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 94,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Exprimer la cause (Parce que)",
+        "phrases": [
+          { "order": 1, "text": "Je mange parce que j'ai faim" },
+          { "order": 2, "text": "Il boit parce qu'il a soif" },
+          { "order": 3, "text": "Elle pleure parce qu'elle est triste" },
+          { "order": 4, "text": "Je dors parce que je suis fatigué" },
+          { "order": 5, "text": "Il étudie parce qu'il a un examen" },
+          { "order": 6, "text": "Nous restons parce qu'il pleut" },
+          { "order": 7, "text": "Je ris parce que c'est drôle" },
+          { "order": 8, "text": "Elle vient parce qu'elle m'aime" },
+          { "order": 9, "text": "Pourquoi tu pars ?" },
+          { "order": 10, "text": "Parce que c'est l'heure" },
+          {
+            "order": 11,
+            "text": "Il est en retard parce qu'il y a du trafic."
+          },
+          {
+            "order": 12,
+            "text": "Je suis heureux parce que c'est le week-end."
+          },
+          {
+            "order": 13,
+            "text": "Ils ne viennent pas parce qu'ils sont malades."
+          },
+          { "order": 14, "text": "Elle achète ça parce que c'est joli" },
+          { "order": 15, "text": "Je demande parce que je ne sais pas" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 95,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Verbes de perception",
+        "phrases": [
+          { "order": 1, "text": "Je vois un oiseau" },
+          { "order": 2, "text": "J'entends de la musique" },
+          { "order": 3, "text": "Je sens une bonne odeur" },
+          { "order": 4, "text": "Je touche le mur" },
+          { "order": 5, "text": "Je goûte la soupe" },
+          { "order": 6, "text": "Tu entends ce bruit ?" },
+          { "order": 7, "text": "Regarde cette photo" },
+          { "order": 8, "text": "Écoute ce chanteur" },
+          { "order": 9, "text": "Le café sent très bon" },
+          { "order": 10, "text": "Le gâteau est délicieux" },
+          { "order": 11, "text": "Elle voit tout" },
+          { "order": 12, "text": "Nous écoutons le professeur" },
+          { "order": 13, "text": "Vous regardez un film" },
+          { "order": 14, "text": "Je sens le vent sur mon visage" },
+          { "order": 15, "text": "C'est beau à voir" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 96,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Demander et donner des conseils",
+        "phrases": [
+          { "order": 1, "text": "Qu'est-ce que je dois faire ?" },
+          { "order": 2, "text": "Tu devrais dormir" },
+          { "order": 3, "text": "C'est une bonne idée" },
+          { "order": 4, "text": "Mange des légumes" },
+          { "order": 5, "text": "Ne fume pas" },
+          { "order": 6, "text": "Fais du sport" },
+          { "order": 7, "text": "Étudie un peu plus" },
+          { "order": 8, "text": "Sois prudent" },
+          { "order": 9, "text": "Prends ton temps" },
+          { "order": 10, "text": "Parle avec ton professeur" },
+          { "order": 11, "text": "Écoute tes parents" },
+          { "order": 12, "text": "N'oublie pas tes clés" },
+          { "order": 13, "text": "Sois gentil avec elle" },
+          { "order": 14, "text": "Apprends tes leçons" },
+          { "order": 15, "text": "Bonne chance !" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 97,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Les réseaux sociaux et applications",
+        "phrases": [
+          { "order": 1, "text": "Je poste une photo" },
+          { "order": 2, "text": "Je commente ton statut" },
+          { "order": 3, "text": "J'aime ton message" },
+          { "order": 4, "text": "Je partage la vidéo" },
+          { "order": 5, "text": "Ajoute-moi sur les réseaux" },
+          { "order": 6, "text": "J'ai une nouvelle notification" },
+          { "order": 7, "text": "Je change ma photo de profil" },
+          { "order": 8, "text": "Je regarde mes messages" },
+          { "order": 9, "text": "Elle a beaucoup d'abonnés" },
+          { "order": 10, "text": "C'est une application gratuite" },
+          { "order": 11, "text": "Je bloque cet utilisateur" },
+          { "order": 12, "text": "Je suis en ligne" },
+          { "order": 13, "text": "Je t'envoie un lien" },
+          { "order": 14, "text": "Quel est ton nom d'utilisateur ?" },
+          { "order": 15, "text": "Le réseau est lent" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 98,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Situations d'urgence",
+        "phrases": [
+          { "order": 1, "text": "Au secours !" },
+          { "order": 2, "text": "Aidez-moi, s'il vous plaît" },
+          { "order": 3, "text": "Appelez la police !" },
+          { "order": 4, "text": "Appelez une ambulance !" },
+          { "order": 5, "text": "Il y a un incendie !" },
+          { "order": 6, "text": "Où est la sortie de secours ?" },
+          { "order": 7, "text": "J'ai perdu mon sac" },
+          { "order": 8, "text": "On m'a volé mon téléphone" },
+          { "order": 9, "text": "Je suis blessé" },
+          { "order": 10, "text": "Attention !" },
+          { "order": 11, "text": "C'est dangereux !" },
+          { "order": 12, "text": "Où est l'hôpital le plus proche ?" },
+          { "order": 13, "text": "Je ne me sens pas bien" },
+          { "order": 14, "text": "Vite !" },
+          { "order": 15, "text": "Tout va bien maintenant" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 99,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Prendre congé",
+        "phrases": [
+          { "order": 1, "text": "Je dois partir" },
+          { "order": 2, "text": "Il se fait tard" },
+          { "order": 3, "text": "À demain !" },
+          { "order": 4, "text": "À lundi !" },
+          { "order": 5, "text": "À bientôt !" },
+          { "order": 6, "text": "À tout à l'heure !" },
+          { "order": 7, "text": "À plus tard !" },
+          { "order": 8, "text": "Bonne soirée" },
+          { "order": 9, "text": "Bonne nuit" },
+          { "order": 10, "text": "Bon week-end !" },
+          { "order": 11, "text": "Bon voyage !" },
+          { "order": 12, "text": "Passe une bonne journée" },
+          { "order": 13, "text": "Au revoir, monsieur" },
+          { "order": 14, "text": "Salut, à la prochaine !" },
+          { "order": 15, "text": "On se voit bientôt" }
+        ]
+      }
+    ]
+  },
+  {
+    "lessonId": 100,
+    "phrases": [
+      {
+        "order": 1,
+        "title": "Récapitulation et Politesse finale",
+        "phrases": [
+          { "order": 1, "text": "Merci beaucoup pour tout" },
+          { "order": 2, "text": "C'était un plaisir" },
+          { "order": 3, "text": "Je suis ravi de vous connaître" },
+          { "order": 4, "text": "De rien" },
+          { "order": 5, "text": "Je vous en prie" },
+          { "order": 6, "text": "Pas de problème" },
+          { "order": 7, "text": "C'est très gentil à vous" },
+          { "order": 8, "text": "Je vous souhaite une bonne journée" },
+          { "order": 9, "text": "Tenez-moi au courant" },
+          { "order": 10, "text": "Pardonnez-moi" },
+          { "order": 11, "text": "Excusez-moi, s'il vous plaît" },
+          { "order": 12, "text": "Bienvenue chez nous" },
+          { "order": 13, "text": "Faites comme chez vous" },
+          { "order": 14, "text": "À la vôtre !" },
+          { "order": 15, "text": "Bonne chance pour la suite !" }
+        ]
+      }
+    ]
+  }
+]
