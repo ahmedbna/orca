@@ -6,6 +6,7 @@ import { setAudioModeAsync } from 'expo-audio';
 import { createDownloadResumable } from 'expo-file-system/legacy';
 import { unzip } from 'react-native-zip-archive';
 import TTS from 'react-native-sherpa-onnx-offline-tts';
+import { Platform } from 'react-native';
 
 export interface PiperModel {
   id: string;
@@ -66,56 +67,171 @@ export function usePiperTTS() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
   const [currentModelId, setCurrentModelId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const isReadyRef = useRef(false);
   const isSpeakingRef = useRef(false);
+  const initializationAttempts = useRef<Record<string, number>>({});
 
-  // 1. SILENCE THE WARNING: Register a listener for VolumeUpdate
+  // Configure audio session for production
+  // const configureAudioSession = async () => {
+  //   try {
+  //     await setAudioModeAsync({
+  //       playsInSilentMode: true,
+  //       shouldPlayInBackground: false,
+  //       interruptionMode: 'duckOthers',
+  //     });
+  //     console.log('✅ Audio session configured');
+  //     return true;
+  //   } catch (error) {
+  //     console.error('❌ Audio session config failed:', error);
+  //     return false;
+  //   }
+  // };
+
+  // Volume listener for production
   useEffect(() => {
-    const subscription = TTS.addVolumeListener?.((volume: number) => {
-      // You can use this volume value (0.0 to 1.0) for a UI visualizer
-    });
-    return () => {
-      if (subscription?.remove) subscription.remove();
-    };
+    if (!TTS?.addVolumeListener) {
+      console.warn('⚠️ TTS.addVolumeListener not available');
+      return;
+    }
+
+    try {
+      const subscription = TTS.addVolumeListener((volume: number) => {
+        // Volume monitoring for debugging in production
+        if (__DEV__) {
+          console.log('🔊 TTS Volume:', volume);
+        }
+      });
+
+      return () => {
+        try {
+          subscription?.remove?.();
+        } catch (e) {
+          console.warn('Failed to remove volume listener:', e);
+        }
+      };
+    } catch (error) {
+      console.error('Failed to add volume listener:', error);
+    }
   }, []);
 
   const getTTSDirectory = useCallback(async () => {
-    const dir = new Directory(Paths.document, 'piper-models');
-    if (!dir.exists) {
-      await dir.create({ intermediates: true });
+    try {
+      const dir = new Directory(Paths.document, 'piper-models');
+
+      if (!dir.exists) {
+        await dir.create({ intermediates: true });
+        console.log('✅ Created TTS directory:', dir.uri);
+      }
+
+      return dir;
+    } catch (error) {
+      console.error('❌ Failed to create TTS directory:', error);
+      throw new Error('Failed to create model directory');
     }
-    return dir;
   }, []);
+
+  const verifyModelFiles = async (
+    modelDir: Directory,
+    model: PiperModel
+  ): Promise<boolean> => {
+    try {
+      const modelFile = new File(modelDir, model.modelFile);
+      const tokensFile = new File(modelDir, 'tokens.txt');
+      const dataDir = new Directory(modelDir, 'espeak-ng-data');
+
+      const modelExists = modelFile.exists;
+      const tokensExist = tokensFile.exists;
+      const dataDirExists = dataDir.exists;
+
+      console.log('📁 Model verification:', {
+        model: modelExists,
+        tokens: tokensExist,
+        dataDir: dataDirExists,
+      });
+
+      return modelExists && tokensExist && dataDirExists;
+    } catch (error) {
+      console.error('❌ Model verification failed:', error);
+      return false;
+    }
+  };
 
   const downloadAndExtractModel = useCallback(
     async (model: PiperModel) => {
       const baseDir = await getTTSDirectory();
       const modelDir = new Directory(baseDir, model.folderName);
 
+      // Check if model already exists and is valid
       if (modelDir.exists) {
-        return modelDir.uri;
+        const isValid = await verifyModelFiles(modelDir, model);
+        if (isValid) {
+          console.log('✅ Model already exists and is valid');
+          return modelDir.uri;
+        } else {
+          console.log('⚠️ Existing model invalid, re-downloading...');
+          await modelDir.delete();
+        }
       }
 
       setIsDownloading(true);
+      setError(null);
       const zipFile = new File(baseDir, `${model.id}.zip`);
 
       try {
+        console.log('⬇️ Downloading model:', model.url);
+
         const downloader = createDownloadResumable(
           model.url,
           zipFile.uri,
           {},
-          (p) => {
-            const progress = p.totalBytesWritten / p.totalBytesExpectedToWrite;
-            setDownloadProgress((prev) => ({ ...prev, [model.id]: progress }));
+          (progress) => {
+            const pct =
+              progress.totalBytesWritten / progress.totalBytesExpectedToWrite;
+            setDownloadProgress((prev) => ({ ...prev, [model.id]: pct }));
+
+            if (__DEV__) {
+              console.log(`📥 Download progress: ${(pct * 100).toFixed(1)}%`);
+            }
           }
         );
 
-        await downloader.downloadAsync();
+        const result = await downloader.downloadAsync();
+
+        if (!result) {
+          throw new Error('Download failed - no result');
+        }
+
+        console.log('✅ Download complete, extracting...');
+
+        // Extract with error handling
         await unzip(zipFile.uri, baseDir.uri);
+        console.log('✅ Extraction complete');
+
+        // Clean up zip file
         await zipFile.delete();
 
+        // Verify extracted files
+        const isValid = await verifyModelFiles(modelDir, model);
+        if (!isValid) {
+          throw new Error('Extracted model files are incomplete');
+        }
+
         return modelDir.uri;
+      } catch (error) {
+        console.error('❌ Download/Extract error:', error);
+        setError(`Failed to download model: ${error}`);
+
+        // Clean up on failure
+        try {
+          if (zipFile.exists) await zipFile.delete();
+          if (modelDir.exists) await modelDir.delete();
+        } catch (cleanupError) {
+          console.warn('Failed to cleanup:', cleanupError);
+        }
+
+        throw error;
       } finally {
         setIsDownloading(false);
       }
@@ -124,48 +240,72 @@ export function usePiperTTS() {
   );
 
   const initializeTTS = useCallback(
-    async (modelId: string) => {
-      if (isInitializing || currentModelId === modelId) return;
+    async (modelId: string, forceReInit = false) => {
+      // Prevent concurrent initializations
+      if (isInitializing) {
+        console.log('⏳ Already initializing, skipping...');
+        return;
+      }
+
+      // Check if already initialized
+      if (!forceReInit && currentModelId === modelId && isReadyRef.current) {
+        console.log('✅ Model already initialized');
+        return;
+      }
+
+      // Limit retry attempts
+      const attempts = initializationAttempts.current[modelId] || 0;
+      if (attempts >= 3) {
+        setError('Maximum initialization attempts reached');
+        return;
+      }
 
       try {
         setIsInitializing(true);
+        setError(null);
+        initializationAttempts.current[modelId] = attempts + 1;
 
-        try {
-          await setAudioModeAsync({
-            playsInSilentMode: true, // allow playback in silent mode
-            shouldPlayInBackground: false, // only if you want background audio
-            interruptionMode: 'mixWithOthers', // manage other audio
-          });
-        } catch (error) {
-          console.warn('Audio session config failed:', error);
-        }
+        console.log('🎤 Configuring audio session...');
+        // const audioConfigured = await configureAudioSession();
+        // if (!audioConfigured) {
+        //   throw new Error('Failed to configure audio session');
+        // }
 
         const model = PIPER_MODELS.find((m) => m.id === modelId);
-        if (!model) return;
+        if (!model) {
+          throw new Error(`Model not found: ${modelId}`);
+        }
 
+        console.log('📦 Preparing model:', model.id);
         const folderUri = await downloadAndExtractModel(model);
 
-        // 2. PATH FIX: The native engine often fails if 'file://' is present.
-        // We strip it to provide a raw absolute path.
-        const rawPath = folderUri.replace('file://', '');
+        // Remove file:// prefix for native code
+        const rawPath = folderUri.replace(/^file:\/\//, '');
 
-        // 3. CONFIG FIX: Piper models require tokens and the espeak-ng-data folder.
-        // These are included in the .zip files you are downloading.
         const config = {
           modelPath: `${rawPath}/${model.modelFile}`,
           tokensPath: `${rawPath}/tokens.txt`,
           dataDirPath: `${rawPath}/espeak-ng-data`,
-          numThreads: 2,
+          numThreads: Platform.select({ ios: 2, android: 4, default: 2 }),
         };
 
-        console.log('Initializing TTS with path:', config.modelPath);
+        console.log('🚀 Initializing TTS with config:', {
+          modelPath: config.modelPath.substring(0, 50) + '...',
+          platform: Platform.OS,
+        });
+
         await TTS.initialize(JSON.stringify(config));
 
         isReadyRef.current = true;
         setCurrentModelId(modelId);
+        initializationAttempts.current[modelId] = 0; // Reset on success
+
+        console.log('✅ TTS initialized successfully');
       } catch (error) {
-        console.error('TTS Init Error:', error);
+        console.error('❌ TTS Init Error:', error);
         isReadyRef.current = false;
+        setError(`Initialization failed: ${error}`);
+        throw error;
       } finally {
         setIsInitializing(false);
       }
@@ -175,19 +315,41 @@ export function usePiperTTS() {
 
   const speak = useCallback(
     async (text: string, speed = 0.75) => {
-      // Basic guard clauses
-      if (!isReadyRef.current || isInitializing || isSpeakingRef.current) {
-        console.warn('TTS not ready or already speaking');
+      if (!isReadyRef.current) {
+        console.warn('⚠️ TTS not ready');
+        setError('TTS not initialized');
+        return;
+      }
+
+      if (isInitializing) {
+        console.warn('⚠️ TTS still initializing');
+        return;
+      }
+
+      if (isSpeakingRef.current) {
+        console.warn('⚠️ Already speaking');
+        return;
+      }
+
+      if (!text || text.trim().length === 0) {
+        console.warn('⚠️ Empty text provided');
         return;
       }
 
       try {
         isSpeakingRef.current = true;
-        // Arguments: (text, speakerId, speed)
-        // Piper models usually use speakerId 0
-        await TTS.generateAndPlay(text, 0, speed);
-      } catch (e) {
-        console.error('TTS playback error:', e);
+        setError(null);
+
+        console.log(
+          `🗣️ Speaking: "${text.substring(0, 30)}..." at ${speed}x speed`
+        );
+
+        await TTS.generateAndPlay(text.trim(), 0, speed);
+
+        console.log('✅ Speech completed');
+      } catch (error) {
+        console.error('❌ TTS playback error:', error);
+        setError(`Speech failed: ${error}`);
       } finally {
         isSpeakingRef.current = false;
       }
@@ -203,5 +365,7 @@ export function usePiperTTS() {
     isDownloading,
     isInitializing,
     downloadProgress,
+    error,
+    isReady: isReadyRef.current,
   };
 }

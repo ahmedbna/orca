@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'expo-router';
-import { useAudioPlayer } from 'expo-audio';
+// import { useEffect, useRef, useState } from 'react';
+// import { useAudioPlayer } from 'expo-audio';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,7 +17,7 @@ import { Shark } from '@/components/orca/shark';
 import { Seafloor } from '@/components/orca/seafloor';
 import { View } from '@/components/ui/view';
 
-const audioSource = require('@/assets/music/orca.mp3');
+// const audioSource = require('@/assets/music/orca.mp3');
 
 export const Background = ({
   user,
@@ -30,56 +30,56 @@ export const Background = ({
 }) => {
   const yellow = useColor('orca');
   const router = useRouter();
-  const pathname = usePathname();
   const insets = useSafeAreaInsets();
 
-  const [mute, setMute] = useState(false);
-  const userMuteBeforeOrcaRef = useRef<boolean | null>(null);
-  const player = useAudioPlayer(audioSource);
-  const isOrcaRoute = pathname.startsWith('/orca/');
-  const isLearnRoute = pathname.startsWith('/study/');
+  // const pathname = usePathname();
+  // const [mute, setMute] = useState(false);
+  // const userMuteBeforeOrcaRef = useRef<boolean | null>(null);
+  // const player = useAudioPlayer(audioSource);
+  // const isOrcaRoute = pathname.startsWith('/orca/');
+  // const isLearnRoute = pathname.startsWith('/study/');
 
   /**
    * 🎵 Audio lifecycle controller
    */
-  useEffect(() => {
-    if (!player) return;
+  // useEffect(() => {
+  //   if (!player) return;
 
-    const syncAudio = async () => {
-      try {
-        // 🐋 ENTER ORCA
-        if (isOrcaRoute || isLearnRoute) {
-          // Save user preference ONCE
-          if (userMuteBeforeOrcaRef.current === null) {
-            userMuteBeforeOrcaRef.current = mute;
-          }
+  //   const syncAudio = async () => {
+  //     try {
+  //       // 🐋 ENTER ORCA
+  //       if (isOrcaRoute || isLearnRoute) {
+  //         // Save user preference ONCE
+  //         if (userMuteBeforeOrcaRef.current === null) {
+  //           userMuteBeforeOrcaRef.current = mute;
+  //         }
 
-          await player.pause();
-          return;
-        }
+  //         await player.pause();
+  //         return;
+  //       }
 
-        // 🏊 EXIT ORCA
-        if (userMuteBeforeOrcaRef.current !== null) {
-          setMute(userMuteBeforeOrcaRef.current);
-          userMuteBeforeOrcaRef.current = null;
-        }
+  //       // 🏊 EXIT ORCA
+  //       if (userMuteBeforeOrcaRef.current !== null) {
+  //         setMute(userMuteBeforeOrcaRef.current);
+  //         userMuteBeforeOrcaRef.current = null;
+  //       }
 
-        // 🔇 User muted
-        if (mute) {
-          await player.pause();
-          return;
-        }
+  //       // 🔇 User muted
+  //       if (mute) {
+  //         await player.pause();
+  //         return;
+  //       }
 
-        // 🔊 Normal playback
-        player.loop = true;
-        await player.play();
-      } catch (e) {
-        console.warn('Audio sync error:', e);
-      }
-    };
+  //       // 🔊 Normal playback
+  //       player.loop = true;
+  //       await player.play();
+  //     } catch (e) {
+  //       console.warn('Audio sync error:', e);
+  //     }
+  //   };
 
-    syncAudio();
-  }, [isOrcaRoute, isLearnRoute, mute]);
+  //   syncAudio();
+  // }, [isOrcaRoute, isLearnRoute, mute]);
 
   return (
     <View style={{ flex: 1, backgroundColor: yellow }} pointerEvents='box-none'>
@@ -142,7 +142,7 @@ export const Background = ({
         </Button>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          {!isOrcaRoute && !isLearnRoute ? (
+          {/* {!isOrcaRoute && !isLearnRoute ? (
             <Button
               size='icon'
               variant='ghost'
@@ -150,7 +150,7 @@ export const Background = ({
             >
               <Text style={{ fontSize: 36 }}>{mute ? '🔇' : '🔊'}</Text>
             </Button>
-          ) : null}
+          ) : null} */}
 
           <Avatar
             size={42}
