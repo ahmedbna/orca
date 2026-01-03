@@ -98,7 +98,7 @@ export default function RootLayout() {
                 <Stack.Screen name='(home)/profile' />
 
                 <Stack.Screen
-                  name='courses'
+                  name='(modal)/courses'
                   options={{
                     headerShown: false,
                     sheetGrabberVisible: true,
@@ -140,7 +140,49 @@ export default function RootLayout() {
                   }}
                 />
                 <Stack.Screen
-                  name='settings'
+                  name='(modal)/settings'
+                  options={{
+                    headerShown: false,
+                    sheetGrabberVisible: true,
+                    sheetAllowedDetents: [1],
+                    contentStyle: {
+                      backgroundColor:
+                        isLiquidGlassAvailable() && osName !== 'iPadOS'
+                          ? 'transparent'
+                          : colorScheme === 'dark'
+                            ? Colors.dark.card
+                            : Colors.light.card,
+                    },
+                    headerTransparent: Platform.OS === 'ios' ? true : false,
+                    headerLargeTitle: false,
+                    title: '',
+                    presentation:
+                      Platform.OS === 'ios'
+                        ? isLiquidGlassAvailable() && osName !== 'iPadOS'
+                          ? 'formSheet'
+                          : 'modal'
+                        : 'modal',
+                    sheetInitialDetentIndex: 0,
+                    headerStyle: {
+                      backgroundColor:
+                        Platform.OS === 'ios'
+                          ? 'transparent'
+                          : colorScheme === 'dark'
+                            ? Colors.dark.card
+                            : Colors.light.card,
+                    },
+                    headerBlurEffect:
+                      isLiquidGlassAvailable() && osName !== 'iPadOS'
+                        ? undefined
+                        : colorScheme === 'dark'
+                          ? 'dark'
+                          : 'light',
+
+                    animation: 'slide_from_bottom',
+                  }}
+                />
+                <Stack.Screen
+                  name='(modal)/delete'
                   options={{
                     headerShown: false,
                     sheetGrabberVisible: true,

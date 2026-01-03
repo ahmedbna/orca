@@ -21,9 +21,12 @@ export default defineSchema({
     learningLanguage: v.optional(v.string()),
     voiceId: v.optional(v.string()),
     agentId: v.optional(v.string()),
+
+    scheduledForDeletion: v.optional(v.number()), // timestamp
   })
     .index('email', ['email'])
-    .index('phone', ['phone']),
+    .index('phone', ['phone'])
+    .index('scheduledForDeletion', ['scheduledForDeletion']), // Add index for cleanup,
 
   credits: defineTable({
     userId: v.id('users'),

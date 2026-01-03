@@ -1,17 +1,16 @@
-import { api } from '@/convex/_generated/api';
-import { Id } from '@/convex/_generated/dataModel';
-import { useQuery } from 'convex/react';
-import { useLocalSearchParams } from 'expo-router';
+// app/orca/_layout.tsx
+
+import { Slot } from 'expo-router';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
+import { api } from '@/convex/_generated/api';
+import { useQuery } from 'convex/react';
 import { Onboarding } from '@/components/onboarding/onboarding';
-import { usePiperTTS } from '@/hooks/usePiperTTS';
 import { Colors } from '@/theme/colors';
 import { Spinner } from '@/components/ui/spinner';
-import { OrcaGame } from '@/components/orca/orca-game';
+import { usePiperTTS } from '@/hooks/usePiperTTS';
 
-export default function OrcaScreen() {
-  const { id } = useLocalSearchParams<{ id: Id<'lessons'> }>();
+export default function HomeLayout() {
   const user = useQuery(api.users.get, {});
   const { availableModels } = usePiperTTS();
 
@@ -51,6 +50,6 @@ export default function OrcaScreen() {
     availableModels.length === 0 ? (
     <Onboarding user={user} />
   ) : (
-    <OrcaGame lessonId={id} />
+    <Slot />
   );
 }

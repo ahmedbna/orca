@@ -11,8 +11,10 @@ import { TextArea } from '@/components/ui/text-area';
 import { Button } from '@/components/ui/button';
 import { SignOutButton } from '@/components/auth/singout';
 import { ButtonSpinner } from '@/components/ui/spinner';
+import { useRouter } from 'expo-router';
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const user = useQuery(api.users.get, {});
   const update = useMutation(api.users.update);
 
@@ -148,6 +150,16 @@ export default function SettingsScreen() {
         </Button>
 
         <SignOutButton disabled={loading} />
+
+        <Button
+          variant='ghost'
+          onPress={() => router.push('/delete')}
+          style={{ marginVertical: 8 }}
+          disabled={loading}
+          loading={loading}
+        >
+          Delete your account
+        </Button>
       </View>
     </ScrollView>
   );

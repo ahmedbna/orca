@@ -1,5 +1,3 @@
-'use client';
-
 import { useConvexAuth } from 'convex/react';
 import { useAuthActions } from '@convex-dev/auth/react';
 import { Button } from '@/components/ui/button';
