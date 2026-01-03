@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
 import { OrcaButton, OrcaSquareButton } from '@/components/squishy/orca-button';
 import { Progress } from '@/components/squishy/progress';
-import { LANGUAGES } from '@/constants/languages';
+import { NATIVES } from '@/constants/languages';
 import { usePiperTTS } from '@/hooks/usePiperTTS';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -211,7 +211,7 @@ export const Study = ({ language, native, lesson }: Props) => {
             }}
           />
           <OrcaSquareButton
-            label={LANGUAGES.find((l) => l.code === native)?.flag || '🌐'}
+            label={NATIVES.find((l) => l.code === native)?.flag || '🌐'}
             variant='green'
             onPress={() => setShowTranslation((v) => !v)}
           />

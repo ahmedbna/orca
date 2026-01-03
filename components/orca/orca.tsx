@@ -19,7 +19,7 @@ import {
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Progress } from '@/components/squishy/progress';
-import { LANGUAGES } from '@/constants/languages';
+import { LANGUAGES, NATIVES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Doc } from '@/convex/_generated/dataModel';
@@ -186,7 +186,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const recordWin = useMutation(api.wins.recordWin);
 
   const TOTAL_OBSTACLES = lesson.phrases.length;
-  const NATIVE_LANGUAGE = LANGUAGES.find((l) => l.code === native);
+  const NATIVE_LANGUAGE = NATIVES.find((l) => l.code === native);
   const LEARNING_LANGUAGE = LANGUAGES.find((l) => l.code === language);
   const tuning = languageTuning(LEARNING_LANGUAGE?.locale);
 

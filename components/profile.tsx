@@ -9,7 +9,7 @@ import { ChevronLeft, BookOpen, Trophy, Zap } from 'lucide-react-native';
 import { Doc, Id } from '@/convex/_generated/dataModel';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { LANGUAGES } from '@/constants/languages';
+import { LANGUAGES, NATIVES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
 
 type Props = {
@@ -43,7 +43,7 @@ export const Profile = ({ user, userId }: Props) => {
     text: '#FFFFFF',
   };
 
-  const nativeLanguag = LANGUAGES.find(
+  const nativeLanguag = NATIVES.find(
     (lang) => lang.code === user.nativeLanguage
   );
 
