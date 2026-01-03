@@ -93,7 +93,7 @@ export const Auth = () => {
               alignItems: 'center',
               justifyContent: 'center',
               marginTop: -36,
-              marginBottom: -46,
+              marginBottom: -36,
             }}
           >
             <Image

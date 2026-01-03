@@ -1,3 +1,5 @@
+// app/_layout.tsx
+
 import React, { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { Auth } from '@/components/auth/auth';
@@ -89,13 +91,8 @@ export default function RootLayout() {
             </Unauthenticated>
             <Authenticated>
               <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name='(home)/index' />
-                <Stack.Screen name='(home)/level/[id]' />
+                <Stack.Screen name='(home)' options={{ headerShown: false }} />
                 <Stack.Screen name='orca/[id]' />
-                <Stack.Screen name='(home)/student/[id]' />
-                <Stack.Screen name='(home)/study/[id]' />
-                <Stack.Screen name='(home)/streak' />
-                <Stack.Screen name='(home)/profile' />
 
                 <Stack.Screen
                   name='(modal)/courses'
