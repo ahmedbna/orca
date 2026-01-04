@@ -7,9 +7,6 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "ios": {
-        "simulator": true
-      },
       "env": {
         "EXPO_PUBLIC_CONVEX_URL": "https://graceful-aardvark-513.convex.cloud",
         "CONVEX_DEPLOY_KEY": "prod:graceful-aardvark-513|eyJ2MiI6IjA3N2U1OGU4ZTEyYTRjNDRhMDg0YzI3NWU2NmJhY2I1In0="
@@ -17,10 +14,6 @@
     },
     "preview": {
       "distribution": "internal",
-      "ios": {
-        "buildConfiguration": "Release",
-        "bundleIdentifier": "com.ahmedbna.orca"
-      },
       "env": {
         "EXPO_PUBLIC_CONVEX_URL": "https://graceful-aardvark-513.convex.cloud",
         "CONVEX_DEPLOY_KEY": "prod:graceful-aardvark-513|eyJ2MiI6IjA3N2U1OGU4ZTEyYTRjNDRhMDg0YzI3NWU2NmJhY2I1In0="
@@ -28,10 +21,6 @@
     },
     "production": {
       "autoIncrement": true,
-      "ios": {
-        "buildConfiguration": "Release",
-        "bundleIdentifier": "com.ahmedbna.orca"
-      },
       "env": {
         "EXPO_PUBLIC_CONVEX_URL": "https://graceful-aardvark-513.convex.cloud",
         "CONVEX_DEPLOY_KEY": "prod:graceful-aardvark-513|eyJ2MiI6IjA3N2U1OGU4ZTEyYTRjNDRhMDg0YzI3NWU2NmJhY2I1In0="
