@@ -136,6 +136,7 @@ export default function RootLayout() {
                     animation: 'slide_from_bottom',
                   }}
                 />
+
                 <Stack.Screen
                   name='(modal)/settings'
                   options={{
@@ -143,12 +144,7 @@ export default function RootLayout() {
                     sheetGrabberVisible: true,
                     sheetAllowedDetents: [1],
                     contentStyle: {
-                      backgroundColor:
-                        isLiquidGlassAvailable() && osName !== 'iPadOS'
-                          ? 'transparent'
-                          : colorScheme === 'dark'
-                            ? Colors.dark.card
-                            : Colors.light.card,
+                      backgroundColor: Colors.dark.card,
                     },
                     headerTransparent: Platform.OS === 'ios' ? true : false,
                     headerLargeTitle: false,
@@ -161,20 +157,9 @@ export default function RootLayout() {
                         : 'modal',
                     sheetInitialDetentIndex: 0,
                     headerStyle: {
-                      backgroundColor:
-                        Platform.OS === 'ios'
-                          ? 'transparent'
-                          : colorScheme === 'dark'
-                            ? Colors.dark.card
-                            : Colors.light.card,
+                      backgroundColor: Colors.dark.card,
                     },
-                    headerBlurEffect:
-                      isLiquidGlassAvailable() && osName !== 'iPadOS'
-                        ? undefined
-                        : colorScheme === 'dark'
-                          ? 'dark'
-                          : 'light',
-
+                    headerBlurEffect: undefined,
                     animation: 'slide_from_bottom',
                   }}
                 />

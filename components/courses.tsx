@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyleSheet, Platform, Pressable } from 'react-native';
+import { StyleSheet, Platform, Pressable, useColorScheme } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   interpolate,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { View } from '@/components/ui/view';
@@ -14,6 +13,9 @@ import { Text } from '@/components/ui/text';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { Spinner } from '@/components/ui/spinner';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { osName } from 'expo-device';
+import { isLiquidGlassAvailable } from 'expo-glass-effect';
+import * as Haptics from 'expo-haptics';
 
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
   if (Platform.OS !== 'web') {
@@ -132,8 +134,14 @@ const CourseCard = ({
 };
 
 export default function CoursesScreen() {
+  const colorScheme = useColorScheme() || 'light';
   const insets = useSafeAreaInsets();
   const courses = useQuery(api.courses.getAll);
+
+  const text =
+    colorScheme === 'light' && isLiquidGlassAvailable() && osName !== 'iPadOS'
+      ? '#000'
+      : '#FFF';
 
   if (courses === undefined) {
     return (
@@ -146,10 +154,10 @@ export default function CoursesScreen() {
   if (courses === null || courses.length === 0) {
     return (
       <View style={[styles.centerContainer, { padding: 16 }]}>
-        <Text variant='heading' style={{ marginBottom: 8 }}>
+        <Text variant='heading' style={{ marginBottom: 8, color: text }}>
           No Courses Available
         </Text>
-        <Text style={{ textAlign: 'center', opacity: 0.7 }}>
+        <Text style={{ textAlign: 'center', color: text, opacity: 0.7 }}>
           Please select a learning language to view available courses.
         </Text>
       </View>
@@ -170,10 +178,12 @@ export default function CoursesScreen() {
         paddingBottom: insets.bottom + 32,
       }}
     >
-      <Text variant='heading' style={styles.heading}>
+      <Text variant='heading' style={[styles.heading, { color: text }]}>
         Your Courses
       </Text>
-      <Text style={styles.subheading}>Continue your learning journey</Text>
+      <Text style={[styles.subheading, { color: text }]}>
+        Continue your learning journey
+      </Text>
 
       {courses.map((course, index) => (
         <CourseCard
