@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/orca.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "ios": {
       "icon": "./assets/images/orca.png",
       "supportsTablet": true,
