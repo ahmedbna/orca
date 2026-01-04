@@ -8,7 +8,7 @@ import { Doc } from '@/convex/_generated/dataModel';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
-import { OrcaButton, OrcaSquareButton } from '@/components/squishy/orca-button';
+import { OrcaButton } from '@/components/squishy/orca-button';
 import { Progress } from '@/components/squishy/progress';
 import { NATIVES } from '@/constants/languages';
 import { usePiperTTS } from '@/hooks/usePiperTTS';
@@ -201,8 +201,9 @@ export const Study = ({ language, native, lesson }: Props) => {
 
         {/* Controls */}
         <View style={{ flexDirection: 'row', gap: 12, marginTop: 8 }}>
-          <OrcaSquareButton
+          <OrcaButton
             label='◀︎'
+            shape='rounded'
             variant='indigo'
             disabled={isFirst}
             onPress={() => {
@@ -210,13 +211,15 @@ export const Study = ({ language, native, lesson }: Props) => {
               setIndex((i) => Math.max(0, i - 1));
             }}
           />
-          <OrcaSquareButton
+          <OrcaButton
             label={NATIVES.find((l) => l.code === native)?.flag || '🌐'}
+            shape='rounded'
             variant='green'
             onPress={() => setShowTranslation((v) => !v)}
           />
-          <OrcaSquareButton
+          <OrcaButton
             label='▶︎'
+            shape='rounded'
             variant='indigo'
             disabled={isLast}
             onPress={() => {

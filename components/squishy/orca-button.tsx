@@ -5,11 +5,10 @@ import Animated, {
   withSpring,
   interpolate,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { Spinner } from '../ui/spinner';
-import { ReactNode } from 'react';
+import { Spinner } from '@/components/ui/spinner';
+import * as Haptics from 'expo-haptics';
 
 const COLORS = {
   yellow: {
@@ -56,14 +55,17 @@ const COLORS = {
   },
 } as const;
 
+const BUTTON_HEIGHT = 64;
 const BUTTON_SHADOW_HEIGHT = 8;
 
 type ButtonVariant = keyof typeof COLORS;
+type ButtonShape = 'pill' | 'rounded';
 
 export const OrcaButton = ({
   onPress,
   label,
   variant = 'yellow',
+  shape = 'pill',
   disabled = false,
   loading = false,
   icon,
@@ -72,20 +74,24 @@ export const OrcaButton = ({
   onPress: () => void;
   label: string;
   variant?: ButtonVariant;
+  shape?: ButtonShape;
   disabled?: boolean;
   loading?: boolean;
-  icon?: any;
+  icon?: React.ReactNode;
   style?: ViewStyle;
 }) => {
   const pressed = useSharedValue(0);
-  const colors = COLORS[variant];
+  const colors = COLORS[disabled ? 'gray' : variant];
+
+  const radius = shape === 'pill' ? 999 : 20;
 
   const animatedStyle = useAnimatedStyle(() => {
     const translateY = interpolate(
       pressed.value,
       [0, 1],
-      [0, BUTTON_SHADOW_HEIGHT]
+      [0, disabled ? 0 : BUTTON_SHADOW_HEIGHT]
     );
+
     return {
       transform: [{ translateY }],
     };
@@ -102,27 +108,32 @@ export const OrcaButton = ({
       disabled={disabled || loading}
       onPress={onPress}
       onPressIn={() => {
-        pressed.value = withSpring(1, { damping: 15 });
+        if (!disabled) pressed.value = withSpring(1, { damping: 15 });
         triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
       }}
       onPressOut={() => {
-        pressed.value = withSpring(0, { damping: 15 });
+        if (!disabled) pressed.value = withSpring(0, { damping: 15 });
         triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
       }}
-      style={[{ height: 64 }, style]}
+      style={[
+        {
+          height: BUTTON_HEIGHT,
+          opacity: disabled ? 0.6 : 1,
+        },
+        style,
+      ]}
     >
       {/* Shadow */}
       <View
         pointerEvents='none'
         style={{
-          backgroundColor: colors.shadow,
           position: 'absolute',
           top: BUTTON_SHADOW_HEIGHT,
           left: 0,
           right: 0,
-          height: 64,
-          borderRadius: 999,
-          zIndex: 1,
+          height: BUTTON_HEIGHT,
+          backgroundColor: colors.shadow,
+          borderRadius: radius,
         }}
       />
 
@@ -131,113 +142,37 @@ export const OrcaButton = ({
         pointerEvents='none'
         style={[
           {
-            backgroundColor: colors.face,
             position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
-            height: 64,
-            borderRadius: 999,
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 2,
+            height: BUTTON_HEIGHT,
+            backgroundColor: colors.face,
+            borderRadius: radius,
             borderWidth: 4,
             borderColor: colors.border,
+            alignItems: 'center',
+            justifyContent: 'center',
           },
           animatedStyle,
         ]}
       >
         {loading ? (
-          <Spinner variant='dots' color='#000' />
+          <Spinner variant='dots' color={colors.text} />
         ) : (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-            {icon && icon}
+            {icon}
             <Text
               style={{
-                color: colors.text,
                 fontSize: 22,
                 fontWeight: '800',
+                color: colors.text,
               }}
             >
               {label}
             </Text>
           </View>
         )}
-      </Animated.View>
-    </Pressable>
-  );
-};
-
-export const OrcaSquareButton = ({
-  onPress,
-  label,
-  variant = 'yellow',
-  disabled = false,
-  flex = 1,
-}: {
-  onPress: () => void;
-  label: string;
-  variant?: ButtonVariant;
-  disabled?: boolean;
-  flex?: number;
-}) => {
-  const pressed = useSharedValue(0);
-  const colors = COLORS[disabled ? 'gray' : variant];
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      pressed.value,
-      [0, 1],
-      [0, disabled ? 0 : 8]
-    );
-    return { transform: [{ translateY }] };
-  });
-
-  return (
-    <Pressable
-      disabled={disabled}
-      onPress={onPress}
-      onPressIn={() => {
-        if (!disabled) pressed.value = withSpring(1, { damping: 15 });
-      }}
-      onPressOut={() => {
-        if (!disabled) pressed.value = withSpring(0, { damping: 15 });
-      }}
-      style={{ flex, height: 64, opacity: disabled ? 0.6 : 1 }}
-    >
-      {/* Shadow */}
-      <View
-        pointerEvents='none'
-        style={{
-          position: 'absolute',
-          top: 8,
-          left: 0,
-          right: 0,
-          height: 64,
-          backgroundColor: colors.shadow,
-          borderRadius: 20,
-        }}
-      />
-
-      {/* Face */}
-      <Animated.View
-        pointerEvents='none'
-        style={[
-          {
-            height: 64,
-            backgroundColor: colors.face,
-            borderRadius: 20,
-            borderWidth: 4,
-            borderColor: colors.border,
-            alignItems: 'center',
-            justifyContent: 'center',
-          },
-          animatedStyle,
-        ]}
-      >
-        <Text style={{ fontSize: 22, fontWeight: '900', color: colors.text }}>
-          {label}
-        </Text>
       </Animated.View>
     </Pressable>
   );
