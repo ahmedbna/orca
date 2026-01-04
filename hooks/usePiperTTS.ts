@@ -72,30 +72,27 @@ export function usePiperTTS() {
     Record<string, number>
   >({});
 
-  // Volume listener for production
+  // Add a dummy volume listener to prevent native warnings
   useEffect(() => {
     if (!TTS?.addVolumeListener) {
-      console.warn('⚠️ TTS.addVolumeListener not available');
       return;
     }
 
     try {
-      const subscription = TTS.addVolumeListener((volume: number) => {
-        // Volume monitoring for debugging in production
-        if (__DEV__) {
-          console.log('🔊 TTS Volume:', volume);
-        }
+      // Silent listener that does nothing - prevents native warnings
+      const subscription = TTS.addVolumeListener(() => {
+        // No-op: silently consume volume events
       });
 
       return () => {
         try {
           subscription?.remove?.();
         } catch (e) {
-          console.warn('Failed to remove volume listener:', e);
+          // Ignore cleanup errors
         }
       };
     } catch (error) {
-      console.error('Failed to add volume listener:', error);
+      // Ignore listener setup errors
     }
   }, []);
 
@@ -247,12 +244,6 @@ export function usePiperTTS() {
         setIsInitializing(true);
         setError(null);
         initializationAttempts.current[modelId] = attempts + 1;
-
-        console.log('🎤 Configuring audio session...');
-        // const audioConfigured = await configureAudioSession();
-        // if (!audioConfigured) {
-        //   throw new Error('Failed to configure audio session');
-        // }
 
         const model = PIPER_MODELS.find((m) => m.id === modelId);
         if (!model) {
