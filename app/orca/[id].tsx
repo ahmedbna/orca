@@ -1,3 +1,4 @@
+// app/orca/[id].tsx
 import { Orca } from '@/components/orca/orca';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
@@ -33,6 +34,7 @@ export default function OrcaScreen() {
     );
   }
 
+  // Don't wrap in Background - Orca component has its own
   return (
     <Orca
       lesson={lesson}

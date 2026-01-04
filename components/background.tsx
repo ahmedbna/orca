@@ -1,12 +1,12 @@
+// components/background.tsx
 import { usePathname, useRouter } from 'expo-router';
-// import { useEffect, useRef, useState } from 'react';
-// import { useAudioPlayer } from 'expo-audio';
+import { useState } from 'react';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Doc } from '@/convex/_generated/dataModel';
-
 import { useColor } from '@/hooks/useColor';
+import { useBackgroundMusic } from '@/hooks/useBackgroundMusic';
 import { Text } from '@/components/ui/text';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -16,8 +16,6 @@ import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
 import { Seafloor } from '@/components/orca/seafloor';
 import { View } from '@/components/ui/view';
-
-// const audioSource = require('@/assets/music/orca.mp3');
 
 export const Background = ({
   user,
@@ -31,55 +29,10 @@ export const Background = ({
   const yellow = useColor('orca');
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const [mute, setMute] = useState(false);
 
-  // const pathname = usePathname();
-  // const [mute, setMute] = useState(false);
-  // const userMuteBeforeOrcaRef = useRef<boolean | null>(null);
-  // const player = useAudioPlayer(audioSource);
-  // const isOrcaRoute = pathname.startsWith('/orca/');
-  // const isLearnRoute = pathname.startsWith('/study/');
-
-  /**
-   * 🎵 Audio lifecycle controller
-   */
-  // useEffect(() => {
-  //   if (!player) return;
-
-  //   const syncAudio = async () => {
-  //     try {
-  //       // 🐋 ENTER ORCA
-  //       if (isOrcaRoute || isLearnRoute) {
-  //         // Save user preference ONCE
-  //         if (userMuteBeforeOrcaRef.current === null) {
-  //           userMuteBeforeOrcaRef.current = mute;
-  //         }
-
-  //         await player.pause();
-  //         return;
-  //       }
-
-  //       // 🏊 EXIT ORCA
-  //       if (userMuteBeforeOrcaRef.current !== null) {
-  //         setMute(userMuteBeforeOrcaRef.current);
-  //         userMuteBeforeOrcaRef.current = null;
-  //       }
-
-  //       // 🔇 User muted
-  //       if (mute) {
-  //         await player.pause();
-  //         return;
-  //       }
-
-  //       // 🔊 Normal playback
-  //       player.loop = true;
-  //       await player.play();
-  //     } catch (e) {
-  //       console.warn('Audio sync error:', e);
-  //     }
-  //   };
-
-  //   syncAudio();
-  // }, [isOrcaRoute, isLearnRoute, mute]);
+  // Use the background music hook
+  const { isSpeechRoute } = useBackgroundMusic(mute);
 
   return (
     <View style={{ flex: 1, backgroundColor: yellow }} pointerEvents='box-none'>
@@ -142,7 +95,7 @@ export const Background = ({
         </Button>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          {/* {!isOrcaRoute && !isLearnRoute ? (
+          {!isSpeechRoute && (
             <Button
               size='icon'
               variant='ghost'
@@ -150,7 +103,7 @@ export const Background = ({
             >
               <Text style={{ fontSize: 36 }}>{mute ? '🔇' : '🔊'}</Text>
             </Button>
-          ) : null} */}
+          )}
 
           <Avatar
             size={42}

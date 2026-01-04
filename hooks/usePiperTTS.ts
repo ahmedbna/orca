@@ -1,12 +1,11 @@
 // hooks/usePiperTTS.ts
 
+import { Platform } from 'react-native';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Directory, File, Paths } from 'expo-file-system';
-import { setAudioModeAsync } from 'expo-audio';
 import { createDownloadResumable } from 'expo-file-system/legacy';
 import { unzip } from 'react-native-zip-archive';
 import TTS from 'react-native-sherpa-onnx-offline-tts';
-import { Platform } from 'react-native';
 
 export interface PiperModel {
   id: string;
@@ -61,33 +60,17 @@ export const PIPER_MODELS: PiperModel[] = [
 ];
 
 export function usePiperTTS() {
-  const [downloadProgress, setDownloadProgress] = useState<
-    Record<string, number>
-  >({});
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [isInitializing, setIsInitializing] = useState(false);
-  const [currentModelId, setCurrentModelId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
   const isReadyRef = useRef(false);
   const isSpeakingRef = useRef(false);
   const initializationAttempts = useRef<Record<string, number>>({});
 
-  // Configure audio session for production
-  // const configureAudioSession = async () => {
-  //   try {
-  //     await setAudioModeAsync({
-  //       playsInSilentMode: true,
-  //       shouldPlayInBackground: false,
-  //       interruptionMode: 'duckOthers',
-  //     });
-  //     console.log('✅ Audio session configured');
-  //     return true;
-  //   } catch (error) {
-  //     console.error('❌ Audio session config failed:', error);
-  //     return false;
-  //   }
-  // };
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
+  const [currentModelId, setCurrentModelId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [downloadProgress, setDownloadProgress] = useState<
+    Record<string, number>
+  >({});
 
   // Volume listener for production
   useEffect(() => {
