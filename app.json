@@ -14,9 +14,11 @@
       "bundleIdentifier": "com.ahmedbna.orca",
       "infoPlist": {
         "UIBackgroundModes": ["audio"],
-        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use the microphone.",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use the microphone to use speech recognition.",
         "NSSpeechRecognitionUsageDescription": "Allow $(PRODUCT_NAME) to use speech recognition.",
-        "NSPhotoLibraryUsageDescription": "$(PRODUCT_NAME) uses your photo library so you can upload profile pictures and learning content.",
+        "NSPhotoLibraryUsageDescription": "$(PRODUCT_NAME) uses your photo library so you can upload profile pictures.",
+        "AVAudioSessionCategory": "AVAudioSessionCategoryPlayAndRecord",
+        "AVAudioSessionMode": "AVAudioSessionModeSpokenAudio",
         "ITSAppUsesNonExemptEncryption": false,
         "UIFileSharingEnabled": true,
         "LSSupportsOpeningDocumentsInPlace": true
@@ -34,10 +36,7 @@
       "predictiveBackGestureEnabled": true,
       "permissions": [
         "android.permission.RECORD_AUDIO",
-        "android.permission.MODIFY_AUDIO_SETTINGS",
-        "android.permission.CAMERA",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
+        "android.permission.MODIFY_AUDIO_SETTINGS"
       ],
       "package": "com.ahmedbna.orca"
     },
@@ -75,12 +74,6 @@
           "dark": {
             "backgroundColor": "#FAD40B"
           }
-        }
-      ],
-      [
-        "expo-audio",
-        {
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access the microphone for transcription."
         }
       ],
       [

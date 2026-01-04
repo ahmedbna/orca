@@ -255,11 +255,15 @@ export const Orca = ({ lesson, native, language }: Props) => {
         },
         androidRecognitionServicePackage: 'com.google.android.tts',
         iosCategory: {
-          mode: 'measurement',
-          category: 'record',
-          categoryOptions: ['defaultToSpeaker', 'allowBluetooth'],
+          category: 'playAndRecord',
+          mode: 'spokenAudio',
+          categoryOptions: [
+            'defaultToSpeaker',
+            'allowBluetooth',
+            'allowBluetoothA2DP',
+          ],
         },
-        iosVoiceProcessingEnabled: true,
+        iosVoiceProcessingEnabled: false,
       });
     } catch (error) {
       console.warn('Start listening failed', error);
@@ -326,10 +330,14 @@ export const Orca = ({ lesson, native, language }: Props) => {
   });
   useSpeechRecognitionEvent('end', () => {
     setIsRecognizing(false);
+
+    // If speech recognition stops unexpectedly while playing,
+    // treat it as a failure and end the game safely
     if (!gameEndedRef.current && gameState === 'playing') {
-      startListening();
+      endGame(false);
     }
   });
+
   useSpeechRecognitionEvent('result', handleSpeechResult);
 
   const startTimer = useCallback(() => {
@@ -737,7 +745,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
               />
               <Text style={styles.titleText}>{lesson.title}</Text>
               <Text style={styles.subText}>
-                {`Pronounce all phrases correctly in ${LEARNING_LANGUAGE?.native} ${LEARNING_LANGUAGE?.flag}`}
+                {`Pronounce all phrases correctly in \n ${LEARNING_LANGUAGE?.native} ${LEARNING_LANGUAGE?.flag} to join the leaderboard`}
               </Text>
             </View>
           ) : null}

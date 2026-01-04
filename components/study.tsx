@@ -201,32 +201,38 @@ export const Study = ({ language, native, lesson }: Props) => {
 
         {/* Controls */}
         <View style={{ flexDirection: 'row', gap: 12, marginTop: 8 }}>
-          <OrcaButton
-            label='◀︎'
-            shape='rounded'
-            variant='indigo'
-            disabled={isFirst}
-            onPress={() => {
-              setShowTranslation(false);
-              setIndex((i) => Math.max(0, i - 1));
-            }}
-          />
-          <OrcaButton
-            label={NATIVES.find((l) => l.code === native)?.flag || '🌐'}
-            shape='rounded'
-            variant='green'
-            onPress={() => setShowTranslation((v) => !v)}
-          />
-          <OrcaButton
-            label='▶︎'
-            shape='rounded'
-            variant='indigo'
-            disabled={isLast}
-            onPress={() => {
-              setShowTranslation(false);
-              setIndex((i) => Math.min(phrases.length - 1, i + 1));
-            }}
-          />
+          <View style={{ flex: 1 }}>
+            <OrcaButton
+              label='◀︎'
+              shape='rounded'
+              variant='indigo'
+              disabled={isFirst}
+              onPress={() => {
+                setShowTranslation(false);
+                setIndex((i) => Math.max(0, i - 1));
+              }}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <OrcaButton
+              label={NATIVES.find((l) => l.code === native)?.flag || '🌐'}
+              shape='rounded'
+              variant='green'
+              onPress={() => setShowTranslation((v) => !v)}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <OrcaButton
+              label='▶︎'
+              shape='rounded'
+              variant='indigo'
+              disabled={isLast}
+              onPress={() => {
+                setShowTranslation(false);
+                setIndex((i) => Math.min(phrases.length - 1, i + 1));
+              }}
+            />
+          </View>
         </View>
 
         <OrcaButton

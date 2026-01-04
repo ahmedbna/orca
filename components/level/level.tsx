@@ -92,7 +92,7 @@ export const Level = ({ lesson }: Props) => {
             >
               🏆 Leaderboard
             </Text>
-            <Text
+            {/* <Text
               style={[
                 {
                   color: '#1C1C1E',
@@ -103,9 +103,8 @@ export const Level = ({ lesson }: Props) => {
                 },
               ]}
             >
-              Pronounce all phrase correctly and compete for the top of the
-              leaderboard.
-            </Text>
+              Pronounce all correctly to get ranked!
+            </Text> */}
           </View>
         )}
         ListEmptyComponent={() => (

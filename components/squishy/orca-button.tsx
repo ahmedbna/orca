@@ -118,6 +118,7 @@ export const OrcaButton = ({
       style={[
         {
           height: BUTTON_HEIGHT,
+          width: '100%',
           opacity: disabled ? 0.6 : 1,
         },
         style,
@@ -129,8 +130,7 @@ export const OrcaButton = ({
         style={{
           position: 'absolute',
           top: BUTTON_SHADOW_HEIGHT,
-          left: 0,
-          right: 0,
+          width: '100%',
           height: BUTTON_HEIGHT,
           backgroundColor: colors.shadow,
           borderRadius: radius,
@@ -144,8 +144,7 @@ export const OrcaButton = ({
           {
             position: 'absolute',
             top: 0,
-            left: 0,
-            right: 0,
+            width: '100%',
             height: BUTTON_HEIGHT,
             backgroundColor: colors.face,
             borderRadius: radius,
