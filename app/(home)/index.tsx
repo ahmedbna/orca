@@ -4,17 +4,15 @@ import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
-import { SignOutButton } from '@/components/auth/singout';
 
 export default function HomeScreen() {
-  const course = useQuery(api.courses.getCourse);
-  const streak = useQuery(api.wins.getCurrentStreak);
+  const homeData = useQuery(api.home.getHomeData);
 
-  if (course === undefined || streak === undefined) {
+  if (homeData === undefined) {
     return <Loading />;
   }
 
-  if (course === null) {
+  if (homeData === null) {
     return (
       <View
         style={{
@@ -23,10 +21,10 @@ export default function HomeScreen() {
           justifyContent: 'center',
         }}
       >
-        <Text>Course Not Found!</Text>
+        <Text>Course Not Found</Text>
       </View>
     );
   }
 
-  return <Map course={course} streak={streak} />;
+  return <Map course={homeData.course} streak={homeData.streak} />;
 }

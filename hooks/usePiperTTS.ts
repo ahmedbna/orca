@@ -5,6 +5,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { Directory, File, Paths } from 'expo-file-system';
 import { createDownloadResumable } from 'expo-file-system/legacy';
 import { unzip } from 'react-native-zip-archive';
+import { setAudioModeAsync } from 'expo-audio';
 import TTS from 'react-native-sherpa-onnx-offline-tts';
 
 export interface PiperModel {
@@ -313,6 +314,18 @@ export function usePiperTTS() {
       try {
         isSpeakingRef.current = true;
         setError(null);
+
+        // CRITICAL: Ensure audio session is configured for TTS before speaking
+        if (Platform.OS === 'ios') {
+          await setAudioModeAsync({
+            playsInSilentMode: true,
+            shouldPlayInBackground: false,
+            allowsRecording: true,
+            interruptionMode: 'duckOthers',
+            shouldRouteThroughEarpiece: false,
+          });
+          console.log('🎤 Audio session configured for TTS');
+        }
 
         console.log(
           `🗣️ Speaking: "${text.substring(0, 30)}..." at ${speed}x speed`

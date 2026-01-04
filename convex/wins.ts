@@ -2,16 +2,19 @@ import { v } from 'convex/values';
 import { query, mutation } from './_generated/server';
 import { getAuthUserId } from '@convex-dev/auth/server';
 
+// convex/wins.ts
 export const getCurrentStreak = query({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error('Not authenticated');
 
     const today = getUTCDay();
+    const thirtyDaysAgo = today - 30 * 24 * 60 * 60 * 1000; // Only fetch last 30 days
 
     const wins = await ctx.db
       .query('wins')
       .withIndex('by_user', (q) => q.eq('userId', userId))
+      .filter((q) => q.gte(q.field('day'), thirtyDaysAgo))
       .collect();
 
     const days = new Set(wins.map((w) => w.day));
@@ -19,7 +22,8 @@ export const getCurrentStreak = query({
     let streak = 0;
     let cursor = today;
 
-    while (days.has(cursor)) {
+    while (days.has(cursor) && streak < 365) {
+      // Safety limit
       streak++;
       cursor -= 24 * 60 * 60 * 1000;
     }

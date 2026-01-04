@@ -13,6 +13,7 @@ import type * as auth from "../auth.js";
 import type * as conversations from "../conversations.js";
 import type * as courses from "../courses.js";
 import type * as credits from "../credits.js";
+import type * as home from "../home.js";
 import type * as http from "../http.js";
 import type * as lessons from "../lessons.js";
 import type * as passwordReset from "../passwordReset.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   conversations: typeof conversations;
   courses: typeof courses;
   credits: typeof credits;
+  home: typeof home;
   http: typeof http;
   lessons: typeof lessons;
   passwordReset: typeof passwordReset;

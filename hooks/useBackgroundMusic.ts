@@ -1,9 +1,9 @@
 // hooks/useBackgroundMusic.ts
 
 import { useEffect, useRef } from 'react';
+import { usePathname } from 'expo-router';
 import { useAudioPlayer } from 'expo-audio';
 import { setAudioModeAsync } from 'expo-audio';
-import { usePathname } from 'expo-router';
 
 const audioSource = require('@/assets/music/orca.mp3');
 
@@ -16,25 +16,48 @@ export function useBackgroundMusic(mute: boolean) {
   // Only create player when NOT on speech routes
   const player = useAudioPlayer(isSpeechRoute ? null : audioSource);
   const hasConfiguredSessionRef = useRef(false);
+  const audioSessionTimeoutRef = useRef<number | null>(null);
 
   // Configure audio session based on route
   useEffect(() => {
     const configureAudioSession = async () => {
+      // Clear any pending timeouts
+      if (audioSessionTimeoutRef.current) {
+        clearTimeout(audioSessionTimeoutRef.current);
+        audioSessionTimeoutRef.current = null;
+      }
+
       try {
         if (isSpeechRoute) {
+          // CRITICAL: Configure for TTS/Speech Recognition
+          // This mode is compatible with Sherpa-ONNX TTS
           await setAudioModeAsync({
             playsInSilentMode: true,
             shouldPlayInBackground: false,
+            allowsRecording: true, // Allow TTS to work
+            interruptionMode: 'duckOthers', // Mix with other audio
+            shouldRouteThroughEarpiece: false,
           });
           hasConfiguredSessionRef.current = true;
-          console.log('🎤 Audio session: Speech/Recording mode');
+          console.log('🎤 Audio session: Speech/TTS mode (mixable)');
         } else {
-          await setAudioModeAsync({
-            playsInSilentMode: true,
-            shouldPlayInBackground: true,
-          });
-          hasConfiguredSessionRef.current = true;
-          console.log('🎵 Audio session: Music playback mode');
+          // Add a small delay before switching to music mode
+          // This ensures TTS has fully released the audio session
+          audioSessionTimeoutRef.current = setTimeout(async () => {
+            try {
+              await setAudioModeAsync({
+                playsInSilentMode: true,
+                shouldPlayInBackground: true,
+                allowsRecording: false,
+                interruptionMode: 'duckOthers', // Don't interrupt other apps
+                shouldRouteThroughEarpiece: false,
+              });
+              hasConfiguredSessionRef.current = true;
+              console.log('🎵 Audio session: Music playback mode');
+            } catch (error) {
+              console.warn('Audio session config error (delayed):', error);
+            }
+          }, 300); // 300ms delay
         }
       } catch (error) {
         console.warn('Audio session config error:', error);
@@ -42,6 +65,13 @@ export function useBackgroundMusic(mute: boolean) {
     };
 
     configureAudioSession();
+
+    return () => {
+      if (audioSessionTimeoutRef.current) {
+        clearTimeout(audioSessionTimeoutRef.current);
+        audioSessionTimeoutRef.current = null;
+      }
+    };
   }, [isSpeechRoute]);
 
   // Manage playback
@@ -62,7 +92,7 @@ export function useBackgroundMusic(mute: boolean) {
       try {
         // Wait for audio session to be configured
         if (!hasConfiguredSessionRef.current) {
-          await new Promise((resolve) => setTimeout(resolve, 300));
+          await new Promise((resolve) => setTimeout(resolve, 500));
         }
 
         player.loop = true;
