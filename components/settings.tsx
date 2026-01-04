@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { View } from '@/components/ui/view';
@@ -19,22 +19,35 @@ import { useRouter } from 'expo-router';
 export default function SettingsScreen() {
   const router = useRouter();
   const { signOut } = useAuthActions();
-  const { isAuthenticated } = useConvexAuth();
+  const { isLoading, isAuthenticated } = useConvexAuth();
 
   const user = useQuery(api.users.get, {});
-  const update = useMutation(api.users.update);
   const deletionStatus = useQuery(api.userDeletion.getDeletionStatus);
+
+  const update = useMutation(api.users.update);
   const requestDeletion = useMutation(api.userDeletion.requestDeletion);
   const cancelDeletion = useMutation(api.userDeletion.cancelDeletion);
 
-  const userbirthday = user?.birthday ? new Date(user.birthday) : undefined;
-
+  // 2. Initialize state with "safe" defaults
   const [loading, setLoading] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [name, setName] = useState(user?.name || '');
-  const [bio, setBio] = useState(user?.bio || '');
-  const [gender, setGender] = useState(user?.gender || '');
-  const [birthday, setBirthday] = useState<Date | undefined>(userbirthday);
+  const [name, setName] = useState('');
+  const [bio, setBio] = useState('');
+  const [gender, setGender] = useState('');
+  const [birthday, setBirthday] = useState<Date | undefined>(undefined);
+
+  // 3. Sync state ONLY when data is fully loaded
+  // This prevents the "Initial Null" crash on iOS
+  useEffect(() => {
+    if (user) {
+      setName(user.name ?? '');
+      setBio(user.bio ?? '');
+      setGender(user.gender ?? '');
+      if (user.birthday) {
+        setBirthday(new Date(user.birthday));
+      }
+    }
+  }, [user]);
 
   const today = new Date();
   const maxSelectableBirthday = new Date(
@@ -80,7 +93,7 @@ export default function SettingsScreen() {
     }
   };
 
-  if (user === undefined || !deletionStatus) {
+  if (isLoading || user === undefined || deletionStatus === undefined) {
     return (
       <View
         style={{
@@ -94,7 +107,7 @@ export default function SettingsScreen() {
     );
   }
 
-  if (user === null) {
+  if (!isAuthenticated || user === null) {
     return (
       <View
         style={{
@@ -104,9 +117,7 @@ export default function SettingsScreen() {
           padding: 16,
         }}
       >
-        <Text variant='heading' style={{ marginBottom: 8 }}>
-          No User Found
-        </Text>
+        <Text variant='heading'>Please log in to view settings.</Text>
       </View>
     );
   }
@@ -122,6 +133,12 @@ export default function SettingsScreen() {
     });
 
     setLoading(false);
+  };
+
+  // Helper for safe date rendering
+  const renderDeletionDate = () => {
+    if (!deletionStatus?.deletionDate) return 'N/A';
+    return new Date(deletionStatus.deletionDate).toLocaleDateString();
   };
 
   return (
@@ -166,11 +183,11 @@ export default function SettingsScreen() {
                 Your account is scheduled for deletion
               </Text>
               <Text style={{ marginBottom: 10, color: '#FFF' }}>
-                Days remaining: {deletionStatus.daysRemaining}
+                Days remaining: {deletionStatus.daysRemaining ?? 0}
               </Text>
               <Text style={{ marginBottom: 20, color: '#ccc' }}>
                 Your account will be permanently deleted on{' '}
-                {new Date(deletionStatus.deletionDate!).toLocaleDateString()}
+                {renderDeletionDate()}
               </Text>
               <Button onPress={handleCancelDeletion} variant='success'>
                 Cancel Deletion
