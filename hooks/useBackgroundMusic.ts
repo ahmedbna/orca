@@ -29,27 +29,37 @@ export function useBackgroundMusic(mute: boolean) {
 
       try {
         if (isSpeechRoute) {
-          // CRITICAL: Configure for TTS/Speech Recognition
-          // This mode is compatible with Sherpa-ONNX TTS
+          // CRITICAL: Stop music first before reconfiguring
+          if (player) {
+            try {
+              player.pause();
+            } catch (e) {
+              // Ignore if player doesn't exist
+            }
+          }
+
+          // Configure for TTS/Speech Recognition
           await setAudioModeAsync({
             playsInSilentMode: true,
             shouldPlayInBackground: false,
-            allowsRecording: true, // Allow TTS to work
-            interruptionMode: 'duckOthers', // Mix with other audio
+            allowsRecording: true,
+            interruptionMode: 'duckOthers',
             shouldRouteThroughEarpiece: false,
           });
           hasConfiguredSessionRef.current = true;
           console.log('🎤 Audio session: Speech/TTS mode (mixable)');
         } else {
-          // Add a small delay before switching to music mode
+          // Wait longer before switching to music mode on real devices
           // This ensures TTS has fully released the audio session
           audioSessionTimeoutRef.current = setTimeout(async () => {
             try {
+              // IMPORTANT: Use mixWithOthers for background music
+              // This allows TTS to interrupt the music when needed
               await setAudioModeAsync({
                 playsInSilentMode: true,
                 shouldPlayInBackground: true,
                 allowsRecording: false,
-                interruptionMode: 'duckOthers', // Don't interrupt other apps
+                interruptionMode: 'mixWithOthers', // Changed from duckOthers
                 shouldRouteThroughEarpiece: false,
               });
               hasConfiguredSessionRef.current = true;
@@ -57,7 +67,7 @@ export function useBackgroundMusic(mute: boolean) {
             } catch (error) {
               console.warn('Audio session config error (delayed):', error);
             }
-          }, 300); // 300ms delay
+          }, 500); // Increased from 300ms to 500ms for real devices
         }
       } catch (error) {
         console.warn('Audio session config error:', error);
@@ -72,7 +82,7 @@ export function useBackgroundMusic(mute: boolean) {
         audioSessionTimeoutRef.current = null;
       }
     };
-  }, [isSpeechRoute]);
+  }, [isSpeechRoute, player]);
 
   // Manage playback
   useEffect(() => {
@@ -92,7 +102,7 @@ export function useBackgroundMusic(mute: boolean) {
       try {
         // Wait for audio session to be configured
         if (!hasConfiguredSessionRef.current) {
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          await new Promise((resolve) => setTimeout(resolve, 700)); // Increased wait time
         }
 
         player.loop = true;

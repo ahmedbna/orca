@@ -15,17 +15,7 @@ import { usePiperTTS } from '@/hooks/usePiperTTS';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const LANGUAGE_TO_PIPER_MODEL: Record<string, string> = {
-  en: 'en-US-Amy',
-  fr: 'fr-FR-Siwis',
-  de: 'de-DE-Thorsten',
-  es: 'es-ES-Carlfm',
-  it: 'it-IT-Riccardo',
-};
-
-// Ordered speeds for cycling
 const SPEED_ORDER = ['0.2x', '0.5x', '1.0x', '1.5x', '2.0x'] as const;
-
 type SpeedKey = (typeof SPEED_ORDER)[number];
 
 const VOICE_SPEED: Record<SpeedKey, number> = {
@@ -37,7 +27,7 @@ const VOICE_SPEED: Record<SpeedKey, number> = {
 };
 
 type Props = {
-  language: string;
+  language: string; // e.g. "en", "de"
   native: string;
   lesson: Doc<'lessons'> & { course: Doc<'courses'> };
 };
@@ -46,8 +36,13 @@ export const Study = ({ language, native, lesson }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  const { initializeTTS, speak, currentModelId, isInitializing } =
-    usePiperTTS();
+  const {
+    availableModels,
+    initializeTTS,
+    speak,
+    currentModelId,
+    isInitializing,
+  } = usePiperTTS();
 
   const phrases = useMemo(
     () => [...lesson.phrases].sort((a, b) => a.order - b.order),
@@ -59,22 +54,27 @@ export const Study = ({ language, native, lesson }: Props) => {
 
   const currentPhrase = phrases[index];
 
-  // New state to track speed
-  const [speedIndex, setSpeedIndex] = useState(2); // default x1.0
+  /* ------------------------------ Speed state ------------------------------ */
 
+  const [speedIndex, setSpeedIndex] = useState(2); // default 1.0x
   const currentSpeedKey = SPEED_ORDER[speedIndex];
   const currentSpeedValue = VOICE_SPEED[currentSpeedKey];
 
+  const selectedModel = useMemo(
+    () => availableModels.find((m) => m.code === language),
+    [availableModels, language]
+  );
+
   useEffect(() => {
-    const modelId = LANGUAGE_TO_PIPER_MODEL[language];
-    if (!modelId) {
-      console.warn(`No Piper model for language: ${language}`);
+    if (!selectedModel) {
+      console.warn(`No Piper model found for language code: ${language}`);
       return;
     }
-    if (currentModelId !== modelId) {
-      initializeTTS(modelId);
+
+    if (currentModelId !== selectedModel.modelId) {
+      initializeTTS(selectedModel.modelId);
     }
-  }, [language, currentModelId, initializeTTS]);
+  }, [selectedModel, currentModelId, initializeTTS, language]);
 
   const handleSpeak = useCallback(() => {
     if (isInitializing) return;
@@ -90,7 +90,6 @@ export const Study = ({ language, native, lesson }: Props) => {
   const isFirst = index === 0;
   const isLast = index === phrases.length - 1;
 
-  // Cycle speed on button press
   const handleSpeedPress = () => {
     setSpeedIndex((i) => (i + 1) % SPEED_ORDER.length);
   };
@@ -111,6 +110,7 @@ export const Study = ({ language, native, lesson }: Props) => {
           <Text style={{ color: '#000', fontSize: 36, fontWeight: '800' }}>
             {currentPhrase.text}
           </Text>
+
           {showTranslation && translation && (
             <Text
               style={{
@@ -143,6 +143,7 @@ export const Study = ({ language, native, lesson }: Props) => {
           zIndex: 99,
         }}
       >
+        {/* Header */}
         <View
           style={{
             flexDirection: 'row',
@@ -156,8 +157,8 @@ export const Study = ({ language, native, lesson }: Props) => {
               flexDirection: 'row',
               alignItems: 'center',
               gap: 4,
-              flex: 1, // 👈 allows truncation
-              marginRight: 12, // spacing from speed button
+              flex: 1,
+              marginRight: 12,
             }}
           >
             <ChevronLeft size={26} strokeWidth={3} />
@@ -170,14 +171,14 @@ export const Study = ({ language, native, lesson }: Props) => {
                 fontSize: 22,
                 fontWeight: '800',
                 opacity: 0.7,
-                flexShrink: 1, // 👈 critical for row layouts
+                flexShrink: 1,
               }}
             >
               {lesson.title}
             </Text>
           </TouchableOpacity>
 
-          {/* Speed button */}
+          {/* Speed */}
           <TouchableOpacity onPress={handleSpeedPress}>
             <Text
               style={{
@@ -213,6 +214,7 @@ export const Study = ({ language, native, lesson }: Props) => {
               }}
             />
           </View>
+
           <View style={{ flex: 1 }}>
             <OrcaButton
               label={NATIVES.find((l) => l.code === native)?.flag || '🌐'}
@@ -221,6 +223,7 @@ export const Study = ({ language, native, lesson }: Props) => {
               onPress={() => setShowTranslation((v) => !v)}
             />
           </View>
+
           <View style={{ flex: 1 }}>
             <OrcaButton
               label='▶︎'

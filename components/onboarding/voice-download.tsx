@@ -28,14 +28,6 @@ const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
   }
 };
 
-const LANGUAGE_TO_PIPER_MODEL: Record<string, string> = {
-  en: 'en-US-Amy',
-  fr: 'fr-FR-Siwis',
-  de: 'de-DE-Thorsten',
-  es: 'es-ES-Carlfm',
-  it: 'it-IT-Riccardo',
-};
-
 export const VoiceDownload = ({
   learningLanguage,
   userData,
@@ -52,8 +44,10 @@ export const VoiceDownload = ({
 
   const border = useColor('border');
   const background = useColor('background');
+
   const updateUser = useMutation(api.users.update);
   const initializeProgress = useMutation(api.courses.initializeProgress);
+
   const { initializeTTS, downloadProgress, isDownloading } = usePiperTTS();
 
   const [initComplete, setInitComplete] = useState(false);
@@ -64,6 +58,7 @@ export const VoiceDownload = ({
   const rotate = useSharedValue(0);
   const pulseOpacity = useSharedValue(0.3);
 
+  // Animations
   useEffect(() => {
     scale.value = withRepeat(
       withSequence(
@@ -90,30 +85,29 @@ export const VoiceDownload = ({
     );
   }, []);
 
+  // Initialize voice + backend
   useEffect(() => {
     const run = async () => {
-      const modelId = LANGUAGE_TO_PIPER_MODEL[learningLanguage];
-
       try {
-        if (modelId) {
-          await initializeTTS(modelId);
-          setInitComplete(true);
-          triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
-        }
+        // ✅ pass language directly
+        await initializeTTS(learningLanguage);
+        setInitComplete(true);
+        triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
 
         await updateUser(userData);
         await initializeProgress();
+
         setBackendUpdateComplete(true);
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error('Voice download onboarding failed:', err);
       }
     };
 
     run();
   }, [learningLanguage]);
 
-  const modelId = LANGUAGE_TO_PIPER_MODEL[learningLanguage];
-  const progress = modelId ? downloadProgress[modelId] || 0 : 0;
+  // ✅ progress is tracked by language
+  const progress = downloadProgress[learningLanguage] ?? 0;
   const progressPercent = Math.round(progress * 100);
 
   useEffect(() => {
@@ -127,6 +121,7 @@ export const VoiceDownload = ({
 
   return (
     <View style={{ flex: 1 }}>
+      {/* Main content */}
       <View
         style={{
           flex: 1,
@@ -154,10 +149,11 @@ export const VoiceDownload = ({
             ? 'All Set!'
             : initComplete
               ? 'Saving Profile...'
-              : 'Downloading Assets...'}
+              : 'Loading Orca...'}
         </Text>
       </View>
 
+      {/* Bottom progress bar */}
       <View
         style={{
           position: 'absolute',

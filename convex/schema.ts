@@ -119,4 +119,15 @@ export default defineSchema({
     .index('by_user_day', ['userId', 'day'])
     .index('by_user_lesson', ['userId', 'lessonId'])
     .index('by_user_lesson_day', ['userId', 'lessonId', 'day']),
+
+  piperModels: defineTable({
+    modelId: v.string(),
+    voice: v.string(),
+    language: v.string(),
+    code: v.string(),
+    locale: v.string(),
+    url: v.string(),
+    folderName: v.string(),
+    modelFile: v.string(),
+  }),
 });

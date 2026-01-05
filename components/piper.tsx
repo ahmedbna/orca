@@ -24,30 +24,41 @@ export const Piper = () => {
 
   return (
     <View style={{ padding: 20, paddingTop: 200 }}>
-      {availableModels.map((model) => (
-        <TouchableOpacity
-          key={model.id}
-          disabled={isDownloading || isInitializing}
-          onPress={() => handlePress(model.id)}
-          style={{
-            padding: 15,
-            backgroundColor: '#f0f0f0',
-            marginVertical: 5,
-            opacity: isDownloading || isInitializing ? 0.5 : 1,
-          }}
-        >
-          <Text>{model.label}</Text>
+      {availableModels.map((model) => {
+        const isActive = currentModelId === model.modelId;
+        const progress = downloadProgress[model.modelId];
 
-          {downloadProgress[model.id] != null &&
-            downloadProgress[model.id] < 1 && (
-              <Text>
-                Downloading {(downloadProgress[model.id] * 100).toFixed(0)}%
+        return (
+          <TouchableOpacity
+            key={model.modelId}
+            disabled={isDownloading || isInitializing}
+            onPress={() => handlePress(model.modelId)}
+            style={{
+              padding: 15,
+              backgroundColor: isActive ? '#d1fae5' : '#f0f0f0',
+              marginVertical: 6,
+              borderRadius: 10,
+              opacity: isDownloading || isInitializing ? 0.5 : 1,
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: '600' }}>
+              {model.language} — {model.voice}
+            </Text>
+
+            <Text style={{ fontSize: 12, opacity: 0.6 }}>{model.locale}</Text>
+
+            {progress != null && progress < 1 && (
+              <Text style={{ marginTop: 4 }}>
+                Downloading {(progress * 100).toFixed(0)}%
               </Text>
             )}
-        </TouchableOpacity>
-      ))}
+          </TouchableOpacity>
+        );
+      })}
 
-      {currentModelId && <Text>Current Voice: {currentModelId}</Text>}
+      {currentModelId && (
+        <Text style={{ marginTop: 16 }}>Current Voice: {currentModelId}</Text>
+      )}
 
       {!isInitializing && currentModelId && (
         <Button
