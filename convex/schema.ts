@@ -21,6 +21,7 @@ export default defineSchema({
     learningLanguage: v.optional(v.string()),
     voiceId: v.optional(v.string()),
     agentId: v.optional(v.string()),
+    currentPiper: v.optional(v.id('piperModels')),
 
     scheduledForDeletion: v.optional(v.number()), // timestamp
   })
@@ -129,5 +130,5 @@ export default defineSchema({
     url: v.string(),
     folderName: v.string(),
     modelFile: v.string(),
-  }),
+  }).index('by_code', ['code']),
 });

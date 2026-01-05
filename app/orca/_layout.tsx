@@ -9,12 +9,10 @@ import { useQuery, useMutation } from 'convex/react';
 import { Onboarding } from '@/components/onboarding/onboarding';
 import { Colors } from '@/theme/colors';
 import { Spinner } from '@/components/ui/spinner';
-import { usePiperTTS } from '@/hooks/usePiperTTS';
 import { Alert } from 'react-native';
 
 export default function HomeLayout() {
   const user = useQuery(api.users.get, {});
-  const { availableModels } = usePiperTTS();
   const checkAndCancelDeletion = useMutation(
     api.userDeletion.checkAndCancelDeletionOnLogin
   );
@@ -75,8 +73,7 @@ export default function HomeLayout() {
   return !user.gender ||
     !user.birthday ||
     !user.nativeLanguage ||
-    !user.learningLanguage ||
-    availableModels.length === 0 ? (
+    !user.learningLanguage ? (
     <Onboarding user={user} />
   ) : (
     <Slot />

@@ -19,6 +19,7 @@ import {
 } from 'react-native-reanimated';
 import { Spinner } from '@/components/ui/spinner';
 import * as Haptics from 'expo-haptics';
+import { Doc } from '@/convex/_generated/dataModel';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -29,9 +30,11 @@ const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
 };
 
 export const VoiceDownload = ({
+  models,
   learningLanguage,
   userData,
 }: {
+  models: Array<Doc<'piperModels'>>;
   learningLanguage: string;
   userData: {
     gender: string;
@@ -48,7 +51,9 @@ export const VoiceDownload = ({
   const updateUser = useMutation(api.users.update);
   const initializeProgress = useMutation(api.courses.initializeProgress);
 
-  const { initializeTTS, downloadProgress, isDownloading } = usePiperTTS();
+  const { initializeTTS, downloadProgress, isDownloading } = usePiperTTS({
+    models,
+  });
 
   const [initComplete, setInitComplete] = useState(false);
   const [downloadComplete, setDownloadComplete] = useState(false);

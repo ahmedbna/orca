@@ -17,6 +17,7 @@ import type * as home from "../home.js";
 import type * as http from "../http.js";
 import type * as lessons from "../lessons.js";
 import type * as passwordReset from "../passwordReset.js";
+import type * as piperModels from "../piperModels.js";
 import type * as resendOTP from "../resendOTP.js";
 import type * as resendPasswordOTP from "../resendPasswordOTP.js";
 import type * as router from "../router.js";
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   lessons: typeof lessons;
   passwordReset: typeof passwordReset;
+  piperModels: typeof piperModels;
   resendOTP: typeof resendOTP;
   resendPasswordOTP: typeof resendPasswordOTP;
   router: typeof router;

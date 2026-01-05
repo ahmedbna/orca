@@ -30,19 +30,15 @@ type Props = {
   language: string; // e.g. "en", "de"
   native: string;
   lesson: Doc<'lessons'> & { course: Doc<'courses'> };
+  models: Array<Doc<'piperModels'>>;
 };
 
-export const Study = ({ language, native, lesson }: Props) => {
+export const Study = ({ language, native, lesson, models }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  const {
-    availableModels,
-    initializeTTS,
-    speak,
-    currentModelId,
-    isInitializing,
-  } = usePiperTTS();
+  const { allModels, initializeTTS, speak, currentModelId, isInitializing } =
+    usePiperTTS({ models });
 
   const phrases = useMemo(
     () => [...lesson.phrases].sort((a, b) => a.order - b.order),
@@ -61,8 +57,8 @@ export const Study = ({ language, native, lesson }: Props) => {
   const currentSpeedValue = VOICE_SPEED[currentSpeedKey];
 
   const selectedModel = useMemo(
-    () => availableModels.find((m) => m.code === language),
-    [availableModels, language]
+    () => allModels.find((m) => m.code === language),
+    [allModels, language]
   );
 
   useEffect(() => {

@@ -6,85 +6,10 @@ import { Directory, File, Paths } from 'expo-file-system';
 import { createDownloadResumable } from 'expo-file-system/legacy';
 import { unzip } from 'react-native-zip-archive';
 import { setAudioModeAsync } from 'expo-audio';
+import { Doc } from '@/convex/_generated/dataModel';
 import TTS from 'react-native-sherpa-onnx-offline-tts';
 
-/* -------------------------------------------------------------------------- */
-/*                                   Types                                    */
-/* -------------------------------------------------------------------------- */
-
-export interface PiperModel {
-  modelId: string;
-  voice: string;
-  language: string;
-  code: string;
-  locale: string;
-  url: string;
-  folderName: string;
-  modelFile: string;
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                 Model List                                 */
-/* -------------------------------------------------------------------------- */
-
-export const PIPER_MODELS: PiperModel[] = [
-  {
-    modelId: 'en-US-Amy',
-    voice: 'Amy',
-    language: 'English (US)',
-    code: 'en',
-    locale: 'en-US',
-    url: 'https://github.com/ahmedbna/piper/releases/download/v1/vits-piper-en_US-amy-low.zip',
-    folderName: 'vits-piper-en_US-amy-low',
-    modelFile: 'en_US-amy-low.onnx',
-  },
-  {
-    modelId: 'fr-FR-Siwis',
-    voice: 'Siwis',
-    language: 'French',
-    code: 'fr',
-    locale: 'fr-FR',
-    url: 'https://github.com/ahmedbna/piper/releases/download/v1/vits-piper-fr_FR-siwis-low.zip',
-    folderName: 'vits-piper-fr_FR-siwis-low',
-    modelFile: 'fr_FR-siwis-low.onnx',
-  },
-  {
-    modelId: 'de-DE-Thorsten',
-    voice: 'Thorsten',
-    language: 'German',
-    code: 'de',
-    locale: 'de-DE',
-    url: 'https://github.com/ahmedbna/piper/releases/download/v1/vits-piper-de_DE-thorsten-low.zip',
-    folderName: 'vits-piper-de_DE-thorsten-low',
-    modelFile: 'de_DE-thorsten-low.onnx',
-  },
-  {
-    modelId: 'es-ES-Carlfm',
-    voice: 'Carlfm',
-    language: 'Spanish',
-    code: 'es',
-    locale: 'es-ES',
-    url: 'https://github.com/ahmedbna/piper/releases/download/v1/vits-piper-es_ES-carlfm-x_low.zip',
-    folderName: 'vits-piper-es_ES-carlfm-x_low',
-    modelFile: 'es_ES-carlfm-x_low.onnx',
-  },
-  {
-    modelId: 'it-IT-Riccardo',
-    voice: 'Riccardo',
-    language: 'Italian',
-    code: 'it',
-    locale: 'it-IT',
-    url: 'https://github.com/ahmedbna/piper/releases/download/v1/vits-piper-it_IT-riccardo-x_low.zip',
-    folderName: 'vits-piper-it_IT-riccardo-x_low',
-    modelFile: 'it_IT-riccardo-x_low.onnx',
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-/*                                   Hook                                     */
-/* -------------------------------------------------------------------------- */
-
-export function usePiperTTS() {
+export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
   const isReadyRef = useRef(false);
   const isSpeakingRef = useRef(false);
   const initializationAttempts = useRef<Record<string, number>>({});
@@ -97,10 +22,6 @@ export function usePiperTTS() {
     Record<string, number>
   >({});
 
-  /* ------------------------------------------------------------------------ */
-  /*                     Prevent native volume listener warning               */
-  /* ------------------------------------------------------------------------ */
-
   useEffect(() => {
     if (!TTS?.addVolumeListener) return;
 
@@ -111,10 +32,6 @@ export function usePiperTTS() {
       // ignore
     }
   }, []);
-
-  /* ------------------------------------------------------------------------ */
-  /*                              File Helpers                                */
-  /* ------------------------------------------------------------------------ */
 
   const getTTSDirectory = useCallback(async () => {
     const dir = new Directory(Paths.document, 'piper-models');
@@ -129,7 +46,7 @@ export function usePiperTTS() {
 
   const verifyModelFiles = async (
     modelDir: Directory,
-    model: PiperModel
+    model: Doc<'piperModels'>
   ): Promise<boolean> => {
     try {
       const modelFile = new File(modelDir, model.modelFile);
@@ -142,12 +59,8 @@ export function usePiperTTS() {
     }
   };
 
-  /* ------------------------------------------------------------------------ */
-  /*                          Download + Extract Model                         */
-  /* ------------------------------------------------------------------------ */
-
   const downloadAndExtractModel = useCallback(
-    async (model: PiperModel) => {
+    async (model: Doc<'piperModels'>) => {
       const baseDir = await getTTSDirectory();
       const modelDir = new Directory(baseDir, model.folderName);
 
@@ -200,9 +113,62 @@ export function usePiperTTS() {
     [getTTSDirectory]
   );
 
-  /* ------------------------------------------------------------------------ */
-  /*                              Initialize TTS                              */
-  /* ------------------------------------------------------------------------ */
+  const removeModel = useCallback(
+    async (modelId: string) => {
+      try {
+        const model = models.find((m) => m.modelId === modelId);
+        if (!model) throw new Error(`Model not found: ${modelId}`);
+
+        const baseDir = await getTTSDirectory();
+        const modelDir = new Directory(baseDir, model.folderName);
+
+        if (modelDir.exists) {
+          await modelDir.delete();
+          console.log('✅ Model removed:', modelId);
+        }
+
+        // Clear progress for this model
+        setDownloadProgress((prev) => {
+          const updated = { ...prev };
+          delete updated[modelId];
+          return updated;
+        });
+
+        // If this was the current model, clear it
+        if (currentModelId === modelId) {
+          isReadyRef.current = false;
+          setCurrentModelId(null);
+        }
+
+        return true;
+      } catch (err) {
+        setError(`Failed to remove model: ${err}`);
+        return false;
+      }
+    },
+    [models, currentModelId, getTTSDirectory]
+  );
+
+  const getDownloadedModels = useCallback(async () => {
+    try {
+      const baseDir = await getTTSDirectory();
+      const downloaded: string[] = [];
+
+      for (const model of models) {
+        const modelDir = new Directory(baseDir, model.folderName);
+        if (modelDir.exists) {
+          const isValid = await verifyModelFiles(modelDir, model);
+          if (isValid) {
+            downloaded.push(model.modelId);
+          }
+        }
+      }
+
+      return downloaded;
+    } catch {
+      return [];
+    }
+  }, [models, getTTSDirectory]);
 
   const initializeTTS = useCallback(
     async (modelId: string, forceReInit = false) => {
@@ -221,7 +187,7 @@ export function usePiperTTS() {
         setError(null);
         initializationAttempts.current[modelId] = attempts + 1;
 
-        const model = PIPER_MODELS.find((m) => m.modelId === modelId);
+        const model = models.find((m) => m.modelId === modelId);
         if (!model) throw new Error(`Model not found: ${modelId}`);
 
         const folderUri = await downloadAndExtractModel(model);
@@ -247,12 +213,8 @@ export function usePiperTTS() {
         setIsInitializing(false);
       }
     },
-    [isInitializing, currentModelId, downloadAndExtractModel]
+    [isInitializing, currentModelId, downloadAndExtractModel, models]
   );
-
-  /* ------------------------------------------------------------------------ */
-  /*                                   Speak                                  */
-  /* ------------------------------------------------------------------------ */
 
   const speak = useCallback(
     async (text: string, speed = 0.75) => {
@@ -283,14 +245,12 @@ export function usePiperTTS() {
     [isInitializing]
   );
 
-  /* ------------------------------------------------------------------------ */
-  /*                                   API                                    */
-  /* ------------------------------------------------------------------------ */
-
   return {
-    availableModels: PIPER_MODELS,
+    allModels: models,
     initializeTTS,
     speak,
+    removeModel,
+    getDownloadedModels,
     currentModelId,
     isDownloading,
     isInitializing,

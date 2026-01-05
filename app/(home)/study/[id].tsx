@@ -11,8 +11,9 @@ import { Colors } from '@/theme/colors';
 export default function StudyScreen() {
   const { id } = useLocalSearchParams<{ id: Id<'lessons'> }>();
   const lesson = useQuery(api.lessons.get, { lessonId: id });
+  const models = useQuery(api.piperModels.getAll);
 
-  if (lesson === undefined) {
+  if (lesson === undefined || models === undefined) {
     return <Loading />;
   }
 
@@ -36,6 +37,7 @@ export default function StudyScreen() {
 
   return (
     <Study
+      models={models}
       lesson={lesson}
       language={lesson.user.learningLanguage}
       native={lesson.user.nativeLanguage}

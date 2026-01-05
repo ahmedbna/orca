@@ -4,17 +4,21 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { usePiperTTS } from '@/hooks/usePiperTTS';
 import { Button } from '@/components/ui/button';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 export const Piper = () => {
+  const models = useQuery(api.piperModels.getAll);
+
   const {
-    availableModels,
+    allModels,
     initializeTTS,
     speak,
     currentModelId,
     isDownloading,
     isInitializing,
     downloadProgress,
-  } = usePiperTTS();
+  } = usePiperTTS({ models: models ? models : [] });
 
   const handlePress = async (modelId: string) => {
     if (currentModelId !== modelId) {
@@ -24,7 +28,7 @@ export const Piper = () => {
 
   return (
     <View style={{ padding: 20, paddingTop: 200 }}>
-      {availableModels.map((model) => {
+      {allModels.map((model) => {
         const isActive = currentModelId === model.modelId;
         const progress = downloadProgress[model.modelId];
 
