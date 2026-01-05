@@ -18,8 +18,8 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { Spinner } from '@/components/ui/spinner';
-import * as Haptics from 'expo-haptics';
 import { Doc } from '@/convex/_generated/dataModel';
+import * as Haptics from 'expo-haptics';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -52,7 +52,7 @@ export const VoiceDownload = ({
   const initializeProgress = useMutation(api.courses.initializeProgress);
 
   const { initializeTTS, downloadProgress, isDownloading } = usePiperTTS({
-    models,
+    models: models || [],
   });
 
   const [initComplete, setInitComplete] = useState(false);
@@ -93,13 +93,26 @@ export const VoiceDownload = ({
   // Initialize voice + backend
   useEffect(() => {
     const run = async () => {
+      if (!models) return;
+
       try {
-        // ✅ pass language directly
-        await initializeTTS(learningLanguage);
+        // Find the default model for the learning language
+        const defaultModel = models.find((m) => m.code === learningLanguage);
+
+        if (!defaultModel) {
+          console.error('No model found for language:', learningLanguage);
+          return;
+        }
+
+        // Initialize TTS with language code
+        await initializeTTS(defaultModel._id);
         setInitComplete(true);
         triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
 
-        await updateUser(userData);
+        // Update user data
+        await updateUser({ ...userData, piperId: defaultModel._id });
+
+        // Initialize course progress
         await initializeProgress();
 
         setBackendUpdateComplete(true);
@@ -109,10 +122,12 @@ export const VoiceDownload = ({
     };
 
     run();
-  }, [learningLanguage]);
+  }, [learningLanguage, models]);
 
-  // ✅ progress is tracked by language
-  const progress = downloadProgress[learningLanguage] ?? 0;
+  const model = models.find((m) => m.code === learningLanguage);
+  const modelId = model?.modelId;
+
+  const progress = modelId ? (downloadProgress[modelId] ?? 0) : 0;
   const progressPercent = Math.round(progress * 100);
 
   useEffect(() => {

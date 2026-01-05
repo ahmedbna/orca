@@ -12,6 +12,8 @@ import { OrcaButton } from '@/components/squishy/orca-button';
 import { Progress } from '@/components/squishy/progress';
 import { NATIVES } from '@/constants/languages';
 import { usePiperTTS } from '@/hooks/usePiperTTS';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -27,7 +29,7 @@ const VOICE_SPEED: Record<SpeedKey, number> = {
 };
 
 type Props = {
-  language: string; // e.g. "en", "de"
+  language: string;
   native: string;
   lesson: Doc<'lessons'> & { course: Doc<'courses'> };
   models: Array<Doc<'piperModels'>>;
@@ -36,6 +38,9 @@ type Props = {
 export const Study = ({ language, native, lesson, models }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+
+  // Get user's CURRENT voice preference (specific model)
+  const userVoice = useQuery(api.piperModels.getUserVoice);
 
   const { allModels, initializeTTS, speak, currentModelId, isInitializing } =
     usePiperTTS({ models });
@@ -47,37 +52,64 @@ export const Study = ({ language, native, lesson, models }: Props) => {
 
   const [index, setIndex] = useState(0);
   const [showTranslation, setShowTranslation] = useState(false);
+  const [speedIndex, setSpeedIndex] = useState(2); // default 1.0x
 
   const currentPhrase = phrases[index];
-
-  /* ------------------------------ Speed state ------------------------------ */
-
-  const [speedIndex, setSpeedIndex] = useState(2); // default 1.0x
   const currentSpeedKey = SPEED_ORDER[speedIndex];
   const currentSpeedValue = VOICE_SPEED[currentSpeedKey];
 
-  const selectedModel = useMemo(
-    () => allModels.find((m) => m.code === language),
-    [allModels, language]
-  );
+  // Use the user's preferred voice, or fallback to first model for language
+  const selectedVoice = useMemo(() => {
+    // Priority 1: User's saved preference that matches language
+    if (userVoice && userVoice.code === language) {
+      return userVoice;
+    }
 
+    // Priority 2: First available model for this language
+    const fallback = allModels.find((m) => m.code === language);
+
+    if (!fallback) {
+      console.warn(`⚠️ No voice model available for language: ${language}`);
+    }
+
+    return fallback;
+  }, [allModels, language, userVoice]);
+
+  // Initialize TTS when component mounts or when selected voice changes
   useEffect(() => {
-    if (!selectedModel) {
-      console.warn(`No Piper model found for language code: ${language}`);
+    if (!selectedVoice) {
+      console.error(`❌ No voice available for language: ${language}`);
       return;
     }
 
-    if (currentModelId !== selectedModel.modelId) {
-      initializeTTS(selectedModel.modelId);
+    // Only initialize if we're not already using this voice
+    if (currentModelId !== selectedVoice.modelId) {
+      console.log(
+        `🎤 Initializing voice: ${selectedVoice.voice} for language: ${language}`
+      );
+      initializeTTS(selectedVoice._id);
     }
-  }, [selectedModel, currentModelId, initializeTTS, language]);
+  }, [selectedVoice, currentModelId, initializeTTS, language]);
 
   const handleSpeak = useCallback(() => {
-    if (isInitializing) return;
-    if (!currentPhrase?.text) return;
+    if (isInitializing) {
+      console.log('⏳ Voice still initializing...');
+      return;
+    }
 
+    if (!currentPhrase?.text) {
+      console.warn('⚠️ No phrase text to speak');
+      return;
+    }
+
+    if (!selectedVoice) {
+      console.error('❌ No voice selected');
+      return;
+    }
+
+    console.log(`🔊 Speaking with voice: ${selectedVoice.voice}`);
     speak(currentPhrase.text, currentSpeedValue);
-  }, [currentPhrase, speak, isInitializing, currentSpeedValue]);
+  }, [currentPhrase, speak, isInitializing, currentSpeedValue, selectedVoice]);
 
   const translation = currentPhrase.dictionary?.find(
     (d) => d.language === native
@@ -90,16 +122,19 @@ export const Study = ({ language, native, lesson, models }: Props) => {
     setSpeedIndex((i) => (i + 1) % SPEED_ORDER.length);
   };
 
+  const BOTTOM_PANEL_HEIGHT = insets.bottom + 240;
+
   return (
     <View style={{ flex: 1 }}>
-      {/* Phrase */}
+      {/* 🔊 TOP TAP AREA */}
       <Pressable
         onPress={handleSpeak}
+        android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
         style={{
           flex: 1,
-          padding: 16,
-          position: 'absolute',
-          top: SCREEN_HEIGHT * 0.3,
+          paddingHorizontal: 16,
+          paddingTop: SCREEN_HEIGHT * 0.32,
+          // paddingBottom: BOTTOM_PANEL_HEIGHT,
         }}
       >
         <View>
@@ -123,7 +158,7 @@ export const Study = ({ language, native, lesson, models }: Props) => {
         </View>
       </Pressable>
 
-      {/* Bottom panel */}
+      {/* 🟡 BOTTOM PANEL */}
       <View
         style={{
           position: 'absolute',
@@ -134,8 +169,7 @@ export const Study = ({ language, native, lesson, models }: Props) => {
           paddingBottom: insets.bottom,
           paddingHorizontal: 16,
           gap: 16,
-          height: insets.bottom + 240,
-          overflow: 'hidden',
+          height: BOTTOM_PANEL_HEIGHT,
           zIndex: 99,
         }}
       >
@@ -235,9 +269,15 @@ export const Study = ({ language, native, lesson, models }: Props) => {
         </View>
 
         <OrcaButton
-          label={isInitializing ? '⏳ LOADING VOICE' : '🔊 LISTEN'}
+          label={
+            isInitializing
+              ? '⏳ LOADING VOICE'
+              : selectedVoice
+                ? `🔊 LISTEN`
+                : '❌ NO VOICE'
+          }
           variant='red'
-          disabled={isInitializing}
+          disabled={isInitializing || !selectedVoice}
           onPress={handleSpeak}
         />
       </View>

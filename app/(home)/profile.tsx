@@ -8,8 +8,15 @@ import { useQuery } from 'convex/react';
 export default function ProfileScreen() {
   const user = useQuery(api.users.get, {});
   const userId = useQuery(api.users.getId);
+  const allModels = useQuery(api.piperModels.getAll);
+  const userVoice = useQuery(api.piperModels.getUserVoice);
 
-  if (user === undefined || userId === undefined) {
+  if (
+    user === undefined ||
+    userId === undefined ||
+    allModels === undefined ||
+    userVoice === undefined
+  ) {
     return <Loading />;
   }
 
@@ -27,5 +34,12 @@ export default function ProfileScreen() {
     );
   }
 
-  return <Profile user={user} userId={userId} />;
+  return (
+    <Profile
+      user={user}
+      userId={userId}
+      allModels={allModels}
+      userVoice={userVoice}
+    />
+  );
 }

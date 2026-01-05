@@ -60,7 +60,7 @@ export const setUserVoice = mutation({
     }
 
     await ctx.db.patch(userId, {
-      currentPiper: model._id,
+      piperId: model._id,
     });
 
     return { success: true };
@@ -74,9 +74,9 @@ export const getUserVoice = query({
     if (!userId) throw new Error('Not authenticated');
 
     const user = await ctx.db.get(userId);
-    if (!user?.currentPiper) return null;
+    if (!user?.piperId) return null;
 
-    const model = await ctx.db.get(user.currentPiper);
+    const model = await ctx.db.get(user.piperId);
 
     if (!model) {
       throw new Error('Model not found');

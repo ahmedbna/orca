@@ -21,7 +21,7 @@ export default defineSchema({
     learningLanguage: v.optional(v.string()),
     voiceId: v.optional(v.string()),
     agentId: v.optional(v.string()),
-    currentPiper: v.optional(v.id('piperModels')),
+    piperId: v.optional(v.id('piperModels')),
 
     scheduledForDeletion: v.optional(v.number()), // timestamp
   })

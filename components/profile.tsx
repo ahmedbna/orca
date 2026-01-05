@@ -1,16 +1,28 @@
-import { TouchableOpacity, ScrollView } from 'react-native';
+import { TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Streak } from '@/components/map/streak';
 import { OrcaButton } from '@/components/squishy/orca-button';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, BookOpen, Trophy, Zap } from 'lucide-react-native';
+import {
+  ChevronLeft,
+  BookOpen,
+  Trophy,
+  Zap,
+  Volume2,
+  Download,
+  Trash2,
+} from 'lucide-react-native';
 import { Doc, Id } from '@/convex/_generated/dataModel';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { LANGUAGES, NATIVES } from '@/constants/languages';
 import { useColor } from '@/hooks/useColor';
+import { usePiperTTS } from '@/hooks/usePiperTTS';
+import { useEffect, useState } from 'react';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 type Props = {
   userId: Id<'users'>;
@@ -24,9 +36,19 @@ type Props = {
     streak: number;
     credits: number;
   };
+  allModels: Array<Doc<'piperModels'>>;
+  userVoice: Doc<'piperModels'> | null;
 };
 
-export const Profile = ({ user, userId }: Props) => {
+const AVATAR_SHADOW_OFFSET = 6;
+const size = 100;
+const colors = {
+  face: '#5E5CE6',
+  shadow: '#3F3DB8',
+  text: '#FFFFFF',
+};
+
+export const Profile = ({ user, userId, allModels, userVoice }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -35,13 +57,31 @@ export const Profile = ({ user, userId }: Props) => {
   const muted = useColor('textMuted');
   const background = useColor('background');
 
-  const AVATAR_SHADOW_OFFSET = 6;
-  const size = 100;
-  const colors = {
-    face: '#5E5CE6',
-    shadow: '#3F3DB8',
-    text: '#FFFFFF',
-  };
+  const {
+    initializeTTS,
+    removeModel,
+    getDownloadedModels,
+    downloadProgress,
+    isDownloading,
+    speak,
+    isInitializing,
+  } = usePiperTTS({ models: allModels || [] });
+  const setUserVoice = useMutation(api.piperModels.setUserVoice);
+
+  const [downloadedModels, setDownloadedModels] = useState<string[]>([]);
+  const [speakingModelId, setSpeakingModelId] = useState<string | null>(null);
+
+  // Load downloaded models
+  useEffect(() => {
+    const loadDownloaded = async () => {
+      const downloaded = await getDownloadedModels();
+      setDownloadedModels(downloaded);
+    };
+
+    if (allModels) {
+      loadDownloaded();
+    }
+  }, [allModels, getDownloadedModels]);
 
   const nativeLanguag = NATIVES.find(
     (lang) => lang.code === user.nativeLanguage
@@ -50,6 +90,110 @@ export const Profile = ({ user, userId }: Props) => {
   const learningLanguage = LANGUAGES.find(
     (lang) => lang.code === user.learningLanguage
   );
+
+  const handleDownloadVoice = async (model: Doc<'piperModels'>) => {
+    try {
+      await initializeTTS(model._id);
+      const downloaded = await getDownloadedModels();
+      setDownloadedModels(downloaded);
+      Alert.alert('Success', `${model.voice} voice downloaded!`);
+    } catch (error) {
+      Alert.alert('Error', `Failed to download voice: ${error}`);
+    }
+  };
+
+  const handleSetCurrentVoice = async (piperId: Id<'piperModels'>) => {
+    try {
+      await setUserVoice({ piperId });
+    } catch (error) {
+      Alert.alert('Error', String(error));
+    }
+  };
+
+  const handleDeleteVoice = async (model: Doc<'piperModels'>) => {
+    const languageModels =
+      allModels?.filter(
+        (m) =>
+          m.code === user?.learningLanguage &&
+          downloadedModels.includes(m.modelId)
+      ) || [];
+
+    if (languageModels.length <= 1) {
+      Alert.alert(
+        'Cannot Delete',
+        'You must have at least one voice model downloaded for your learning language.'
+      );
+      return;
+    }
+
+    if (userVoice?._id === model._id) {
+      Alert.alert(
+        'Cannot Delete',
+        'You cannot delete the currently active voice. Please switch to another voice first.'
+      );
+      return;
+    }
+
+    Alert.alert(
+      'Delete Voice',
+      `Are you sure you want to delete ${model.voice}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            const success = await removeModel(model.modelId);
+            if (success) {
+              const downloaded = await getDownloadedModels();
+              setDownloadedModels(downloaded);
+              Alert.alert('Success', 'Voice deleted!');
+            } else {
+              Alert.alert('Error', 'Failed to delete voice');
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const handleTestVoice = async (model: Doc<'piperModels'>) => {
+    if (speakingModelId || isInitializing) return;
+
+    try {
+      setSpeakingModelId(model.modelId);
+      await initializeTTS(model._id);
+      const downloaded = await getDownloadedModels();
+      setDownloadedModels(downloaded);
+
+      const testPhrases: Record<string, string> = {
+        en: 'Hello! This is a test of the voice.',
+        de: 'Hallo! Das ist ein Test der Stimme.',
+        es: '¡Hola! Esta es una prueba de la voz.',
+        fr: 'Bonjour! Ceci est un test de la voix.',
+        it: 'Ciao! Questo è un test della voce.',
+        pt: 'Olá! Este é um teste da voz.',
+        ru: 'Привет! Это тест голоса.',
+        zh: '你好！这是语音测试。',
+        ja: 'こんにちは！これは音声のテストです。',
+        ko: '안녕하세요! 음성 테스트입니다.',
+      };
+
+      const phrase = testPhrases[model.code] || 'Hello! This is a test.';
+      await speak(phrase, 0.75);
+    } catch (error) {
+      Alert.alert('Error', `Failed to test voice: ${error}`);
+    } finally {
+      setSpeakingModelId(null);
+    }
+  };
+
+  const availableVoices =
+    allModels?.filter((m) => m.code === user?.learningLanguage) || [];
+
+  const downloadedCount = availableVoices.filter((v) =>
+    downloadedModels.includes(v.modelId)
+  ).length;
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FAD40B' }}>
@@ -84,7 +228,6 @@ export const Profile = ({ user, userId }: Props) => {
             }}
           >
             <View>
-              {/* Shadow */}
               <View
                 pointerEvents='none'
                 style={{
@@ -97,7 +240,6 @@ export const Profile = ({ user, userId }: Props) => {
                 }}
               />
 
-              {/* Avatar */}
               <View
                 pointerEvents='none'
                 style={{
@@ -165,6 +307,7 @@ export const Profile = ({ user, userId }: Props) => {
           </View>
         </View>
 
+        {/* Stats Section */}
         <View
           style={{
             backgroundColor: background,
@@ -178,7 +321,6 @@ export const Profile = ({ user, userId }: Props) => {
             elevation: 5,
           }}
         >
-          {/* Stats Row */}
           <View
             style={{
               flexDirection: 'row',
@@ -401,6 +543,248 @@ export const Profile = ({ user, userId }: Props) => {
             </LinearGradient>
           </View>
         )}
+
+        {user._id === userId ? (
+          <View
+            style={{
+              backgroundColor: background,
+              borderRadius: 24,
+              padding: 20,
+              marginBottom: 16,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 5,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '800',
+                color: text,
+                marginBottom: 8,
+              }}
+            >
+              🎙️ Voice Settings
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                color: muted,
+                marginBottom: 16,
+              }}
+            >
+              {downloadedCount} of {availableVoices.length} voices downloaded
+            </Text>
+
+            <View style={{ gap: 12 }}>
+              {availableVoices.map((model) => {
+                const isDownloaded = downloadedModels.includes(model.modelId);
+                const isCurrent = userVoice?._id === model._id;
+                const progress = downloadProgress[model.modelId] || 0;
+                const isSpeaking = speakingModelId === model.modelId;
+                const isCurrentlyDownloading =
+                  isDownloading && progress > 0 && progress < 1;
+
+                return (
+                  <View
+                    key={model._id}
+                    style={{
+                      backgroundColor: card,
+                      padding: 16,
+                      borderRadius: 16,
+                      borderWidth: isCurrent ? 2 : 0,
+                      borderColor: isCurrent ? '#4CAF50' : 'transparent',
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginBottom: 12,
+                      }}
+                    >
+                      <View style={{ flex: 1 }}>
+                        <Text
+                          style={{
+                            color: text,
+                            fontSize: 16,
+                            fontWeight: '800',
+                          }}
+                        >
+                          {model.voice}
+                        </Text>
+                        <Text
+                          style={{ color: muted, fontSize: 13, marginTop: 2 }}
+                        >
+                          {model.language} • {model.locale}
+                        </Text>
+                      </View>
+
+                      {isCurrent && (
+                        <View
+                          style={{
+                            backgroundColor: '#4CAF50',
+                            paddingHorizontal: 12,
+                            paddingVertical: 6,
+                            borderRadius: 8,
+                            alignSelf: 'flex-start',
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: '#FFF',
+                              fontSize: 11,
+                              fontWeight: '800',
+                            }}
+                          >
+                            ACTIVE
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+
+                    {isCurrentlyDownloading && (
+                      <View style={{ marginBottom: 12 }}>
+                        <View
+                          style={{
+                            height: 6,
+                            backgroundColor: card,
+                            borderRadius: 3,
+                            overflow: 'hidden',
+                          }}
+                        >
+                          <View
+                            style={{
+                              height: '100%',
+                              width: `${progress * 100}%`,
+                              backgroundColor: '#4CAF50',
+                            }}
+                          />
+                        </View>
+                        <Text
+                          style={{ color: muted, fontSize: 11, marginTop: 4 }}
+                        >
+                          Downloading: {Math.round(progress * 100)}%
+                        </Text>
+                      </View>
+                    )}
+
+                    <View style={{ flexDirection: 'row', gap: 8 }}>
+                      {!isDownloaded ? (
+                        <TouchableOpacity
+                          onPress={() => handleDownloadVoice(model)}
+                          disabled={isDownloading || isInitializing}
+                          style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: '#4CAF50',
+                            paddingVertical: 12,
+                            borderRadius: 12,
+                            opacity: isDownloading || isInitializing ? 0.5 : 1,
+                          }}
+                        >
+                          <Download size={16} color='#FFF' />
+                          <Text
+                            style={{
+                              color: '#FFF',
+                              marginLeft: 8,
+                              fontWeight: '700',
+                              fontSize: 14,
+                            }}
+                          >
+                            Download
+                          </Text>
+                        </TouchableOpacity>
+                      ) : (
+                        <>
+                          <TouchableOpacity
+                            onPress={() => handleTestVoice(model)}
+                            disabled={
+                              isInitializing || isSpeaking || !!speakingModelId
+                            }
+                            style={{
+                              flex: 1,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#FF3B30',
+                              paddingVertical: 12,
+                              borderRadius: 12,
+                              opacity:
+                                isInitializing ||
+                                isSpeaking ||
+                                !!speakingModelId
+                                  ? 0.5
+                                  : 1,
+                            }}
+                          >
+                            <Volume2 size={16} color={text} />
+                            <Text
+                              style={{
+                                color: text,
+                                marginLeft: 8,
+                                fontWeight: '700',
+                                fontSize: 14,
+                              }}
+                            >
+                              {'Listen'}
+                              {/* {isSpeaking ? 'Playing...' : 'Listen'} */}
+                            </Text>
+                          </TouchableOpacity>
+
+                          {!isCurrent && (
+                            <TouchableOpacity
+                              onPress={() => handleSetCurrentVoice(model._id)}
+                              style={{
+                                flex: 1,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: '#5E5CE6',
+                                paddingVertical: 12,
+                                borderRadius: 12,
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  color: '#FFF',
+                                  fontWeight: '700',
+                                  fontSize: 14,
+                                }}
+                              >
+                                Set Active
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+
+                          <TouchableOpacity
+                            onPress={() => handleDeleteVoice(model)}
+                            disabled={isCurrent || downloadedCount <= 1}
+                            style={{
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: 'transparent',
+                              paddingHorizontal: 16,
+                              paddingVertical: 12,
+                              borderRadius: 12,
+                              opacity:
+                                isCurrent || downloadedCount <= 1 ? 0.3 : 1,
+                            }}
+                          >
+                            <Trash2 size={16} color='#FFF' />
+                          </TouchableOpacity>
+                        </>
+                      )}
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+        ) : null}
       </ScrollView>
 
       <View
@@ -420,13 +804,11 @@ export const Profile = ({ user, userId }: Props) => {
           },
         ]}
       >
-        {/* Back Button */}
         <TouchableOpacity
           onPress={() => router.back()}
           style={{ flexDirection: 'row', gap: 2, alignItems: 'center' }}
         >
           <ChevronLeft size={26} color='#000' strokeWidth={3} />
-
           <Text
             variant='title'
             style={{

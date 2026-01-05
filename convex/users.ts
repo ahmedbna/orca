@@ -171,6 +171,7 @@ export const update = mutation({
     learningLanguage: v.optional(v.string()),
     voiceId: v.optional(v.string()),
     agentId: v.optional(v.string()),
+    piperId: v.optional(v.id('piperModels')),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);

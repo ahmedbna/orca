@@ -6,6 +6,7 @@ import { usePiperTTS } from '@/hooks/usePiperTTS';
 import { Button } from '@/components/ui/button';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
 
 export const Piper = () => {
   const models = useQuery(api.piperModels.getAll);
@@ -20,7 +21,7 @@ export const Piper = () => {
     downloadProgress,
   } = usePiperTTS({ models: models ? models : [] });
 
-  const handlePress = async (modelId: string) => {
+  const handlePress = async (modelId: Id<'piperModels'>) => {
     if (currentModelId !== modelId) {
       await initializeTTS(modelId);
     }
@@ -36,7 +37,7 @@ export const Piper = () => {
           <TouchableOpacity
             key={model.modelId}
             disabled={isDownloading || isInitializing}
-            onPress={() => handlePress(model.modelId)}
+            onPress={() => handlePress(model._id)}
             style={{
               padding: 15,
               backgroundColor: isActive ? '#d1fae5' : '#f0f0f0',

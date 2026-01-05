@@ -11,12 +11,14 @@ import { Onboarding } from '@/components/onboarding/onboarding';
 import { Colors } from '@/theme/colors';
 import { Spinner } from '@/components/ui/spinner';
 import { Alert } from 'react-native';
+import { SherpaVolumeSilencer } from '@/hooks/SherpaVolumeSilencer';
 
 export default function HomeLayout() {
   const user = useQuery(api.users.get, {});
   const checkAndCancelDeletion = useMutation(
     api.userDeletion.checkAndCancelDeletionOnLogin
   );
+  const models = useQuery(api.piperModels.getAll);
 
   // Check and cancel deletion on mount
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function HomeLayout() {
     checkDeletion();
   }, [user?._id]); // Only run when user ID changes
 
-  if (user === undefined) {
+  if (user === undefined || models === undefined) {
     return (
       <View
         style={{
@@ -75,9 +77,11 @@ export default function HomeLayout() {
     !user.birthday ||
     !user.nativeLanguage ||
     !user.learningLanguage ? (
-    <Onboarding user={user} />
+    <Onboarding user={user} models={models} />
   ) : (
     <Background user={user}>
+      <SherpaVolumeSilencer />
+
       <Slot />
     </Background>
   );

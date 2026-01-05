@@ -20,9 +20,9 @@ import { Progress } from '@/components/squishy/progress';
 import { Image } from 'expo-image';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { VoiceDownload } from '@/components/onboarding/voice-download';
-import * as Haptics from 'expo-haptics';
 import { Doc } from '@/convex/_generated/dataModel';
 import { SquishyInput } from '../squishy/squishy-input';
+import * as Haptics from 'expo-haptics';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -59,7 +59,13 @@ const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
   }
 };
 
-export const Onboarding = ({ user }: { user?: Doc<'users'> }) => {
+export const Onboarding = ({
+  user,
+  models,
+}: {
+  user?: Doc<'users'>;
+  models: Array<Doc<'piperModels'>>;
+}) => {
   const insets = useSafeAreaInsets();
   const yellow = useColor('orca');
   const border = useColor('border');
@@ -141,6 +147,7 @@ export const Onboarding = ({ user }: { user?: Doc<'users'> }) => {
 
       {showDownload ? (
         <VoiceDownload
+          models={models}
           learningLanguage={learningLanguage}
           userData={{
             gender,
