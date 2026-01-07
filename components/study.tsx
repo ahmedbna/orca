@@ -136,7 +136,6 @@ export const Study = ({ language, native, lesson, models }: Props) => {
             flex: 1,
             paddingHorizontal: 16,
             paddingTop: SCREEN_HEIGHT * 0.32,
-            // paddingBottom: BOTTOM_PANEL_HEIGHT,
           }}
         >
           <View>

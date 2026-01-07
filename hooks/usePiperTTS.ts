@@ -1,7 +1,7 @@
 // hooks/usePiperTTS.ts
 
 import { Platform } from 'react-native';
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Directory, File, Paths } from 'expo-file-system';
 import { createDownloadResumable } from 'expo-file-system/legacy';
 import { unzip } from 'react-native-zip-archive';
@@ -12,39 +12,37 @@ import TTS from 'react-native-sherpa-onnx-offline-tts';
 export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
   const isReadyRef = useRef(false);
   const isSpeakingRef = useRef(false);
-  const isConfiguringSessionRef = useRef(false);
-  const initializationAttempts = useRef<Record<string, number>>({});
   const currentModelRef = useRef<Doc<'piperModels'> | null>(null);
+  const initializationAttempts = useRef<Record<string, number>>({});
 
   const [isDownloading, setIsDownloading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
   const [currentModelId, setCurrentModelId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
   const [downloadProgress, setDownloadProgress] = useState<
     Record<string, number>
   >({});
 
-  const configureTTSAudioSession = async () => {
-    if (isConfiguringSessionRef.current) return;
-
+  // Configure audio session for TTS on mount and whenever we need to speak
+  const configureTTSAudioSession = useCallback(async () => {
     try {
-      isConfiguringSessionRef.current = true;
-
-      // 🔥 FIX: More aggressive audio session configuration
       await setAudioModeAsync({
         playsInSilentMode: true,
         allowsRecording: false,
         shouldPlayInBackground: false,
-        interruptionMode: 'duckOthers', // This will duck other audio when TTS plays
+        interruptionMode: 'duckOthers',
         shouldRouteThroughEarpiece: false,
       });
+      console.log('✅ TTS audio session configured');
     } catch (err) {
       console.warn('⚠️ TTS audio session config error:', err);
-    } finally {
-      isConfiguringSessionRef.current = false;
     }
-  };
+  }, []);
+
+  // Configure audio session when component mounts
+  useEffect(() => {
+    configureTTSAudioSession();
+  }, [configureTTSAudioSession]);
 
   const getTTSDirectory = useCallback(async () => {
     const dir = new Directory(Paths.document, 'piper-models');
@@ -130,14 +128,13 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
           await modelDir.delete();
           console.log('✅ Model removed:', modelId);
         }
-        // Clear progress for this specific model
 
         setDownloadProgress((prev) => {
           const updated = { ...prev };
           delete updated[modelId];
           return updated;
         });
-        // If this was the current model, clear it
+
         if (currentModelId === modelId) {
           isReadyRef.current = false;
           currentModelRef.current = null;
@@ -162,7 +159,6 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
           const isValid = await verifyModelFiles(modelDir, model);
           if (isValid) {
             downloaded.push(model.modelId);
-            // Set progress to 100% for verified models
             setDownloadProgress((prev) => ({ ...prev, [model.modelId]: 1 }));
           }
         }
@@ -175,34 +171,48 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
 
   const initializeTTS = useCallback(
     async (piperId: Id<'piperModels'>, forceReInit = false) => {
-      if (isInitializing) return;
+      if (isInitializing) {
+        console.log('⏳ Already initializing, skipping...');
+        return;
+      }
 
       if (
         !forceReInit &&
         currentModelRef.current?._id === piperId &&
         isReadyRef.current
       ) {
+        console.log('✅ Model already initialized and ready');
         return;
       }
 
       const model = models.find((m) => m._id === piperId);
-      if (!model) throw new Error('Model not found');
+      if (!model) {
+        console.error('❌ Model not found');
+        throw new Error('Model not found');
+      }
 
       const attempts = initializationAttempts.current[model.modelId] || 0;
       if (attempts >= 3) {
-        setError('Maximum initialization attempts reached');
+        const errMsg = 'Maximum initialization attempts reached';
+        setError(errMsg);
+        console.error('❌', errMsg);
         return;
       }
 
       try {
         setIsInitializing(true);
+        setError(null);
         initializationAttempts.current[model.modelId] = attempts + 1;
 
-        // 🔥 FIX: Configure audio session FIRST
+        console.log(`🎤 Initializing TTS for model: ${model.voice}`);
+
+        // Configure audio session BEFORE initializing TTS
         await configureTTSAudioSession();
 
         const folderUri = await downloadAndExtractModel(model);
         const rawPath = folderUri.replace(/^file:\/\//, '');
+
+        console.log(`📁 Model path: ${rawPath}`);
 
         await TTS.initialize(
           JSON.stringify({
@@ -217,42 +227,69 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
         currentModelRef.current = model;
         setCurrentModelId(model.modelId);
         initializationAttempts.current[model.modelId] = 0;
+
+        console.log(`✅ TTS initialized successfully for: ${model.voice}`);
       } catch (err) {
         isReadyRef.current = false;
         currentModelRef.current = null;
-        setError(String(err));
+        const errMsg = String(err);
+        setError(errMsg);
+        console.error('❌ TTS initialization error:', err);
         throw err;
       } finally {
         setIsInitializing(false);
       }
     },
-    [models, downloadAndExtractModel]
+    [models, downloadAndExtractModel, configureTTSAudioSession]
   );
 
   const speak = useCallback(
     async (text: string, speed = 0.75) => {
-      if (!isReadyRef.current || isSpeakingRef.current || isInitializing)
+      if (!isReadyRef.current) {
+        console.warn('⚠️ TTS not ready');
         return;
-      if (!text.trim()) return;
+      }
+
+      if (isSpeakingRef.current) {
+        console.warn('⚠️ Already speaking');
+        return;
+      }
+
+      if (isInitializing) {
+        console.warn('⚠️ Still initializing');
+        return;
+      }
+
+      if (!text.trim()) {
+        console.warn('⚠️ Empty text');
+        return;
+      }
 
       try {
         isSpeakingRef.current = true;
 
-        // 🔥 FIX: Reconfigure audio session right before speaking
-        // This ensures TTS has full control even if background music was playing
+        // Small delay to ensure any background audio is fully stopped
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        // Reconfigure audio session right before speaking
+        // This ensures TTS has priority even if background music tried to play
         await configureTTSAudioSession();
+
+        console.log(
+          `🔊 Speaking: "${text.substring(0, 50)}..." at speed ${speed}`
+        );
 
         await TTS.generateAndPlay(text.trim(), 0, speed);
 
         console.log('✅ TTS playback completed');
       } catch (err) {
-        console.error('🔊 TTS speak error:', err);
+        console.error('❌ TTS speak error:', err);
         setError(String(err));
       } finally {
         isSpeakingRef.current = false;
       }
     },
-    [isInitializing]
+    [isInitializing, configureTTSAudioSession]
   );
 
   return {

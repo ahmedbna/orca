@@ -1,12 +1,10 @@
 // components/background.tsx
 import { useRouter } from 'expo-router';
-import { useState, useEffect } from 'react';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Doc } from '@/convex/_generated/dataModel';
 import { useColor } from '@/hooks/useColor';
-import { useBackgroundMusic } from '@/hooks/useBackgroundMusic';
 import { Text } from '@/components/ui/text';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -16,50 +14,30 @@ import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
 import { Seafloor } from '@/components/orca/seafloor';
 import { View } from '@/components/ui/view';
-import { setAudioModeAsync } from 'expo-audio';
+import { usePathname } from 'expo-router';
 
 export const Background = ({
   user,
   swim = false,
   children,
+  mute,
+  setMute,
 }: {
   user?: Doc<'users'>;
   swim?: boolean;
   children: React.ReactNode;
+  mute?: boolean;
+  setMute?: (value: boolean) => void;
 }) => {
   const yellow = useColor('orca');
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [mute, setMute] = useState(false);
+  const pathname = usePathname();
 
-  // Use the background music hook
-  const { isSpeechRoute } = useBackgroundMusic(mute);
-
-  // 🔥 NEW: Reset audio session when entering speech routes
-  useEffect(() => {
-    if (isSpeechRoute) {
-      const resetAudioForSpeech = async () => {
-        try {
-          await setAudioModeAsync({
-            playsInSilentMode: true,
-            allowsRecording: false,
-            shouldPlayInBackground: false,
-            interruptionMode: 'duckOthers',
-            shouldRouteThroughEarpiece: false,
-          });
-          console.log(
-            '✅ Background: Audio session configured for speech route'
-          );
-        } catch (err) {
-          console.warn('⚠️ Background: Audio session config failed:', err);
-        }
-      };
-
-      // Small delay to ensure previous audio is cleaned up
-      const timer = setTimeout(resetAudioForSpeech, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [isSpeechRoute]);
+  // Check if we're on a speech route (orca or study)
+  const isOrcaRoute = pathname.startsWith('/orca/');
+  const isStudyRoute = pathname.includes('/study/');
+  const isSpeechRoute = isOrcaRoute || isStudyRoute;
 
   return (
     <View style={{ flex: 1, backgroundColor: yellow }} pointerEvents='box-none'>
@@ -122,12 +100,9 @@ export const Background = ({
         </Button>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          {!isSpeechRoute && (
-            <Button
-              size='icon'
-              variant='ghost'
-              onPress={() => setMute((prev) => !prev)}
-            >
+          {/* Only show mute button on non-speech routes */}
+          {!isSpeechRoute && setMute && (
+            <Button size='icon' variant='ghost' onPress={() => setMute(!mute)}>
               <Text style={{ fontSize: 36 }}>{mute ? '🔇' : '🔊'}</Text>
             </Button>
           )}
