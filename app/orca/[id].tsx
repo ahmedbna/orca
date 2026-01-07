@@ -34,7 +34,6 @@ export default function OrcaScreen() {
     );
   }
 
-  // Don't wrap in Background - Orca component has its own
   return (
     <Orca
       lesson={lesson}

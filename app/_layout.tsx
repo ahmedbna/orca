@@ -92,7 +92,14 @@ export default function RootLayout() {
             <Authenticated>
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name='(home)' options={{ headerShown: false }} />
-                <Stack.Screen name='orca/[id]' />
+                <Stack.Screen
+                  name='orca/[id]'
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='study/[id]'
+                  options={{ headerShown: false }}
+                />
 
                 <Stack.Screen
                   name='(modal)/courses'

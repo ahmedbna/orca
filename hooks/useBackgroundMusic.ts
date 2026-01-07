@@ -1,46 +1,94 @@
 // hooks/useBackgroundMusic.ts
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePathname } from 'expo-router';
 import { useAudioPlayer } from 'expo-audio';
+import { setAudioModeAsync } from 'expo-audio';
 
 const audioSource = require('@/assets/music/orca.mp3');
 
 export function useBackgroundMusic(mute: boolean) {
   const pathname = usePathname();
+  const playerRef = useRef<ReturnType<typeof useAudioPlayer> | null>(null);
 
   const isOrcaRoute = pathname.startsWith('/orca/');
-  const isStudyRoute = pathname.startsWith('/study/');
+  const isStudyRoute = pathname.includes('/study/');
   const isSpeechRoute = isOrcaRoute || isStudyRoute;
 
-  // IMPORTANT:
-  // Player exists ONLY when NOT on speech routes
-  const player = useAudioPlayer(isSpeechRoute ? null : audioSource);
+  // Always create the player (don't conditionally create it)
+  const player = useAudioPlayer(audioSource);
+
+  // Store player reference
+  if (player && !playerRef.current) {
+    playerRef.current = player;
+  }
 
   useEffect(() => {
-    if (!player) return;
+    const currentPlayer = playerRef.current;
+    if (!currentPlayer) return;
 
-    if (mute || isSpeechRoute) {
+    const stopMusicAndConfigureTTS = async () => {
       try {
-        player.pause();
-      } catch {}
-      return;
+        // Stop music safely
+        try {
+          await currentPlayer.pause();
+          currentPlayer.volume = 0;
+        } catch (err) {
+          // Ignore if player is already stopped
+        }
+
+        // Configure audio session for TTS
+        await setAudioModeAsync({
+          playsInSilentMode: true,
+          allowsRecording: false,
+          shouldPlayInBackground: false,
+          interruptionMode: 'duckOthers',
+          shouldRouteThroughEarpiece: false,
+        });
+
+        console.log('✅ Audio configured for speech route');
+      } catch (err) {
+        console.warn('⚠️ Speech audio setup error:', err);
+      }
+    };
+
+    const playBackgroundMusic = async () => {
+      try {
+        await setAudioModeAsync({
+          playsInSilentMode: true,
+          allowsRecording: false,
+          shouldPlayInBackground: false,
+          interruptionMode: 'mixWithOthers',
+          shouldRouteThroughEarpiece: false,
+        });
+
+        currentPlayer.loop = true;
+        currentPlayer.volume = 0.5;
+        await currentPlayer.play();
+
+        console.log('🎵 Background music playing');
+      } catch (err) {
+        console.warn('🎵 Background music error:', err);
+      }
+    };
+
+    // Handle state changes
+    if (isSpeechRoute || mute) {
+      stopMusicAndConfigureTTS();
+    } else {
+      playBackgroundMusic();
     }
 
-    try {
-      player.loop = true;
-      player.volume = 0.3;
-      player.play();
-    } catch (err) {
-      console.warn('🎵 Background music error:', err);
-    }
-
+    // Cleanup on unmount or route change
     return () => {
       try {
-        player.pause();
-      } catch {}
+        currentPlayer.pause();
+        currentPlayer.volume = 0;
+      } catch (err) {
+        // Ignore cleanup errors
+      }
     };
-  }, [player, mute, isSpeechRoute]);
+  }, [mute, isSpeechRoute]);
 
   return { isSpeechRoute };
 }

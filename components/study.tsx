@@ -14,6 +14,7 @@ import { NATIVES } from '@/constants/languages';
 import { usePiperTTS } from '@/hooks/usePiperTTS';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { Background } from './background';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -31,7 +32,7 @@ const VOICE_SPEED: Record<SpeedKey, number> = {
 type Props = {
   language: string;
   native: string;
-  lesson: Doc<'lessons'> & { course: Doc<'courses'> };
+  lesson: Doc<'lessons'> & { user: Doc<'users'>; course: Doc<'courses'> };
   models: Array<Doc<'piperModels'>>;
 };
 
@@ -125,162 +126,164 @@ export const Study = ({ language, native, lesson, models }: Props) => {
   const BOTTOM_PANEL_HEIGHT = insets.bottom + 240;
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* 🔊 TOP TAP AREA */}
-      <Pressable
-        onPress={handleSpeak}
-        android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
-        style={{
-          flex: 1,
-          paddingHorizontal: 16,
-          paddingTop: SCREEN_HEIGHT * 0.32,
-          // paddingBottom: BOTTOM_PANEL_HEIGHT,
-        }}
-      >
-        <View>
-          <Text style={{ color: '#000', fontSize: 36, fontWeight: '800' }}>
-            {currentPhrase.text}
-          </Text>
-
-          {showTranslation && translation && (
-            <Text
-              style={{
-                color: '#000',
-                fontSize: 32,
-                fontWeight: '800',
-                opacity: 0.6,
-                marginTop: 8,
-              }}
-            >
-              {translation}
-            </Text>
-          )}
-        </View>
-      </Pressable>
-
-      {/* 🟡 BOTTOM PANEL */}
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: '#F6C90E',
-          paddingBottom: insets.bottom,
-          paddingHorizontal: 16,
-          gap: 16,
-          height: BOTTOM_PANEL_HEIGHT,
-          zIndex: 99,
-        }}
-      >
-        {/* Header */}
-        <View
+    <Background user={lesson.user} swim={false}>
+      <View style={{ flex: 1 }}>
+        {/* 🔊 TOP TAP AREA */}
+        <Pressable
+          onPress={handleSpeak}
+          android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            flex: 1,
+            paddingHorizontal: 16,
+            paddingTop: SCREEN_HEIGHT * 0.32,
+            // paddingBottom: BOTTOM_PANEL_HEIGHT,
           }}
         >
-          <TouchableOpacity
-            onPress={() => router.back()}
+          <View>
+            <Text style={{ color: '#000', fontSize: 36, fontWeight: '800' }}>
+              {currentPhrase.text}
+            </Text>
+
+            {showTranslation && translation && (
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: 32,
+                  fontWeight: '800',
+                  opacity: 0.6,
+                  marginTop: 8,
+                }}
+              >
+                {translation}
+              </Text>
+            )}
+          </View>
+        </Pressable>
+
+        {/* 🟡 BOTTOM PANEL */}
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#F6C90E',
+            paddingBottom: insets.bottom,
+            paddingHorizontal: 16,
+            gap: 16,
+            height: BOTTOM_PANEL_HEIGHT,
+            zIndex: 99,
+          }}
+        >
+          {/* Header */}
+          <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 4,
-              flex: 1,
-              marginRight: 12,
+              justifyContent: 'space-between',
             }}
           >
-            <ChevronLeft size={26} strokeWidth={3} />
-
-            <Text
-              numberOfLines={1}
-              ellipsizeMode='tail'
+            <TouchableOpacity
+              onPress={() => router.back()}
               style={{
-                color: '#000',
-                fontSize: 22,
-                fontWeight: '800',
-                opacity: 0.7,
-                flexShrink: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 4,
+                flex: 1,
+                marginRight: 12,
               }}
             >
-              {lesson.title}
-            </Text>
-          </TouchableOpacity>
+              <ChevronLeft size={26} strokeWidth={3} />
 
-          {/* Speed */}
-          <TouchableOpacity onPress={handleSpeedPress}>
-            <Text
-              style={{
-                color: '#000',
-                fontSize: 18,
-                fontWeight: '800',
-                opacity: 0.7,
-              }}
-            >
-              {currentSpeedKey}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode='tail'
+                style={{
+                  color: '#000',
+                  fontSize: 22,
+                  fontWeight: '800',
+                  opacity: 0.7,
+                  flexShrink: 1,
+                }}
+              >
+                {lesson.title}
+              </Text>
+            </TouchableOpacity>
+
+            {/* Speed */}
+            <TouchableOpacity onPress={handleSpeedPress}>
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: 18,
+                  fontWeight: '800',
+                  opacity: 0.7,
+                }}
+              >
+                {currentSpeedKey}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Progress */}
+          <Progress
+            total={phrases.length}
+            correctSegments={Array.from({ length: index + 1 }, (_, i) => i)}
+            failedSegments={[]}
+          />
+
+          {/* Controls */}
+          <View style={{ flexDirection: 'row', gap: 12, marginTop: 8 }}>
+            <View style={{ flex: 1 }}>
+              <OrcaButton
+                label='◀︎'
+                shape='rounded'
+                variant='indigo'
+                disabled={isFirst}
+                onPress={() => {
+                  setShowTranslation(false);
+                  setIndex((i) => Math.max(0, i - 1));
+                }}
+              />
+            </View>
+
+            <View style={{ flex: 1 }}>
+              <OrcaButton
+                label={NATIVES.find((l) => l.code === native)?.flag || '🌐'}
+                shape='rounded'
+                variant='green'
+                onPress={() => setShowTranslation((v) => !v)}
+              />
+            </View>
+
+            <View style={{ flex: 1 }}>
+              <OrcaButton
+                label='▶︎'
+                shape='rounded'
+                variant='indigo'
+                disabled={isLast}
+                onPress={() => {
+                  setShowTranslation(false);
+                  setIndex((i) => Math.min(phrases.length - 1, i + 1));
+                }}
+              />
+            </View>
+          </View>
+
+          <OrcaButton
+            label={
+              isInitializing
+                ? '⏳ LOADING VOICE'
+                : selectedVoice
+                  ? `🔊 LISTEN`
+                  : '❌ NO VOICE'
+            }
+            variant='red'
+            disabled={isInitializing || !selectedVoice}
+            onPress={handleSpeak}
+          />
         </View>
-
-        {/* Progress */}
-        <Progress
-          total={phrases.length}
-          correctSegments={Array.from({ length: index + 1 }, (_, i) => i)}
-          failedSegments={[]}
-        />
-
-        {/* Controls */}
-        <View style={{ flexDirection: 'row', gap: 12, marginTop: 8 }}>
-          <View style={{ flex: 1 }}>
-            <OrcaButton
-              label='◀︎'
-              shape='rounded'
-              variant='indigo'
-              disabled={isFirst}
-              onPress={() => {
-                setShowTranslation(false);
-                setIndex((i) => Math.max(0, i - 1));
-              }}
-            />
-          </View>
-
-          <View style={{ flex: 1 }}>
-            <OrcaButton
-              label={NATIVES.find((l) => l.code === native)?.flag || '🌐'}
-              shape='rounded'
-              variant='green'
-              onPress={() => setShowTranslation((v) => !v)}
-            />
-          </View>
-
-          <View style={{ flex: 1 }}>
-            <OrcaButton
-              label='▶︎'
-              shape='rounded'
-              variant='indigo'
-              disabled={isLast}
-              onPress={() => {
-                setShowTranslation(false);
-                setIndex((i) => Math.min(phrases.length - 1, i + 1));
-              }}
-            />
-          </View>
-        </View>
-
-        <OrcaButton
-          label={
-            isInitializing
-              ? '⏳ LOADING VOICE'
-              : selectedVoice
-                ? `🔊 LISTEN`
-                : '❌ NO VOICE'
-          }
-          variant='red'
-          disabled={isInitializing || !selectedVoice}
-          onPress={handleSpeak}
-        />
       </View>
-    </View>
+    </Background>
   );
 };

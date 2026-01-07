@@ -41,7 +41,7 @@ export const LessonCard = ({ lesson }: Props) => {
 
   return (
     <Pressable
-      onPress={() => router.push(`/(home)/study/${lesson._id}`)}
+      onPress={() => router.push(`/study/${lesson._id}`)}
       onPressIn={() => {
         triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
         pressed.value = withSpring(1, { damping: 16 });

@@ -1,6 +1,6 @@
 // components/background.tsx
-import { usePathname, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useRouter } from 'expo-router';
+import { useState, useEffect } from 'react';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,6 +16,7 @@ import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
 import { Seafloor } from '@/components/orca/seafloor';
 import { View } from '@/components/ui/view';
+import { setAudioModeAsync } from 'expo-audio';
 
 export const Background = ({
   user,
@@ -33,6 +34,32 @@ export const Background = ({
 
   // Use the background music hook
   const { isSpeechRoute } = useBackgroundMusic(mute);
+
+  // 🔥 NEW: Reset audio session when entering speech routes
+  useEffect(() => {
+    if (isSpeechRoute) {
+      const resetAudioForSpeech = async () => {
+        try {
+          await setAudioModeAsync({
+            playsInSilentMode: true,
+            allowsRecording: false,
+            shouldPlayInBackground: false,
+            interruptionMode: 'duckOthers',
+            shouldRouteThroughEarpiece: false,
+          });
+          console.log(
+            '✅ Background: Audio session configured for speech route'
+          );
+        } catch (err) {
+          console.warn('⚠️ Background: Audio session config failed:', err);
+        }
+      };
+
+      // Small delay to ensure previous audio is cleaned up
+      const timer = setTimeout(resetAudioForSpeech, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isSpeechRoute]);
 
   return (
     <View style={{ flex: 1, backgroundColor: yellow }} pointerEvents='box-none'>

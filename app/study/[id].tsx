@@ -6,7 +6,6 @@ import { useLocalSearchParams } from 'expo-router';
 import { Loading } from '@/components/loading';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
-import { Colors } from '@/theme/colors';
 
 export default function StudyScreen() {
   const { id } = useLocalSearchParams<{ id: Id<'lessons'> }>();

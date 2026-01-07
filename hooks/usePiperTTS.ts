@@ -25,30 +25,27 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
     Record<string, number>
   >({});
 
-  /* ------------------------------------------------------------------ */
-  /* Audio session – configured ONCE, owned by TTS only                  */
-  /* ------------------------------------------------------------------ */
   const configureTTSAudioSession = async () => {
     if (isConfiguringSessionRef.current) return;
 
     try {
       isConfiguringSessionRef.current = true;
 
+      // 🔥 FIX: More aggressive audio session configuration
       await setAudioModeAsync({
         playsInSilentMode: true,
         allowsRecording: false,
         shouldPlayInBackground: false,
-        interruptionMode: 'duckOthers',
+        interruptionMode: 'duckOthers', // This will duck other audio when TTS plays
         shouldRouteThroughEarpiece: false,
       });
+    } catch (err) {
+      console.warn('⚠️ TTS audio session config error:', err);
     } finally {
       isConfiguringSessionRef.current = false;
     }
   };
 
-  /* ------------------------------------------------------------------ */
-  /* Filesystem helpers                                                  */
-  /* ------------------------------------------------------------------ */
   const getTTSDirectory = useCallback(async () => {
     const dir = new Directory(Paths.document, 'piper-models');
     if (!dir.exists) {
@@ -72,9 +69,6 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
     }
   };
 
-  /* ------------------------------------------------------------------ */
-  /* Download + extract                                                  */
-  /* ------------------------------------------------------------------ */
   const downloadAndExtractModel = useCallback(
     async (model: Doc<'piperModels'>) => {
       const baseDir = await getTTSDirectory();
@@ -125,9 +119,60 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
     [getTTSDirectory]
   );
 
-  /* ------------------------------------------------------------------ */
-  /* Initialize TTS                                                      */
-  /* ------------------------------------------------------------------ */
+  const removeModel = useCallback(
+    async (modelId: string) => {
+      try {
+        const model = models.find((m) => m.modelId === modelId);
+        if (!model) throw new Error(`Model not found: ${modelId}`);
+        const baseDir = await getTTSDirectory();
+        const modelDir = new Directory(baseDir, model.folderName);
+        if (modelDir.exists) {
+          await modelDir.delete();
+          console.log('✅ Model removed:', modelId);
+        }
+        // Clear progress for this specific model
+
+        setDownloadProgress((prev) => {
+          const updated = { ...prev };
+          delete updated[modelId];
+          return updated;
+        });
+        // If this was the current model, clear it
+        if (currentModelId === modelId) {
+          isReadyRef.current = false;
+          currentModelRef.current = null;
+          setCurrentModelId(null);
+        }
+        return true;
+      } catch (err) {
+        setError(`Failed to remove model: ${err}`);
+        return false;
+      }
+    },
+    [models, currentModelId, getTTSDirectory]
+  );
+
+  const getDownloadedModels = useCallback(async () => {
+    try {
+      const baseDir = await getTTSDirectory();
+      const downloaded: string[] = [];
+      for (const model of models) {
+        const modelDir = new Directory(baseDir, model.folderName);
+        if (modelDir.exists) {
+          const isValid = await verifyModelFiles(modelDir, model);
+          if (isValid) {
+            downloaded.push(model.modelId);
+            // Set progress to 100% for verified models
+            setDownloadProgress((prev) => ({ ...prev, [model.modelId]: 1 }));
+          }
+        }
+      }
+      return downloaded;
+    } catch {
+      return [];
+    }
+  }, [models, getTTSDirectory]);
+
   const initializeTTS = useCallback(
     async (piperId: Id<'piperModels'>, forceReInit = false) => {
       if (isInitializing) return;
@@ -153,6 +198,7 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
         setIsInitializing(true);
         initializationAttempts.current[model.modelId] = attempts + 1;
 
+        // 🔥 FIX: Configure audio session FIRST
         await configureTTSAudioSession();
 
         const folderUri = await downloadAndExtractModel(model);
@@ -183,9 +229,6 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
     [models, downloadAndExtractModel]
   );
 
-  /* ------------------------------------------------------------------ */
-  /* Speak                                                              */
-  /* ------------------------------------------------------------------ */
   const speak = useCallback(
     async (text: string, speed = 0.75) => {
       if (!isReadyRef.current || isSpeakingRef.current || isInitializing)
@@ -194,8 +237,16 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
 
       try {
         isSpeakingRef.current = true;
+
+        // 🔥 FIX: Reconfigure audio session right before speaking
+        // This ensures TTS has full control even if background music was playing
+        await configureTTSAudioSession();
+
         await TTS.generateAndPlay(text.trim(), 0, speed);
+
+        console.log('✅ TTS playback completed');
       } catch (err) {
+        console.error('🔊 TTS speak error:', err);
         setError(String(err));
       } finally {
         isSpeakingRef.current = false;
@@ -213,6 +264,8 @@ export function usePiperTTS({ models }: { models: Array<Doc<'piperModels'>> }) {
     isDownloading,
     isInitializing,
     downloadProgress,
+    getDownloadedModels,
+    removeModel,
     error,
     isReady: isReadyRef.current,
   };
