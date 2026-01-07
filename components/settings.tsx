@@ -6,7 +6,7 @@ import { Text } from '@/components/ui/text';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
-import { ChevronLeft, User } from 'lucide-react-native';
+import { ChevronLeft, Mail, User } from 'lucide-react-native';
 import { TextArea } from '@/components/ui/text-area';
 import { Button } from '@/components/ui/button';
 import { SignOutButton } from '@/components/auth/singout';
@@ -208,6 +208,15 @@ export default function SettingsScreen() {
         </View>
       ) : (
         <View style={{ gap: 12, marginVertical: 24 }}>
+          <Input
+            variant='outline'
+            label='Email'
+            placeholder='me@example.com'
+            icon={Mail}
+            value={user.email}
+            disabled={true}
+          />
+
           <Input
             variant='outline'
             label='Full Name'
