@@ -14,30 +14,21 @@ import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
 import { Seafloor } from '@/components/orca/seafloor';
 import { View } from '@/components/ui/view';
-import { usePathname } from 'expo-router';
 
 export const Background = ({
   user,
   swim = false,
+  study = false,
   children,
-  mute,
-  setMute,
 }: {
   user?: Doc<'users'>;
   swim?: boolean;
+  study?: boolean;
   children: React.ReactNode;
-  mute?: boolean;
-  setMute?: (value: boolean) => void;
 }) => {
   const yellow = useColor('orca');
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const pathname = usePathname();
-
-  // Check if we're on a speech route (orca or study)
-  const isOrcaRoute = pathname.startsWith('/orca/');
-  const isStudyRoute = pathname.includes('/study/');
-  const isSpeechRoute = isOrcaRoute || isStudyRoute;
 
   return (
     <View style={{ flex: 1, backgroundColor: yellow }} pointerEvents='box-none'>
@@ -99,28 +90,21 @@ export const Background = ({
           </Text>
         </Button>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          {/* Only show mute button on non-speech routes */}
-          {!isSpeechRoute && setMute && (
-            <Button size='icon' variant='ghost' onPress={() => setMute(!mute)}>
-              <Text style={{ fontSize: 36 }}>{mute ? '🔇' : '🔊'}</Text>
-            </Button>
-          )}
-
-          <Avatar
-            size={42}
-            image={user?.image}
-            name={user?.name}
-            onPress={() => router.push('/profile')}
-          />
-        </View>
+        <Avatar
+          size={42}
+          image={user?.image}
+          name={user?.name}
+          onPress={() => router.push('/profile')}
+        />
       </View>
 
       {/* Background Elements */}
       <Clouds />
       <Bubbles />
-      <Shark />
-      <Jellyfish />
+
+      {!study ? <Shark /> : null}
+      {!study ? <Jellyfish /> : null}
+
       <Seafloor speed={swim ? 5000 : 0} bottom={insets.bottom + 240} />
 
       <View

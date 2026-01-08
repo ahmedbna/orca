@@ -12,8 +12,6 @@ import { Colors } from '@/theme/colors';
 import { Spinner } from '@/components/ui/spinner';
 import { Alert } from 'react-native';
 import { SherpaVolumeSilencer } from '@/hooks/SherpaVolumeSilencer';
-import { useBackgroundMusic } from '@/hooks/useBackgroundMusic';
-import { useState } from 'react';
 
 export default function HomeLayout() {
   const user = useQuery(api.users.get, {});
@@ -21,10 +19,6 @@ export default function HomeLayout() {
     api.userDeletion.checkAndCancelDeletionOnLogin
   );
   const models = useQuery(api.piperModels.getAll);
-  const [mute, setMute] = useState(false);
-
-  // Use background music hook here - it will handle route detection
-  useBackgroundMusic(mute);
 
   // Check and cancel deletion on mount
   useEffect(() => {
@@ -84,7 +78,7 @@ export default function HomeLayout() {
     !user.learningLanguage ? (
     <Onboarding user={user} models={models} />
   ) : (
-    <Background user={user} mute={mute} setMute={setMute}>
+    <Background user={user}>
       <SherpaVolumeSilencer />
       <Slot />
     </Background>

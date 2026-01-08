@@ -126,7 +126,7 @@ export const Study = ({ language, native, lesson, models }: Props) => {
   const BOTTOM_PANEL_HEIGHT = insets.bottom + 240;
 
   return (
-    <Background user={lesson.user} swim={false}>
+    <Background user={lesson.user} swim={false} study>
       <View style={{ flex: 1 }}>
         {/* 🔊 TOP TAP AREA */}
         <Pressable
