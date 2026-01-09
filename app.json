@@ -81,9 +81,12 @@
         {
           "android": {
             "compileSdkVersion": 35,
-            "targetSdkVersion": 34,
-            "buildToolsVersion": "34.0.0",
-            "minSdkVersion": 24
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "minSdkVersion": 24,
+            "manifestPlaceholders": {
+              "expo.jsEngine": "hermes"
+            }
           },
           "ios": {
             "deploymentTarget": "16.0",
