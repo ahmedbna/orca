@@ -13,12 +13,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ahmedbna.orca",
       "infoPlist": {
-        "UIBackgroundModes": ["audio"],
-        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use the microphone to use speech recognition.",
-        "NSSpeechRecognitionUsageDescription": "Allow $(PRODUCT_NAME) to use speech recognition.",
-        "NSPhotoLibraryUsageDescription": "$(PRODUCT_NAME) uses your photo library so you can upload profile pictures.",
-        "AVAudioSessionCategory": "AVAudioSessionCategoryPlayAndRecord",
-        "AVAudioSessionMode": "AVAudioSessionModeSpokenAudio",
+        "NSMicrophoneUsageDescription": "Orca uses the microphone to listen to your pronunciation during lesson test so you can pass levels and unlock the next ones.",
+        "NSSpeechRecognitionUsageDescription": "Orca converts your speech to text to check pronunciation and help you progress through the game.",
+        "NSPhotoLibraryUsageDescription": "Orca lets you choose a photo from your library to use as your profile picture.",
         "ITSAppUsesNonExemptEncryption": false,
         "UIFileSharingEnabled": true,
         "LSSupportsOpeningDocumentsInPlace": true
@@ -57,8 +54,8 @@
       [
         "expo-speech-recognition",
         {
-          "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone.",
-          "speechRecognitionPermission": "Allow $(PRODUCT_NAME) to use speech recognition.",
+          "microphonePermission": "Orca uses the microphone to listen to your pronunciation during lesson test so you can pass levels and unlock the next ones.",
+          "speechRecognitionPermission": "Allow speech recognition so Orca can evaluate your pronunciation during gameplay.",
           "androidSpeechServicePackages": [
             "com.google.android.googlequicksearchbox"
           ]
