@@ -72,10 +72,7 @@ export default function HomeLayout() {
     );
   }
 
-  return !user.gender ||
-    !user.birthday ||
-    !user.nativeLanguage ||
-    !user.learningLanguage ? (
+  return !user.nativeLanguage || !user.learningLanguage ? (
     <Onboarding user={user} models={models} />
   ) : (
     <Background user={user}>

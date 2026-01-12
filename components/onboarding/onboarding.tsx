@@ -1,7 +1,7 @@
 // components/onboarding/onboarding.tsx
 
 import React, { useState } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,7 +12,6 @@ import { Clouds } from '@/components/orca/clouds';
 import { Shark } from '@/components/orca/shark';
 import { useColor } from '@/hooks/useColor';
 import { NATIVES, LANGUAGES } from '@/constants/languages';
-import { Platform } from 'react-native';
 import { OrcaButton } from '@/components/squishy/orca-button';
 import { Seafloor } from '@/components/orca/seafloor';
 import { DatePicker } from '@/components/ui/date-picker';
@@ -25,6 +24,8 @@ import { SquishyInput } from '../squishy/squishy-input';
 import * as Haptics from 'expo-haptics';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const isIOS = Platform.OS === 'ios';
+const TOTAL_STEPS = isIOS ? 2 : 3;
 
 const bubbles = [
   {
@@ -74,7 +75,7 @@ export const Onboarding = ({
   const [currentStep, setCurrentStep] = useState(0);
   const [showDownload, setShowDownload] = useState(false);
 
-  // Form state
+  // Form state (UNCHANGED)
   const [name, setName] = useState(user?.name || '');
   const [gender, setGender] = useState<string>('');
   const [birthday, setBirthday] = useState<Date | undefined>();
@@ -82,6 +83,12 @@ export const Onboarding = ({
   const [learningLanguage, setLearningLanguage] = useState<string>('');
 
   const canProceed = () => {
+    if (isIOS) {
+      if (currentStep === 0) return nativeLanguage !== '';
+      if (currentStep === 1) return learningLanguage !== '';
+      return false;
+    }
+
     switch (currentStep) {
       case 0:
         return gender !== '' && birthday !== undefined;
@@ -94,12 +101,11 @@ export const Onboarding = ({
     }
   };
 
-  const handleNext = async () => {
-    if (currentStep < 2) {
-      setCurrentStep(currentStep + 1);
+  const handleNext = () => {
+    if (currentStep < TOTAL_STEPS - 1) {
+      setCurrentStep((s) => s + 1);
       triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
     } else {
-      // Final step - start download immediately
       triggerHaptic(Haptics.ImpactFeedbackStyle.Heavy);
       setShowDownload(true);
     }
@@ -107,7 +113,7 @@ export const Onboarding = ({
 
   const handleBack = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      setCurrentStep((s) => s - 1);
       triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
     }
   };
@@ -150,8 +156,8 @@ export const Onboarding = ({
           models={models}
           learningLanguage={learningLanguage}
           userData={{
-            gender,
-            birthday: birthday ? birthday.getTime() : undefined,
+            gender: isIOS ? undefined : gender,
+            birthday: isIOS ? undefined : birthday?.getTime(),
             nativeLanguage,
             learningLanguage,
           }}
@@ -164,7 +170,8 @@ export const Onboarding = ({
             paddingHorizontal: 16,
           }}
         >
-          {currentStep === 0 && (
+          {/* STEP 0 — PERSONAL INFO (NON-iOS ONLY) */}
+          {!isIOS && currentStep === 0 && (
             <View style={{ gap: 24 }}>
               <View style={{ alignItems: 'center' }}>
                 <View
@@ -250,7 +257,6 @@ export const Onboarding = ({
                     onPress={() => setGender('male')}
                     variant={gender === 'male' ? 'green' : 'black'}
                   />
-
                   <OrcaButton
                     label='👩 Female'
                     style={{ flex: 1 }}
@@ -282,7 +288,8 @@ export const Onboarding = ({
             </View>
           )}
 
-          {currentStep === 1 && (
+          {/* STEP 1 — NATIVE LANGUAGE */}
+          {((!isIOS && currentStep === 1) || (isIOS && currentStep === 0)) && (
             <View style={{ flex: 1, gap: 20 }}>
               <View style={{ alignItems: 'center' }}>
                 <Text style={{ fontSize: 48 }}>🌍</Text>
@@ -330,7 +337,8 @@ export const Onboarding = ({
             </View>
           )}
 
-          {currentStep === 2 && (
+          {/* STEP 2 — LEARNING LANGUAGE */}
+          {((!isIOS && currentStep === 2) || (isIOS && currentStep === 1)) && (
             <View style={{ gap: 20 }}>
               <View style={{ alignItems: 'center' }}>
                 <Text style={{ fontSize: 48 }}>🎯</Text>
@@ -384,26 +392,24 @@ export const Onboarding = ({
         </View>
       )}
 
-      {!showDownload ? (
+      {!showDownload && (
         <View
-          style={[
-            {
-              paddingBottom: insets.bottom,
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: '#F6C90E',
-              paddingHorizontal: 16,
-              gap: 16,
-              height: BOTTOM_BAR_HEIGHT,
-              overflow: 'hidden',
-              zIndex: 99,
-            },
-          ]}
+          style={{
+            paddingBottom: insets.bottom,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#F6C90E',
+            paddingHorizontal: 16,
+            gap: 16,
+            height: BOTTOM_BAR_HEIGHT,
+            overflow: 'hidden',
+            zIndex: 99,
+          }}
         >
           <Progress
-            total={3}
+            total={TOTAL_STEPS}
             correctSegments={Array.from(
               { length: currentStep + 1 },
               (_, i) => i
@@ -429,14 +435,14 @@ export const Onboarding = ({
 
             <OrcaButton
               onPress={handleNext}
-              label={currentStep === 2 ? 'Setup Profile' : 'Next'}
+              label={currentStep === TOTAL_STEPS - 1 ? 'Setup Profile' : 'Next'}
               variant='green'
               disabled={!canProceed()}
               style={{ flex: 3 }}
             />
           </View>
         </View>
-      ) : null}
+      )}
     </View>
   );
 };

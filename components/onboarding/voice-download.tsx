@@ -20,6 +20,7 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { Doc } from '@/convex/_generated/dataModel';
 import * as Haptics from 'expo-haptics';
+import { useRouter } from 'expo-router';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -37,7 +38,7 @@ export const VoiceDownload = ({
   models: Array<Doc<'piperModels'>>;
   learningLanguage: string;
   userData: {
-    gender: string;
+    gender?: string;
     birthday?: number;
     nativeLanguage: string;
     learningLanguage: string;
@@ -45,6 +46,7 @@ export const VoiceDownload = ({
 }) => {
   const insets = useSafeAreaInsets();
 
+  const router = useRouter();
   const border = useColor('border');
   const background = useColor('background');
 
@@ -62,6 +64,10 @@ export const VoiceDownload = ({
   const scale = useSharedValue(1);
   const rotate = useSharedValue(0);
   const pulseOpacity = useSharedValue(0.3);
+
+  useEffect(() => {
+    if (backendUpdateComplete) router.push('/(home)');
+  }, [backendUpdateComplete]);
 
   // Animations
   useEffect(() => {
