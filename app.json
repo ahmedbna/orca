@@ -13,7 +13,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ahmedbna.orca",
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Orca uses the microphone to listen to your pronunciation during lesson test so you can pass levels and unlock the next ones.",
+        "NSMicrophoneUsageDescription": "Orca uses the microphone to evaluate your pronunciation during lesson test so you can pass levels and unlock the next ones.",
         "NSSpeechRecognitionUsageDescription": "Orca converts your speech to text to check pronunciation and help you progress through the game.",
         "NSPhotoLibraryUsageDescription": "Orca lets you choose a photo from your library to use as your profile picture.",
         "ITSAppUsesNonExemptEncryption": false,
