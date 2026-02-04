@@ -1,5 +1,6 @@
+// components/courses.tsx
 import React from 'react';
-import { StyleSheet, Platform, Pressable, useColorScheme } from 'react-native';
+import { StyleSheet, Platform, Pressable, FlatList } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -10,11 +11,12 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
-import { ScrollView } from '@/components/ui/scroll-view';
 import { Spinner } from '@/components/ui/spinner';
+import { useSubscription } from '@/hooks/useSubscription';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { osName } from 'expo-device';
-import { isLiquidGlassAvailable } from 'expo-glass-effect';
+import { Crown } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import { ALL_LANGUAGES } from '@/constants/languages';
 import * as Haptics from 'expo-haptics';
 
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
@@ -25,24 +27,26 @@ const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
 
 // Vibrant color schemes for courses
 const courseColors = [
-  { bg: '#6C63FF', shadow: '#4B45CC' }, // Purple
-  { bg: '#FF6B9D', shadow: '#CC5680' }, // Pink
-  { bg: '#4ECDC4', shadow: '#3BA399' }, // Teal
-  { bg: '#FF8C42', shadow: '#CC7035' }, // Orange
-  { bg: '#95E1D3', shadow: '#76B4A9' }, // Mint
-  { bg: '#F38181', shadow: '#C26767' }, // Coral
-  { bg: '#AA96DA', shadow: '#8878AE' }, // Lavender
-  { bg: '#FCBAD3', shadow: '#CA9AAF' }, // Rose
+  { bg: '#5B4FFF', shadow: '#4036C7' }, // Rich Purple
+  { bg: '#FF2E7E', shadow: '#C52263' }, // Hot Pink
+  { bg: '#00D1C1', shadow: '#009F93' }, // Vibrant Teal
+  { bg: '#FF7A1F', shadow: '#CC5E14' }, // Bold Orange
+  { bg: '#00C896', shadow: '#009B74' }, // Deep Mint
+  { bg: '#FF4B4B', shadow: '#C73838' }, // Strong Coral Red
+  { bg: '#8A5CFF', shadow: '#6844C7' }, // Electric Lavender
+  { bg: '#FF4FA7', shadow: '#C73C82' }, // Vivid Rose
 ];
 
 const CourseCard = ({
   course,
   index,
   onPress,
+  hasAccess,
 }: {
   course: any;
   index: number;
   onPress: () => void;
+  hasAccess: boolean;
 }) => {
   const pressed = useSharedValue(0);
   const colors = courseColors[index % courseColors.length];
@@ -57,16 +61,24 @@ const CourseCard = ({
   const getStatusEmoji = () => {
     if (course.isCompleted) return '🎉';
     if (course.isCurrent) return '🔥';
-    if (!course.isUnlocked) return '🔒';
+    if (!course.isUnlocked) {
+      return course.isPremium && !hasAccess ? '👑' : '🔒';
+    }
     return '📚';
   };
 
   const getStatusText = () => {
     if (course.isCompleted) return 'Completed';
     if (course.isCurrent) return 'Current';
-    if (!course.isUnlocked) return 'Locked';
+    if (!course.isUnlocked) {
+      return course.isPremium && !hasAccess ? 'Premium' : 'Locked';
+    }
     return 'Available';
   };
+
+  const isLocked = !course.isUnlocked;
+  const isPremiumLocked = course.isPremium && !hasAccess;
+  const canPress = course.isUnlocked || isPremiumLocked;
 
   return (
     <Animated.View style={styles.courseContainer}>
@@ -77,22 +89,22 @@ const CourseCard = ({
           {
             backgroundColor: colors.shadow,
             top: 8,
-            opacity: course.isUnlocked ? 1 : 0.5,
+            opacity: isLocked ? 0.3 : 1,
           },
         ]}
       />
 
       {/* Main card */}
       <Pressable
-        onPress={course.isUnlocked ? onPress : undefined}
+        onPress={canPress ? onPress : undefined}
         onPressIn={() => {
-          if (course.isUnlocked) {
+          if (canPress) {
             triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
             pressed.value = withSpring(1, { damping: 16 });
           }
         }}
         onPressOut={() => {
-          if (course.isUnlocked) {
+          if (canPress) {
             triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
             pressed.value = withSpring(0, { damping: 16 });
           }
@@ -103,11 +115,12 @@ const CourseCard = ({
             styles.courseCard,
             {
               backgroundColor: colors.bg,
-              opacity: course.isUnlocked ? 1 : 0.6,
             },
             animatedStyle,
           ]}
         >
+          {/* Premium Badge */}
+
           <View style={styles.courseContent}>
             {/* Status Badge */}
             <View style={styles.statusBadge}>
@@ -123,27 +136,56 @@ const CourseCard = ({
             </View>
           </View>
 
-          {/* Status Label */}
-          <View style={styles.statusLabel}>
-            <Text style={styles.statusText}>{getStatusText()}</Text>
-          </View>
+          {isPremiumLocked ? (
+            <View
+              style={{
+                position: 'absolute',
+                backgroundColor: '#FAD40B',
+                borderRadius: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 4,
+                borderWidth: 2,
+                borderColor: 'rgba(0, 0, 0, 0.15)',
+                zIndex: 10,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                bottom: 8,
+                right: 16,
+              }}
+            >
+              <Crown size={12} color='#000' strokeWidth={3} />
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: 14,
+                  fontWeight: '800',
+                }}
+              >
+                Orca+
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.statusLabel}>
+              <Text style={styles.statusText}>{getStatusText()}</Text>
+            </View>
+          )}
         </Animated.View>
       </Pressable>
     </Animated.View>
   );
 };
 
-export default function CoursesScreen() {
-  const colorScheme = useColorScheme() || 'light';
+export const Courses = () => {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
+
   const courses = useQuery(api.courses.getAll);
+  const hasAccess = useQuery(api.subscriptions.hasAccess);
 
-  const text =
-    colorScheme === 'light' && isLiquidGlassAvailable() && osName !== 'iPadOS'
-      ? '#000'
-      : '#FFF';
+  const { presentPaywall } = useSubscription();
 
-  if (courses === undefined) {
+  if (courses === undefined || hasAccess === undefined) {
     return (
       <View style={styles.centerContainer}>
         <Spinner size='lg' variant='circle' color='#000000' />
@@ -154,61 +196,72 @@ export default function CoursesScreen() {
   if (courses === null || courses.length === 0) {
     return (
       <View style={[styles.centerContainer, { padding: 16 }]}>
-        <Text variant='heading' style={{ marginBottom: 8, color: text }}>
+        <Text variant='heading' style={{ marginBottom: 8, color: '#000' }}>
           No Courses Available
         </Text>
-        <Text style={{ textAlign: 'center', color: text, opacity: 0.7 }}>
+        <Text style={{ textAlign: 'center', color: '#000', opacity: 0.7 }}>
           Please select a learning language to view available courses.
         </Text>
       </View>
     );
   }
 
-  const handleCoursePress = (courseId: string) => {
-    // Navigate to course detail or start course
-    console.log('Course pressed:', courseId);
+  const handleCoursePress = async (course: any) => {
+    if (course.isPremium && !hasAccess) {
+      const purchased = await presentPaywall();
+
+      if (purchased) {
+        console.log('User purchased subscription!');
+        // The subscription hook will handle backend sync
+        // User can now navigate to the course
+      }
+    } else if (course.isUnlocked) {
+      // Navigate to course (implement your navigation logic)
+      console.log('Course pressed:', course._id);
+      router.back();
+      // Add navigation to course here if needed
+    }
   };
 
-  return (
-    <ScrollView
-      contentInsetAdjustmentBehavior='automatic'
-      contentContainerStyle={{
-        padding: 16,
-        paddingTop: 40,
-        paddingBottom: insets.bottom + 32,
-      }}
-    >
-      <Text variant='heading' style={[styles.heading, { color: text }]}>
-        Your Courses
-      </Text>
-      <Text style={[styles.subheading, { color: text }]}>
-        Continue your learning journey
-      </Text>
-
-      {courses.map((course, index) => (
-        <CourseCard
-          key={course._id}
-          course={course}
-          index={index}
-          onPress={() => handleCoursePress(course._id)}
-        />
-      ))}
-    </ScrollView>
+  const language = ALL_LANGUAGES.find(
+    (lang) => lang.code === courses[0].language,
   );
-}
+
+  return (
+    <FlatList
+      style={{ flex: 1 }}
+      contentContainerStyle={{
+        paddingTop: insets.top + 70,
+        paddingHorizontal: 16,
+        paddingBottom: insets.bottom + 300,
+      }}
+      data={courses}
+      keyExtractor={(item) => item._id}
+      renderItem={({ item, index }) => (
+        <CourseCard
+          key={item._id}
+          course={item}
+          index={index}
+          onPress={() => handleCoursePress(item)}
+          hasAccess={hasAccess}
+        />
+      )}
+      ListHeaderComponent={() => (
+        <View style={{ marginBottom: 16 }}>
+          <Text variant='heading' style={[{ color: '#000' }]}>
+            {`${language?.native} Courses ${language?.flag}`}
+          </Text>
+        </View>
+      )}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   centerContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  heading: {
-    marginBottom: 8,
-  },
-  subheading: {
-    marginBottom: 24,
-    opacity: 0.7,
   },
   courseContainer: {
     position: 'relative',
@@ -295,7 +348,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     color: '#FFF',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '700',
   },
 });

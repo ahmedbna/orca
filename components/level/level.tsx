@@ -1,3 +1,4 @@
+// components/level/level.tsx
 import { FlatList, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View } from '@/components/ui/view';
@@ -33,8 +34,8 @@ export const Level = ({ lesson }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  // Fetch leaderboard data
-  const leaderboard = useQuery(api.scores.getLeaderboard, {
+  // Fetch leaderboard data using the new completions API
+  const leaderboard = useQuery(api.completions.getLeaderboard, {
     lessonId: lesson._id,
   });
 
@@ -55,7 +56,7 @@ export const Level = ({ lesson }: Props) => {
   const scores: ScoreData[] =
     leaderboard?.map((entry) => ({
       userId: entry.userId,
-      time: formatTime(entry.time), // Convert ms to seconds
+      time: formatTime(entry.time),
       name: entry.name,
       image: entry.image,
       rank: entry.rank,
@@ -92,19 +93,6 @@ export const Level = ({ lesson }: Props) => {
             >
               🏆 Leaderboard
             </Text>
-            {/* <Text
-              style={[
-                {
-                  color: '#1C1C1E',
-                  marginTop: 4,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  opacity: 0.8,
-                },
-              ]}
-            >
-              Pronounce all correctly to get ranked!
-            </Text> */}
           </View>
         )}
         ListEmptyComponent={() => (
@@ -147,8 +135,8 @@ export const Level = ({ lesson }: Props) => {
             flexDirection: 'row',
             gap: 2,
             alignItems: 'center',
-            flex: 1, // 👈 allows truncation
-            marginRight: 12, // spacing from speed button
+            flex: 1,
+            marginRight: 12,
           }}
         >
           <ChevronLeft size={26} color='#000' strokeWidth={3} />
@@ -168,7 +156,7 @@ export const Level = ({ lesson }: Props) => {
               color: '#000',
               fontWeight: '800',
               opacity: 0.7,
-              flexShrink: 1, // 👈 critical for row layouts
+              flexShrink: 1,
             }}
           >
             {lesson.course.title}

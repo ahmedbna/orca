@@ -1,4 +1,4 @@
-// users.ts
+// convex/users.ts
 import { v } from 'convex/values';
 import { getAuthUserId } from '@convex-dev/auth/server';
 import { mutation, query } from './_generated/server';
@@ -30,12 +30,12 @@ export const get = query({
 
     /* -------------------- streak -------------------- */
     const today = getUTCDay();
-    const wins = await ctx.db
-      .query('wins')
+    const completions = await ctx.db
+      .query('completions')
       .withIndex('by_user', (q) => q.eq('userId', userId))
       .collect();
 
-    const days = new Set(wins.map((w) => w.day));
+    const days = new Set(completions.map((c) => c.day));
     let streak = 0;
     let cursor = today;
     while (days.has(cursor)) {
@@ -51,7 +51,7 @@ export const get = query({
       const courses = await ctx.db
         .query('courses')
         .withIndex('by_language', (q) =>
-          q.eq('language', user.learningLanguage!)
+          q.eq('language', user.learningLanguage!),
         )
         .collect();
 
@@ -107,7 +107,7 @@ export const get = query({
       const courses = await ctx.db
         .query('courses')
         .withIndex('by_language', (q) =>
-          q.eq('language', user.learningLanguage!)
+          q.eq('language', user.learningLanguage!),
         )
         .collect();
 
@@ -118,7 +118,7 @@ export const get = query({
           const progress = await ctx.db
             .query('courseProgress')
             .withIndex('by_user_course', (q) =>
-              q.eq('userId', userId).eq('courseId', c._id)
+              q.eq('userId', userId).eq('courseId', c._id),
             )
             .first();
 
@@ -128,7 +128,7 @@ export const get = query({
             isCompleted: progress?.isCompleted ?? false,
             isCurrent: course?._id === c._id,
           };
-        })
+        }),
       );
     }
 
@@ -153,7 +153,7 @@ export const get = query({
       allCourses,
       coursesCompleted,
       lessonsCompleted,
-      totalWins: wins.length,
+      totalWins: completions.length,
       streak,
       credits: credits?.balance ?? 0,
     };

@@ -1,3 +1,4 @@
+// app/(home)/streak.tsx
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Streak } from '@/components/map/streak';
@@ -37,8 +38,8 @@ export default function StreakScreen() {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
 
   const course = useQuery(api.courses.getCourse);
-  const streak = useQuery(api.wins.getCurrentStreak);
-  const heatmapData = useQuery(api.wins.getWinHeatmap);
+  const streak = useQuery(api.completions.getCurrentStreak);
+  const heatmapData = useQuery(api.completions.getWinHeatmap);
 
   if (
     course === undefined ||

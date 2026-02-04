@@ -16,12 +16,12 @@ export const getHomeData = query({
     const thirtyDaysAgo = today - 30 * 24 * 60 * 60 * 1000;
 
     // Fetch everything in parallel
-    const [courses, courseProgress, allLessons, lessonProgress, wins] =
+    const [courses, courseProgress, allLessons, lessonProgress, completions] =
       await Promise.all([
         ctx.db
           .query('courses')
           .withIndex('by_language', (q) =>
-            q.eq('language', user.learningLanguage!)
+            q.eq('language', user.learningLanguage!),
           )
           .collect(),
         ctx.db
@@ -34,7 +34,7 @@ export const getHomeData = query({
           .withIndex('by_user', (q) => q.eq('userId', userId))
           .collect(),
         ctx.db
-          .query('wins')
+          .query('completions')
           .withIndex('by_user', (q) => q.eq('userId', userId))
           .filter((q) => q.gte(q.field('day'), thirtyDaysAgo))
           .collect(),
@@ -72,7 +72,7 @@ export const getHomeData = query({
     });
 
     // Calculate streak
-    const days = new Set(wins.map((w) => w.day));
+    const days = new Set(completions.map((c) => c.day));
     let streak = 0;
     let cursor = today;
     while (days.has(cursor) && streak < 365) {

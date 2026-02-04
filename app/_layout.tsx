@@ -26,6 +26,7 @@ import * as SecureStore from 'expo-secure-store';
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+import Purchases from 'react-native-purchases';
 
 SplashScreen.setOptions({
   duration: 200,
@@ -48,7 +49,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (Platform.OS === 'android') {
       NavigationBar.setButtonStyleAsync(
-        colorScheme === 'light' ? 'dark' : 'light'
+        colorScheme === 'light' ? 'dark' : 'light',
       );
     }
   }, [colorScheme]);
@@ -56,9 +57,43 @@ export default function RootLayout() {
   // Keep the root view background color in sync with the current theme
   useEffect(() => {
     setBackgroundColorAsync(
-      colorScheme === 'dark' ? Colors.dark.background : Colors.light.background
+      colorScheme === 'dark' ? Colors.dark.background : Colors.light.background,
     );
   }, [colorScheme]);
+
+  // Initialize RevenueCat SDK
+  useEffect(() => {
+    const initializeRevenueCat = async () => {
+      try {
+        const apiKey = Platform.select({
+          ios: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY,
+          android: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY,
+        });
+
+        if (!apiKey) {
+          console.warn(
+            '⚠️ RevenueCat API key not found in environment variables',
+          );
+          return;
+        }
+
+        // Configure RevenueCat
+        Purchases.configure({
+          apiKey,
+          // Don't set appUserID here - we'll set it after authentication
+        });
+
+        // Set log level (use INFO in production)
+        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+
+        console.log('✅ RevenueCat initialized successfully');
+      } catch (error) {
+        console.error('❌ Failed to initialize RevenueCat:', error);
+      }
+    };
+
+    initializeRevenueCat();
+  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -99,49 +134,6 @@ export default function RootLayout() {
                 <Stack.Screen
                   name='study/[id]'
                   options={{ headerShown: false }}
-                />
-
-                <Stack.Screen
-                  name='(modal)/courses'
-                  options={{
-                    headerShown: false,
-                    sheetGrabberVisible: true,
-                    sheetAllowedDetents: [0.4, 0.7, 1],
-                    contentStyle: {
-                      backgroundColor:
-                        isLiquidGlassAvailable() && osName !== 'iPadOS'
-                          ? 'transparent'
-                          : colorScheme === 'dark'
-                            ? Colors.dark.card
-                            : Colors.light.card,
-                    },
-                    headerTransparent: Platform.OS === 'ios' ? true : false,
-                    headerLargeTitle: false,
-                    title: '',
-                    presentation:
-                      Platform.OS === 'ios'
-                        ? isLiquidGlassAvailable() && osName !== 'iPadOS'
-                          ? 'formSheet'
-                          : 'modal'
-                        : 'modal',
-                    sheetInitialDetentIndex: 0,
-                    headerStyle: {
-                      backgroundColor:
-                        Platform.OS === 'ios'
-                          ? 'transparent'
-                          : colorScheme === 'dark'
-                            ? Colors.dark.card
-                            : Colors.light.card,
-                    },
-                    headerBlurEffect:
-                      isLiquidGlassAvailable() && osName !== 'iPadOS'
-                        ? undefined
-                        : colorScheme === 'dark'
-                          ? 'dark'
-                          : 'light',
-
-                    animation: 'slide_from_bottom',
-                  }}
                 />
 
                 <Stack.Screen

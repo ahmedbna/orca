@@ -12,11 +12,12 @@ import { Colors } from '@/theme/colors';
 import { Spinner } from '@/components/ui/spinner';
 import { Alert } from 'react-native';
 import { SherpaVolumeSilencer } from '@/hooks/SherpaVolumeSilencer';
+import Purchases from 'react-native-purchases';
 
 export default function HomeLayout() {
   const user = useQuery(api.users.get, {});
   const checkAndCancelDeletion = useMutation(
-    api.userDeletion.checkAndCancelDeletionOnLogin
+    api.userDeletion.checkAndCancelDeletionOnLogin,
   );
   const models = useQuery(api.piperModels.getAll);
 
@@ -31,7 +32,7 @@ export default function HomeLayout() {
             Alert.alert(
               '🎉 Welcome Back!',
               "Your account deletion has been cancelled. We're happy to have you back!",
-              [{ text: 'OK', style: 'default' }]
+              [{ text: 'OK', style: 'default' }],
             );
           }
         } catch (error) {
@@ -42,6 +43,29 @@ export default function HomeLayout() {
 
     checkDeletion();
   }, [user?._id]);
+
+  // Set RevenueCat user ID when user is loaded
+  useEffect(() => {
+    const setRevenueCatUserId = async () => {
+      if (user?._id) {
+        try {
+          // Login to RevenueCat with user ID
+          await Purchases.logIn(user._id);
+          console.log('✅ RevenueCat user ID set:', user._id);
+
+          // Optionally set user attributes for analytics
+          await Purchases.setAttributes({
+            email: user.email || '',
+            name: user.name || '',
+          });
+        } catch (error) {
+          console.error('❌ Failed to set RevenueCat user ID:', error);
+        }
+      }
+    };
+
+    setRevenueCatUserId();
+  }, [user?._id, user?.email, user?.name]);
 
   if (user === undefined || models === undefined) {
     return (

@@ -40,7 +40,7 @@ const ORCA_X = 6;
 const ORCA_Y = SCREEN_HEIGHT / 2 - (ORCA_SIZE * 0.6) / 2;
 const ORCA_COLOR = '#FAD40B';
 const OBSTACLE_TYPES = ['🦑', '🪼', '🐡', '🐙', '🦐'];
-const ROUND_SECONDS = 10;
+const ROUND_SECONDS = 8;
 const LIVES = 3;
 const SHADOW_HEIGHT = 6;
 const HORIZONTAL_PADDING = 16;
@@ -54,7 +54,7 @@ function levenshtein(a: string, b: string) {
   if (lb === 0) return la;
 
   const dp: number[][] = Array.from({ length: la + 1 }, () =>
-    new Array<number>(lb + 1).fill(0)
+    new Array<number>(lb + 1).fill(0),
   );
   for (let i = 0; i <= la; i++) dp[i][0] = i;
   for (let j = 0; j <= lb; j++) dp[0][j] = j;
@@ -83,7 +83,7 @@ function normalizeText(s: string) {
 
 function slidingWindowSimilarity(
   inputStream: string,
-  targetPhrase: string
+  targetPhrase: string,
 ): number {
   const normalizedInput = normalizeText(inputStream);
   const normalizedTarget = normalizeText(targetPhrase);
@@ -182,8 +182,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const green = useColor('green');
 
   const completeLesson = useMutation(api.lessons.completeLesson);
-  const submitScore = useMutation(api.scores.submitScore);
-  const recordWin = useMutation(api.wins.recordWin);
+  const recordCompletion = useMutation(api.completions.recordCompletion);
 
   const TOTAL_OBSTACLES = lesson.phrases.length;
   const NATIVE_LANGUAGE = NATIVES.find((l) => l.code === native);
@@ -206,10 +205,10 @@ export const Orca = ({ lesson, native, language }: Props) => {
   const [interimText, setInterimText] = useState('');
   const secondsLeftRef = useRef(ROUND_SECONDS);
   const [correctSegmentIndices, setCorrectSegmentIndices] = useState<number[]>(
-    []
+    [],
   );
   const [failedSegmentIndices, setFailedSegmentIndices] = useState<number[]>(
-    []
+    [],
   );
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -291,7 +290,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
     if (!relevantTranscript) return;
 
     setInterimText((prev) =>
-      prev === relevantTranscript ? prev : relevantTranscript
+      prev === relevantTranscript ? prev : relevantTranscript,
     );
 
     processTranscript(relevantTranscript, fullTranscript.length);
@@ -405,7 +404,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
       withTiming(10, { duration: 50 }),
       withTiming(-10, { duration: 50 }),
       withTiming(10, { duration: 50 }),
-      withTiming(0, { duration: 50 })
+      withTiming(0, { duration: 50 }),
     );
   }, []);
 
@@ -446,36 +445,26 @@ export const Orca = ({ lesson, native, language }: Props) => {
 
       // Submit score if won
       if (won) {
+        // Record completion for all users (win or loss)
         setIsSubmitting(true);
         try {
-          // Submit score to leaderboard
-          await submitScore({
+          await recordCompletion({
             lessonId: lesson._id,
             time: ft,
             correctPhrases: correctPhrasesRef.current,
           });
 
-          await recordWin({ lessonId: lesson._id });
-
-          // Complete lesson and unlock progression
           await completeLesson({
             lessonId: lesson._id,
           });
         } catch (error) {
-          console.error('Failed to submit score:', error);
+          console.error('Failed to record completion:', error);
         } finally {
           setIsSubmitting(false);
         }
       }
     },
-    [
-      cleanup,
-      lesson._id,
-      TOTAL_OBSTACLES,
-      completeLesson,
-      submitScore,
-      recordWin,
-    ]
+    [cleanup, lesson._id, TOTAL_OBSTACLES, completeLesson, recordCompletion],
   );
 
   const markSuccess = useCallback(
@@ -516,7 +505,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
         if (!gameEndedRef.current) spawnObstacle();
       }, 250);
     },
-    [endGame]
+    [endGame],
   );
 
   const spawnObstacle = useCallback(() => {
@@ -554,7 +543,7 @@ export const Orca = ({ lesson, native, language }: Props) => {
         if (finished && isMovingRef.current && !gameEndedRef.current) {
           scheduleOnRN(handleCollisionJS);
         }
-      }
+      },
     );
   }, [endGame, startRoundTimer, startTimer, handleCollisionJS]);
 

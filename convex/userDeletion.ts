@@ -75,7 +75,7 @@ export const getDeletionStatus = query({
 
     const now = Date.now();
     const daysRemaining = Math.ceil(
-      (user.scheduledForDeletion - now) / (24 * 60 * 60 * 1000)
+      (user.scheduledForDeletion - now) / (24 * 60 * 60 * 1000),
     );
 
     return {
@@ -140,24 +140,14 @@ export const deleteUserData = internalMutation({
       await ctx.db.delete(progress._id);
     }
 
-    // Delete scores
-    const scores = await ctx.db
-      .query('scores')
+    // Delete completions (replaces scores and wins)
+    const completions = await ctx.db
+      .query('completions')
       .withIndex('by_user', (q) => q.eq('userId', args.userId))
       .collect();
 
-    for (const score of scores) {
-      await ctx.db.delete(score._id);
-    }
-
-    // Delete wins
-    const wins = await ctx.db
-      .query('wins')
-      .withIndex('by_user', (q) => q.eq('userId', args.userId))
-      .collect();
-
-    for (const win of wins) {
-      await ctx.db.delete(win._id);
+    for (const completion of completions) {
+      await ctx.db.delete(completion._id);
     }
 
     // Delete auth-related data
@@ -183,7 +173,7 @@ export const deleteUserData = internalMutation({
     await ctx.db.delete(args.userId);
 
     console.log(
-      `Successfully deleted user ${args.userId} and all associated data`
+      `Successfully deleted user ${args.userId} and all associated data`,
     );
 
     return {
@@ -193,8 +183,7 @@ export const deleteUserData = internalMutation({
         conversations: conversations.length,
         courseProgress: courseProgress.length,
         lessonProgress: lessonProgress.length,
-        scores: scores.length,
-        wins: wins.length,
+        completions: completions.length,
         authSessions: authSessions.length,
         authAccounts: authAccounts.length,
       },
@@ -213,7 +202,7 @@ export const cleanupScheduledDeletions = internalMutation({
     const users = await ctx.db.query('users').collect();
 
     const usersToDelete = users.filter(
-      (user) => user.scheduledForDeletion && user.scheduledForDeletion <= now
+      (user) => user.scheduledForDeletion && user.scheduledForDeletion <= now,
     );
 
     console.log(`Found ${usersToDelete.length} users to delete`);
@@ -222,8 +211,6 @@ export const cleanupScheduledDeletions = internalMutation({
 
     for (const user of usersToDelete) {
       try {
-        // Since we can't directly call internal mutations from internal mutations,
-        // we'll delete inline
         await deleteUserDataInline(ctx, user._id);
 
         results.push({
@@ -288,22 +275,13 @@ async function deleteUserDataInline(ctx: any, userId: string) {
     await ctx.db.delete(progress._id);
   }
 
-  // Delete scores
-  const scores = await ctx.db
-    .query('scores')
+  // Delete completions
+  const completions = await ctx.db
+    .query('completions')
     .withIndex('by_user', (q: any) => q.eq('userId', userId))
     .collect();
-  for (const score of scores) {
-    await ctx.db.delete(score._id);
-  }
-
-  // Delete wins
-  const wins = await ctx.db
-    .query('wins')
-    .withIndex('by_user', (q: any) => q.eq('userId', userId))
-    .collect();
-  for (const win of wins) {
-    await ctx.db.delete(win._id);
+  for (const completion of completions) {
+    await ctx.db.delete(completion._id);
   }
 
   // Delete auth-related data

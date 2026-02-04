@@ -84,11 +84,11 @@ export const Profile = ({ user, userId, allModels, userVoice }: Props) => {
   }, [allModels, getDownloadedModels]);
 
   const nativeLanguag = NATIVES.find(
-    (lang) => lang.code === user.nativeLanguage
+    (lang) => lang.code === user.nativeLanguage,
   );
 
   const learningLanguage = LANGUAGES.find(
-    (lang) => lang.code === user.learningLanguage
+    (lang) => lang.code === user.learningLanguage,
   );
 
   const handleDownloadVoice = async (model: Doc<'piperModels'>) => {
@@ -115,13 +115,13 @@ export const Profile = ({ user, userId, allModels, userVoice }: Props) => {
       allModels?.filter(
         (m) =>
           m.code === user?.learningLanguage &&
-          downloadedModels.includes(m.modelId)
+          downloadedModels.includes(m.modelId),
       ) || [];
 
     if (languageModels.length <= 1) {
       Alert.alert(
         'Cannot Delete',
-        'You must have at least one voice model downloaded for your learning language.'
+        'You must have at least one voice model downloaded for your learning language.',
       );
       return;
     }
@@ -129,7 +129,7 @@ export const Profile = ({ user, userId, allModels, userVoice }: Props) => {
     if (userVoice?._id === model._id) {
       Alert.alert(
         'Cannot Delete',
-        'You cannot delete the currently active voice. Please switch to another voice first.'
+        'You cannot delete the currently active voice. Please switch to another voice first.',
       );
       return;
     }
@@ -153,7 +153,7 @@ export const Profile = ({ user, userId, allModels, userVoice }: Props) => {
             }
           },
         },
-      ]
+      ],
     );
   };
 
@@ -192,7 +192,7 @@ export const Profile = ({ user, userId, allModels, userVoice }: Props) => {
     allModels?.filter((m) => m.code === user?.learningLanguage) || [];
 
   const downloadedCount = availableVoices.filter((v) =>
-    downloadedModels.includes(v.modelId)
+    downloadedModels.includes(v.modelId),
   ).length;
 
   return (

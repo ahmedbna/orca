@@ -36,10 +36,10 @@ const COLORS = {
     border: 'rgba(0,0,0,0.1)',
   },
   green: {
-    face: '#34C759',
-    shadow: '#2E9E4E',
-    text: '#FFFFFF',
-    border: 'rgba(0,0,0,0.1)',
+    face: '#1FD65F', // More saturated & lively
+    shadow: '#18A94A', // Deeper contrast shadow
+    text: '#FFFFFF', // Stays perfect
+    border: 'rgba(0,0,0,0.12)',
   },
   red: {
     face: '#FF3B30',
@@ -89,7 +89,7 @@ export const OrcaButton = ({
     const translateY = interpolate(
       pressed.value,
       [0, 1],
-      [0, disabled ? 0 : BUTTON_SHADOW_HEIGHT]
+      [0, disabled ? 0 : BUTTON_SHADOW_HEIGHT],
     );
 
     return {

@@ -105,7 +105,7 @@ export const Background = ({
       {!study ? <Shark /> : null}
       {!study ? <Jellyfish /> : null}
 
-      <Seafloor speed={swim ? 5000 : 0} bottom={insets.bottom + 240} />
+      <Seafloor speed={swim ? 7000 : 0} bottom={insets.bottom + 240} />
 
       <View
         style={{

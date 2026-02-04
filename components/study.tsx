@@ -12,9 +12,10 @@ import { OrcaButton } from '@/components/squishy/orca-button';
 import { Progress } from '@/components/squishy/progress';
 import { NATIVES } from '@/constants/languages';
 import { usePiperTTS } from '@/hooks/usePiperTTS';
-import { useQuery } from 'convex/react';
+import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Background } from './background';
+import { useColor } from '@/hooks/useColor';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -40,15 +41,30 @@ export const Study = ({ language, native, lesson, models }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  // Get user's CURRENT voice preference (specific model)
-  const userVoice = useQuery(api.piperModels.getUserVoice);
+  const border = useColor('border');
+  const background = useColor('background');
 
-  const { allModels, initializeTTS, speak, currentModelId, isInitializing } =
-    usePiperTTS({ models });
+  // ===== Convex =====
+  const userVoice = useQuery(api.piperModels.getUserVoice);
+  const updateUser = useMutation(api.users.update);
+
+  // ===== Piper Hook =====
+  const {
+    allModels,
+    initializeTTS,
+    speak,
+    currentModelId,
+    isInitializing,
+    downloadProgress,
+    isDownloading,
+  } = usePiperTTS({ models });
+
+  // ===== Local State =====
+  const [downloadComplete, setDownloadComplete] = useState(false);
 
   const phrases = useMemo(
     () => [...lesson.phrases].sort((a, b) => a.order - b.order),
-    [lesson.phrases]
+    [lesson.phrases],
   );
 
   const [index, setIndex] = useState(0);
@@ -59,14 +75,12 @@ export const Study = ({ language, native, lesson, models }: Props) => {
   const currentSpeedKey = SPEED_ORDER[speedIndex];
   const currentSpeedValue = VOICE_SPEED[currentSpeedKey];
 
-  // Use the user's preferred voice, or fallback to first model for language
+  // ===== Select Voice =====
   const selectedVoice = useMemo(() => {
-    // Priority 1: User's saved preference that matches language
     if (userVoice && userVoice.code === language) {
       return userVoice;
     }
 
-    // Priority 2: First available model for this language
     const fallback = allModels.find((m) => m.code === language);
 
     if (!fallback) {
@@ -76,44 +90,50 @@ export const Study = ({ language, native, lesson, models }: Props) => {
     return fallback;
   }, [allModels, language, userVoice]);
 
-  // Initialize TTS when component mounts or when selected voice changes
+  // ===== Auto Download + Init =====
   useEffect(() => {
-    if (!selectedVoice) {
-      console.error(`❌ No voice available for language: ${language}`);
-      return;
-    }
+    if (!selectedVoice) return;
 
-    // Only initialize if we're not already using this voice
+    const run = async () => {
+      try {
+        await initializeTTS(selectedVoice._id);
+
+        // Save preference after successful download
+        await updateUser({ piperId: selectedVoice._id });
+
+        setDownloadComplete(true);
+      } catch (err) {
+        console.error('Voice initialization failed:', err);
+      }
+    };
+
     if (currentModelId !== selectedVoice.modelId) {
-      console.log(
-        `🎤 Initializing voice: ${selectedVoice.voice} for language: ${language}`
-      );
-      initializeTTS(selectedVoice._id);
+      run();
     }
-  }, [selectedVoice, currentModelId, initializeTTS, language]);
+  }, [selectedVoice, currentModelId]);
 
+  // ===== Progress =====
+  const modelId = selectedVoice?.modelId;
+  const progress = modelId ? (downloadProgress[modelId] ?? 0) : 0;
+  const progressPercent = Math.round(progress * 100);
+
+  // ===== Speak =====
   const handleSpeak = useCallback(() => {
-    if (isInitializing) {
-      console.log('⏳ Voice still initializing...');
-      return;
-    }
+    if (isInitializing || isDownloading) return;
+    if (!currentPhrase?.text || !selectedVoice) return;
 
-    if (!currentPhrase?.text) {
-      console.warn('⚠️ No phrase text to speak');
-      return;
-    }
-
-    if (!selectedVoice) {
-      console.error('❌ No voice selected');
-      return;
-    }
-
-    console.log(`🔊 Speaking with voice: ${selectedVoice.voice}`);
     speak(currentPhrase.text, currentSpeedValue);
-  }, [currentPhrase, speak, isInitializing, currentSpeedValue, selectedVoice]);
+  }, [
+    currentPhrase,
+    speak,
+    isInitializing,
+    isDownloading,
+    currentSpeedValue,
+    selectedVoice,
+  ]);
 
   const translation = currentPhrase.dictionary?.find(
-    (d) => d.language === native
+    (d) => d.language === native,
   )?.translation;
 
   const isFirst = index === 0;
@@ -125,12 +145,15 @@ export const Study = ({ language, native, lesson, models }: Props) => {
 
   const BOTTOM_PANEL_HEIGHT = insets.bottom + 240;
 
+  // ================= UI =================
+
   return (
     <Background user={lesson.user} swim={false} study>
       <View style={{ flex: 1 }}>
-        {/* 🔊 TOP TAP AREA */}
+        {/* 🔊 TAP AREA */}
         <Pressable
           onPress={handleSpeak}
+          disabled={isDownloading || isInitializing}
           android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
           style={{
             flex: 1,
@@ -209,7 +232,6 @@ export const Study = ({ language, native, lesson, models }: Props) => {
               </Text>
             </TouchableOpacity>
 
-            {/* Speed */}
             <TouchableOpacity onPress={handleSpeedPress}>
               <Text
                 style={{
@@ -269,18 +291,64 @@ export const Study = ({ language, native, lesson, models }: Props) => {
             </View>
           </View>
 
-          <OrcaButton
-            label={
-              isInitializing
-                ? '⏳ LOADING VOICE'
-                : selectedVoice
-                  ? `🔊 LISTEN`
-                  : '❌ NO VOICE'
-            }
-            variant='red'
-            disabled={isInitializing || !selectedVoice}
-            onPress={handleSpeak}
-          />
+          {/* ===== DOWNLOAD UI ===== */}
+
+          {isDownloading && !downloadComplete ? (
+            <View style={{ width: '100%' }}>
+              <View
+                style={{
+                  height: 64,
+                  borderRadius: 999,
+                  backgroundColor: background,
+                  borderWidth: 3,
+                  borderColor: border,
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+              >
+                <View
+                  style={{
+                    height: '100%',
+                    width: `${progressPercent}%`,
+                    backgroundColor: '#30D158',
+                    borderRadius: 999,
+                  }}
+                />
+
+                <View
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 24,
+                      fontWeight: '800',
+                      color: '#FFF',
+                    }}
+                  >
+                    {progressPercent}%
+                  </Text>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <OrcaButton
+              label={
+                isInitializing
+                  ? '⏳ LOADING VOICE'
+                  : selectedVoice
+                    ? '🔊 LISTEN'
+                    : '❌ NO VOICE'
+              }
+              variant='red'
+              disabled={isInitializing || isDownloading || !selectedVoice}
+              onPress={handleSpeak}
+            />
+          )}
         </View>
       </View>
     </Background>
