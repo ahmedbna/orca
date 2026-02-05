@@ -11,8 +11,15 @@ export default function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: Id<'users'> }>();
   const user = useQuery(api.users.get, { userId: id });
   const userId = useQuery(api.users.getId);
+  const allModels = useQuery(api.piperModels.getAll);
+  const userVoice = useQuery(api.piperModels.getUserVoice);
 
-  if (user === undefined || userId === undefined) {
+  if (
+    user === undefined ||
+    userId === undefined ||
+    allModels === undefined ||
+    userVoice === undefined
+  ) {
     return <Loading />;
   }
 
@@ -30,5 +37,12 @@ export default function StudentScreen() {
     );
   }
 
-  return <Profile user={user} userId={userId} />;
+  return (
+    <Profile
+      user={user}
+      userId={userId}
+      allModels={allModels}
+      userVoice={userVoice}
+    />
+  );
 }

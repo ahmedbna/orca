@@ -1,4 +1,7 @@
-import { View, Pressable, StyleSheet, Platform } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
+import { View, Platform, Pressable } from 'react-native';
+import { useConnection } from './useConnection';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,9 +10,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { Text } from '../ui/text';
-import { ChevronRight } from 'lucide-react-native';
-import { Doc } from '@/convex/_generated/dataModel';
-import { useRouter } from 'expo-router';
 
 const SHADOW_HEIGHT = 6;
 const HORIZONTAL_PADDING = 16;
@@ -27,11 +27,7 @@ const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
   }
 };
 
-type Props = {
-  lesson: Doc<'lessons'>;
-};
-
-export const LessonCard = ({ lesson }: Props) => {
+export const StartClass = () => {
   const router = useRouter();
   const pressed = useSharedValue(0);
   const pulse = useSharedValue(1);
@@ -42,10 +38,18 @@ export const LessonCard = ({ lesson }: Props) => {
       transform: [{ translateY }, { scale: pulse.value }],
     };
   });
+  const { isConnectionActive, connect } = useConnection();
+
+  // Navigate to Assistant screen when we have the connection details.
+  useEffect(() => {
+    if (isConnectionActive) {
+      router.push('/classroom/123'); // Navigate to the classroom screen with a sample ID
+    }
+  }, [isConnectionActive, router]);
 
   return (
     <Pressable
-      onPress={() => router.push(`/study/${lesson._id}`)}
+      onPress={() => connect()}
       onPressIn={() => {
         triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
         pressed.value = withSpring(1, { damping: 16 });
@@ -58,6 +62,7 @@ export const LessonCard = ({ lesson }: Props) => {
         flex: 1,
         paddingBottom: SHADOW_HEIGHT,
       }}
+      disabled={isConnectionActive}
     >
       {/* Shadow */}
       <View
@@ -95,7 +100,7 @@ export const LessonCard = ({ lesson }: Props) => {
               fontSize: 24,
             }}
           >
-            📚
+            🧑‍🏫
           </Text>
           <Text
             style={{
@@ -104,7 +109,7 @@ export const LessonCard = ({ lesson }: Props) => {
               fontWeight: '800',
             }}
           >
-            STUDY
+            CLASS
           </Text>
         </View>
       </Animated.View>

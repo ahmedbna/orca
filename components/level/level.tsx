@@ -15,6 +15,7 @@ import { api } from '@/convex/_generated/api';
 import { Loading } from '@/components/loading';
 import { formatTime } from '@/lib/format-time';
 import { ChevronLeft } from 'lucide-react-native';
+import { StartClass } from '../livekit/start-class';
 
 export interface ScoreData {
   userId: Id<'users'>;
@@ -126,6 +127,7 @@ export const Level = ({ lesson }: Props) => {
             height: insets.bottom + 240,
             overflow: 'hidden',
             zIndex: 99,
+            flex: 1,
           },
         ]}
       >
@@ -135,18 +137,23 @@ export const Level = ({ lesson }: Props) => {
             flexDirection: 'row',
             gap: 2,
             alignItems: 'center',
-            flex: 1,
             marginRight: 12,
           }}
         >
           <ChevronLeft size={26} color='#000' strokeWidth={3} />
 
-          <Text variant='heading'>
-            {
-              LANGUAGES.find((lang) => lang.code === lesson.course.language)
-                ?.flag
-            }
+          <Text
+            style={{
+              fontSize: 22,
+              color: '#000',
+              fontWeight: '800',
+              opacity: 0.7,
+              flexShrink: 1,
+            }}
+          >
+            {lesson.order < 10 ? `0${lesson.order}` : lesson.order}:
           </Text>
+
           <Text
             variant='title'
             numberOfLines={1}
@@ -159,13 +166,30 @@ export const Level = ({ lesson }: Props) => {
               flexShrink: 1,
             }}
           >
-            {lesson.course.title}
+            {lesson.title}
           </Text>
         </TouchableOpacity>
 
-        <LessonCard lesson={lesson} />
+        <View
+          style={{
+            flex: 1,
+            gap: 8,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 12,
+            }}
+          >
+            <LessonCard lesson={lesson} />
+            <StartClass />
+          </View>
 
-        <OrcaButton label='PLAY' variant='green' onPress={handlePlayPress} />
+          <OrcaButton label='PLAY' variant='green' onPress={handlePlayPress} />
+        </View>
       </View>
     </View>
   );

@@ -27,6 +27,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import Purchases from 'react-native-purchases';
+import { ConnectionProvider } from '@/components/livekit/useConnection';
+import { registerGlobals } from '@livekit/react-native';
+
+registerGlobals();
 
 SplashScreen.setOptions({
   duration: 200,
@@ -125,46 +129,56 @@ export default function RootLayout() {
               <Auth />
             </Unauthenticated>
             <Authenticated>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name='(home)' options={{ headerShown: false }} />
-                <Stack.Screen
-                  name='orca/[id]'
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='study/[id]'
-                  options={{ headerShown: false }}
-                />
+              <ConnectionProvider>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen
+                    name='(home)'
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='orca/[id]'
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='study/[id]'
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='(modal)/settings'
-                  options={{
-                    headerShown: false,
-                    sheetGrabberVisible: true,
-                    sheetAllowedDetents: [1],
-                    contentStyle: {
-                      backgroundColor: Colors.dark.card,
-                    },
-                    headerTransparent: Platform.OS === 'ios' ? true : false,
-                    headerLargeTitle: false,
-                    title: '',
-                    presentation:
-                      Platform.OS === 'ios'
-                        ? isLiquidGlassAvailable() && osName !== 'iPadOS'
-                          ? 'formSheet'
-                          : 'modal'
-                        : 'modal',
-                    sheetInitialDetentIndex: 0,
-                    headerStyle: {
-                      backgroundColor: Colors.dark.card,
-                    },
-                    headerBlurEffect: undefined,
-                    animation: 'slide_from_bottom',
-                  }}
-                />
+                  <Stack.Screen
+                    name='classroom/[id]'
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen name='+not-found' />
-              </Stack>
+                  <Stack.Screen
+                    name='(modal)/settings'
+                    options={{
+                      headerShown: false,
+                      sheetGrabberVisible: true,
+                      sheetAllowedDetents: [1],
+                      contentStyle: {
+                        backgroundColor: Colors.dark.card,
+                      },
+                      headerTransparent: Platform.OS === 'ios' ? true : false,
+                      headerLargeTitle: false,
+                      title: '',
+                      presentation:
+                        Platform.OS === 'ios'
+                          ? isLiquidGlassAvailable() && osName !== 'iPadOS'
+                            ? 'formSheet'
+                            : 'modal'
+                          : 'modal',
+                      sheetInitialDetentIndex: 0,
+                      headerStyle: {
+                        backgroundColor: Colors.dark.card,
+                      },
+                      headerBlurEffect: undefined,
+                      animation: 'slide_from_bottom',
+                    }}
+                  />
+
+                  <Stack.Screen name='+not-found' />
+                </Stack>
+              </ConnectionProvider>
             </Authenticated>
           </ConvexAuthProvider>
         </KeyboardProvider>
