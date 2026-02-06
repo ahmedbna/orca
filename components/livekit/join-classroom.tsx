@@ -27,7 +27,7 @@ const triggerHaptic = (style: Haptics.ImpactFeedbackStyle) => {
   }
 };
 
-export const StartClass = () => {
+export const JoinClassroom = () => {
   const router = useRouter();
   const pressed = useSharedValue(0);
   const pulse = useSharedValue(1);

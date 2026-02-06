@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -6,8 +7,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-
-import React, { useCallback, useEffect, useState } from 'react';
 import {
   AudioSession,
   useIOSAudioManagement,
@@ -24,14 +23,13 @@ import {
   useSessionMessages,
   useTrackToggle,
 } from '@livekit/components-react';
-import { useConnection } from './useConnection';
-import ControlBar from './livekit-ui/ControlBar';
-import ChatBar from './livekit-ui/ChatBar';
-import ChatLog from './livekit-ui/ChatLog';
-import AgentVisualization from './livekit-ui/AgentVisualization';
+import { ChatLog } from '@/components/livekit/livekit-ui/ChatLog';
+import { ChatBar } from '@/components/livekit/livekit-ui/ChatBar';
+import { ControlBar } from '@/components/livekit/livekit-ui/ControlBar';
+import { AgentVisualization } from '@/components/livekit/livekit-ui/AgentVisualization';
+import { useConnection } from '@/components/livekit/useConnection';
 
 export const Classroom = () => {
-  // Start the audio session first.
   useEffect(() => {
     let start = async () => {
       await AudioSession.startAudioSession();
@@ -52,8 +50,8 @@ export const Classroom = () => {
 
 const RoomView = () => {
   const router = useRouter();
-  const connection = useConnection();
   const room = useRoomContext();
+  const connection = useConnection();
 
   useIOSAudioManagement(room, true);
 
@@ -70,6 +68,13 @@ const RoomView = () => {
     [Track.Source.ScreenShare],
     localParticipantIdentity,
   );
+
+  useEffect(() => {
+    // If mic is off, turn it on immediately
+    if (!isMicrophoneEnabled) {
+      localParticipant.setMicrophoneEnabled(true);
+    }
+  }, [localParticipant, isMicrophoneEnabled]);
 
   const localVideoTrack =
     localCameraTrack && isCameraEnabled

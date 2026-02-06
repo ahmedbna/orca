@@ -15,7 +15,7 @@ import { api } from '@/convex/_generated/api';
 import { Loading } from '@/components/loading';
 import { formatTime } from '@/lib/format-time';
 import { ChevronLeft } from 'lucide-react-native';
-import { StartClass } from '../livekit/start-class';
+import { JoinClassroom } from '../livekit/join-classroom';
 
 export interface ScoreData {
   userId: Id<'users'>;
@@ -185,7 +185,7 @@ export const Level = ({ lesson }: Props) => {
             }}
           >
             <LessonCard lesson={lesson} />
-            <StartClass />
+            <JoinClassroom />
           </View>
 
           <OrcaButton label='PLAY' variant='green' onPress={handlePlayPress} />

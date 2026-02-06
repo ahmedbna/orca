@@ -30,6 +30,7 @@ import Purchases from 'react-native-purchases';
 import { ConnectionProvider } from '@/components/livekit/useConnection';
 import { registerGlobals } from '@livekit/react-native';
 
+// Required setup for LiveKit React-Native
 registerGlobals();
 
 SplashScreen.setOptions({

@@ -17,12 +17,12 @@ type ChatBarProps = {
   onChatSend: (text: string) => void;
 };
 
-export default function ChatBar({
+export const ChatBar = ({
   style,
   value,
   onChangeText,
   onChatSend,
-}: ChatBarProps) {
+}: ChatBarProps) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -50,7 +50,7 @@ export default function ChatBar({
       </View>
     </KeyboardAvoidingView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -18,10 +18,7 @@ export type ChatLogProps = {
   style: StyleProp<ViewStyle>;
   messages: ReceivedMessage[];
 };
-export default function ChatLog({
-  style,
-  messages: transcriptions,
-}: ChatLogProps) {
+export const ChatLog = ({ style, messages: transcriptions }: ChatLogProps) => {
   const { localParticipant } = useLocalParticipant();
 
   const renderItem = useCallback(
@@ -33,7 +30,7 @@ export default function ChatLog({
         return <AgentTranscriptionText text={item.message} />;
       }
     },
-    [localParticipant]
+    [localParticipant],
   );
 
   return (
@@ -45,7 +42,7 @@ export default function ChatLog({
       itemLayoutAnimation={LinearTransition}
     />
   );
-}
+};
 
 const UserTranscriptionText = (props: { text: string }) => {
   let { text } = props;

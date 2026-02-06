@@ -15,7 +15,7 @@ type AgentVisualizationProps = {
 
 const barSize = 0.2;
 
-export default function AgentVisualization({ style }: AgentVisualizationProps) {
+export const AgentVisualization = ({ style }: AgentVisualizationProps) => {
   const { state, microphoneTrack, cameraTrack } = useAgent();
   const [barWidth, setBarWidth] = useState(0);
   const [barBorderRadius, setBarBorderRadius] = useState(0);
@@ -49,7 +49,7 @@ export default function AgentVisualization({ style }: AgentVisualizationProps) {
       {videoView}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -37,7 +37,7 @@ type ControlBarOptions = {
   onExitClick: () => void;
 };
 
-export default function ControlBar({ style = {}, options }: ControlBarProps) {
+export const ControlBar = ({ style = {}, options }: ControlBarProps) => {
   const { microphoneTrack, localParticipant } = useLocalParticipant();
   const [trackRef, setTrackRef] = useState<TrackReference | undefined>(
     undefined,
@@ -133,7 +133,7 @@ export default function ControlBar({ style = {}, options }: ControlBarProps) {
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
