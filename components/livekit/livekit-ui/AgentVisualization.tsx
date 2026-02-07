@@ -1,5 +1,5 @@
 import { useAgent } from '@livekit/components-react';
-import { BarVisualizer, VideoTrack } from '@livekit/react-native';
+import { BarVisualizer } from '@livekit/react-native';
 import React, { useCallback, useState } from 'react';
 import {
   LayoutChangeEvent,
@@ -16,7 +16,7 @@ type AgentVisualizationProps = {
 const barSize = 0.2;
 
 export const AgentVisualization = ({ style }: AgentVisualizationProps) => {
-  const { state, microphoneTrack, cameraTrack } = useAgent();
+  const { state, microphoneTrack } = useAgent();
   const [barWidth, setBarWidth] = useState(0);
   const [barBorderRadius, setBarBorderRadius] = useState(0);
 
@@ -27,9 +27,6 @@ export const AgentVisualization = ({ style }: AgentVisualizationProps) => {
     setBarBorderRadius(barSize * height);
   }, []);
 
-  let videoView = cameraTrack ? (
-    <VideoTrack trackRef={cameraTrack} style={styles.videoTrack} />
-  ) : null;
   return (
     <View style={[style, styles.container]}>
       <View style={styles.barVisualizerContainer} onLayout={layoutCallback}>
@@ -39,14 +36,13 @@ export const AgentVisualization = ({ style }: AgentVisualizationProps) => {
           options={{
             minHeight: barSize,
             barWidth: barWidth,
-            barColor: '#FFFFFF',
+            barColor: '#000',
             barBorderRadius: barBorderRadius,
           }}
           trackRef={microphoneTrack}
           style={styles.barVisualizer}
         />
       </View>
-      {videoView}
     </View>
   );
 };
@@ -55,6 +51,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#FAD40B',
   },
   videoTrack: {
     position: 'absolute',

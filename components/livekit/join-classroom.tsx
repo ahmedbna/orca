@@ -9,7 +9,10 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { Text } from '../ui/text';
+import { Text } from '@/components/ui/text';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useSubscription } from '@/hooks/useSubscription';
 
 const SHADOW_HEIGHT = 6;
 const HORIZONTAL_PADDING = 16;
@@ -32,6 +35,9 @@ export const JoinClassroom = () => {
   const pressed = useSharedValue(0);
   const pulse = useSharedValue(1);
 
+  const { presentPaywall } = useSubscription();
+  const hasAccess = useQuery(api.subscriptions.hasAccess);
+
   const animatedFaceStyle = useAnimatedStyle(() => {
     const translateY = interpolate(pressed.value, [0, 1], [0, SHADOW_HEIGHT]);
     return {
@@ -47,9 +53,21 @@ export const JoinClassroom = () => {
     }
   }, [isConnectionActive, router]);
 
+  const handleJoinClassroom = async () => {
+    if (hasAccess) {
+      const purchased = await presentPaywall();
+
+      if (purchased) {
+        connect();
+      }
+    } else {
+      connect();
+    }
+  };
+
   return (
     <Pressable
-      onPress={() => connect()}
+      onPress={handleJoinClassroom}
       onPressIn={() => {
         triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
         pressed.value = withSpring(1, { damping: 16 });

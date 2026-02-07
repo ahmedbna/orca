@@ -1,33 +1,27 @@
 import { useCallback, useEffect, useState } from 'react';
-import {
-  Animated,
-  Dimensions,
-  StyleSheet,
-  useAnimatedValue,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { Animated, StyleSheet, useAnimatedValue, View } from 'react-native';
 import {
   AudioSession,
   useIOSAudioManagement,
   useLocalParticipant,
   useParticipantTracks,
   useRoomContext,
-  VideoTrack,
 } from '@livekit/react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Track } from 'livekit-client';
-import {
-  TrackReference,
-  useSessionMessages,
-  useTrackToggle,
-} from '@livekit/components-react';
+import { useSessionMessages, useTrackToggle } from '@livekit/components-react';
 import { ChatLog } from '@/components/livekit/livekit-ui/ChatLog';
-import { ChatBar } from '@/components/livekit/livekit-ui/ChatBar';
-import { ControlBar } from '@/components/livekit/livekit-ui/ControlBar';
 import { AgentVisualization } from '@/components/livekit/livekit-ui/AgentVisualization';
 import { useConnection } from '@/components/livekit/useConnection';
+import { OrcaButton } from '../squishy/orca-button';
+import { Spinner } from '../ui/spinner';
+import { Image } from 'expo-image';
+import { Text } from '../ui/text';
+import { Button } from '../ui/button';
 
 export const Classroom = () => {
   useEffect(() => {
@@ -41,17 +35,14 @@ export const Classroom = () => {
     };
   }, []);
 
-  return (
-    <SafeAreaView>
-      <RoomView />
-    </SafeAreaView>
-  );
+  return <RoomView />;
 };
 
 const RoomView = () => {
   const router = useRouter();
   const room = useRoomContext();
   const connection = useConnection();
+  const insets = useSafeAreaInsets();
 
   useIOSAudioManagement(room, true);
 
@@ -62,12 +53,6 @@ const RoomView = () => {
     cameraTrack: localCameraTrack,
     localParticipant,
   } = useLocalParticipant();
-  const localParticipantIdentity = localParticipant.identity;
-
-  const localScreenShareTrack = useParticipantTracks(
-    [Track.Source.ScreenShare],
-    localParticipantIdentity,
-  );
 
   useEffect(() => {
     // If mic is off, turn it on immediately
@@ -76,109 +61,140 @@ const RoomView = () => {
     }
   }, [localParticipant, isMicrophoneEnabled]);
 
-  const localVideoTrack =
-    localCameraTrack && isCameraEnabled
-      ? ({
-          participant: localParticipant,
-          publication: localCameraTrack,
-          source: Track.Source.Camera,
-        } satisfies TrackReference)
-      : localScreenShareTrack.length > 0 && isScreenShareEnabled
-        ? localScreenShareTrack[0]
-        : null;
-
   // Messages
   const { messages, send } = useSessionMessages();
-  const [isChatEnabled, setChatEnabled] = useState(false);
-  const [chatMessage, setChatMessage] = useState('');
+  const [isChatEnabled, setChatEnabled] = useState(true);
+  // const [chatMessage, setChatMessage] = useState('');
 
-  const onChatSend = useCallback(
-    (message: string) => {
-      send(message);
-      setChatMessage('');
-    },
-    [setChatMessage, send],
-  );
+  // const onChatSend = useCallback(
+  //   (message: string) => {
+  //     send(message);
+  //     setChatMessage('');
+  //   },
+  //   [setChatMessage, send],
+  // );
 
   // Control callbacks
   const micToggle = useTrackToggle({ source: Track.Source.Microphone });
-  const cameraToggle = useTrackToggle({ source: Track.Source.Camera });
-  const screenShareToggle = useTrackToggle({
-    source: Track.Source.ScreenShare,
-  });
   const onChatClick = useCallback(() => {
     setChatEnabled(!isChatEnabled);
   }, [isChatEnabled, setChatEnabled]);
+
   const onExitClick = useCallback(() => {
     connection.disconnect();
     router.back();
   }, [connection, router]);
 
-  // Layout positioning
-  const [containerWidth, setContainerWidth] = useState(
-    Dimensions.get('window').width,
-  );
-  const [containerHeight, setContainerHeight] = useState(
-    Dimensions.get('window').height,
-  );
   const agentVisualizationPosition = useAgentVisualizationPosition(
     isChatEnabled,
     isCameraEnabled || isScreenShareEnabled,
   );
-  const localVideoPosition = useLocalVideoPosition(isChatEnabled, {
-    width: containerWidth,
-    height: containerHeight,
-  });
 
-  let localVideoView = localVideoTrack ? (
-    <Animated.View
-      style={[
-        {
-          position: 'absolute',
-          zIndex: 1,
-          ...localVideoPosition,
-        },
-      ]}
-    >
-      <VideoTrack trackRef={localVideoTrack} style={styles.video} />
-    </Animated.View>
-  ) : null;
-
-  return (
+  return messages.length === 0 ? (
     <View
-      style={styles.container}
-      onLayout={(event) => {
-        const { width, height } = event.nativeEvent.layout;
-        setContainerWidth(width);
-        setContainerHeight(height);
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FAD40B',
+        paddingTop: 32,
+        paddingBottom: 32,
+        position: 'relative',
       }}
     >
-      <View style={styles.spacer} />
-      <ChatLog style={styles.logContainer} messages={messages} />
-      <ChatBar
+      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          source={require('@/assets/images/icon.png')}
+          style={{
+            width: 200,
+            height: 200,
+          }}
+          contentFit='cover'
+        />
+        <Spinner size='lg' variant='dots' color='#000' />
+
+        <Text
+          style={{
+            color: '#000',
+            fontWeight: 800,
+            fontSize: 26,
+            marginTop: 16,
+          }}
+        >
+          Getting ready
+        </Text>
+      </View>
+
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 32,
+          margin: 16,
+          flexDirection: 'row',
+          alignItems: 'stretch',
+        }}
+      >
+        <OrcaButton variant='red' label='End Call' onPress={onExitClick} />
+      </View>
+    </View>
+  ) : (
+    <SafeAreaView style={{ backgroundColor: '#FAD40B' }}>
+      <View style={styles.container}>
+        <View style={styles.spacer} />
+        <ChatLog style={styles.logContainer} messages={messages} />
+        {/* <ChatBar
         style={styles.chatBar}
         value={chatMessage}
         onChangeText={(value) => {
           setChatMessage(value);
         }}
         onChatSend={onChatSend}
-      />
+      /> */}
 
-      <Animated.View
-        style={[
-          {
+        {/* <View
+          style={{
             position: 'absolute',
-            zIndex: 1,
-            backgroundColor: '#000000',
-            ...agentVisualizationPosition,
-          },
-        ]}
-      >
-        <AgentVisualization style={styles.agentVisualization} />
-      </Animated.View>
+            top: 0,
+            left: 0,
+            right: 0,
+            paddingHorizontal: 16,
+            paddingTop: insets.top + 4,
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 20,
+          }}
+        >
+          <Image
+            source={require('@/assets/images/icon.png')}
+            style={{ width: 100, height: 100 }}
+            contentFit='contain'
+          />
+        </View> */}
 
-      {localVideoView}
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              zIndex: 1,
+              backgroundColor: '#000000',
+              ...agentVisualizationPosition,
+            },
+          ]}
+        >
+          <AgentVisualization style={styles.agentVisualization} />
+        </Animated.View>
 
+        <View
+          style={{
+            margin: 16,
+            flexDirection: 'row',
+            alignItems: 'stretch',
+          }}
+        >
+          <OrcaButton variant='red' label='End Call' onPress={onExitClick} />
+        </View>
+
+        {/* 
       <ControlBar
         style={styles.controlBar}
         options={{
@@ -187,13 +203,12 @@ const RoomView = () => {
           isScreenShareEnabled,
           isChatEnabled,
           onMicClick: micToggle.toggle,
-          onCameraClick: cameraToggle.toggle,
           onChatClick,
-          onScreenShareClick: screenShareToggle.toggle,
           onExitClick,
         }}
-      />
-    </View>
+      /> */}
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -202,6 +217,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     alignItems: 'center',
+    backgroundColor: '#FAD40B',
   },
   spacer: {
     height: '24%',
@@ -330,81 +346,5 @@ const useAgentVisualizationPosition = (
       inputRange: [0, 1],
       outputRange: ['0%', '100%'],
     }),
-  };
-};
-
-const useLocalVideoPosition = (
-  isChatVisible: boolean,
-  containerDimens: { width: number; height: number },
-): ViewStyle => {
-  const width = useAnimatedValue(
-    isChatVisible ? collapsedWidth : expandedLocalWidth,
-  );
-  const height = useAnimatedValue(
-    isChatVisible ? collapsedHeight : expandedLocalHeight,
-  );
-
-  useEffect(() => {
-    const widthAnim = Animated.spring(
-      width,
-      createAnimConfig(isChatVisible ? collapsedWidth : expandedLocalWidth),
-    );
-    const heightAnim = Animated.spring(
-      height,
-      createAnimConfig(isChatVisible ? collapsedHeight : expandedLocalHeight),
-    );
-
-    widthAnim.start();
-    heightAnim.start();
-
-    return () => {
-      widthAnim.stop();
-      heightAnim.stop();
-    };
-  }, [width, height, isChatVisible]);
-
-  const x = useAnimatedValue(0);
-  const y = useAnimatedValue(0);
-  useEffect(() => {
-    let targetX: number;
-    let targetY: number;
-
-    if (!isChatVisible) {
-      targetX = 1 - expandedLocalWidth - 16 / containerDimens.width;
-      targetY = 1 - expandedLocalHeight - 106 / containerDimens.height;
-    } else {
-      // Handle agent visualizer showing next to local video.
-      targetX = 0.66 - collapsedWidth / 2;
-      targetY = 0; // marginTop handles this.
-    }
-
-    const xAnim = Animated.spring(x, createAnimConfig(targetX));
-    const yAnim = Animated.spring(y, createAnimConfig(targetY));
-    xAnim.start();
-    yAnim.start();
-    return () => {
-      xAnim.stop();
-      yAnim.stop();
-    };
-  }, [containerDimens.width, containerDimens.height, x, y, isChatVisible]);
-
-  return {
-    left: x.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0%', '100%'],
-    }),
-    top: y.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0%', '100%'],
-    }),
-    width: width.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0%', '100%'],
-    }),
-    height: height.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0%', '100%'],
-    }),
-    marginTop: 16,
   };
 };

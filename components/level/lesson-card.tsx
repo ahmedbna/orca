@@ -1,22 +1,21 @@
-import { View, Pressable, StyleSheet, Platform } from 'react-native';
+import { View, Pressable, Platform } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   interpolate,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
-import { Text } from '../ui/text';
-import { ChevronRight } from 'lucide-react-native';
-import { Doc } from '@/convex/_generated/dataModel';
 import { useRouter } from 'expo-router';
+import * as Haptics from 'expo-haptics';
+import { Text } from '@/components/ui/text';
+import { Doc } from '@/convex/_generated/dataModel';
 
 const SHADOW_HEIGHT = 6;
 const HORIZONTAL_PADDING = 16;
 
-const RED = {
-  face: '#FF3B30',
-  shadow: '#C1271D',
+const COLOR = {
+  face: '#5E5CE6',
+  shadow: '#3F3DB8',
   text: '#FFFFFF',
   border: 'rgba(0,0,0,0.15)',
 };
@@ -68,7 +67,7 @@ export const LessonCard = ({ lesson }: Props) => {
           top: SHADOW_HEIGHT,
           bottom: 0,
           borderRadius: 24,
-          backgroundColor: RED.shadow,
+          backgroundColor: COLOR.shadow,
           zIndex: 1,
         }}
       />
@@ -77,13 +76,13 @@ export const LessonCard = ({ lesson }: Props) => {
       <Animated.View
         style={[
           {
-            backgroundColor: RED.face,
+            backgroundColor: COLOR.face,
             borderRadius: 24,
             padding: HORIZONTAL_PADDING,
             gap: 12,
             zIndex: 2,
             borderWidth: 4,
-            borderColor: RED.border,
+            borderColor: COLOR.border,
             justifyContent: 'center',
           },
           animatedFaceStyle,
@@ -99,7 +98,7 @@ export const LessonCard = ({ lesson }: Props) => {
           </Text>
           <Text
             style={{
-              color: RED.text,
+              color: COLOR.text,
               fontSize: 20,
               fontWeight: '800',
             }}

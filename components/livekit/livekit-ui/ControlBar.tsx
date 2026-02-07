@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import { TrackReference, useLocalParticipant } from '@livekit/components-react';
 import { BarVisualizer } from '@livekit/react-native';
 import {
@@ -29,9 +30,7 @@ type ControlBarOptions = {
   isMicEnabled: boolean;
   onMicClick: () => void;
   isCameraEnabled: boolean;
-  onCameraClick: () => void;
   isScreenShareEnabled: boolean;
-  onScreenShareClick: () => void;
   isChatEnabled: boolean;
   onChatClick: () => void;
   onExitClick: () => void;
@@ -57,7 +56,7 @@ export const ControlBar = ({ style = {}, options }: ControlBarProps) => {
 
   return (
     <View style={[style, styles.container]}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[
           styles.button,
           options.isMicEnabled ? styles.enabledButton : undefined,
@@ -65,11 +64,7 @@ export const ControlBar = ({ style = {}, options }: ControlBarProps) => {
         activeOpacity={0.7}
         onPress={() => options.onMicClick()}
       >
-        {options.isMicEnabled ? (
-          <Mic2 size={20} color='#FFFFFF' />
-        ) : (
-          <MicOff size={20} color='#FFFFFF' />
-        )}
+        {options.isMicEnabled ? <Text>🎤</Text> : <Text>🎤</Text>}
         <BarVisualizer
           barCount={3}
           trackRef={trackRef}
@@ -80,36 +75,8 @@ export const ControlBar = ({ style = {}, options }: ControlBarProps) => {
             barWidth: 2,
           }}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
-      <TouchableOpacity
-        style={[
-          styles.button,
-          options.isCameraEnabled ? styles.enabledButton : undefined,
-        ]}
-        activeOpacity={0.7}
-        onPress={() => options.onCameraClick()}
-      >
-        {options.isCameraEnabled ? (
-          <Camera size={20} color='#FFFFFF' />
-        ) : (
-          <CameraOff size={20} color='#FFFFFF' />
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          options.isScreenShareEnabled ? styles.enabledButton : undefined,
-        ]}
-        activeOpacity={0.7}
-        onPress={() => options.onScreenShareClick()}
-      >
-        {options.isScreenShareEnabled ? (
-          <ScreenShare size={20} color='#FFFFFF' />
-        ) : (
-          <ScreenShareOff size={20} color='#FFFFFF' />
-        )}
-      </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.button,

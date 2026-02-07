@@ -2,6 +2,7 @@ import {
   ReceivedMessage,
   useLocalParticipant,
 } from '@livekit/components-react';
+import { Image } from 'expo-image';
 import { useCallback } from 'react';
 import {
   ListRenderItemInfo,
@@ -25,9 +26,66 @@ export const ChatLog = ({ style, messages: transcriptions }: ChatLogProps) => {
     ({ item }: ListRenderItemInfo<ReceivedMessage>) => {
       const isLocalUser = item.from === localParticipant;
       if (isLocalUser) {
-        return <UserTranscriptionText text={item.message} />;
+        return (
+          <View
+            style={{
+              width: '100%',
+              alignContent: 'flex-end',
+            }}
+          >
+            <Text
+              style={{
+                width: 'auto',
+                fontSize: 24,
+                fontWeight: 800,
+                color: '#000',
+                alignSelf: 'flex-end',
+                borderRadius: 6,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                margin: 16,
+                opacity: 0.6,
+              }}
+            >
+              {item.message}
+            </Text>
+          </View>
+        );
       } else {
-        return <AgentTranscriptionText text={item.message} />;
+        return (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'flex-start',
+              marginHorizontal: 16,
+              marginVertical: 8,
+            }}
+          >
+            <Image
+              source={require('@/assets/images/icon.png')}
+              style={{
+                width: 40,
+                height: 40,
+                backgroundColor: '#fff',
+                borderRadius: 999,
+                marginRight: 12,
+              }}
+              contentFit='cover'
+            />
+
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: '800',
+                  color: '#000',
+                }}
+              >
+                {item.message}
+              </Text>
+            </View>
+          </View>
+        );
       }
     },
     [localParticipant],
@@ -43,70 +101,3 @@ export const ChatLog = ({ style, messages: transcriptions }: ChatLogProps) => {
     />
   );
 };
-
-const UserTranscriptionText = (props: { text: string }) => {
-  let { text } = props;
-  const colorScheme = useColorScheme();
-  const themeStyle =
-    colorScheme === 'light'
-      ? styles.userTranscriptionLight
-      : styles.userTranscriptionDark;
-  const themeTextStyle =
-    colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
-
-  return (
-    text && (
-      <View style={styles.userTranscriptionContainer}>
-        <Text style={[styles.userTranscription, themeStyle, themeTextStyle]}>
-          {text}
-        </Text>
-      </View>
-    )
-  );
-};
-
-const AgentTranscriptionText = (props: { text: string }) => {
-  let { text } = props;
-  const colorScheme = useColorScheme();
-  const themeTextStyle =
-    colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
-  return (
-    text && (
-      <Text style={[styles.agentTranscription, themeTextStyle]}>{text}</Text>
-    )
-  );
-};
-
-const styles = StyleSheet.create({
-  userTranscriptionContainer: {
-    width: '100%',
-    alignContent: 'flex-end',
-  },
-  userTranscription: {
-    width: 'auto',
-    fontSize: 17,
-    alignSelf: 'flex-end',
-    borderRadius: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    margin: 16,
-  },
-  userTranscriptionLight: {
-    backgroundColor: '#B0B0B0',
-  },
-  userTranscriptionDark: {
-    backgroundColor: '#131313',
-  },
-
-  agentTranscription: {
-    fontSize: 17,
-    textAlign: 'left',
-    margin: 16,
-  },
-  lightThemeText: {
-    color: '#000000',
-  },
-  darkThemeText: {
-    color: '#FFFFFF',
-  },
-});
